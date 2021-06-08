@@ -1,0 +1,35 @@
+.navbar {
+	display: none;
+}
+.main-navigation{
+	display: none;
+}
+.hidden-print {
+	display: none;
+}
+.breadcrumb {
+	display: none;
+}
+.page-header {
+	display: none;
+}
+.footer {
+	display: none;
+}
+.main-container {
+	display: none;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+.main-content .container{
+	display: none;
+	min-height: auto !important;
+	border: none !important;
+}
+* { overflow: visible !important; } 
+* { float: none !important; }
+
+.certificate-print-body{
+	overflow: visible !important;
+}
+.p{ page-break-after:always; color:red; }
