@@ -58,15 +58,12 @@ $(document).ready(function () {
 							resultHtml += '<li>'+ v + '</li>';
 						});
 						resultHtml += '</ul>';
-						success_or_error_msg('#master_message_div',"danger",resultHtml);
+						toastr['error']( 'Failed!!!!', resultHtml);
 						//load_data("");
 						clear_form();
 					}
 					else{
-						success_or_error_msg('#master_message_div',"success","Updated Successful");
-						$("#admin_user_list_button").trigger('click');
-						location.reload(true);
-						//clear_form();
+						toastr['success']( 'Updated Successfully', 'General Settings ');
 					}
 					$(window).scrollTop();
 				 }
@@ -152,8 +149,7 @@ $(document).ready(function () {
 							resultHtml += '<li>'+ v + '</li>';
 						});
 						resultHtml += '</ul>';
-						success_or_error_msg('#master_message_div',"danger",resultHtml);
-						clear_form();
+						toastr['error']( 'Failed!!!!', resultHtml);
 					}
 					else{
 						toastr['success']( 'Save Successfully', 'Module '+$('#menu_title').val());
@@ -280,9 +276,7 @@ $(document).ready(function () {
 							resultHtml += '<li>'+ v + '</li>';
 						});
 						resultHtml += '</ul>';
-						success_or_error_msg('#master_message_div',"danger",resultHtml);
-						//load_data("");
-						clear_form();
+						toastr['error']( 'Failed!!!!', resultHtml);
 					}
 					else{
 						toastr['success']( 'Save Successfully', 'Action '+$('#activity_name').val());

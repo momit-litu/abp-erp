@@ -229,10 +229,10 @@ class AdminController extends Controller
 	
 	//admin users list
 	public function ajaxAdminList(Request $request){
-		$userType = $request->type;
+		$userType = 'Admin';
 		$admin_user_id 		= Auth::user()->id;
-		$edit_action_id 	= ($request->type=='Admin')?3:36; // Admin/Center User edit
-		$delete_action_id 	= ($request->type=='Admin')?4:37; // Admin/Center User delete
+		$edit_action_id 	= ($request->type=='Admin')?3:36; // Admin/Student User edit
+		$delete_action_id 	= ($request->type=='Admin')?4:37; // Admin/Student User delete
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
 		/*echo User::Select('user_profile_image', 'id', DB::raw('CONCAT(first_name," ", ifnull(last_name,"")) as name'),  'email', 'status')
@@ -262,12 +262,12 @@ class AdminController extends Controller
 			if($user->status == 0){			$user['status']="<button class='btn btn-xs btn-warning' disabled>In-active</button>";}
 			else if($user->status == 1){	$user['status']="<button class='btn btn-xs btn-success' disabled>Active</button>";}
 
-			$user['actions']		=" <button title='View' onclick='admin_user_view(".$user->id.")' id='view_" . $user->id . "' class='btn btn-xs btn-primary admin-user-view' ><i class='clip-zoom-in'></i></button>";
+			$user['actions']		=" <button title='View' onclick='admin_user_view(".$user->id.")' id='view_" . $user->id . "' class='btn btn-xs btn-info btn-hover-shine admin-user-view' ><i class='lnr-eye'></i></button>";
 			if($edit_permisiion>0){
-				$user['actions'] 	.=" <button title='Edit' onclick='admin_user_edit(".$user->id.")' id=edit_" . $user->id . "  class='btn btn-xs btn-green admin-user-edit' ><i class='clip-pencil-3'></i></button>";
+				$user['actions'] 	.=" <button title='Edit' onclick='admin_user_edit(".$user->id.")' id=edit_" . $user->id . " class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
 			}
 			if ($delete_permisiion > 0) {				
-					$user['actions'] .=" <button title='Delete' onclick='delete_admin_user(".$user->id.")' id='delete_" . $user->id . "' class='btn btn-xs btn-danger admin-user-delete' ><i class='clip-remove'></i></button>";
+					$user['actions'] .=" <button title='Delete' onclick='delete_admin_user(".$user->id.")' id='delete_" . $user->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
 			}
 			$return_arr[] = $user;		
 		}
@@ -468,9 +468,7 @@ class AdminController extends Controller
 									->get();*/
 									
 		//$return_arr = array();
-		foreach($groups as $group){
-			//var_dump($group);die;
-		}
+
 		return json_encode(array('data'=>$groups));
 	}
 	
@@ -532,14 +530,15 @@ class AdminController extends Controller
 				}
 				else{					
 					$data = UserGroup::find($request->edit_id);
-					$data->update($data);
+					$data->group_name = $request->group_name;
+					$data->type = $request->type;
+					$data->update();
 				}
 				DB::commit();
 				$return['result'] = "1";
 				return json_encode($return);
 			}
 			catch (\Exception $e){
-				dd($e);
 				DB::rollback();
 				$return['result'] = "0";
 				$return['errors'][] ="Faild to save";
@@ -566,13 +565,13 @@ class AdminController extends Controller
 
 			$admin_group_list['actions'] = "";
 			if($give_permission>0){
-				$admin_group_list['actions'] .="<button title='Permission' onclick='group_permission(".$admin_group_list->id.")' id=permission_" . $admin_group_list->id . "  class='btn btn-xs btn-warning' ><i class='clip-key'></i></button>";
+				$admin_group_list['actions'] .="<button title='Permission' onclick='group_permission(".$admin_group_list->id.")' id=permission_" . $admin_group_list->id . " class='btn btn-xs btn-hover-shine btn-warning' ><i class='fa fa-key'></i></button>";
 			}
 			if($edit_permisiion>0){
-				$admin_group_list['actions'] .=" <button title='Edit' onclick='admin_group_edit(".$admin_group_list->id.")' id=edit_" . $admin_group_list->id . "  class='btn btn-xs btn-green' ><i class='clip-pencil-3'></i></button>";
+				$admin_group_list['actions'] .=" <button title='Edit' onclick='admin_group_edit(".$admin_group_list->id.")' id=edit_" . $admin_group_list->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
 			}
 			if ($delete_permisiion>0) {
-				$admin_group_list['actions'] .=" <button title='Delete' onclick='admin_group_delete(".$admin_group_list->id.")' id='delete_" . $admin_group_list->id . "' class='btn btn-xs btn-danger'><i class='clip-remove'></i></button>";
+				$admin_group_list['actions'] .=" <button title='Delete' onclick='admin_group_delete(".$admin_group_list->id.")' id='delete_" . $admin_group_list->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
 			}
 
 			$return_arr[] = $admin_group_list;

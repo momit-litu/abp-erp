@@ -72,62 +72,59 @@
 
 <!-- Profile Modal -->
 
-<div class="modal fade" id="profile_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" >User  Profile</h4>
-      </div>
-      <div class="modal-body">
-		<div class="byline">
-			<span id="profile_modal_body"></span>
-			 <div class="">
-				<div class="" style="margin-bottom: 0px!important">
-				  <div class="col-lg-12">
-					  <div class="col-md-3 col-xs-12 col-sm-6 col-lg-3">
-						<div class="thumbnail text-center photo_view_postion_b" >
-						  <div class="profile_image">
-
-						  </div>
-
-						</div>
-						<button id="status_btn" type="button" class="btn hide">Status</button>
-					  </div>
-					  <div class="col-md-9 col-xs-12 col-sm-6 col-lg-9">
-						  <div class="" >
-							<span id="name_div"></span>
-							<p><div id="status_div"></div></p>
-							<div id="group_div"></div></p>
-						  </div>
-							<hr>
-						  <div class="col-md-12">
-
-							<p title="Phone"><span class="glyphicon glyphicon-earphone one" style="width:50px;"></span><span id="contact_div"></span></p>
-							<p title="Email"><span class="glyphicon glyphicon-envelope one" style="width:50px;"></span><span id="email_div"></span></p>
-
-						  </div>
-						 <!-- <div class="col-md-6">
-							  <p title="NID NO"><span class="glyphicon glyphicon-credit-card one" style="width:50px;"></span><span id="nid_div"></span></p>
-							<p title="Address"><span class="glyphicon glyphicon-map-marker one" style="width:50px;"></span><span id="address_div"></span></p>
-						  </div>-->
-						  <hr>
-						<div class="col-md-12">
-							<div id="remarks_details">
-
-							</div>
-						 </div>
-
-					  </div>
-					</div>
-				 </div>
+<div class="modal fade" id="profile_modal" >
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="form-title"><i class="fa fa-user"></i> User Details</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
-		</div>
-      </div>
+			<div class="modal-body">
+				<div class="main-card mb-3 card">
+					<div class="card-body">
+						<div class="row">
+              <div class="col-md-4 col-xs-12">
+                <div class="thumbnail text-center photo_view_postion_b" >
+                  <div class="profile_image">
+  
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8 col-xs-12">
+                <div class="" >
+                <span id="name_div"></span>
+                <p><div id="status_div"></div></p>
+                <div id="group_div"></div></p>
+                </div>
+                <hr>
+                <div class="col-md-12">
+  
+                <p title="Phone"><span><i class="lnr-phone-handset"></i></span><span id="contact_div"></span></p>
+                <p title="Email"><span ><i class="lnr-envelope"></i></span><span id="email_div"></span></p>
+  
+                </div>
+               <!-- <div class="col-md-6">
+                  <p title="NID NO"><span class="glyphicon glyphicon-credit-card one" style="width:50px;"></span><span id="nid_div"></span></p>
+                <p title="Address"><span class="glyphicon glyphicon-map-marker one" style="width:50px;"></span><span id="address_div"></span></p>
+                </div>-->
+                <hr>
+              <div class="col-md-12">
+                <div id="remarks_details">
+  
+                </div>
+               </div>
+  
+              </div>
+            </div>
+					</div>
+				</div>
+			</div>
       <div class="modal-footer">
-       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
-    </div>
-  </div>
+		</div>
+	</div>
 </div>
 

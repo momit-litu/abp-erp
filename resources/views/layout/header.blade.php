@@ -1,6 +1,6 @@
 <div class="app-header header-shadow">
     <div class="app-header__logo">
-        <div class="logo-src"><img src="{{ asset('assets/images/logo-inverse.png')}}" /> </div>
+        <div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:140px" /> </div>
         
         <div class="header__pane ml-auto">
             <div>

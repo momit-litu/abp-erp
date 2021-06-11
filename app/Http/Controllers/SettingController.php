@@ -83,18 +83,7 @@ class SettingController extends Controller
 						$success					= $logo_image->move($upload_path,$image_name);
 						$settings_data['logo'] 		= $image_name;
 					}
-				}
-				
-				$cs_image = $request->file('certificate_signeture');
-				if (isset($cs_image)){					
-					$image_name 				= $cs_image->getClientOriginalName();
-					if($image_name != $data->certificate_signeture){
-						$upload_path 				= 'assets/images/admin-upload/';					
-						$success					= $cs_image->move($upload_path,$image_name);
-						$settings_data['certificate_signeture'] = $image_name;
-					}
-				}
-				
+				}				
 				$data->update($settings_data);
 				//dd($settings_data);
 				DB::commit();

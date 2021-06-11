@@ -62,28 +62,6 @@
 						@endif				
 					</li>
 				@endforeach
-
-
-
-
-				<li class="app-sidebar__heading">Menu</li>
-
-
-				<li class="mm-active">
-					<a href="#">
-						<i class="metismenu-icon pe-7s-browser"></i>
-						Pages
-						<i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-					</a>
-					<ul>
-						<li class="mm-active">
-							<a href="pages-login.html">
-								<i class="metismenu-icon"></i>
-								Login
-							</a>
-						</li>
-					</ul>
-				</li>
 			</ul>
 		</div>
 	</div>

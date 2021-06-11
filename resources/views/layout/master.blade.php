@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Analytics Dashboard - This is an example dashboard created using build-in elements and components.</title>
+    <title>{{$site_settings['short_name']}} | {{isset($page_title) ? $page_title : ''}}  </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
     />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
@@ -31,7 +31,21 @@
 	<div class="app-main">
         @include('layout.sidebar')    
 		@yield('content')
-
+        <div class="body-block-example-1 d-none">
+            <div class="loader bg-transparent no-shadow p-0">
+                <div class="ball-grid-pulse">
+                    <div class="bg-white"></div>
+                    <div class="bg-white"></div>
+                    <div class="bg-white"></div>
+                    <div class="bg-white"></div>
+                    <div class="bg-white"></div>
+                    <div class="bg-white"></div>
+                    <div class="bg-white"></div>
+                    <div class="bg-white"></div>
+                    <div class="bg-white"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -62,7 +76,7 @@
 <script src="{{ asset('assets/theme/assets/js/scripts-init/charts/charts-sparklines.js') }}"></script>
 
 <!--Chart.js-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script src="{{ asset('assets/theme/assets/js/scripts-init/charts/chartsjs-utils.js') }}"></script>
 <!--<script src="{{ asset('assets/theme/assets/js/scripts-init/charts/chartjs.js') }}"></script>-->
 
@@ -80,7 +94,7 @@
 
 <!--Multiselect-->
 <script src="{{ asset('assets/theme/assets/js/vendors/form-components/bootstrap-multiselect.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="{{ asset('assets/theme/assets/js/scripts-init/form-components/input-select.js') }}"></script>
 
 <!--Form Validation-->
@@ -161,7 +175,7 @@
 <script src="{{ asset('assets/theme/assets/js/scripts-init/scrollbar.js') }}"></script>
 
 <!--Toastr-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/theme/assets/js/scripts-init/toastr.js') }}"></script>
 
 <!--SweetAlert2-->
