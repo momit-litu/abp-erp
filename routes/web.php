@@ -44,13 +44,13 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/module/get-parent-menu',array('as'=>'Parent Menu List' ,'uses' =>'SettingController@getParentMenu'));
 	Route::get('/web-action/get-module-name',array('as'=>'Actions' , 'uses' =>'SettingController@getModuleName'));
 	Route::get('/admin/load-actions-for-group-permission/{id}',array('as'=>'Load Actions', 'uses' =>'AdminController@load_actions_for_group_permission'));
-	
+
 	Route::get('/notification',array('as'=>'All Notifications', 		'uses' =>'AdminController@profileIndex'));
 	Route::get('/notifications',array('as'=>'All Notifications', 		'uses' =>'AdminController@ajaxNotificationList'));
 	Route::get('/notifications/{page}',array('as'=>'Notifications', 	'uses' =>'AdminController@notificationHome'));
 	Route::get('/notification/view',array('as'=>'Notification Read', 	'uses' =>'AdminController@notificationRead'));
 	Route::get('/update-notification',array('as'=>'Read Notifications', 'uses' =>'AdminController@updateNotification'));
-	
+
 });
 
 // need  authentication and permission to access the action/action-lists
@@ -91,13 +91,13 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	//Permission
 	Route::post('/admin/permission-action-entry-update',array('as'=>'Permission Entry', 'action_id'=>'20', 'uses' =>'AdminController@permission_action_entry_update'));
 
-	
+
 	//students
-	Route::get('student',array('as'=>'Student' , 'action_id'=>'38', 'uses' =>'LearnerController@index'));
-	Route::get('/students',array('as'=>'Student List' ,  'action_id'=>'38','uses' =>'LearnerController@showList'));
-	Route::get('/student/{id}',array('as'=>'Student View' , 'action_id'=>'38', 'uses' =>'LearnerController@show'));
-	Route::post('/student',array('as'=>'Student Entry', 'action_id'=>'39', 'uses' =>'LearnerController@createOrEdit'));
-	Route::get('/student/delete/{id}',array('as'=>'Student Delete', 'action_id'=>'41', 'uses' =>'LearnerController@destroy'));
+	Route::get('student',array('as'=>'Student' , 'action_id'=>'38', 'uses' =>'StudentController@index'));
+	Route::get('/students',array('as'=>'Student List' ,  'action_id'=>'38','uses' =>'StudentController@showList'));
+	Route::get('/student/{id}',array('as'=>'Student View' , 'action_id'=>'38', 'uses' =>'StudentController@show'));
+	Route::post('/student',array('as'=>'Student Entry', 'action_id'=>'39', 'uses' =>'StudentController@createOrEdit'));
+	Route::get('/student/delete/{id}',array('as'=>'Student Delete', 'action_id'=>'41', 'uses' =>'StudentController@destroy'));
 
 });
 

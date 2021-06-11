@@ -33,48 +33,44 @@ class StudentController extends Controller
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
         $data['actions']['add_permisiion']= $add_permisiion;
 
-		return view('learner.index',$data);
+        //dd($data);
+
+		return view('student.index',$data);
     }
 
 	//learnetr list by ajax
 	public function showList(){
 		$admin_user_id 		= Auth::user()->id;
 		$userType 			= Auth::user()->type;
-		$edit_action_id 	= 40; // learner edit
-		$delete_action_id 	= 41; // learner delete
+		$edit_action_id 	= 40; // Student edit
+		$delete_action_id 	= 41; // Student delete
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
 
-	    $learnerSql = Learner::Select('id','center_id','first_name', 'last_name', 'email', 'contact_no', 'address','nid_no','user_profile_image','remarks','status')
-							->with('center');
-		if($userType=='Center'){
-			$centerId = Auth::user()->center_id;
-			$learnerSql->where('center_id',$centerId);
-		}
+	    $studentSql = Student::Select('id','first_name', 'last_name', 'email', 'contact_no', 'address','nid_no','user_profile_image','remarks','status');
 
-		$learners = $learnerSql->orderBy('created_at','desc')->get();
+		$students = $studentSql->orderBy('created_at','desc')->get();
 
         $return_arr = array();
-        foreach($learners as $learner){
+        foreach($students as $student){
             $data['actions']	= "";
-            $data['status'] 	= ($learner->status == 'Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
-            $data['id'] 		= $learner->id;
-			$data['first_name'] = $learner->first_name;
-			$data['last_name'] 	= $learner->last_name ;
-            $data['email'] 		= $learner->email;
-			$data['contact_no'] = $learner->contact_no;
-			$data['address'] 	= $learner->address;
-			$data['center_name']= $learner->center->name;
-			//dd( $learner->id;die;
-			$image_path = asset('assets/images/learner');
-			$data['user_profile_image'] = ($learner->user_profile_image!="" || $learner->user_profile_image!=null)?'<img height="40" width="50" src="'.$image_path.'/'.$learner->user_profile_image.'" alt="image" />':'<img height="40" width="50" src="'.$image_path.'/no-user-image.png'.'" alt="image" />';
+            $data['status'] 	= ($student->status == 'Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
+            $data['id'] 		= $student->id;
+			$data['first_name'] = $student->first_name;
+			$data['last_name'] 	= $student->last_name ;
+            $data['email'] 		= $student->email;
+			$data['contact_no'] = $student->contact_no;
+			$data['address'] 	= $student->address;
+			//dd( $student->id;die;
+			$image_path = asset('assets/images/student');
+			$data['user_profile_image'] = ($student->user_profile_image!="" || $student->user_profile_image!=null)?'<img height="40" width="50" src="'.$image_path.'/'.$student->user_profile_image.'" alt="image" />':'<img height="40" width="50" src="'.$image_path.'/no-user-image.png'.'" alt="image" />';
 
-            $data['actions']	="<button title='View' onclick='learnerView(".$learner->id.")' id='view_" . $learner->id . "' class='btn btn-xs btn-primary' ><i class='clip-zoom-in'></i></button>&nbsp;";
+            $data['actions']	="<button title='View' onclick='studentView(".$student->id.")' id='view_" . $student->id . "' class='btn btn-xs btn-info btn-hover-shine admin-user-view' ><i class='lnr-eye'></i></button>";
 			if($edit_permisiion>0){
-                $data['actions'] .="<button onclick='learnerEdit(".$learner->id.")' id=edit_" . $learner->id . "  class='btn btn-xs btn-green module-edit' ><i class='clip-pencil-3'></i></button>";
+                $data['actions'] .="<button title='Edit' onclick='studentEdit(".$student->id.")' id=edit_" . $student->id . " class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
             if ($delete_permisiion>0) {
-                $data['actions'] .=" <button onclick='learnerDelete(".$learner->id.")' id='delete_" . $learner->id . "' class='btn btn-xs btn-danger' ><i class='clip-remove'></i></button>";
+                $data['actions'] .=" <button title='Delete' onclick='studentDelete(".$student->id.")' id='delete_" . $student->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
             }
             $return_arr[] = $data;
         }
@@ -84,8 +80,8 @@ class StudentController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;
-        $learner = Learner::with('center')->findOrFail($id);
-		return json_encode(array('learner'=>$learner));
+        $student = Student::findOrFail($id);
+		return json_encode(array('student'=>$student));
     }
 
 	public function destroy($id)
@@ -93,22 +89,22 @@ class StudentController extends Controller
         if($id==""){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 		}
-		$learner = Learner::with('registrations')->findOrFail($id);
-		//dd($learner);
-		$is_deletable = (count($learner->registrations)==0)?1:0; // 1:deletabe, 0:not-deletable
-		if(empty($learner)){
-			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No learner found"));
+		$student = Student::with('registrations')->findOrFail($id);
+		//dd($student);
+		$is_deletable = (count($student->registrations)==0)?1:0; // 1:deletabe, 0:not-deletable
+		if(empty($student)){
+			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No student found"));
 		}
 		try {
 			DB::beginTransaction();
 			if($is_deletable){
-				$learner->delete();
-				$return['message'] = "Learner Deleted successfully";
+				$student->delete();
+				$return['message'] = "Student Deleted successfully";
 			}
 			else{
-				$learner->status = 'Inactive';
-				$learner->update();
-				$return['message'] = "Deletation is not possible, but deactivated the learner";
+				$student->status = 'Inactive';
+				$student->update();
+				$return['message'] = "Deletation is not possible, but deactivated the student";
 			}
 			DB::commit();
 			$return['response_code'] = 1;
@@ -123,10 +119,10 @@ class StudentController extends Controller
 
     }
 
-	public function learnerAutoComplete(){
+	public function studentAutoComplete(){
 		$term = $_REQUEST['term'];
 
-		$data = Learner::select('id', 'first_name', 'last_name', 'email')
+		$data = Student::select('id', 'first_name', 'last_name', 'email')
 				       ->where([
                     ['status', '=', 'Active'],
                     ['first_name','like','%'.$term.'%']
@@ -167,15 +163,15 @@ class StudentController extends Controller
 		// update
 		if(!is_null($request->input('edit_id')) && $request->input('edit_id') != "" && $update_permission){
 
-			$response_data =  $this->editLearner($request->all(), $request->input('edit_id'), $request->file('user_profile_image') );
+			$response_data =  $this->editStudent($request->all(), $request->input('edit_id'), $request->file('user_profile_image') );
 		}
 		// new entry
 		else if($entry_permission && $userType=='Center'){
-			$response_data =  $this->createLearner($request->all(), $request->file('user_profile_image'));
+			$response_data =  $this->createStudent($request->all(), $request->file('user_profile_image'));
 		}
 		else{
 			$return['response_code'] = 0;
-			$return['errors'] = "You are not authorized to insert a learner";
+			$return['errors'] = "You are not authorized to insert a student";
 			$response_data = json_encode($return);
 		}
 
@@ -183,7 +179,7 @@ class StudentController extends Controller
     }
 
 
-	private function createLearner($request, $photo){
+	private function createStudent($request, $photo){
 		//dd($request);
 		$centerId = Auth::user()->center_id;
 		//$center = Center::select('id')->where('id',$centerId)->first();
@@ -203,7 +199,7 @@ class StudentController extends Controller
             }
             else{
 				DB::beginTransaction();
-				$emailVerification = Learner::where('email',$request['email'])->first();
+				$emailVerification = Student::where('email',$request['email'])->first();
 	            if(isset($emailVerification->id)){
 					$return['response_code'] 	= "0";
 					$return['errors'][] = $request['email']." is already exists";
@@ -211,17 +207,17 @@ class StudentController extends Controller
 				}
 
 				$profileImage = "";
-				$LearnerImage = $photo;
-				if (isset($LearnerImage)){
+				$StudentImage = $photo;
+				if (isset($StudentImage)){
 					$image_name 	= time();
-					$ext 			= $LearnerImage->getClientOriginalExtension();
+					$ext 			= $StudentImage->getClientOriginalExtension();
 					$image_full_name= $image_name.'.'.$ext;
-					$upload_path 	= 'assets/images/learner/';
-					$success		= $LearnerImage->move($upload_path,$image_full_name);
+					$upload_path 	= 'assets/images/student/';
+					$success		= $StudentImage->move($upload_path,$image_full_name);
 					$profileImage 	= $image_full_name;
 				}
 
-                Learner::create([
+                Student::create([
                     'first_name'=>  $request['first_name'],
                     'last_name' =>  $request['last_name'],
 					'center_id'	=>  $centerId,
@@ -236,7 +232,7 @@ class StudentController extends Controller
                 ]);
 				DB::commit();
 				$return['response_code'] = 1;
-				$return['message'] = "Learner saved successfully";
+				$return['message'] = "Student saved successfully";
 				return json_encode($return);
             }
         }
@@ -248,19 +244,19 @@ class StudentController extends Controller
 		}
 	}
 
-	private function editLearner($request, $id, $photo){
+	private function editStudent($request, $id, $photo){
 		//dd($request);
 		try {
 			if($id==""){
 				return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 			}
-			// if learner already is in a registration then need the hard update permission
+			// if Student already is in a registration then need the hard update permission
 			// only edopro admin can edit
 			// $hardUpdate_permission = $this->PermissionHasOrNot($admin_user_id,42);
-			$learner = Learner::findOrFail($id);
+			$student = Student::findOrFail($id);
 
-			if(empty($learner)){
-				return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No learner found"));
+			if(empty($student)){
+				return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No student found"));
 			}
 
             $rule = [
@@ -278,37 +274,37 @@ class StudentController extends Controller
             }
             else{
 				DB::beginTransaction();
-				$emailVerification = Learner::where([['email',$request['email']],['id','!=',$id]])->first();
+				$emailVerification = Student::where([['email',$request['email']],['id','!=',$id]])->first();
 	            if(isset($emailVerification->id)){
 					$return['response_code'] 	= "0";
 					$return['errors'][] = $request['email']." is already exists";
 					return json_encode($return);
 				}
 
-				$learner->first_name 	= $request['first_name'];
-				$learner->last_name 	= $request['last_name'];
-				$learner->email 		= $request['email'];
-				$learner->contact_no 	= $request['contact_no'];
-				$learner->address 		= $request['address'];
-				$learner->nid_no 		= $request['nid_no'];
-				$learner->date_of_birth = $request['date_of_birth'];
-				$learner->remarks 		= $request['remarks'];
-				$learner->status 		=  (isset($request['status']))?"Active":'Inactive';
+				$student->first_name 	= $request['first_name'];
+				$student->last_name 	= $request['last_name'];
+				$student->email 		= $request['email'];
+				$student->contact_no 	= $request['contact_no'];
+				$student->address 		= $request['address'];
+				$student->nid_no 		= $request['nid_no'];
+				$student->date_of_birth = $request['date_of_birth'];
+				$student->remarks 		= $request['remarks'];
+				$student->status 		=  (isset($request['status']))?"Active":'Inactive';
 
-				$LearnerImage = $photo;
-				if (isset($LearnerImage)){
+				$StudentImage = $photo;
+				if (isset($StudentImage)){
 					$image_name 	= time();
-					$ext 			= $LearnerImage->getClientOriginalExtension();
+					$ext 			= $StudentImage->getClientOriginalExtension();
 					$image_full_name= $image_name.'.'.$ext;
-					$upload_path 	= 'assets/images/learner/';
-					$success		= $LearnerImage->move($upload_path,$image_full_name);
-					$learner->user_profile_image = $image_full_name;
+					$upload_path 	= 'assets/images/student/';
+					$success		= $StudentImage->move($upload_path,$image_full_name);
+					$student->user_profile_image = $image_full_name;
 				}
-				$learner->update();
+				$student->update();
 
 				DB::commit();
 				$return['response_code'] = 1;
-				$return['message'] = "Learner Updated successfully";
+				$return['message'] = "Student Updated successfully";
 				return json_encode($return);
             }
         }
