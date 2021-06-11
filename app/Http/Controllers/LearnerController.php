@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Learner;
+use App\Models\Student;
 use App\Center;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -10,7 +10,7 @@ use App\Traits\HasPermission;
 use Auth;
 use DB;
 
-class LearnerController extends Controller
+class StudentController extends Controller
 {
     use HasPermission;
 	public function __construct(Request $request)
@@ -19,23 +19,23 @@ class LearnerController extends Controller
         $description = \Request::route()->getAction();
         $this->page_desc = isset($description['desc']) ? $description['desc'] : $this->page_title;
     }
-	
+
 	public function index()
     {
         $data['page_title'] 	= $this->page_title;
-		$data['module_name']	= "Learners";
-		$data['sub_module']		= "Learners";
-		
+		$data['module_name']	= "Students";
+		$data['sub_module']		= "Students";
+
 		// action permissions
         $admin_user_id  		= Auth::user()->id;
 		$data['userType']		= Auth::user()->type;
-        $add_action_id  		= 39; // Learner entry
+        $add_action_id  		= 39; // Student entry
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
         $data['actions']['add_permisiion']= $add_permisiion;
 
 		return view('learner.index',$data);
     }
-	
+
 	//learnetr list by ajax
 	public function showList(){
 		$admin_user_id 		= Auth::user()->id;
@@ -51,7 +51,7 @@ class LearnerController extends Controller
 			$centerId = Auth::user()->center_id;
 			$learnerSql->where('center_id',$centerId);
 		}
-		
+
 		$learners = $learnerSql->orderBy('created_at','desc')->get();
 
         $return_arr = array();
@@ -83,7 +83,7 @@ class LearnerController extends Controller
 
     public function show($id)
     {
-		if($id=="") return 0;		
+		if($id=="") return 0;
         $learner = Learner::with('center')->findOrFail($id);
 		return json_encode(array('learner'=>$learner));
     }
@@ -92,14 +92,14 @@ class LearnerController extends Controller
     {
         if($id==""){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
-		}			
+		}
 		$learner = Learner::with('registrations')->findOrFail($id);
 		//dd($learner);
 		$is_deletable = (count($learner->registrations)==0)?1:0; // 1:deletabe, 0:not-deletable
 		if(empty($learner)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No learner found"));
 		}
-		try {			
+		try {
 			DB::beginTransaction();
 			if($is_deletable){
 				$learner->delete();
@@ -113,16 +113,16 @@ class LearnerController extends Controller
 			DB::commit();
 			$return['response_code'] = 1;
 			return json_encode($return);
-        } 
+        }
 		catch (\Exception $e){
 			DB::rollback();
 			$return['response_code'] 	= 0;
 			$return['errors'] = "Failed to delete !".$e->getMessage();
 			return json_encode($return);
 		}
-		
+
     }
-	
+
 	public function learnerAutoComplete(){
 		$term = $_REQUEST['term'];
 
@@ -140,8 +140,8 @@ class LearnerController extends Controller
                     ['email','like','%'.$term.'%']
                 ])
 			->get();
-			
-			
+
+
 
 		$data_count = $data->count();
 
@@ -154,9 +154,9 @@ class LearnerController extends Controller
 			$json[] = array('id' => "0",'label' => "Not Found !!!");
 		}
 		return json_encode($json);
-		
+
 	}
-	
+
     public function createOrEdit(Request $request)
     {
 		$admin_user_id 		= Auth::user()->id;
@@ -166,7 +166,7 @@ class LearnerController extends Controller
 
 		// update
 		if(!is_null($request->input('edit_id')) && $request->input('edit_id') != "" && $update_permission){
-			
+
 			$response_data =  $this->editLearner($request->all(), $request->input('edit_id'), $request->file('user_profile_image') );
 		}
 		// new entry
@@ -181,8 +181,8 @@ class LearnerController extends Controller
 
         return $response_data;
     }
-	
-	
+
+
 	private function createLearner($request, $photo){
 		//dd($request);
 		$centerId = Auth::user()->center_id;
@@ -190,9 +190,9 @@ class LearnerController extends Controller
 		try {
             $rule = [
                 'first_name'=> 'required|string',
-                'email' 	=> 'required|email', 
+                'email' 	=> 'required|email',
 				'contact_no'=> 'required',
-				'date_of_birth'=> 'required'  
+				'date_of_birth'=> 'required'
 			];
             $validation = \Validator::make($request, $rule);
 
@@ -209,25 +209,25 @@ class LearnerController extends Controller
 					$return['errors'][] = $request['email']." is already exists";
 					return json_encode($return);
 				}
-				
+
 				$profileImage = "";
 				$LearnerImage = $photo;
-				if (isset($LearnerImage)){					
+				if (isset($LearnerImage)){
 					$image_name 	= time();
 					$ext 			= $LearnerImage->getClientOriginalExtension();
 					$image_full_name= $image_name.'.'.$ext;
-					$upload_path 	= 'assets/images/learner/';					
+					$upload_path 	= 'assets/images/learner/';
 					$success		= $LearnerImage->move($upload_path,$image_full_name);
 					$profileImage 	= $image_full_name;
 				}
-				
+
                 Learner::create([
                     'first_name'=>  $request['first_name'],
                     'last_name' =>  $request['last_name'],
 					'center_id'	=>  $centerId,
 					'email' 	=>  $request['email'],
 					'contact_no'=>  $request['contact_no'],
-					'address'	=>  $request['address'],					
+					'address'	=>  $request['address'],
 					'nid_no' 	=>  $request['nid_no'],
 					'date_of_birth'=>  $request['date_of_birth'],
 					'remarks' 	=>  $request['remarks'],
@@ -239,7 +239,7 @@ class LearnerController extends Controller
 				$return['message'] = "Learner saved successfully";
 				return json_encode($return);
             }
-        } 
+        }
 		catch (\Exception $e){
 			DB::rollback();
 			$return['response_code'] 	= 0;
@@ -247,27 +247,27 @@ class LearnerController extends Controller
 			return json_encode($return);
 		}
 	}
-	
+
 	private function editLearner($request, $id, $photo){
 		//dd($request);
 		try {
 			if($id==""){
 				return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 			}
-			// if learner already is in a registration then need the hard update permission		
+			// if learner already is in a registration then need the hard update permission
 			// only edopro admin can edit
 			// $hardUpdate_permission = $this->PermissionHasOrNot($admin_user_id,42);
 			$learner = Learner::findOrFail($id);
-			
+
 			if(empty($learner)){
 				return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No learner found"));
 			}
 
             $rule = [
                 'first_name'=> 'required|string',
-                'email' 	=> 'required|email', 
-				'contact_no'=> 'required',	
-				'date_of_birth'=> 'required'   				
+                'email' 	=> 'required|email',
+				'contact_no'=> 'required',
+				'date_of_birth'=> 'required'
             ];
             $validation = \Validator::make($request, $rule);
 
@@ -276,15 +276,15 @@ class LearnerController extends Controller
 				$return['errors'] = $validation->errors();
 				return json_encode($return);
             }
-            else{				
-				DB::beginTransaction();				
+            else{
+				DB::beginTransaction();
 				$emailVerification = Learner::where([['email',$request['email']],['id','!=',$id]])->first();
 	            if(isset($emailVerification->id)){
 					$return['response_code'] 	= "0";
 					$return['errors'][] = $request['email']." is already exists";
 					return json_encode($return);
 				}
-				
+
 				$learner->first_name 	= $request['first_name'];
 				$learner->last_name 	= $request['last_name'];
 				$learner->email 		= $request['email'];
@@ -294,13 +294,13 @@ class LearnerController extends Controller
 				$learner->date_of_birth = $request['date_of_birth'];
 				$learner->remarks 		= $request['remarks'];
 				$learner->status 		=  (isset($request['status']))?"Active":'Inactive';
-				
+
 				$LearnerImage = $photo;
-				if (isset($LearnerImage)){					
+				if (isset($LearnerImage)){
 					$image_name 	= time();
 					$ext 			= $LearnerImage->getClientOriginalExtension();
 					$image_full_name= $image_name.'.'.$ext;
-					$upload_path 	= 'assets/images/learner/';					
+					$upload_path 	= 'assets/images/learner/';
 					$success		= $LearnerImage->move($upload_path,$image_full_name);
 					$learner->user_profile_image = $image_full_name;
 				}
@@ -311,7 +311,7 @@ class LearnerController extends Controller
 				$return['message'] = "Learner Updated successfully";
 				return json_encode($return);
             }
-        } 
+        }
 		catch (\Exception $e){
 			DB::rollback();
 			$return['response_code'] 	= 0;

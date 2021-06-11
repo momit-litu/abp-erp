@@ -1,8 +1,8 @@
 <?php
 namespace App\Traits;
-use App\User;
-use App\UserGroupMember;
-use App\UserGroupPermission;
+use App\Models\User;
+use App\Models\UserGroupMember;
+use App\Models\UserGroupPermission;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,7 +22,7 @@ trait HasPermission
 		//$permission = User_group_permission::select('status')->whereIn('group_id',[$user_groups])->where('action_id',$action_id)->get();
 		//\DB::enableQueryLog();
 		$permission = \DB::select(\DB::raw("SELECT count(status) as has_permission FROM user_group_permissions WHERE group_id IN($user_groups) AND action_id=$action_id AND STATUS=1"));
-		//dd(\DB::getQueryLog()); 
+		//dd(\DB::getQueryLog());
 		//dd($permission);
 		foreach($permission as $p){
 			return $p->has_permission;

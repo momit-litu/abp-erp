@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 //later i will use use App\Traits\HasRoleAndPermission;
+use App\Models\WebAction;
 use Illuminate\Http\Request;
 use Validator;
 use Session;
 use DB;
-use \App\System;
-use \App\Setting;
-use App\Menu;
-use App\WebAction;
-use App\UserGroup;
-use App\UserGroupPermission;
+use \App\Models\System;
+use \App\Models\Setting;
+use App\Models\Menu;
+use App\ModelsWebAction;
+use App\Models\UserGroup;
+use App\Models\UserGroupPermission;
 use Auth;
 use App\Traits\HasPermission;
 
@@ -73,17 +74,17 @@ class SettingController extends Controller
 					'admin_url'		=>$request->admin_url,
 					'address'		=>$request->address,
 				];
-				
+
 				//if logo Image provided
 				$logo_image = $request->file('logo');
-				if (isset($logo_image)){					
+				if (isset($logo_image)){
 					$image_name 				= $logo_image->getClientOriginalName();
 					if($image_name != $data->logo){
-						$upload_path 				= 'assets/images/admin-upload/';					
+						$upload_path 				= 'assets/images/admin-upload/';
 						$success					= $logo_image->move($upload_path,$image_name);
 						$settings_data['logo'] 		= $image_name;
 					}
-				}				
+				}
 				$data->update($settings_data);
 				//dd($settings_data);
 				DB::commit();
@@ -339,7 +340,7 @@ class SettingController extends Controller
 			//->where('actions.status','1')
 			->orderBy('actions.id','desc')
 			->get();
-			
+
 		$return_arr = array();
 		foreach($webActionList as $webActionList){
 			$webActionList['status']=($webActionList->status == 1)?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-sm btn-warning' disabled>In-active</button>";

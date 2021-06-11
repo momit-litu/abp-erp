@@ -54,13 +54,13 @@ class User extends Authenticatable
             } else {
                 $change_status=0;
             }
-            $loginstatuschange = \App\User::where('email',\Auth::user()->email)->update(array('login_status'=>$change_status));
+            $loginstatuschange = \App\Models\User::where('email',\Auth::user()->email)->update(array('login_status'=>$change_status));
             return $loginstatuschange;
         }
     }
 
 	public function user_groups() {
-        return $this->hasMany('App\UserGroupMember', 'user_id');
+        return $this->hasMany('App\Models\UserGroupMember', 'user_id');
     }
 
 }

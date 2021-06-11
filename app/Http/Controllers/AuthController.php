@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 class AuthController extends Controller
@@ -30,9 +30,9 @@ class AuthController extends Controller
      */
     public function authLogin()
     {
-        
+
         if (\Auth::check()) {
-            \App\User::LogInStatusUpdate("login");
+            \App\Models\User::LogInStatusUpdate("login");
            // return redirect('dashboard');
 
         } else {
@@ -85,7 +85,7 @@ class AuthController extends Controller
                 \Session::forget('pre_login_url');
                 return redirect($url);
             }else {
-                \App\User::LogInStatusUpdate(1);
+                \App\Models\User::LogInStatusUpdate(1);
                 return redirect('dashboard');
             }
 
@@ -108,10 +108,10 @@ class AuthController extends Controller
     {
 
         if (\Auth::check()) {
-            $user_info = \App\User::where('email',\Auth::user()->email)->first();
+            $user_info = \App\Models\User::where('email',\Auth::user()->email)->first();
            // print_r($user_info); die();
             if (!empty($user_info) && ($email==$user_info->email)) {
-				\App\User::LogInStatusUpdate(0);
+				\App\Models\User::LogInStatusUpdate(0);
                 \Auth::logout();
                 \Session::flush();
                 return \Redirect::to('auth/login');
@@ -151,7 +151,7 @@ class AuthController extends Controller
             return redirect()->back()->withErrors($v)->withInput();
         }
         $email = $request->input('email');
-        $user_email= \App\User::where('email','=',$email)->first();
+        $user_email= \App\Models\User::where('email','=',$email)->first();
         if (!isset($user_email->id)) {
             return redirect('auth/forget/password')->with('errormessage',"Sorry email does not match!");
         }
@@ -159,7 +159,7 @@ class AuthController extends Controller
 
         #UpdateRememberToken
         $token = \App\System::RandomStringNum(16);
-        \App\User::where('id',$user_email->id)->update(['remember_token'=>$token]);
+        \App\Models\User::where('id',$user_email->id)->update(['remember_token'=>$token]);
 
         $reset_url= url('auth/forget/password/'.$user_email->id.'/verify').'?token='.$token;
 		//echo $reset_url;die;
@@ -179,7 +179,7 @@ class AuthController extends Controller
     public function authSystemForgotPasswordVerification($user_id)
     {
         $remember_token=isset($_GET['token'])?$_GET['token']:'';
-        $user_info= \App\User::where('id','=',$user_id)->first();
+        $user_info= \App\Models\User::where('id','=',$user_id)->first();
 
         if(!empty($remember_token)&&isset($user_info->id) && !empty($user_info->remember_token) && ($user_info->remember_token==$remember_token)){
 
@@ -219,7 +219,7 @@ class AuthController extends Controller
             'updated_at' => $now
         );
         try {
-            $update_pass=\App\User::where('id', $user_id)->update($update_password);
+            $update_pass=\App\Models\User::where('id', $user_id)->update($update_password);
             if($update_pass) {
                 return redirect('auth/login')->with('message',"Password updated successfully !");
             }
@@ -234,7 +234,7 @@ class AuthController extends Controller
     public function EmailVerificationPage($user_id)
     {
         $remember_token=isset($_GET['token'])?$_GET['token']:'';
-        $user_info= \App\User::where('id','=',$user_id)->first();
+        $user_info= \App\Models\User::where('id','=',$user_id)->first();
 
         if(!empty($remember_token)&&isset($user_info->id) && !empty($user_info->remember_token) && ($user_info->remember_token==$remember_token)){
 
@@ -266,7 +266,7 @@ class AuthController extends Controller
             'updated_at' => $now
         );
         try {
-            $update_pass=\App\User::where('id', $user_id)->update($update_password);
+            $update_pass=\App\Models\User::where('id', $user_id)->update($update_password);
 
             if($update_pass) {
                 return redirect('auth/login')->with('message',"Password updated successfully !");

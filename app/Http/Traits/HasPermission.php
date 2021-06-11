@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
-use App\User;
-use App\UserGroupMember;
-use App\UserGroupPermission;
+use App\Models\User;
+use App\Models\UserGroupMember;
+use App\Models\UserGroupPermission;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,7 +25,7 @@ trait HasPermission
     */
 
     public function PermissionHasOrNot($admin_user_id,$action_id){
-		
+
 		$user_groups_arr = UserGroupMember::selectRaw("group_concat('".'"'."', group_id,'".'"'."') as groupss")->where('user_id',$admin_user_id)->groupBy('user_id')->get();
 		$user_groups = $user_groups_arr[0]['groupss'];
 

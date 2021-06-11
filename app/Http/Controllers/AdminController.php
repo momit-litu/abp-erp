@@ -7,17 +7,15 @@ use Auth;
 use Validator;
 use Session;
 use DB;
-use \App\System;
-use \App\User;
-use App\UserGroup;
-use App\UserGroupMember;
-use App\Menu;
-use App\UserGroupPermission;
-use App\WebAction;
+use \App\Models\User;
+use App\Models\UserGroup;
+use App\Models\UserGroupMember;
+use App\Models\UserGroupPermission;
+use App\Models\WebAction;
 use \App\Center;
 use \App\Qualification;
 use \App\CenterQualification;
-use \App\Learner;
+use \App\Models\Student;
 use \App\Registration;
 use \App\RegistrationLearner;
 use App\Traits\HasPermission;
@@ -49,7 +47,7 @@ class AdminController extends Controller
 		if($userType == 'Center'){
 			$userCenterId 		= Auth::user()->center_id;
 			$center		  		= Center::find($userCenterId);
-			$data['centerName']	=	$center->name;		
+			$data['centerName']	=	$center->name;
 		}
 		//dd($data);
 		$dashboardComponents = array();
@@ -63,7 +61,7 @@ class AdminController extends Controller
 		$certifiedLearners 		= $this->PermissionHasOrNot($admin_user_id,58 ); // Certified Learners
 		$registeredLearners 	= $this->PermissionHasOrNot($admin_user_id,61 ); // Registered Learners
 		$approvedQualifications = $this->PermissionHasOrNot($admin_user_id,62 ); // Approved Qualifications
-		
+
 		$totalActiveCentres 		= "";
 		$totalActiveQualifications 	= "";
 		$totalActiveLearners 		= "";
@@ -73,7 +71,7 @@ class AdminController extends Controller
 		$totalCertifiedLearners 	= "";
 		$totalRegisteredLearners 	= "";
 		$totalApprovedQualifications= "";
-		
+
 		if($activeCentres){
 			$totalActiveCentres = Center::where('status','Active')->count();
 			$activeCentresData = [
@@ -95,7 +93,7 @@ class AdminController extends Controller
 			$dashboardComponents[]=$activeQualificationsData;
 		}
 		if($activeLearners){
-			$totalActiveLearners = Learner::where('status','Active')->count();
+			$totalActiveLearners = Student::where('status','Active')->count();
 			$activeLearnersData = [
 				'name' 				=> 'Active Learners',
 				'backgroundColor' 	=> '#d25c32',
@@ -141,7 +139,7 @@ class AdminController extends Controller
 				->orwhere([
                     ['approval_status','Requested']
                 ])->where('payment_status','Due');
-				
+
 			if($userType == 'Center')
 				$dueInvoiceAmountSql->where('center_id',$userCenterId);
 			$totalDueInvoiceAmount = $dueInvoiceAmountSql->sum('registration_fees');
@@ -167,7 +165,7 @@ class AdminController extends Controller
 				'totalNo' 			=> $totalRegisteredLearners,
 				'redirectTo'		=>'learner'
 			];
-			$dashboardComponents[]=$registeredLearnersData;	
+			$dashboardComponents[]=$registeredLearnersData;
 		}
 		if($approvedQualifications){
 			$approvedQualificationsSql= CenterQualification::where('status','Active');
@@ -181,7 +179,7 @@ class AdminController extends Controller
 				'totalNo' 			=> $totalApprovedQualifications,
 				'redirectTo'		=>'profile'
 			];
-			$dashboardComponents[]=$approvedQualificationsData;	
+			$dashboardComponents[]=$approvedQualificationsData;
 		}
 		if($certifiedLearners){
 			$certifiedLearnersSql= RegistrationLearner::whereNotNull('certificate_no');
@@ -189,7 +187,7 @@ class AdminController extends Controller
 				$certifiedLearnersSql->with(['registration'=> function($r) use($userCenterId){
 					$r->where('center_id',$userCenterId);
 				}]);
-			$totalCertifiedLearners = $certifiedLearnersSql->count();	
+			$totalCertifiedLearners = $certifiedLearnersSql->count();
 			$certifiedLearnersData = [
 				'name' 				=> 'Certified Learners',
 				'backgroundColor' 	=> '#cd148d',
@@ -197,7 +195,7 @@ class AdminController extends Controller
 				'redirectTo'		=>'certificate'
 			];
 			$dashboardComponents[]=$certifiedLearnersData;
-		}		
+		}
         return view('admin.dashbord', array('page_title'=>$page_title, 'data'=>$data,'dashboardComponents'=>$dashboardComponents));
     }
 
@@ -210,7 +208,7 @@ class AdminController extends Controller
 		$userType 			= Auth::user()->type;
         return view('welcome', $data);
 	}
-	
+
 	//admin users management
 	public function adminUserManagement(Request $request){
 		$userType = $request->type;
@@ -222,11 +220,11 @@ class AdminController extends Controller
 		$admin_user_id 		   = Auth::user()->id;
 		$add_action_id 	   	   = ($request->type=='Admin')?2:35; // Admin/Center User add
 		$add_permisiion 	   = $this->PermissionHasOrNot($admin_user_id,$add_action_id );
-		
+
 		$data['actions']['add_permisiion']= $add_permisiion;
         return view('admin.index', $data);
 	}
-	
+
 	//admin users list
 	public function ajaxAdminList(Request $request){
 		$userType = 'Admin';
@@ -258,7 +256,7 @@ class AdminController extends Controller
 			}else{
 				$user['user_profile_image'] = '<img height="40" width="50" src="'.$image_path.'/no-user-image.png'.'" alt="image" />';
 			}
-			
+
 			if($user->status == 0){			$user['status']="<button class='btn btn-xs btn-warning' disabled>In-active</button>";}
 			else if($user->status == 1){	$user['status']="<button class='btn btn-xs btn-success' disabled>Active</button>";}
 
@@ -266,10 +264,10 @@ class AdminController extends Controller
 			if($edit_permisiion>0){
 				$user['actions'] 	.=" <button title='Edit' onclick='admin_user_edit(".$user->id.")' id=edit_" . $user->id . " class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
 			}
-			if ($delete_permisiion > 0) {				
+			if ($delete_permisiion > 0) {
 					$user['actions'] .=" <button title='Delete' onclick='delete_admin_user(".$user->id.")' id='delete_" . $user->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
 			}
-			$return_arr[] = $user;		
+			$return_arr[] = $user;
 		}
 		return json_encode(array('data'=>$return_arr));
 	}
@@ -323,11 +321,11 @@ class AdminController extends Controller
 				];
 				//if admin user Image provided
 				$admin_image = $request->file('user_profile_image');
-				if (isset($admin_image)){					
+				if (isset($admin_image)){
 					$image_name 				= time();
 					$ext 						= $admin_image->getClientOriginalExtension();
 					$image_full_name 			= $image_name.'.'.$ext;
-					$upload_path 				= 'assets/images/user/admin/';					
+					$upload_path 				= 'assets/images/user/admin/';
 					$success					= $admin_image->move($upload_path,$image_full_name);
 					$data['user_profile_image'] = $image_full_name;
 				}
@@ -337,10 +335,10 @@ class AdminController extends Controller
 					$data['password'] = $password;
 					$response 	= User::create($data);
 					$user_id 	= $response->id;
-					
+
 					//insert all the group and the admin user's data into user group member with value 0 (no permission)
-					$user_groups = UserGroup::select('id')->where('type',1)->get();					
-					foreach ($user_groups as $user_group ) {							
+					$user_groups = UserGroup::select('id')->where('type',1)->get();
+					foreach ($user_groups as $user_group ) {
 						$group_member_data 				= new UserGroupMember();
 						$group_member_data->group_id	= $user_group['id'];
 						$group_member_data->user_id		= $user_id;
@@ -353,14 +351,14 @@ class AdminController extends Controller
 					if ($group!="") {
 						foreach ($group as $group ) {
 							$group_entry =  UserGroupMember::where('group_id', $group)->where('user_id', $user_id)->update(['status'=>1]);
-						}						
+						}
 					}
 				}
 				else if($request->id != ''){
-					if($request->password != ""){						
+					if($request->password != ""){
 						$data['password'] = bcrypt($request->password);
 					}
-					
+
 					$user 		= User::find($request->id);
 					$old_image 	= $user->user_profile_image;
 					if (isset($admin_image) && $old_image!="") {
@@ -368,7 +366,7 @@ class AdminController extends Controller
 						unlink($delete_img);
 					}
 					$user->update($data);
-					
+
 
 					$group = $request->input('group');
 
@@ -461,18 +459,18 @@ class AdminController extends Controller
 		$userType = ($request->type == 'Admin')?1:2;
 		$admin_user_id  = Auth::user()->id;
 		$groups 		= UserGroup::where('type',$userType)->get();
-		
+
 	/*	$groups = UserGroupMember::leftJoin('user_groups', 'user_groups.id', '=', 'user_group_members.group_id')
 									->where('user_id',$admin_user_id)
 									->select('user_groups.id', 'user_groups.group_name')
 									->get();*/
-									
+
 		//$return_arr = array();
 
 		return json_encode(array('data'=>$groups));
 	}
-	
-	
+
+
 	//Entry Admin User Group And App User Grou
 	public function admin_groups_entry_or_update(Request $request){
 		$rule = [
@@ -497,15 +495,15 @@ class AdminController extends Controller
 				];
 
 				if ($request->edit_id == '') {
-					
+
 					$response = UserGroup::create($data);
 					// Get group id
 					$group_id = $response->id;
-					
+
 					if ($request->type=='1') {
 						// Get Admin User
 						$admin_user_id = User::Select('id')->orderBy('id')->get();
-						
+
 						// Assign Admin user Group for all Admin user with status 0
 						foreach($admin_user_id as $admin_user_id){
 							$admin_user_group_member 			= new UserGroupMember();
@@ -528,7 +526,7 @@ class AdminController extends Controller
 						}
 					}
 				}
-				else{					
+				else{
 					$data = UserGroup::find($request->edit_id);
 					$data->group_name = $request->group_name;
 					$data->type = $request->type;
@@ -604,7 +602,7 @@ class AdminController extends Controller
 
     public function load_actions_for_group_permission($id){
     	$group_id = $id;
-		
+
     	$permission_details = DB::table('user_group_permissions as up')
     							->leftJoin('actions as wa', 'up.action_id', '=', 'wa.id')
     							->leftJoin('menus as m','wa.module_id','=','m.id')
@@ -613,7 +611,7 @@ class AdminController extends Controller
 								->orderBy('module_name','asc')
     							->select('up.*', 'wa.activity_name', 'm.module_name')
     							->get();
-								
+
 		return json_encode(array('data'=>$permission_details));
     }
 
@@ -666,12 +664,12 @@ class AdminController extends Controller
 		if($user->center_id){
 			$centerQualifications 	= Center::with('qualifications')->findOrFail($user->center_id);
 			$qualifications 		= $centerQualifications->qualifications;
-		}	
+		}
 		//dd($qualifications);
 		$data['qualifications'] =$qualifications;
 		return view('admin.profile_index',$data);
     }
-   
+
     public function profileInfo(){
     	$id 			= Auth::user()->id;
     	$profile_info 	= User::get()->where('id',$id);
@@ -700,10 +698,10 @@ class AdminController extends Controller
 					$return['errors'][] = $request->email." is already exists";
 					return json_encode($return);
 				}
-			}		
+			}
 			try{
-				DB::beginTransaction();	
-				
+				DB::beginTransaction();
+
 				$data = [
 					'first_name'	=> $request->first_name,
 					'last_name'		=> $request->last_name,
@@ -711,14 +709,14 @@ class AdminController extends Controller
 					'email'			=> $request->email,
 					'remarks'		=> $request->remarks,
 				];
-				
+
 				//if admin user Image provided
 				$admin_image = $request->file('user_profile_image');
-				if (isset($admin_image)){					
+				if (isset($admin_image)){
 					$image_name 				= time();
 					$ext 						= $admin_image->getClientOriginalExtension();
 					$image_full_name 			= $image_name.'.'.$ext;
-					$upload_path 				= 'assets/images/user/admin/';					
+					$upload_path 				= 'assets/images/user/admin/';
 					$success					= $admin_image->move($upload_path,$image_full_name);
 					$data['user_profile_image'] = $image_full_name;
 				}
@@ -729,9 +727,9 @@ class AdminController extends Controller
 					$delete_img = $upload_path.$old_image;
 					unlink($delete_img);
 				}
-				
+
 				$user->update($data);
-					
+
 				DB::commit();
 				$return['result'] = "1";
 				return json_encode($return);
@@ -742,7 +740,7 @@ class AdminController extends Controller
 				$return['errors'][] ="Faild to save";
 				return json_encode($return);
 			}
-		}			
+		}
 	}
 
 	public function updatePassword(Request $request){
@@ -755,16 +753,16 @@ class AdminController extends Controller
 			$return['errors'] = $validation->errors();
 			return json_encode($return);
         }
-        else{		
+        else{
 			try{
-				DB::beginTransaction();				
+				DB::beginTransaction();
 				$id = $request->change_pass_id;
 				$current_password = bcrypt($request->current_password);
 
 				$column_value = [
-					'password'=>$current_password,		
+					'password'=>$current_password,
 				];
-				
+
 				$data = User::find($id);
 				if ($current_password == $data['password']) {
 					$data->update($column_value);
@@ -791,25 +789,25 @@ class AdminController extends Controller
 		$user->unreadNotifications->markAsRead();
 	}
 
-	public function notificationHome($page){		
+	public function notificationHome($page){
 		$page_no= $page;
         $limit 	= 2;
         $start 	= ($page_no*$limit)-$limit;
         $end   	= $limit;
-		
+
 		$user = User::find(Auth::user()->id);
 		$notifications = $user->notifications()->offset($start)->limit($end)->get();
-		
+
 		$data['totalUnreadNotifications']= count($user->unreadNotifications);
 		$data['notifications']=$notifications;
 		return json_encode($data);
 	}
-	
+
 	public function notificationRead(){
 		$user = User::find(Auth::user()->id);
 		$user->unreadNotifications->markAsRead();
 	}
-	
+
 	public function ajaxNotificationList(){
 		$user = User::find(Auth::user()->id);
 		$notifications = $user->notifications;

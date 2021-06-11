@@ -38,12 +38,12 @@
 						<i class="fa fa-plus"></i>
 						Add New  Admin User
 					</button>
-				</div>    
+				</div>
 			</div>
 		</div>
 		<div class="main-card mb-3 card">
 			<div class="card-body">
-				<table class="table table-bordered table-hover admin_user_table" id="admin_user_table" style="width:100% !important"> 
+				<table class="table table-bordered table-hover admin_user_table" id="admin_user_table" style="width:100% !important">
 					<thead>
 						<tr>
 							<th width="100">Photo</th>
@@ -58,9 +58,9 @@
 					</tbody>
 				</table>
 			</div>
-		</div>           		
+		</div>
 	</div>
-</div>    
+</div>
 </div>
 <div class="modal fade" id="entry-form" >
 	<div class="modal-dialog modal-lg">
@@ -93,7 +93,7 @@
 											</div>
 										</div>
 									</div>
-								<!--	
+								<!--
 									<div class="form-group">
 										<label class="control-label col-md-2 col-sm-2 col-xs-6">Designation</label>
 										<div class="col-md-4 col-sm-4 col-xs-6">
@@ -102,8 +102,8 @@
 										<label class="control-label col-md-2 col-sm-2 col-xs-6" >Department</label>
 										<div class="col-md-4 col-sm-4 col-xs-4">
 											<input type="text" id="department_name" name="department_name"  class="form-control col-lg-12"/>
-										</div>						
-									</div>  
+										</div>
+									</div>
 								-->
 									<div class="form-row">
 										<div class="col-md-6">
@@ -119,12 +119,12 @@
 											</div>
 										</div>
 									</div>
-									<!--<div class="form-group"> 
+									<!--<div class="form-group">
 										<label class="control-label col-md-2 col-sm-2 col-xs-6" >Address</label>
 										<div class="col-md-10 col-sm-10  col-xs-6">
 											<input type="text" id="address" name="address" class="form-control col-lg-12" />
 										</div>
-									</div>-->	
+									</div>-->
 									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
@@ -143,7 +143,7 @@
 										<div class="col-md-12">
 											<div class="position-relative form-group">
 												<label>Remarks</label>
-												<textarea rows="2" cols="100" id="remarks" name="remarks" class="form-control col-lg-12"></textarea> 
+												<textarea rows="2" cols="100" id="remarks" name="remarks" class="form-control col-lg-12"></textarea>
 											</div>
 										</div>
 									</div>
@@ -170,7 +170,7 @@
 									<div id="form_submit_error" class="text-center" style="display:none"></div>
 								</div>
 							</div>
-						</form>	
+						</form>
 					</div>
 				</div>
 			</div>
@@ -178,11 +178,11 @@
 				<div class="col-md-12" style="display: flex; flex-direction: row;">
 					<div class="col-md-3 text-left">
 						@if($actions['add_permisiion']>0)
-						<button type="submit" id="save_admin_info" class="btn btn-success  btn-lg btn-block">Save</button>                    
-						
-					@endif   
+						<button type="submit" id="save_admin_info" class="btn btn-success  btn-lg btn-block">Save</button>
+
+					@endif
 					</div>
-					<div class="col-md-9 text-right">						
+					<div class="col-md-9 text-right">
 						<button type="button" id="clear_button" class="btn btn-warning">Clear</button>
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 					</div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -152,7 +152,7 @@ class System extends Model
         $now = date('Y-m-d H:i:s');
         try{
 
-            $user_info=\App\User::where('id',$users_id)->first();
+            $user_info=\App\Models\User::where('id',$users_id)->first();
 
             if(isset($user_info)){
                 $users_id=$user_info->id;
@@ -177,14 +177,14 @@ class System extends Model
 
             });
 
-            //\App\System::EventLogWrite('send-mail,forget-password-verification',json_encode($data));
+            //\App\Models\System::EventLogWrite('send-mail,forget-password-verification',json_encode($data));
             \Session::flash('errormessage', 'Please check your inbox!');
 
 
         }catch (\Exception $e){
 
             $message = "Message : ".$e->getMessage().", File : ".$e->getFile().", Line : ".$e->getLine();
-            \App\System::ErrorLogWrite($message);
+            \App\Models\System::ErrorLogWrite($message);
             \Session::flash('errormessage', $e->getMessage());
             return false;
         }

@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Providers;
-use App\Setting;
-use App\Menu;
+use App\Models\Setting;
+use App\Models\Menu;
 use App\Center;
 use Auth;
 use Illuminate\Support\ServiceProvider;
@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
 			$centerName	="Edupro Admin";
 			if($user->type == 'Center'){
 				$center		  	= Center::find($user->center_id);
-				$centerName		=	$center->short_name;		
+				$centerName		=	$center->short_name;
 			}
 			$view->with('centerNamee', $centerName);
 		});
@@ -88,8 +88,8 @@ class AppServiceProvider extends ServiceProvider
 					$parent_menu['sub_menus'] = $submenus;
 					$menu_n_submenu_array[] = $parent_menu;
 				}
-				
-				
+
+
 			}
 			//dd($menu_n_submenu_array);
 			$view->with('menus',$menu_n_submenu_array);
