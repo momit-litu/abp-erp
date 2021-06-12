@@ -11,7 +11,7 @@
 							<span class="d-inline-block pr-2">
 								<i class="pe-7s-menu icon-gradient bg-mean-fruit"></i>
 							</span>
-							<span class="d-inline-block">Genaral Settings</span>
+							<span class="d-inline-block">General Settings</span>
 						</div>
 						<div class="page-title-subheading opacity-10">
 							<nav class="" aria-label="breadcrumb">
@@ -110,11 +110,11 @@
 							</div>
 						@endif
 					</div>
-				</form>	
+				</form>
 			</div>
-		</div>           		
+		</div>
 	</div>
-</div>    
+</div>
 </div>
 @endsection
 @section('JScript')

@@ -79,7 +79,7 @@
                 <div class="modal-body">
                     <div class="main-card mb-3 card">
                         <div class="card-body">
-                            <form id="admin_user_form" autocomplete="off" name="admin_user_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
+                            <form id="student_form" autocomplete="off" name="student_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
                                 @csrf
                                 <input type="hidden" name="id" id="id">
                                 <div class="row">
@@ -87,29 +87,18 @@
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="company_name" class="">First Name<span class="required">*</span></label>
+                                                    <label for="first_name" class="">First Name<span class="required">*</span></label>
                                                     <input type="text" id="first_name" name="first_name" required class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="short_name" class="">Last Name</label>
+                                                    <label for="last_name" class="">Last Name</label>
                                                     <input type="text" id="last_name" name="last_name" class="form-control col-lg-12" />
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--
-                                            <div class="form-group">
-                                                <label class="control-label col-md-2 col-sm-2 col-xs-6">Designation</label>
-                                                <div class="col-md-4 col-sm-4 col-xs-6">
-                                                    <input type="text" id="designation_name" name="designation_name"  class="form-control col-lg-12"/>
-                                                </div>
-                                                <label class="control-label col-md-2 col-sm-2 col-xs-6" >Department</label>
-                                                <div class="col-md-4 col-sm-4 col-xs-4">
-                                                    <input type="text" id="department_name" name="department_name"  class="form-control col-lg-12"/>
-                                                </div>
-                                            </div>
-                                        -->
+
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
@@ -135,19 +124,15 @@
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label>Address<span class="required">*</span></label>
-                                                    <textarea rows="2" cols="100" id="address" name="address" class="form-control col-lg-12"></textarea>
+                                                    <input type="text" id="address" name="address" required class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label>Date Of Birth<span class="required">*</span></label>
-                                                    <input class="datepicker" data-date-format="mm/dd/yyyy">
-
-                                                    {{--
-                                                                                                        <input type="text" id="date_of_birth" name="date_of_birth" required class="form-control col-lg-12"/>
-                                                    --}}
+                                                    <label>Date of Birth <span class="required">*</span></label>
+                                                    <input type="date" id="date_of_birth" name="date_of_birth" required class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
 
@@ -176,7 +161,6 @@
 									</span>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div id="form_submit_error" class="text-center" style="display:none"></div>
@@ -189,10 +173,7 @@
                 <div class="modal-footer">
                     <div class="col-md-12" style="display: flex; flex-direction: row;">
                         <div class="col-md-3 text-left">
-                            @if($actions['add_permisiion']>0)
-                                <button type="submit" id="save_admin_info" class="btn btn-success  btn-lg btn-block">Save</button>
-
-                            @endif
+                                <button type="submit" id="save_student" class="btn btn-success  btn-lg btn-block">Save</button>
                         </div>
                         <div class="col-md-9 text-right">
                             <button type="button" id="clear_button" class="btn btn-warning">Clear</button>
@@ -351,6 +332,95 @@
 	const user_type = "<?php echo $userType; ?>";
 </script>
 <script type="text/javascript" src="{{ asset('assets/js/page-js/student/student.js')}}"></script>
+<script>
+
+
+    const editAddForm = $('.edit-add-form');
+    editAddForm.validate({
+        errorElement: "em",
+        onkeyup: false,
+        errorPlacement: function (error, element) {
+            error.addClass("help-block");
+            element.parents(".form-group").addClass("has-feedback");
+
+            if (element.parents(".form-group").length) {
+                error.insertAfter(element.parents(".form-group").first().children().last());
+            } else if (element.hasClass('select2') || element.hasClass('select2-ajax-custom') || element.hasClass('select2-ajax')) {
+                error.insertAfter(element.parents(".form-group").first().find('.select2-container'));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).parents(".form-group").addClass("has-error").removeClass("has-success");
+            $(element).closest('.help-block').remove();
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).parents(".form-group").addClass("has-success").removeClass("has-error");
+        },
+        rules: {
+            first_name: {
+                required: true
+            },
+            last_name: {
+                required: true,
+               // pattern: "^[\\s-'\u0980-\u09ff]{1,255}$",
+            },
+
+            institute_id: {
+                required: true,
+            },
+            course_fee: {
+                required: true,
+                min: 1
+            },
+            cover_image: {
+                accept: "image/*",
+            },
+            description: {
+                required: true,
+            },
+            eligibility: {
+                required: true,
+            },
+            prerequisite: {
+                required: true,
+            },
+
+
+        },
+        messages: {
+            title_bn: {
+                pattern: "This field is required in Bangla.",
+            },
+            code: {
+                remote: "Code already in use!",
+            }
+        },
+        submitHandler: function (htmlForm) {
+            $('.overlay').show();
+            htmlForm.submit();
+        }
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $(input).parent().find('.avatar-preview img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+
+    $(document).ready(function () {
+        $('#cover_image').change(function () {
+            readURL(this); //preview image
+            editAddForm.validate().element("#cover_image");
+        });
+    })
+</script>
+
 @endsection
 
 

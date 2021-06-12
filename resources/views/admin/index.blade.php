@@ -166,9 +166,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<div class="col-md-12 col-sm-12 col-xs-12">
-									<div id="form_submit_error" class="text-center" style="display:none"></div>
-								</div>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div id="form_submit_error" class="text-center" style="display:none"></div>
+                                </div>
 							</div>
 						</form>
 					</div>

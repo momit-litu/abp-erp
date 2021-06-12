@@ -1,4 +1,5 @@
 
+
 $('.modal').on('hide.bs.modal', function (e) {
 	clear_form();
   })
@@ -20,7 +21,7 @@ $('.modal').on('hide.bs.modal', function (e) {
 		"showMethod": "fadeIn",
 		"hideMethod": "fadeOut"
 	};
-	
+
 
 
 // className: danger, success, info, primary, default, warning
@@ -36,7 +37,7 @@ function success_or_error_msg(div_to_show, class_name, message, field_id){
 
 function clear_form(){
 	$('.form')[0].reset();
-	$('.form').find('input[type=hidden]').each(function(){    
+	$('.form').find('input[type=hidden]').each(function(){
         this.value = "";
     });
 }
@@ -45,13 +46,13 @@ $(document).ready(function () {
 	// for get site url
 	var url = $('.site_url').val();
 	var page =1;
-	
+
 	$('.openDropdown').on('click', function (event) {
 		event.stopPropagation();
 		//$(this).toggleClass('open');
 	});
-	
-	
+
+
 	set_notification_time_out_fn = () =>{
         setTimeout(function(){
             loadNotifications();
@@ -74,7 +75,7 @@ $(document).ready(function () {
 			loadNotifications();
 		}
 	}
-	
+
 	loadNotifications = () =>{
 		$.ajax({
 			url: url+'/notifications/'+page,
@@ -92,7 +93,7 @@ $(document).ready(function () {
 					  hour: '2-digit',
 					  minute: '2-digit',
 					});
-					
+
 					var read_status_class 	= (notification.read_at==null)?"alert-danger":"";
 					html +=' <li class="'+read_status_class+'"> ' +
 							'<a href="javascript:void(0)"> ' +
@@ -116,17 +117,17 @@ $(document).ready(function () {
 		page++;
 		//set_notification_time_out_fn()
 	}
-	
+
 	loadNotifications();
-	
+
 	loadMoreNotofication = () =>{
 		loadNotifications();
 	}
-	
+
 	loadAllNotofication = () =>{
 		window.location.href = url+"/notification";
 	}
-	
+
 });
 
 

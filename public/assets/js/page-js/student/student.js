@@ -51,9 +51,12 @@ $(document).ready(function () {
 		}
 	});
 
+
 	//Entry And Update Function For Module
 	$("#save_student").on('click',function(){
 		event.preventDefault();
+
+		console.log('save_student')
 		$.ajaxSetup({
 			headers:{
 				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
@@ -62,17 +65,24 @@ $(document).ready(function () {
 
 		var formData = new FormData($('#student_form')[0]);
 
+		console.log($.trim($('#first_name').val()))
+
 		if($.trim($('#first_name').val()) == ""){
-			success_or_error_msg('#master_message_div','danger',"Please enter first name","#first_name");
+            console.log('$.trim($().val())')
+
+            success_or_error_msg('#form_submit_error','danger',"Please enter first name","#first_name");
+		}
+		if($.trim($('#last_name').val()) == ""){
+			success_or_error_msg('#form_submit_error','danger',"Please enter first name","#first_name");
 		}
 		else if($.trim($('#email').val()) == ""){
-			success_or_error_msg('#master_message_div','danger',"Please enter email","#email");
+			success_or_error_msg('#form_submit_error','danger',"Please enter email","#email");
 		}
 		else if($.trim($('#contact_no').val()) == "" || !($.isNumeric($('#contact_no').val()))){
-			success_or_error_msg('#master_message_div','danger',"Please enter contact no","#contact_no");
+			success_or_error_msg('#form_submit_error','danger',"Please enter contact no","#contact_no");
 		}
 		else if($.trim($('#date_of_birth').val()) == ""){
-			success_or_error_msg('#master_message_div','danger',"Please enter date of birth","#date_of_birth");
+			success_or_error_msg('#form_submit_error','danger',"Please enter date of birth","#date_of_birth");
 		}
 		else{
 			$.ajax({
@@ -149,7 +159,6 @@ $(document).ready(function () {
 					var photo ='<img src="'+student_image_url+'/no-user-image.png" alt="student Image" class="img img-responsive">';
 				}
                 console.log(data)
-
 				var modalHtml  ="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 '><div class='thumbnail text-center photo_view_postion_b' ><div class='profile_image'>"+photo+"</div></div></div><div class='col-lg-8 '>";
 					modalHtml +="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 col-md-4 '><strong>First Name :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['first_name']+"</div></div>";
 					modalHtml +="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 col-md-4 '><strong>Last Name :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['last_name']+"</div></div>";
@@ -158,6 +167,7 @@ $(document).ready(function () {
 					modalHtml +="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 col-md-4 '><strong>Contact No. :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['contact_no']+"</div></div>";
 					modalHtml +="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 col-md-4 '><strong>Address :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+address+"</div></div>";
 					modalHtml +="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 col-md-4 '><strong>National ID No. :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+nid_no+"</div></div>";
+					modalHtml +="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 col-md-4 '><strong>Centre :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['center']['name']+"</div></div>";
 					modalHtml +="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+statusHtml+"</div></div>";
 					modalHtml +="<div class='col-lg-12  margin-top-5 '><div class='col-lg-3 col-md-4 '><strong>Remarks :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+remarks+"</div></div>";
 					modalHtml +="</div></div>";

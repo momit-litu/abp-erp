@@ -25,11 +25,11 @@
 </head>
 
 <body>
-    
+
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
     @include('layout.header')
 	<div class="app-main">
-        @include('layout.sidebar')    
+        @include('layout.sidebar')
 		@yield('content')
         <div class="body-block-example-1 d-none">
             <div class="loader bg-transparent no-shadow p-0">
