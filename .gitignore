@@ -13,8 +13,9 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-.env
+/.env
 .phpunit.result.cache
-composer.lock
+/composer.lock
 /storage/worker.log
 /storage/monitor_token
+/vendor
