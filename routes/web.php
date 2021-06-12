@@ -99,5 +99,11 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/student',array('as'=>'Student Entry', 'action_id'=>'39', 'uses' =>'StudentController@createOrEdit'));
 	Route::get('/student/delete/{id}',array('as'=>'Student Delete', 'action_id'=>'41', 'uses' =>'StudentController@destroy'));
 
+
+	// expense
+	Route::get('expense/expense-category',array('as'=>'Expense Category' , 'action_id'=>'66', 'uses' =>'ExpenseController@categoryIndex'));
+	Route::get('/expense/expense-category-list',array('as'=>'Expense Category List' ,'action_id'=>'67', 'uses' =>'ExpenseController@ajaxExpenseCategoryList'));
+
+
 });
 
