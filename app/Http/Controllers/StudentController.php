@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 use Auth;
@@ -222,7 +223,7 @@ class StudentController extends Controller
                     $profileImage = $image_full_name;
                 }
 
-                Student::create([
+                $studentCreate = Student::create([
                     'first_name' => $request['first_name'],
                     'last_name' => $request['last_name'],
                     'email' => $request['email'],
@@ -234,6 +235,19 @@ class StudentController extends Controller
                     'user_profile_image' => $profileImage,
                     'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
                 ]);
+                //dd($student->id);
+                User::create([
+                    'first_name' => $request['first_name'],
+                    'last_name' => $request['last_name'],
+                    'email' => $request['email'],
+                    'contact_no' => $request['contact_no'],
+                    'remarks' => $request['remarks'],
+                    'user_profile_image' => $profileImage,
+                    'status' => (isset($request['status'])) ? 'Active' : 'Inactive',
+                    'student_id'=> $studentCreate->id,
+                    'password'=>bcrypt($request['contact_no'])
+                ]);
+
                 DB::commit();
                 $return['response_code'] = 1;
                 $return['message'] = "Student saved successfully";
@@ -258,6 +272,8 @@ class StudentController extends Controller
             // only edopro admin can edit
             // $hardUpdate_permission = $this->PermissionHasOrNot($admin_user_id,42);
             $student = Student::findOrFail($id);
+            $user = User::where('student_id',$id)->firstOrFail();
+
 
             if (empty($student)) {
                 return json_encode(array('response_code' => 0, 'errors' => "Invalid request! No student found"));
@@ -298,6 +314,15 @@ class StudentController extends Controller
                 $student->remarks = $request['remarks'];
                 $student->status = (isset($request['status'])) ? "Active" : 'Inactive';
 
+
+                $user->first_name = $request['first_name'];
+                $user->last_name = $request['last_name'];
+                $user->email = $request['email'];
+                $user->contact_no = $request['contact_no'];
+                $user->remarks = $request['remarks'];
+                $user->status = (isset($request['status'])) ? "Active" : 'Inactive';
+
+
                 $StudentImage = $photo;
                 if (isset($StudentImage)) {
                     $image_name = time();
@@ -306,8 +331,10 @@ class StudentController extends Controller
                     $upload_path = 'assets/images/student/';
                     $success = $StudentImage->move($upload_path, $image_full_name);
                     $student->user_profile_image = $image_full_name;
+                    $user->user_profile_image = $image_full_name;
                 }
                 $student->update();
+                $user->update();
 
                 DB::commit();
                 $return['response_code'] = 1;
