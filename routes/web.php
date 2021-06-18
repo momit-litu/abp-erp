@@ -99,6 +99,22 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/student',array('as'=>'Student Entry', 'action_id'=>'39', 'uses' =>'StudentController@createOrEdit'));
 	Route::get('/student/delete/{id}',array('as'=>'Student Delete', 'action_id'=>'41', 'uses' =>'StudentController@destroy'));
 
+	//courseCategory
+    //TODO the action id is copied from student
+	Route::get('/course-category',array('as'=>'Course Category' , 'action_id'=>'38', 'uses' =>'CourseCategoryController@index'));
+	Route::get('/course-categories',array('as'=>'Course Categories List' ,  'action_id'=>'38','uses' =>'CourseCategoryController@showList'));
+	Route::get('/course-category/{id}',array('as'=>'Course Category View' , 'action_id'=>'38', 'uses' =>'CourseCategoryController@show'));
+	Route::post('/course-category',array('as'=>'Course Category Entry', 'action_id'=>'39', 'uses' =>'CourseCategoryController@createOrEdit'));
+	Route::get('/course-category/delete/{id}',array('as'=>'Course Category Delete', 'action_id'=>'41', 'uses' =>'CourseCategoryController@destroy'));
+
+	//course
+    //TODO the action id is copied from student
+	Route::get('course',array('as'=>'Course ' , 'action_id'=>'38', 'uses' =>'CourseController@index'));
+	Route::get('/course',array('as'=>'Course List' ,  'action_id'=>'38','uses' =>'CourseCateCourseControllergoryController@showList'));
+	Route::get('/course/{id}',array('as'=>'Course View' , 'action_id'=>'38', 'uses' =>'CourseController@show'));
+	Route::post('/course',array('as'=>'Course Entry', 'action_id'=>'39', 'uses' =>'CourseController@createOrEdit'));
+	Route::get('/course/delete/{id}',array('as'=>'Course Delete', 'action_id'=>'41', 'uses' =>'CourseController@destroy'));
+
 
 	// expense
 	Route::get('expense/expense-category',array('as'=>'Expense Category' , 'action_id'=>'66', 'uses' =>'ExpenseController@categoryIndex'));
