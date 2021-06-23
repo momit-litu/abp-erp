@@ -204,6 +204,8 @@
 {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
 <script src="{{ asset('assets/js/sweetalert.min.js')}}"></script>
 <script src="{{ asset('assets/js/jquery-ui.min.js')}}"></script>
+
+
 @yield('JScript')
 
 

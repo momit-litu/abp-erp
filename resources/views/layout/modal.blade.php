@@ -53,18 +53,24 @@
 <div class="modal fade" id="generic_modal_lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document"> <!-- modal-lg-->
     <div class="modal-content">
-      <div class="modal-header hidden-print">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabelLg">set the titel</h4>
-      </div>
-      <div class="modal-body" id="modalBodyLg"> 
-			Set the body
+      <div class="modal-header">
+				<h5 class="modal-title" id="myModalLabelLg"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+      
+      <div class="modal-body" > 
+        <div class="main-card mb-3 card">
+					<div class="card-body" id="modalBodyLg">
+          </div>
+        </div>
       </div>
       <div class="modal-footer hidden-print">
-		<button class="btn btn-primary  print-button-lg" style="display:none"  onclick="printWindow()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print</button>
-		<button class="btn btn-primary hidden-print" id="print-button-t" style="display:none"  onclick="printTranscript()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print Transcript</button>
-		<button class="btn btn-primary hidden-print" id="print-button-c" style="display:none"  onclick="printCertificate()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print Certificate</button>
-		<button type="button" class="btn btn-danger hidden-print" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary  print-button-lg" style="display:none"  onclick="printWindow()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print</button>
+        <button class="btn btn-primary hidden-print" id="print-button-t" style="display:none"  onclick="printTranscript()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print Transcript</button>
+        <button class="btn btn-primary hidden-print" id="print-button-c" style="display:none"  onclick="printCertificate()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print Certificate</button>
+        <button type="button" class="btn btn-danger hidden-print" data-dismiss="modal">Close</button>
 	  </div>
     </div>
   </div>
