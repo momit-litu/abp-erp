@@ -14,31 +14,31 @@ $(document).ready(function () {
 		radioClass: 'iradio_flat-green'
 	});
     actionAdd = function actionAdd(){
-        $("#form-title").html('<i class="fa fa-plus"></i> Add  New Expense Category');
+        $("#form-title").html('<i class="fa fa-plus"></i> Add  New Expense Head');
         $("#clear_button").show();
-        $("#save_expense_category").html('Save');
+        $("#save_expense_head").html('Save');
         $('#entry-form').modal('show');
     }
 
 
 	//for show menus list
-	 menu_datatable = $('#expense_category_table').DataTable({
+	 expense_head_datatable = $('#expense_head_table').DataTable({
 		destroy: true,
 		"order": [[ 0, 'desc' ]],
 		"processing": true,
 		"serverSide": false,
-		"ajax": url+"/expense/expense-category-list",
+		"ajax": url+"/expense/expense-head-list",
 		"aoColumns": [
 			{ mData: 'id'},
-			{ mData: 'category_name' },
-			{ mData: 'parent_name'},
+			{ mData: 'expense_head_name' },
+			{ mData: 'category_name'},
 			{ mData: 'status', className: "text-center"},
 			{ mData: 'actions' , className: "text-center"},
 		],
 	});
 
 //Entry And Update Function For Module
-    $("#save_expense_category").on('click',function(){
+    $("#save_expense_head").on('click',function(){
         event.preventDefault();
         $.ajaxSetup({
             headers:{
@@ -46,17 +46,17 @@ $(document).ready(function () {
             }
         });
 
-        var formData = new FormData($('#expense_category_form')[0]);
+        var formData = new FormData($('#expense_head_form')[0]);
 
-        if($.trim($('#expense_category_name').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Insert Expense Category","#expense_category_name");
+        if($.trim($('#expense_head_name').val()) == ""){
+            success_or_error_msg('#master_message_div','danger',"Please Insert Expense Head","#expense_head_name");
         }
-        else if($.trim($('#parent_id').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Select a Parent Id","#parent_id");
+        else if($.trim($('#expense_category_id').val()) == ""){
+            success_or_error_msg('#master_message_div','danger',"Please Select a Expense Category Id","#expense_category_id");
         }
         else{
             $.ajax({
-                url: url+"/expense/expense-category",
+                url: url+"/expense/expense-head",
                 type:'POST',
                 data:formData,
                 async:false,
@@ -64,6 +64,7 @@ $(document).ready(function () {
                 contentType:false,
                 processData:false,
                 success: function(data){
+                    console.log(data);
                     var response = JSON.parse(data);
                     if(response['response_code'] == 0){
                         var errors	= response['errors'];
@@ -82,7 +83,7 @@ $(document).ready(function () {
                     else{
                         toastr['success']( 'Saved Successfully', 'Admin User '+$('#first_name').val());
                         $('.modal').modal('hide')
-                        menu_datatable.ajax.reload();
+                        expense_head_datatable.ajax.reload();
                         clear_form();
                         $("#save_module").html('Save');
                         $("#edit_id").val('');
@@ -99,21 +100,21 @@ $(document).ready(function () {
         clear_form();
     });
 //Edit function for Module
-    expenseCategoryEdit = function expenseCategoryEdit(id){
+        expenseHeadEdit = function expenseHeadEdit(id){
         var edit_id = id;
-        $("#form-title").html('<i class="fa fa-plus"></i> Edit Expense Category');
+        $("#form-title").html('<i class="fa fa-plus"></i> Edit Expense Head');
 
         $.ajax({
-            url: url+'/expense/expense-category-list/'+edit_id,
+            url: url+'/expense/expense-head-list/'+edit_id,
             cache: false,
             success: function(response){
                 var response = JSON.parse(response);
-                var data = response['expneseCategory'];
+                var data = response['expneseHead'];
 
-                $("#save_expense_category").html('Update');
+                $("#save_expense_head").html('Update');
                 $("#clear_button").hide();
-                $("#expense_category_name").val(data['category_name']);
-                $("#parent_id").val(data['parent_id']);
+                $("#expense_head_name").val(data['expense_head_name']);
+                $("#expense_category_id").val(data['expense_category_id']);
                 $("#edit_id").val(data['id']);
                 (data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
                 $('#entry-form').modal('show');
@@ -121,7 +122,7 @@ $(document).ready(function () {
         });
     }
     //Delete Module
-    expenseCategoryDelete = function expenseCategoryDelete(id){
+    expenseHeadDelete = function expenseHeadDelete(id){
         var delete_id = id;
         swal({
             title: "Are you sure?",
@@ -132,7 +133,7 @@ $(document).ready(function () {
         }).then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: url+'/expense/expense-category-delete/'+delete_id,
+                    url: url+'/expense/expense-head-delete/'+delete_id,
                     cache: false,
                     success: function(data){
                         var response = JSON.parse(data);
@@ -141,7 +142,7 @@ $(document).ready(function () {
                         }
                         else{
                             success_or_error_msg('#master_message_div',"success",response['message']);
-                            menu_datatable.ajax.reload();
+                            expense_head_datatable.ajax.reload();
                         }
                     }
                 });

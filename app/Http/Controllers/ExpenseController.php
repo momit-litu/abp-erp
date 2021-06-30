@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\ExpenseHead;
 use App\Models\ExpneseCategory;
 use Illuminate\Http\Request;
 use Validator;
@@ -24,7 +26,7 @@ class ExpenseController extends Controller
 		$data['page_title'] = $this->page_title;
 		$data['module_name']= "Expenses";
 		$data['sub_module']	= "Expense Category";
-		
+
 		$data['parentExpneseCategory']= ExpneseCategory::whereNull('parent_id')->get();
 		// action permissions
         $admin_user_id  	= Auth::user()->id;
@@ -33,7 +35,7 @@ class ExpenseController extends Controller
         $data['actions']['add_permisiion']= $add_permisiion;
 		return view('expense.expense_category',$data);
 	}
-	
+
 	public function ajaxExpenseCategoryList(){
 		$admin_user_id 		= Auth::user()->id;
 		$edit_action_id 	= 68;
@@ -41,11 +43,14 @@ class ExpenseController extends Controller
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
 
-		$expenseCategoryList = ExpneseCategory::Select('id','category_name', 'parent_id', 'status')->orderBy('created_at','desc')->get();
+		$expenseCategoryList = ExpneseCategory::Select('id','category_name', 'parent_id', 'status')->with('parent')->orderBy('created_at','desc')->get();
 
 		$return_arr = array();
 		foreach($expenseCategoryList as $expenseCategory){
-			$expenseCategory['status']=($expenseCategory->status == 1)?"<button class='btn btn-sm btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-success' disabled>In-active</button>";
+
+		    $expenseCategory['parent_name'] = (is_null($expenseCategory->parent_id)) ? "" : $expenseCategory->parent->category_name;
+
+            $expenseCategory['status']=($expenseCategory->status == 1)?"<button class='btn btn-sm btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-success' disabled>In-active</button>";
 			$expenseCategory['actions'] = "";
 
 			if($edit_permisiion>0){
@@ -55,10 +60,324 @@ class ExpenseController extends Controller
 				$expenseCategory['actions'] .=" <button onclick='expenseCategoryDelete(".$expenseCategory->id.")' id='delete_" . $expenseCategory->id . "' class='btn btn-xs btn-hover-shine btn-danger' ><i class='fa fa-trash'></i></button>";
 			}
 			$return_arr[] = $expenseCategory;
-			
+
 		}
 		return json_encode(array('data'=>$return_arr));
 	}
-	
+    public function createOrEdit(Request $request)
+    {
+        $admin_user_id 		= Auth::user()->id;
+        $entry_permission 	= $this->PermissionHasOrNot($admin_user_id,66);
+
+        // update
+        if(!is_null($request->input('edit_id')) && $request->input('edit_id') != ""){
+            $response_data 	=  $this->editExpenseCategory($request->all(), $request->input('edit_id') );
+        }
+        // new entry
+        else{
+            $response_data 	=  $this->createExpenseCategory($request->all());
+        }
+        return $response_data;
+    }
+
+    public function show($id)
+    {
+        if($id=="") return 0;
+        $expneseCategory = ExpneseCategory::findOrFail($id);
+        return json_encode(array('expneseCategory'=>$expneseCategory));
+    }
+
+    public function destroy($id)
+    {
+        if($id==""){
+            return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
+        }
+        $expense = ExpneseCategory::with('child')->findOrFail($id);
+        $is_deletable = (count($expense->child)==0)?1:0; // 1:deletabe, 0:not-deletable
+        if(empty($expense)){
+            return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Expense Category found"));
+        }
+        try {
+            DB::beginTransaction();
+            if($is_deletable){
+                ExpneseCategory::where('parent_id', $expense->id)->delete();
+                $expense->delete();
+                $return['message'] = "Expense Category Deleted successfully";
+            }
+            else{
+                $expense->status = 'Inactive';
+                $expense->update();
+                $return['message'] = "Deletation is not possible, but deactivated the Expense Category";
+            }
+
+            DB::commit();
+            $return['response_code'] = 1;
+
+            return json_encode($return);
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            $return['response_code'] 	= 0;
+            $return['errors'] = "Failed to delete !".$e->getMessage();
+            return json_encode($return);
+        }
+    }
+
+    private function createExpenseCategory($request){
+        //dd($request);
+        try {
+            $rule = [
+                'expense_category_name'     => 'required',
+
+            ];
+            $validation = \Validator::make($request, $rule);
+
+            if($validation->fails()){
+                $return['response_code'] = "0";
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            }
+            else{
+                DB::beginTransaction();
+                ExpneseCategory::create([
+                    'category_name'     =>  $request['expense_category_name'],
+                    'parent_id' 		=>  $request['parent_id'],
+                    'status' 	=> (isset($request['status']))?$request['status']:'Inactive'
+                ]);
+                DB::commit();
+                $return['response_code'] = 1;
+                $return['message'] = "Expense Category saved successfully";
+                return json_encode($return);
+            }
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            $return['response_code'] 	= 0;
+            $return['errors'] = "Failed to save !".$e->getMessage();
+            return json_encode($return);
+        }
+    }
+
+    private function editExpenseCategory($request, $id){
+        try {
+            if($id==""){
+                return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
+            }
+            $expneseCategory = ExpneseCategory::findOrFail($id);
+            if(empty($expneseCategory)){
+                return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Expense Category found"));
+            }
+
+            $rule = [
+                'expense_category_name'     => 'required',
+            ];
+            $validation = \Validator::make($request, $rule);
+
+            if($validation->fails()){
+                $return['response_code'] = "0";
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            }
+            else{
+
+                DB::beginTransaction();
+                $expneseCategory->category_name = $request['expense_category_name'];
+                $expneseCategory->parent_id = $request['parent_id'];
+                $expneseCategory->status =  (isset($request['status']))?'Active':'Inactive';
+                $expneseCategory->update();
+
+                DB::commit();
+                $return['response_code'] = 1;
+                $return['message'] = "Expense Category Updated successfully";
+                return json_encode($return);
+            }
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            $return['response_code'] 	= 0;
+            $return['errors'] = "Failed to update !".$e->getMessage();
+            return json_encode($return);
+        }
+
+
+    }
+
+    // Expense Head
+
+    public function expenseHeadIndex(){
+        $data['page_title'] = $this->page_title;
+        $data['module_name']= "Expenses";
+        $data['sub_module']	= "Expense Head";
+
+        $data['parentExpneseHead']= ExpneseCategory::all();
+        // action permissions
+        $admin_user_id  	= Auth::user()->id;
+        $add_action_id  	= 73;// Module Management
+        $add_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
+        $data['actions']['add_permisiion']= $add_permisiion;
+        return view('expense.expense_head',$data);
+    }
+
+    public function ajaxExpenseHeadList(){
+        $admin_user_id 		= Auth::user()->id;
+        $edit_action_id 	= 75;
+        $delete_action_id 	= 76;
+        $edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
+        $delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
+
+        $expenseHeadList = ExpenseHead::Select('id', 'expense_head_name', 'expense_category_id', 'status')->with('expensecategory')->orderBy('created_at','desc')->get();
+
+        $return_arr = array();
+        foreach($expenseHeadList as $expenseHead){
+            $expenseHead['category_name'] = (is_null($expenseHead->expense_category_id)) ? "" : $expenseHead->expensecategory->category_name;
+            $expenseHead['status']=($expenseHead->status == 1)?"<button class='btn btn-sm btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-success' disabled>In-active</button>";
+            $expenseHead['actions'] = "";
+
+            if($edit_permisiion>0){
+                $expenseHead['actions'] .="<button onclick='expenseHeadEdit(".$expenseHead->id.")' id=edit_" . $expenseHead->id . "  class='btn btn-xs btn-hover-shine  btn-primary module-edit'><i class='lnr-pencil'></i></button>";
+            }
+            if ($delete_permisiion>0) {
+                $expenseHead['actions'] .=" <button onclick='expenseHeadDelete(".$expenseHead->id.")' id='delete_" . $expenseHead->id . "' class='btn btn-xs btn-hover-shine btn-danger' ><i class='fa fa-trash'></i></button>";
+            }
+            $return_arr[] = $expenseHead;
+
+        }
+        return json_encode(array('data'=>$return_arr));
+    }
+
+    public function ExpensHeadcreateOrEdit(Request $request)
+    {
+        $admin_user_id 		= Auth::user()->id;
+        $entry_permission 	= $this->PermissionHasOrNot($admin_user_id,73);
+
+        // update
+        if(!is_null($request->input('edit_id')) && $request->input('edit_id') != ""){
+            $response_data 	=  $this->editExpenseHead($request->all(), $request->input('edit_id') );
+        }
+        // new entry
+        else{
+            $response_data 	=  $this->createExpenseHead($request->all());
+        }
+        return $response_data;
+    }
+    private function createExpenseHead($request){
+        //dd($request);
+        try {
+            $rule = [
+                'expense_head_name'     => 'required',
+
+            ];
+            $validation = \Validator::make($request, $rule);
+
+            if($validation->fails()){
+                $return['response_code'] = "0";
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            }
+            else{
+                DB::beginTransaction();
+                ExpenseHead::create([
+                    'expense_head_name'     =>  $request['expense_head_name'],
+                    'expense_category_id'   =>  $request['expense_category_id'],
+                    'status' 	=> (isset($request['status']))?$request['status']:'Inactive'
+                ]);
+                DB::commit();
+                $return['response_code'] = 1;
+                $return['message'] = "Expense Head saved successfully";
+                return json_encode($return);
+            }
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            $return['response_code'] 	= 0;
+            $return['errors'] = "Failed to save !".$e->getMessage();
+            return json_encode($return);
+        }
+    }
+
+    private function editExpenseHead($request, $id){
+        try {
+            if($id==""){
+                return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
+            }
+            $expneseHead = ExpenseHead::findOrFail($id);
+            if(empty($expneseHead)){
+                return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Expense Head found"));
+            }
+
+            $rule = [
+                'expense_head_name'     => 'required',
+            ];
+            $validation = \Validator::make($request, $rule);
+
+            if($validation->fails()){
+                $return['response_code'] = "0";
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            }
+            else{
+
+                DB::beginTransaction();
+                $expneseHead->expense_head_name = $request['expense_head_name'];
+                $expneseHead->expense_category_id = $request['expense_category_id'];
+                $expneseHead->status =  (isset($request['status']))?'Active':'Inactive';
+                $expneseHead->update();
+
+                DB::commit();
+                $return['response_code'] = 1;
+                $return['message'] = "Expense Head Updated successfully";
+                return json_encode($return);
+            }
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            $return['response_code'] 	= 0;
+            $return['errors'] = "Failed to update !".$e->getMessage();
+            return json_encode($return);
+        }
+
+
+    }
+    public function showHead($id){
+
+            if($id=="") return 0;
+            $expenseHead = ExpenseHead::findOrFail($id);
+            return json_encode(array('expneseHead'=>$expenseHead));
+
+    }
+
+    public function destroyHead($id){
+        if($id==""){
+            return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
+        }
+        $expenseHead = ExpenseHead::findOrFail($id);
+//        $is_deletable = (count($expenseHead->expensecategory)==0)?1:0; // 1:deletabe, 0:not-deletable
+//        if(empty($expenseHead)){
+//            return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Expense Head found"));
+//        }
+        try {
+            DB::beginTransaction();
+//            if($is_deletable){
+                $expenseHead->delete();
+                $return['message'] = "Expense Head Deleted successfully";
+           // }
+//            else{
+//                $expenseHead->status = 'Inactive';
+//                $expenseHead->update();
+//                $return['message'] = "Deletation is not possible, but deactivated the Expense Head";
+//            }
+
+            DB::commit();
+            $return['response_code'] = 1;
+
+            return json_encode($return);
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            $return['response_code'] 	= 0;
+            $return['errors'] = "Failed to delete !".$e->getMessage();
+            return json_encode($return);
+        }
+    }
 
 }
