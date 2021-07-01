@@ -8,7 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
-    'App\\ExpenseHead' => $baseDir . '/app/ExpenseHead.php',
+    'App\\Expense' => $baseDir . '/app/Expense.php',
     'App\\Http\\Controllers\\AdminController' => $baseDir . '/app/Http/Controllers/AdminController.php',
     'App\\Http\\Controllers\\AuthController' => $baseDir . '/app/Http/Controllers/AuthController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
@@ -28,6 +28,7 @@ return array(
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Mail\\centerRegistrationNotification' => $baseDir . '/app/Mail/centerRegistrationNotification.php',
     'App\\Models\\BaseModel' => $baseDir . '/app/Models/BaseModel.php',
+    'App\\Models\\ExpenseHead' => $baseDir . '/app/Models/ExpenseHead.php',
     'App\\Models\\ExpneseCategory' => $baseDir . '/app/Models/ExpneseCategory.php',
     'App\\Models\\Level' => $baseDir . '/app/Models/Level.php',
     'App\\Models\\Menu' => $baseDir . '/app/Models/Menu.php',
