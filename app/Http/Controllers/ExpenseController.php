@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\Expense;
 use App\Models\ExpenseHead;
 use App\Models\ExpneseCategory;
 use Illuminate\Http\Request;
@@ -388,7 +387,7 @@ class ExpenseController extends Controller
         $data['module_name']= "Expenses";
         $data['sub_module']	= "Expense Detail";
 
-        $data['parentExpneseDetail']= Expense::all();
+        $data['parentExpneseHead']= ExpenseHead::all();
         // action permissions
         $admin_user_id  	= Auth::user()->id;
         $add_action_id  	= 73;// Module Management
