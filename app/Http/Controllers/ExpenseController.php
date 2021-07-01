@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Expense;
 use App\Models\ExpenseHead;
 use App\Models\ExpneseCategory;
 use Illuminate\Http\Request;
@@ -378,6 +379,22 @@ class ExpenseController extends Controller
             $return['errors'] = "Failed to delete !".$e->getMessage();
             return json_encode($return);
         }
+    }
+
+    // Expense Detail
+
+    public function expenseDetailIndex(){
+        $data['page_title'] = $this->page_title;
+        $data['module_name']= "Expenses";
+        $data['sub_module']	= "Expense Detail";
+
+        $data['parentExpneseDetail']= Expense::all();
+        // action permissions
+        $admin_user_id  	= Auth::user()->id;
+        $add_action_id  	= 73;// Module Management
+        $add_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
+        $data['actions']['add_permisiion']= $add_permisiion;
+        return view('expense.expense_detail',$data);
     }
 
 }
