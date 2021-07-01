@@ -122,12 +122,17 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/expense/expense-category',array('as'=>'Expense Category Entry' ,'action_id'=>'67', 'uses' =>'ExpenseController@createOrEdit'));
 	Route::get('/expense/expense-category-delete/{id}',array('as'=>'Expense Category Delete' ,'action_id'=>'69', 'uses' =>'ExpenseController@destroy'));
 	// Expense Head
-    // expense
     Route::get('expense/expense-head',array('as'=>'Expense Head' , 'action_id'=>'73', 'uses' =>'ExpenseController@expenseHeadIndex'));
     Route::get('/expense/expense-head-list',array('as'=>'Expense Head List' ,'action_id'=>'73', 'uses' =>'ExpenseController@ajaxExpenseHeadList'));
     Route::get('/expense/expense-head-list/{id}',array('as'=>'Expense Head List' ,'action_id'=>'75', 'uses' =>'ExpenseController@showHead'));
     Route::post('/expense/expense-head',array('as'=>'Expense Head Entry' ,'action_id'=>'73', 'uses' =>'ExpenseController@ExpensHeadcreateOrEdit'));
     Route::get('/expense/expense-head-delete/{id}',array('as'=>'Expense Head Delete' ,'action_id'=>'76', 'uses' =>'ExpenseController@destroyHead'));
+    // Expense Detail
+    Route::get('expense/expense-detail',array('as'=>'Expense Detail' , 'action_id'=>'77', 'uses' =>'ExpenseController@expenseDetailIndex'));
+    Route::get('/expense/expense-detail-list',array('as'=>'Expense Detail List' ,'action_id'=>'77', 'uses' =>'ExpenseController@ajaxExpenseDetailList'));
+    Route::get('/expense/expense-detail-list/{id}',array('as'=>'Expense Detail List' ,'action_id'=>'77', 'uses' =>'ExpenseController@showDetail'));
+    Route::post('/expense/expense-detail',array('as'=>'Expense Detail Entry' ,'action_id'=>'79', 'uses' =>'ExpenseController@ExpensDetailcreateOrEdit'));
+    Route::get('/expense/expense-detail-delete/{id}',array('as'=>'Expense Detail Delete' ,'action_id'=>'80', 'uses' =>'ExpenseController@destroyDetail'));
 
 });
 
