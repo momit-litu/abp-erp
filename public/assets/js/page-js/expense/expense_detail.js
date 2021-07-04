@@ -22,23 +22,26 @@ $(document).ready(function () {
 
 
 	//for show menus list
-         expense_head_datatable = $('#expense_detail_table').DataTable({
+         expense_detail_datatable = $('#expense_detail_table').DataTable({
 		destroy: true,
 		"order": [[ 0, 'desc' ]],
 		"processing": true,
 		"serverSide": false,
-		"ajax": url+"/expense/expense-head-list",
+		"ajax": url+"/expense/expense-detail-list",
 		"aoColumns": [
 			{ mData: 'id'},
 			{ mData: 'expense_head_name' },
-			{ mData: 'category_name'},
+			{ mData: 'amount'},
+			{ mData: 'details'},
+			{ mData: 'expense_attach'},
+			{ mData: 'payment_status'},
 			{ mData: 'status', className: "text-center"},
 			{ mData: 'actions' , className: "text-center"},
 		],
 	});
 
 //Entry And Update Function For Module
-    $("#save_expense_head").on('click',function(){
+    $("#save_expense_detail").on('click',function(){
         event.preventDefault();
         $.ajaxSetup({
             headers:{
@@ -46,17 +49,23 @@ $(document).ready(function () {
             }
         });
 
-        var formData = new FormData($('#expense_head_form')[0]);
+        var formData = new FormData($('#expense_detail_form')[0]);
 
-        if($.trim($('#expense_head_name').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Insert Expense Head","#expense_head_name");
+        if($.trim($('#expense_head_id').val()) == ""){
+            success_or_error_msg('#master_message_div','danger',"Please Insert Expense Head","#expense_head_id");
         }
-        else if($.trim($('#expense_category_id').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Select a Expense Category Id","#expense_category_id");
+        else if($.trim($('#amount').val()) == ""){
+            success_or_error_msg('#master_message_div','danger',"Please Select a Expense Amount","#amount");
+        }
+        else if($.trim($('#details').val()) == ""){
+            success_or_error_msg('#master_message_div','danger',"Please Select a Expense Details","#details");
+        }
+        else if($.trim($('#attachment').val()) == ""){
+            success_or_error_msg('#master_message_div','danger',"Please Select a Expense Attachment","#attachment");
         }
         else{
             $.ajax({
-                url: url+"/expense/expense-head",
+                url: url+"/expense/expense-detail",
                 type:'POST',
                 data:formData,
                 async:false,
@@ -100,12 +109,12 @@ $(document).ready(function () {
         clear_form();
     });
 //Edit function for Module
-        expenseHeadEdit = function expenseHeadEdit(id){
+        expenseDetailEdit = function expenseDetailEdit(id){
         var edit_id = id;
-        $("#form-title").html('<i class="fa fa-plus"></i> Edit Expense Head');
+        $("#form-title").html('<i class="fa fa-plus"></i> Edit Expense Detail');
 
         $.ajax({
-            url: url+'/expense/expense-head-list/'+edit_id,
+            url: url+'/expense/expense-detail-list/'+edit_id,
             cache: false,
             success: function(response){
                 var response = JSON.parse(response);
@@ -113,8 +122,10 @@ $(document).ready(function () {
 
                 $("#save_expense_head").html('Update');
                 $("#clear_button").hide();
-                $("#expense_head_name").val(data['expense_head_name']);
-                $("#expense_category_id").val(data['expense_category_id']);
+                $("#expense_head_id").val(data['expense_head_id']);
+                $("#amount").val(data['amount']);
+                $("#details").val(data['details']);
+                $("#payment_status").val(data['payment_status']);
                 $("#edit_id").val(data['id']);
                 (data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
                 $('#entry-form').modal('show');
@@ -122,7 +133,7 @@ $(document).ready(function () {
         });
     }
     //Delete Module
-    expenseHeadDelete = function expenseHeadDelete(id){
+    expenseDetailDelete = function expenseDetailDelete(id){
         var delete_id = id;
         swal({
             title: "Are you sure?",
@@ -133,7 +144,7 @@ $(document).ready(function () {
         }).then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url: url+'/expense/expense-head-delete/'+delete_id,
+                    url: url+'/expense/expense-detail-delete/'+delete_id,
                     cache: false,
                     success: function(data){
                         var response = JSON.parse(data);
@@ -142,7 +153,7 @@ $(document).ready(function () {
                         }
                         else{
                             success_or_error_msg('#master_message_div',"success",response['message']);
-                            expense_head_datatable.ajax.reload();
+                            expense_detail_datatable.ajax.reload();
                         }
                     }
                 });

@@ -9,4 +9,8 @@ class Expense extends Model
     protected $fillable = [
         'expense_head_id', 'amount', 'details', 'attachment', 'payment_status', 'status'
     ];
+
+    public function expensehead(){
+        return $this->belongsTo(ExpenseHead::class, 'expense_head_id', 'id');
+    }
 }

@@ -131,7 +131,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
     Route::get('expense/expense-detail',array('as'=>'Expense Detail' , 'action_id'=>'77', 'uses' =>'ExpenseController@expenseDetailIndex'));
     Route::get('/expense/expense-detail-list',array('as'=>'Expense Detail List' ,'action_id'=>'77', 'uses' =>'ExpenseController@ajaxExpenseDetailList'));
     Route::get('/expense/expense-detail-list/{id}',array('as'=>'Expense Detail List' ,'action_id'=>'77', 'uses' =>'ExpenseController@showDetail'));
-    Route::post('/expense/expense-detail',array('as'=>'Expense Detail Entry' ,'action_id'=>'79', 'uses' =>'ExpenseController@ExpensDetailcreateOrEdit'));
+    Route::post('/expense/expense-detail',array('as'=>'Expense Detail Entry' ,'action_id'=>'77', 'uses' =>'ExpenseController@ExpensDetailcreateOrEdit'));
     Route::get('/expense/expense-detail-delete/{id}',array('as'=>'Expense Detail Delete' ,'action_id'=>'80', 'uses' =>'ExpenseController@destroyDetail'));
 
 });
