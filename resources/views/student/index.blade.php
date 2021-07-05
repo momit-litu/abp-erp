@@ -52,11 +52,11 @@
                         <tr>
                             <th>ID</th>
                             <th></th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
+                            <th>Student No.</th>
+                            <th>Full Name</th>
                             <th>Email</th>
                             <th>Contact No. </th>
-                            <th>Address </th>
+                          <!-- <th>Address </th>-->
                             <th class="hidden-xs">Status</th>
                             <th width='80' class="text-center">Actions</th>
                         </tr>
@@ -90,18 +90,21 @@
                                 @csrf
                                 <input type="hidden" name="id" id="id">
                                 <div class="row">
-                                    <div class="col-md-9">
+                                    <div class="col-md-12">
+                                        
                                         <div class="form-row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="position-relative form-group">
-                                                    <label for="first_name" class="">First Name<span class="required">*</span></label>
-                                                    <input type="text" id="first_name" name="first_name" required class="form-control col-lg-12"/>
+                                                    <label for="first_name" class="">Student Number</label>
+                                                    <input type="text" id="student_no" name="student_no"  class="form-control col-lg-4"/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-12">
                                                 <div class="position-relative form-group">
-                                                    <label for="last_name" class="">Last Name</label>
-                                                    <input type="text" id="last_name" name="last_name" class="form-control col-lg-12" />
+                                                    <label for="first_name" class="">Full Name<span class="required">*</span></label>
+                                                    <input type="text" id="name" name="name" required class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -109,28 +112,42 @@
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label>Contact No<span class="required">*</span></label>
+                                                    <label>Contact No (WhatsApp)<span class="required">*</span></label>
                                                     <input type="text" id="contact_no" name="contact_no" required class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label>Ememergency Contact</label>
+                                                    <input type="text" id="emergency_contact" name="emergency_contact" class="form-control col-lg-12"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label>Email<span class="required">*</span></label>
                                                     <input type="email" id="email" name="email" required class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label>Date of Birth <span class="required">*</span></label>
+                                                    <input type="date" id="date_of_birth" name="date_of_birth" required class="form-control col-lg-12"/>
+                                                </div>
+                                            </div>                                           
                                         </div>
 
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label>NID No<span class="required">*</span></label>
-                                                    <input type="text" id="nid" name="nid" required class="form-control col-lg-12"/>
+                                                    <label>NID No</label>
+                                                    <input type="text" id="nid" name="nid" class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label>Address<span class="required">*</span></label>
+                                                    <label>Postal  Address<span class="required">*</span></label>
                                                     <input type="text" id="address" name="address" required class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
@@ -138,11 +155,52 @@
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label>Date of Birth <span class="required">*</span></label>
-                                                    <input type="date" id="date_of_birth" name="date_of_birth" required class="form-control col-lg-12"/>
+                                                    <label for="short_name" class="">Mode of Study </label>
+                                                    <select id="study_mode" name="study_mode" class="form-control col-lg-12">
+                                                    <option value="Online">Online</option>
+                                                    <option value="Campus">Campus</option>
+                                                </select>
                                                 </div>
                                             </div>
-
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="short_name" class="">Last Qualification </label>
+                                                    <select id="last_qualification" name="last_qualification" class="form-control col-lg-12">
+                                                    <option value="Masters bachelor">Masters bachelor</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">                                            
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label>Passing Year</label>
+                                                    <input type="date" id="passing_year" name="passing_year"  class="form-control col-lg-12"/>
+                                                    <input type="text" class="form-control" data-toggle="datepicker-year">
+                                                </div>
+                                            </div> 
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label>Current Employment</label>
+                                                    <input type="text" id="current_emplyment" name="current_emplyment" class="form-control col-lg-12"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="short_name" class="">How do you know ABP?</label>
+                                                    <select id="how_know" name="how_know" class="form-control col-lg-12">
+                                                    <option value='From a Trainee of ABP'>From a Trainee of ABP</option>
+                                                    <option value='From FaceBook'>From FaceBook</option>
+                                                    <option value='By google search'>By google search</option>
+                                                    <option value='From office colleague'>From office colleague</option>
+                                                    <option value='From Email'>From Email</option>
+                                                    <option value='Other'>Other</option>
+                                                </select>
+                                                </div>
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label>Is Active</label>
@@ -158,14 +216,25 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3 text-center">
-                                        <img src="{{asset('assets/images/user/admin')}}/no-user-image.png" width="70%" height="70%" class="img-thumbnail" id="user_image">
-
-                                        <span class="btn btn-light-grey btn-file">
-										<span class="fileupload-new"><i class="fa fa-picture-o"></i> Select image</span>
-										<input type="file" name="user_profile_image" id="user_profile_image" value="">
-									</span>
+                                        <div class="form-row">
+                                            <div class="col-md-6">
+                                                <label>	<strong>Certificate, Transcript and NID</strong></label>
+                                                <hr>
+                                                <input type="file" class="form-control col-lg-12" name="documents[]"  data-show-upload="true" data-show-caption="true" id="documents" value="" multiple>
+                                                <table class="mb-0 table table-bordered" id='attachment_table'>                                                
+                                                </table>
+                                            </div>
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-4">
+                                                <label><strong> Student Photo</strong></label>
+                                                <hr>
+                                                <img src="{{asset('assets/images/user/admin')}}/no-user-image.png" width="70%" height="70%" class="img-thumbnail" id="user_image">
+                                                <span class="btn btn-light-grey btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-picture-o"></i> </span>
+                                                    <input type="file" class="form-control col-lg-12" name="user_profile_image" id="user_profile_image" value="">
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -210,30 +279,38 @@
 
                                         </div>
                                     </div>
+                                    <hr>
+
+                                    <p>Attachments:</p>
+                                    
+                                    <div id='attachment_div'></div>
+                                    
                                 </div>
                                 <div class="col-md-8 col-xs-12">
                                     <div class="" >
+                                        <h5><span id="student_number"></span></h5>
                                         <span id="student_name"></span>
-                                        <p><div id="status_div"></div></p>
+                                        <p><div id="status_div"></div><span id="type_div"></span></p>
                                         <div id="group_div"></div></p>
                                     </div>
                                     <hr>
                                     <div class="col-md-12">
-
-                                        <p title="Birthday"><span><i class="lnr-phone-handset"></i></span><span id="student_DOB"></span></p>
-                                        <p title="Phone"><span><i class="lnr-phone-handset"></i></span><span id="student_contact"></span></p>
-                                        <p title="Email"><span ><i class="lnr-envelope"></i></span><span id="email_div"></span></p>
-                                        <p title="Address"><span ></span><span id="student_address"></span></p>
-
+                                        <p title="NID NO"><span class="lnr-license" style="width:50px;"> </span><span id="nid_div"></span></p>
+                                        <p title="Birthday"><span><i class="lnr-calendar-full"></i> </span><span id="student_DOB"></span></p>
+                                        <p title="Phone"><span><i class="lnr-phone-handset"></i> </span><span id="student_contact"></span></p>
+                                        <p title="Phone"><span><i class="lnr-phone-handset"></i> </span><span id="student_emergency_contact"></span></p>
+                                        <p title="Email"><span ><i class="lnr-envelope"></i> </span><span id="email_div"></span></p>
+                                        <p title="Address"><span ><i class="fa fa-address-card"></i> </span><span id="student_address"></span></p>
                                     </div>
-                                    <!-- <div class="col-md-6">
-                                       <p title="NID NO"><span class="glyphicon glyphicon-credit-card one" style="width:50px;"></span><span id="nid_div"></span></p>
-                                     <p title="Address"><span class="glyphicon glyphicon-map-marker one" style="width:50px;"></span><span id="address_div"></span></p>
-                                     </div>-->
+                                    <hr>
+                                    <div class="col-md-12">                                       
+                                     <p>Current Employment : <span id="current_emplyment_div"></span></p>
+                                     <p>Last Qualification : <span id="last_qualification_div"></span></p>
+                                     <p>Passing Year : <span id="passing_year_div"></span></p>
+                                     </div>
                                     <hr>
                                     <div class="col-md-12">
                                         <div id="remarks_details">
-
                                         </div>
                                     </div>
 
