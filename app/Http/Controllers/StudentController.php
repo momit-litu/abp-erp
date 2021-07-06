@@ -103,7 +103,7 @@ class StudentController extends Controller
         }
         try {
             DB::beginTransaction();
-            if ($is_deletable) { 
+            if ($is_deletable) {
                 $user = User::where('student_id',$student->id)->firstOrFail();
                 UserGroupMember::where('user_id',$user->id)->delete();
                 $user->delete();
@@ -180,7 +180,6 @@ class StudentController extends Controller
         return $response_data;
     }
 
-
     private function createStudent($request, $photo)
     {
         try {
@@ -233,7 +232,7 @@ class StudentController extends Controller
                     'user_profile_image' => $profileImage,
                     'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
                 ]);
-               
+
                 // create a student type user
                 $studentUser = User::create([
 					'first_name'	=> $request['first_name'],
@@ -245,8 +244,8 @@ class StudentController extends Controller
 				]);
 
                 //insert student user group permission
-				$user_groups = UserGroup::select('id')->where('type',2)->get();					
-				foreach ($user_groups as $user_group ) {							
+				$user_groups = UserGroup::select('id')->where('type',2)->get();
+				foreach ($user_groups as $user_group ) {
 					$group_member_data 				= new UserGroupMember();
 					$group_member_data->group_id	= $user_group['id'];
 					$group_member_data->user_id		= $studentUser->id;

@@ -60,9 +60,6 @@ $(document).ready(function () {
         else if($.trim($('#details').val()) == ""){
             success_or_error_msg('#master_message_div','danger',"Please Select a Expense Details","#details");
         }
-        else if($.trim($('#attachment').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Select a Expense Attachment","#attachment");
-        }
         else{
             $.ajax({
                 url: url+"/expense/expense-detail",
@@ -92,7 +89,7 @@ $(document).ready(function () {
                     else{
                         toastr['success']( 'Saved Successfully', 'Admin User '+$('#first_name').val());
                         $('.modal').modal('hide')
-                        expense_head_datatable.ajax.reload();
+                        expense_detail_datatable.ajax.reload();
                         clear_form();
                         $("#save_module").html('Save');
                         $("#edit_id").val('');
@@ -108,6 +105,49 @@ $(document).ready(function () {
     $("#clear_button").on('click',function(){
         clear_form();
     });
+
+    //Expense detail View
+    expense_detail_view = function expense_detail_view(id){
+        var expense_detail_id = id;
+        $.ajax({
+            url: url+'/expense/expense-detail-list/'+expense_detail_id,
+            cache: false,
+            success: function(response){
+                var response = JSON.parse(response);
+                console.log(response)
+                var data = response['expense'];
+                console.log(data['amount']);
+
+                $("#expense-detail-view-modal").modal();
+                $("#expense_head_name").html('<h5>'+data['expense_head_id']+'</h5>');
+                $("#amount").html('<p>'+data['amount']+'</p>');
+                $("#id").html(data['id']);
+                $("#details").html(data['details']);
+                $("#expense_attach").html(data['expense_attach']);
+
+                $("#payment_status").html(data['payment_status']);
+
+
+
+                console.log(profile_image_url)
+                if (data["attachment"]!=null && data["attachment"]!="") {
+                    $(".expense_image").html('<img style="width:50%" src="'+profile_image_url+'/'+data["attachment"]+'" alt="Image" class="img img-responsive">');
+                }
+                else{
+                    $(".expense_image").html('<img  style="width:50%" src="'+profile_image_url+'/no-user-image.png" alt="Image" class="img img-responsive">');
+                }
+
+
+                if(data['status']=='Active'){
+                    $("#status_div").html('<span class="badge badge-success">Active</span>');
+                }
+                else{
+                    $("#status_div").html('<span class="badge badge-danger">In-active</span>');
+                } //alert(profile_image_url);
+            }
+        });
+    }
+
 //Edit function for Module
         expenseDetailEdit = function expenseDetailEdit(id){
         var edit_id = id;
@@ -118,12 +158,14 @@ $(document).ready(function () {
             cache: false,
             success: function(response){
                 var response = JSON.parse(response);
-                var data = response['expneseHead'];
+                var data = response['expense'];
+                console.log(data['attachment']);
 
                 $("#save_expense_head").html('Update');
                 $("#clear_button").hide();
                 $("#expense_head_id").val(data['expense_head_id']);
                 $("#amount").val(data['amount']);
+                $("#file-attached").html('<img style="width:40%" src="'+profile_image_url+'/'+data["attachment"]+'" alt="Image" class="img img-responsive">');
                 $("#details").val(data['details']);
                 $("#payment_status").val(data['payment_status']);
                 $("#edit_id").val(data['id']);

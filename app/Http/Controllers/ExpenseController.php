@@ -12,6 +12,7 @@ use Session;
 use DB;
 use Auth;
 use App\Traits\HasPermission;
+use Illuminate\Http\Response;
 
 class ExpenseController extends Controller
 {
@@ -414,11 +415,15 @@ class ExpenseController extends Controller
             $expenseDetail['expense_head_name'] = (is_null($expenseDetail->expense_head_id)) ? "" : $expenseDetail->expensehead->expense_head_name;
             $image_path = asset('assets/images/expense');
             $expenseDetail['expense_attach'] = ($expenseDetail->attachment != "" || $expenseDetail->attachment != null) ? '<img height="40" width="50" src="' . $image_path . '/' . $expenseDetail->attachment . '" alt="image" />' : '<img height="40" width="50" src="' . $image_path . '/no-user-image.png' . '" alt="image" />';
-            $expenseDetail['status'] = ($expenseDetail->status == 1) ? "<button class='btn btn-sm btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-success' disabled>In-active</button>";
+            if($expenseDetail->status == 0){			$expenseDetail['status']="<button class='btn btn-xs btn-warning' disabled>In-active</button>";}
+            else if($expenseDetail->status == 1){	$expenseDetail['status']="<button class='btn btn-xs btn-success' disabled>Active</button>";}
+            //$expenseDetail['status'] = ($expenseDetail->status === 'Active') ? "<button class='btn btn-sm btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-success' disabled>In-active</button>";
             $expenseDetail['actions'] = "";
 
+
+            $expenseDetail['actions']		=" <button title='View' onclick='expense_detail_view(".$expenseDetail->id.")' id='view_" . $expenseDetail->id . "' class='btn btn-xs btn-info btn-hover-shine admin-user-view' ><i class='lnr-eye'></i></button>";
             if ($edit_permisiion > 0) {
-                $expenseDetail['actions'] .= "<button onclick='expenseDetailEdit(" . $expenseDetail->id . ")' id=edit_" . $expenseDetail->id . "  class='btn btn-xs btn-hover-shine  btn-primary module-edit'><i class='lnr-pencil'></i></button>";
+                $expenseDetail['actions'] .= " <button onclick='expenseDetailEdit(" . $expenseDetail->id . ")' id=edit_" . $expenseDetail->id . "  class='btn btn-xs btn-hover-shine  btn-primary module-edit'><i class='lnr-pencil'></i></button>";
             }
             if ($delete_permisiion > 0) {
                 $expenseDetail['actions'] .= " <button onclick='expenseDetailDelete(" . $expenseDetail->id . ")' id='delete_" . $expenseDetail->id . "' class='btn btn-xs btn-hover-shine btn-danger' ><i class='fa fa-trash'></i></button>";
@@ -508,7 +513,6 @@ class ExpenseController extends Controller
                 'expense_head_id' => 'required',
                 'amount' => 'required',
                 'details' => 'required',
-                'attachment' => 'required',
             ];
             $validation = \Validator::make($request, $rule);
 
@@ -520,15 +524,19 @@ class ExpenseController extends Controller
 
                 DB::beginTransaction();
                 $StudentImage = $photo;
-                if (isset($StudentImage)) {
+                if ($StudentImage) {
                     $image_name = time();
                     $ext = $StudentImage->getClientOriginalExtension();
                     $image_full_name = $image_name . '.' . $ext;
                     $upload_path = 'assets/images/expense/';
                     $success = $StudentImage->move($upload_path, $image_full_name);
+                    unlink('assets/images/expense/'.$expensedetail->attachment);
                     $profileImage = $image_full_name;
 
+                } else {
+                    $profileImage = $expensedetail->attachment;
                 }
+
 
                 $expensedetail->expense_head_id = $request['expense_head_id'];
                 $expensedetail->amount = $request['amount'];
@@ -552,13 +560,19 @@ class ExpenseController extends Controller
 
 
     }
-
+    public function getDownload($id)
+    {
+        if ($id == "") return 0;
+        $expenseDetail = Expense::findOrFail($id);
+        $file='assets/images/expense/'.$expenseDetail->attachment;
+        return response()->download($file);
+    }
     public function showDetail($id)
     {
 
         if ($id == "") return 0;
         $expenseDetail = Expense::findOrFail($id);
-        return json_encode(array('expneseHead' => $expenseDetail));
+        return json_encode(array('expense' => $expenseDetail));
 
     }
 
