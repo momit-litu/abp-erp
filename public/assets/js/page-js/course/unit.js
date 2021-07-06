@@ -17,10 +17,10 @@ $(document).ready(function () {
 	unitAdd = function unmitAdd(){
 		$("#form-title").html('<i class="fa fa-plus"></i> Add  New Unit');
 		$("#clear_button").show();
-		$("#save_unit").html('Save');	
+		$("#save_unit").html('Save');
 		$('#entry-form').modal('show');
 	}
-		
+
 	//for show units list
 	 unit_datatable = $('#units_table').DataTable({
 		destroy: true,
@@ -34,7 +34,7 @@ $(document).ready(function () {
 			{ mData: 'name' },
 			{ mData: 'glh'},
 			{ mData: 'tut'},
-			{ mData: 'assessment_type'},			
+			{ mData: 'assessment_type'},
 			{ mData: 'status', className: "text-center"},
 			{ mData: 'actions' , className: "text-center"},
 		],
@@ -45,8 +45,8 @@ $(document).ready(function () {
             }
         ]
 	});
-	
-	
+
+
 
 	//Entry And Update Function For Module
 	$("#save_unit").on('click',function(){
@@ -65,7 +65,7 @@ $(document).ready(function () {
 		else if($.trim($('#name').val()) == ""){
 			success_or_error_msg('#master_message_div','danger',"Please Select a unit name","#name");
 		}
-		// 
+		//
 		else if($.trim($('#glh').val()) == "" || !($.isNumeric($('#glh').val()))){
 			success_or_error_msg('#master_message_div','danger',"Please Select a GLI","#glh");
 		}
@@ -87,7 +87,7 @@ $(document).ready(function () {
 				success: function(data){
 					var response = JSON.parse(data);
 					if(response['response_code'] == 0){
-						var errors	= response['errors'];						
+						var errors	= response['errors'];
 						resultHtml = '<ul>';
 						if(typeof(errors)=='string'){
 							resultHtml += '<li>'+ errors + '</li>';
@@ -119,7 +119,7 @@ $(document).ready(function () {
 	$("#clear_button").on('click',function(){
 		clear_form();
 	});
-	
+
 
 
 	//Edit function for Module

@@ -34,11 +34,13 @@
 					</div>
 				</div>
 				<div class="page-title-actions">
+                    @if($actions['add_permisiion']==66)
 					<button type="button" onclick='actionAdd()' title="Add a new action" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary">
 						<i class="fa fa-plus"></i>
 						Add New Exoense Category
 					</button>
-				</div>    
+                        @endif
+				</div>
 			</div>
 		</div>
 		<div class="main-card mb-3 card">
@@ -46,7 +48,6 @@
 				<table class="table table-bordered table-hover expense_category_table" id="expense_category_table" style="width:100% !important">
 					<thead>
 					<tr>
-
 						<th> ID</th>
 						<th> Expense Category Name</th>
 						<th>Parent Name</th>
@@ -54,19 +55,18 @@
 						<th width='80'>Actions</th>
 					</tr>
 					</thead>
-					<tbody>
-					</tbody>
+					<tbody></tbody>
 				</table>
 			</div>
-		</div>           		
+		</div>
 	</div>
-</div>    
+</div>
 </div>
 <div class="modal fade" id="entry-form" >
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="form-title"><i class="fa fa-plus"></i> Add  New Expense Category</h5>
+				<h5 class="modal-title" id="form-title"></h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -78,7 +78,7 @@
 							@csrf
 							<div class="row">
 								<div class="col-md-12">
-									<input type="hidden" name="edit_id" id="edit_id">									
+									<input type="hidden" name="edit_id" id="edit_id">
 									<div class="form-group">
 										<label class="control-label col-md-3 col-sm-3 col-xs-6" >Expense Category Name<span class="required">*</span></label>
 										<div class="col-md-12  col-xs-6">
@@ -110,7 +110,7 @@
 									<div id="form_submit_error" class="text-center" style="display:none"></div>
 								</div>
 							</div>
-						</form>	
+						</form>
 					</div>
 				</div>
 			</div>
@@ -118,16 +118,16 @@
 				<div class="col-md-12" style="display: flex; flex-direction: row;">
 					<div class="col-md-3 text-left">
 						@if($actions['add_permisiion']>0)
-						<button type="submit" id="save_expense_category" class="btn btn-success  btn-lg btn-block">Save</button>                    
-						
-					@endif   
+						<button type="submit" id="save_expense_category" class="btn btn-success  btn-lg btn-block">Save</button>
+
+					@endif
 					</div>
-					<div class="col-md-9 text-right">						
+					<div class="col-md-9 text-right">
 						<button type="button" id="clear_button" class="btn btn-warning">Clear</button>
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>

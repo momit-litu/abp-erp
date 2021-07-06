@@ -196,8 +196,12 @@ class StudentController extends Controller
         return $response_data;
     }
 
+<<<<<<< HEAD
 
     private function createStudent($request, $photo, $documents)
+=======
+    private function createStudent($request, $photo)
+>>>>>>> 56f6a7868c26eed37706b067e6c584ef393ae32c
     {
         try {
             $rule = [
@@ -255,7 +259,7 @@ class StudentController extends Controller
                     'user_profile_image' => $profileImage,
                     'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
                 ]);
-               
+
                 // create a student type user
                 $studentUser = User::create([
 					'first_name'	=> $request['name'],
@@ -267,8 +271,8 @@ class StudentController extends Controller
 				]);
 
                 //insert student user group permission
-				$user_groups = UserGroup::select('id')->where('type',2)->get();					
-				foreach ($user_groups as $user_group ) {							
+				$user_groups = UserGroup::select('id')->where('type',2)->get();
+				foreach ($user_groups as $user_group ) {
 					$group_member_data 				= new UserGroupMember();
 					$group_member_data->group_id	= $user_group['id'];
 					$group_member_data->user_id		= $studentUser->id;
