@@ -554,10 +554,7 @@ class ComposerStaticInitcbcdb63df724bb51fbdca2b609bf384e
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
-<<<<<<< HEAD
-=======
         'App\\Expense' => __DIR__ . '/../..' . '/app/Expense.php',
->>>>>>> 56f6a7868c26eed37706b067e6c584ef393ae32c
         'App\\Http\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminController.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
@@ -577,10 +574,7 @@ class ComposerStaticInitcbcdb63df724bb51fbdca2b609bf384e
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Mail\\centerRegistrationNotification' => __DIR__ . '/../..' . '/app/Mail/centerRegistrationNotification.php',
         'App\\Models\\BaseModel' => __DIR__ . '/../..' . '/app/Models/BaseModel.php',
-<<<<<<< HEAD
-=======
         'App\\Models\\ExpenseHead' => __DIR__ . '/../..' . '/app/Models/ExpenseHead.php',
->>>>>>> 56f6a7868c26eed37706b067e6c584ef393ae32c
         'App\\Models\\ExpneseCategory' => __DIR__ . '/../..' . '/app/Models/ExpneseCategory.php',
         'App\\Models\\Level' => __DIR__ . '/../..' . '/app/Models/Level.php',
         'App\\Models\\Menu' => __DIR__ . '/../..' . '/app/Models/Menu.php',
