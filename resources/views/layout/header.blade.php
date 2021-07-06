@@ -341,16 +341,17 @@
                                         <div class="scrollbar-container ps">
                                             <ul class="nav flex-column">
                                                 <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Profile
-                                                        <!--<div class="ml-auto badge badge-success">New
-                                                        </div>-->
-                                                    </a>
+                                                    @if(\Auth::check())
+                                                    <a href="{{url('/profile')}}" class="nav-link">Profile</a>
+                                                    @endif
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Change Password
-                                                    </a>
+                                                    @if(\Auth::check())
+                                                    <a href="{{ url('my/profile?tab=change_password') }}" class="nav-link">Change Password </a>
+                                                    @endif
                                                 </li>
                                                 <li class="nav-item">
+                                                    
                                                     <a href="javascript:void(0);" class="nav-link">Messages
                                                         <div class="ml-auto badge badge-warning">512
                                                         </div>

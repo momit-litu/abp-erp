@@ -26,9 +26,12 @@ Route::post('auth/forget/password',array('as'=>'Forgot Password' , 'uses' =>'Aut
 Route::get('auth/forget/password/{user_id}/verify',array('as'=>'Forgot Password Verify' , 'uses' =>'AuthController@authSystemForgotPasswordVerification'));
 Route::post('auth/forget/password/{user_id}/verify',array('as'=>'New Password Submit' , 'uses' =>'AuthController@authSystemNewPasswordPost'));
 
+
+Route::post('ckeditor/upload', 'CKEditorController@upload')->name('ckeditor.image-upload');
+
 Route::get('/load-user-groups', array('as'=>'user-group' , 'uses' =>'AdminController@loadUserGroups'));
 Route::post('/units-autosuggest',array('as'=>'Unit Autosuggest list', 'uses' =>'UnitController@unitAutoComplete'));
-Route::post('/qualifications-autosuggest/{showType}',array('as'=>'Qualification Autosuggest list', 'uses' =>'QualificationController@qualificationAutoComplete'));
+Route::post('/courses-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@qualificationAutoComplete'));
 
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
@@ -93,19 +96,19 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/admin/permission-action-entry-update',array('as'=>'Permission Entry', 'action_id'=>'20', 'uses' =>'AdminController@permission_action_entry_update'));
 
 
-	// qualification units
+	// Course units
 	Route::get('/unit',array('as'=>'Units', 'action_id'=>'21', 'uses' =>'UnitController@index'));
 	Route::get('/units',array('as'=>'Unit List' ,'action_id'=>'21', 'uses' =>'UnitController@showList'));
 	Route::get('/unit/{id}',array('as'=>'Unit Details' ,'action_id'=>'21', 'uses' =>'UnitController@show'));
 	Route::post('/unit',array('as'=>'Unit Entry' , 'action_id'=>'22', 'uses' =>'UnitController@createOrEdit'));
 	Route::get('/unit/delete/{id}',array('as'=>'Unit Delete' , 'action_id'=>'24', 'uses' =>'UnitController@destroy'));
 
-	// qualification 
-	Route::get('/qualification',array('as'=>'Qualifications', 'action_id'=>'25', 'uses' =>'QualificationController@index'));
-	Route::get('/qualifications',array('as'=>'Qualification List' ,'action_id'=>'25', 'uses' =>'QualificationController@showList'));
-	Route::get('/qualification/{id}',array('as'=>'Qualification Details' ,'action_id'=>'25', 'uses' =>'QualificationController@show'));
-	Route::post('/qualification',array('as'=>'Qualification Entry' , 'action_id'=>'26', 'uses' =>'QualificationController@createOrEdit'));
-	Route::get('/qualification/delete/{id}',array('as'=>'Qualification Delete' , 'action_id'=>'28', 'uses' =>'QualificationController@destroy'));
+	// Courses 
+	Route::get('/course',array('as'=>'Courses', 'action_id'=>'25', 'uses' =>'CourseController@index'));
+	Route::get('/courses',array('as'=>'Course List' ,'action_id'=>'25', 'uses' =>'CourseController@showList'));
+	Route::get('/course/{id}',array('as'=>'Course Details' ,'action_id'=>'25', 'uses' =>'CourseController@show'));
+	Route::post('/course',array('as'=>'Course Entry' , 'action_id'=>'26', 'uses' =>'CourseController@createOrEdit'));
+	Route::get('/course/delete/{id}',array('as'=>'Course Delete' , 'action_id'=>'28', 'uses' =>'CourseController@destroy'));
 
 
 	//students

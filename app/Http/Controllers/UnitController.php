@@ -29,7 +29,7 @@ class UnitController extends Controller
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
         $data['actions']['add_permisiion']= $add_permisiion;
 
-		return view('qualification.unit',$data);
+		return view('course.unit',$data);
     }
 	
 	//unit list by ajax
@@ -106,8 +106,8 @@ class UnitController extends Controller
         if($id==""){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 		}			
-		$unit = Unit::with('hasQualification')->findOrFail($id);
-		$is_deletable = (count($unit->hasQualification)==0)?1:0; // 1:deletabe, 0:not-deletable
+		$unit = Unit::with('hasCourse')->findOrFail($id);
+		$is_deletable = (count($unit->hasCourse)==0)?1:0; // 1:deletabe, 0:not-deletable
 		if(empty($unit)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No unit found"));
 		}

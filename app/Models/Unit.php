@@ -10,8 +10,8 @@ class Unit extends Model
         'name','unit_code','assessment_type','glh','tut','credit_hour','status',
     ];
 	
-	public function hasQualification(){
-		return $this->belongsToMany('App\Models\Qualification','qualification_units');
+	public function hasCourse(){
+		return $this->belongsToMany('App\Models\Course','course_units');
 	}
 
 }

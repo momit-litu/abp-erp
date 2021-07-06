@@ -269,10 +269,10 @@ $(document).ready(function () {
 							resultHtml += '<li>'+ v + '</li>';
 						});
 						resultHtml += '</ul>';
-						toastr['error']( 'Failed!!!!', resultHtml);
+						toastr['error']( resultHtml, 'Failed!!!!');
 					}
 					else{	
-						toastr['success']( 'Saved Successfully', 'User Group '+$('#group_name').val());
+						toastr['success']('User Group '+$('#group_name').val(), 'Success!!!');
 						admin_group.ajax.reload();
 						clear_form();
 						$('.modal').modal('hide');
@@ -499,10 +499,10 @@ $(document).ready(function () {
 						resultHtml += '<li>'+ v + '</li>';
 					});
 					resultHtml += '</ul>';
-					toastr['error']( 'ERROR!!!!', resultHtml);
+					toastr['error']( resultHtml, 'ERROR!!!!');
 				}
 				else{	
-					toastr['success']( 'Saved Successfully', 'User Group Permission');	
+					toastr['success']( 'User Group Permission', 'Success!!!');	
 					$('.modal').modal('hide')		
 					clear_form();
 				}

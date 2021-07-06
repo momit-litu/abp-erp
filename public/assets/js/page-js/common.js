@@ -4,25 +4,33 @@ $('.modal').on('hide.bs.modal', function (e) {
 	clear_form();
   })
 
-	toastr.options = {
-		"closeButton": true,
-		"debug": false,
-		"newestOnTop": true,
-		"progressBar": true,
-		"positionClass": "toast-top-right",
-		"preventDuplicates": false,
-		"onclick": null,
-		"showDuration": "300",
-		"hideDuration": "1000",
-		"timeOut": "5000",
-		"extendedTimeOut": "1000",
-		"showEasing": "swing",
-		"hideEasing": "linear",
-		"showMethod": "fadeIn",
-		"hideMethod": "fadeOut"
-	};
+toastr.options = {
+	"closeButton": true,
+	"debug": false,
+	"newestOnTop": true,
+	"progressBar": true,
+	"positionClass": "toast-top-right",
+	"preventDuplicates": false,
+	"onclick": null,
+	"showDuration": "300",
+	"hideDuration": "1000",
+	"timeOut": "5000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
+};
 
-
+const editors = {};
+function createEditor( elementId ) {
+    return ClassicEditor
+        .create( document.getElementById( elementId ) )
+        .then( editor => {
+            editors[ elementId ] = editor;
+        } )
+        .catch( err => console.error( err.stack ) );
+}
 
 // className: danger, success, info, primary, default, warning
 function success_or_error_msg(div_to_show, class_name, message, field_id){

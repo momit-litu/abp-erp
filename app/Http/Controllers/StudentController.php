@@ -372,7 +372,7 @@ class StudentController extends Controller
                 $user->status = (isset($request['status'])) ? "Active" : 'Inactive';
 
                 $StudentImage = $photo;
-                if (isset($StudentImage)) {
+                if (isset($StudentImage) && $StudentImage!="") {
                     $old_image = $student->user_profile_image;
                     $image_name = time();
                     $ext = $StudentImage->getClientOriginalExtension();

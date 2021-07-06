@@ -48,10 +48,10 @@ $(document).ready(function () {
 							resultHtml += '<li>'+ v + '</li>';
 						});
 						resultHtml += '</ul>';
-						success_or_error_msg('#master_message_div',"danger",resultHtml);
+						toastr['error']( 'Failed!!!!', resultHtml);
 					}
 					else{				
-						success_or_error_msg('#master_message_div',"success","Update Successfully");
+						toastr['success']( 'Update Successful', 'Personal Information Updated');
 						$("#my_profile_tab").trigger('click');
 						$("#edit_profile_menu_tab").addClass('hidden');
 						profile_info();
@@ -114,10 +114,10 @@ $(document).ready(function () {
 								resultHtml += '<li>'+ v + '</li>';
 							});
 							resultHtml += '</ul>';
-							success_or_error_msg('#master_message_div',"danger",resultHtml);
+							toastr['error']( 'Failed!!!!', resultHtml);
 						}
-						else{				
-							success_or_error_msg('#master_message_div',"success","Change Password Successfully");
+						else{		
+							toastr['success']( 'Update Successful', 'Password Changed');		
 							$("#my_profile_tab").trigger('click');
 							$("#change_pass_menu_tab").addClass('hidden');
 							profile_info();
@@ -142,10 +142,12 @@ $(document).ready(function () {
 			{ mData: 'message'},
 			{ mData: 'date' , className: "text-center"},
 			{ mData: 'status', className: "text-center"},
+			{ mData: 'actions', className: "text-center"},
 		],
 		"columnDefs": [
-			{ "width": "180px", "targets": 1 },
-			{ "width": "120px", "targets": 2 },
+			{ "width": "120px", "targets": 1 },
+			{ "width": "100px", "targets": 2 },
+			{ "width": "80px", "targets": 3 },
         ],
 		"fixedColumns": true
 	});

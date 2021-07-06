@@ -12,12 +12,10 @@ use App\Models\UserGroup;
 use App\Models\UserGroupMember;
 use App\Models\UserGroupPermission;
 use App\Models\WebAction;
-use \App\Center;
-use \App\Qualification;
-use \App\CenterQualification;
+use \App\Models\Course;
+//use \App\Models\StudentCourse;
 use \App\Models\Student;
-use \App\Registration;
-use \App\RegistrationLearner;
+
 use App\Traits\HasPermission;
 
 class AdminController extends Controller
@@ -29,7 +27,7 @@ class AdminController extends Controller
         $this->page_title = $request->route()->getName();
         $description = \Request::route()->getAction();
         $this->page_desc = isset($description['desc']) ? $description['desc'] : $this->page_title;
-		if($request->type != "Admin" && $request->type != "Center"){
+		if($request->type != "Admin" && $request->type != "Student"){
 			//not working right now
 			return redirect()->route('Dashboard');
 		}
@@ -40,17 +38,17 @@ class AdminController extends Controller
         $page_title = $this->page_title;
 		$data['module_name']= "Dashboard";
 		$data['sub_module']	= "";
-		$data['centerName']	= "";
+		$data['studentName']	= "";
 		$admin_user_id 		= Auth::user()->id;
 		$userType 			= Auth::user()->type;
 
-		if($userType == 'Center'){
-			$userCenterId 		= Auth::user()->center_id;
-			$center		  		= Center::find($userCenterId);
-			$data['centerName']	=	$center->name;
+		if($userType == 'Student'){
+			$userStudentId 		= Auth::user()->student_id;
+			$student	  		= Student::find($userStudentId);
+			$data['studentName']=$student->name;
 		}
 		//dd($data);
-		$dashboardComponents = array();
+	/*	$dashboardComponents = array();
 		// edupro admin dashboard components
 		$activeCentres 			= $this->PermissionHasOrNot($admin_user_id,54 ); // Active Centres
 		$activeQualifications 	= $this->PermissionHasOrNot($admin_user_id,55 ); // Active Qualifications
@@ -195,15 +193,15 @@ class AdminController extends Controller
 				'redirectTo'		=>'certificate'
 			];
 			$dashboardComponents[]=$certifiedLearnersData;
-		}
-        return view('admin.dashbord', array('page_title'=>$page_title, 'data'=>$data,'dashboardComponents'=>$dashboardComponents));
+		}*/
+        return view('admin.dashbord', array('page_title'=>$page_title, 'data'=>$data,/*'dashboardComponents'=>$dashboardComponents*/));
     }
 
 	public function welcome(){
 		$page_title = $this->page_title;
 		$data['module_name']= "Dashboard";
 		$data['sub_module']	= "";
-		$data['centerName']	= "";
+		$data['studentName']	= "";
 		$admin_user_id 		= Auth::user()->id;
 		$userType 			= Auth::user()->type;
         return view('welcome', $data);
@@ -558,7 +556,7 @@ class AdminController extends Controller
 		$admin_group_list 	= UserGroup::Select('id', 'group_name', 'type','status')->orderBy('group_name')->get();
 		$return_arr 		= array();
 		foreach($admin_group_list as $admin_group_list){
-			$admin_group_list['type']	=($admin_group_list->type == 1)?"Admin User":"Center User";
+			$admin_group_list['type']	=($admin_group_list->type == 1)?"Admin User":"Student User";
 			$admin_group_list['status']	=($admin_group_list->status == 1)?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>In-active</button>";
 
 			$admin_group_list['actions'] = "";
@@ -660,13 +658,11 @@ class AdminController extends Controller
 		$id 				= Auth::user()->id;
 		$user 				= User::find($id);
     	$data['user']		= $user;
-		$qualifications		= "";
-		if($user->center_id){
-			$centerQualifications 	= Center::with('qualifications')->findOrFail($user->center_id);
-			$qualifications 		= $centerQualifications->qualifications;
+		/*if($user->student_id){
+			$studentCourses = Student::with('courses')->findOrFail($user->student_id);
+			$courses 		= $studentCourse->courses;
 		}
-		//dd($qualifications);
-		$data['qualifications'] =$qualifications;
+		$data['courses'] =$courses;*/
 		return view('admin.profile_index',$data);
     }
 
@@ -703,8 +699,7 @@ class AdminController extends Controller
 				DB::beginTransaction();
 
 				$data = [
-					'first_name'	=> $request->first_name,
-					'last_name'		=> $request->last_name,
+					'name'	=> $request->first_name,
 					'contact_no'	=> $request->contact_no,
 					'email'			=> $request->email,
 					'remarks'		=> $request->remarks,
@@ -818,6 +813,11 @@ class AdminController extends Controller
 			$notification['type'] 	= $notification->notifiable_type;
 			$notification['message']= (!is_null($notification->read_at))?$notification->data['Message']:"<strong class='text-danger'>".$notification->data['Message']."</strong>";
 			$notification['date']	= date("Y-m-d h:m", strtotime($notification->created_at));
+			if(is_null($notification->read_at))
+				$notification['actions'] .="<button onclick='notificationSeen(".$notification->id.")' id=edit_" . $notification->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
+            else 
+				$notification['actions'] .="";
+			
 			$return_arr[] 			= $notification;
 		}
 		return json_encode(array('data'=>$return_arr));

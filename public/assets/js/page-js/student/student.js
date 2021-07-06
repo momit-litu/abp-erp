@@ -87,10 +87,10 @@ $(document).ready(function () {
 							});
 						}
 						resultHtml += '</ul>';
-						toastr['error']( 'Failed!!!!', resultHtml);
+						toastr['error'](resultHtml,  'Failed!!!!');
 					}
 					else{
-						toastr['success']( 'Saved Successfully', 'Student '+$('#first_name').val());
+						toastr['success']('Student saved successfully',  'Success!!!');
 						$('.modal').modal('hide')
 						student_datatable.ajax.reload();
 						clear_form();
@@ -193,14 +193,12 @@ $(document).ready(function () {
 		$("#clear_button").trigger('click');
 		$("#admin_user_add_button").html("<b> Edit Student</b>");
 
-
 		$.ajax({
 			url: url+'/student/'+edit_id,
 			cache: false,
 			success: function(response){
 				var response = JSON.parse(response);
 				var data = response['student'];
-
 
 				$("#save_student").html('Update');
 				$("#clear_button").hide();
@@ -261,10 +259,10 @@ $(document).ready(function () {
 					success: function(data){
 						var response = JSON.parse(data);
 						if(response['response_code'] == 0){
-							toastr['error']( 'Faild', response['message']);
+							toastr['error']( response['message'], 'Faild!!!');
 						}
 						else{
-							toastr['success']( 'Success', response['message']);
+							toastr['success'](response['message'], 'Success!!!');
 							student_datatable.ajax.reload();
 						}
 					}

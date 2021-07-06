@@ -56,7 +56,6 @@
 <!--SCRIPTS INCLUDES-->
 
 <!--CORE-->
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/metismenu"></script>
@@ -187,6 +186,8 @@
 <script src="{{ asset('assets/theme/assets/js/scripts-init/treeview.js') }}"></script>
 
 
+
+
 <!--TABLES -->
 <!--DataTables-->
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
@@ -205,6 +206,8 @@
 <script src="{{ asset('assets/js/sweetalert.min.js')}}"></script>
 <script src="{{ asset('assets/js/jquery-ui.min.js')}}"></script>
 
+<!--<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>-->
+<script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 
 @yield('JScript')
 
