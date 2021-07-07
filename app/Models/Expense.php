@@ -12,5 +12,6 @@ class Expense extends Model
 
     public function expenseHead(){
         return $this->belongsTo(ExpenseHead::class, 'expense_head_id', 'id');
+        
     }
 }
