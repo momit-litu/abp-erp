@@ -26,6 +26,10 @@ $(document).ready(function () {
 			{ mData: 'status', className: "text-center"},
 			{ mData: 'actions' , className: "text-left"},
 		],
+		"columnDefs": [
+            { "targets": [ 0 ],  "visible": false },
+			{ "width": "80px", "targets":[ 6 ]},
+        ],
 	});
 
 	//autosuggest

@@ -133,11 +133,11 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
     Route::post('/expense/expense-head',array('as'=>'Expense Head Entry' ,'action_id'=>'73', 'uses' =>'ExpenseController@ExpensHeadcreateOrEdit'));
     Route::get('/expense/expense-head-delete/{id}',array('as'=>'Expense Head Delete' ,'action_id'=>'76', 'uses' =>'ExpenseController@destroyHead'));
     // Expense Detail
-    Route::get('expense/expense-detail',array('as'=>'Expense Detail' , 'action_id'=>'77', 'uses' =>'ExpenseController@expenseDetailIndex'));
-    Route::get('/expense/expense-detail-list',array('as'=>'Expense Detail List' ,'action_id'=>'77', 'uses' =>'ExpenseController@ajaxExpenseDetailList'));
-    Route::get('/expense/expense-detail-list/{id}',array('as'=>'Expense Detail List' ,'action_id'=>'77', 'uses' =>'ExpenseController@showDetail'));
-    Route::post('/expense/expense-detail',array('as'=>'Expense Detail Entry' ,'action_id'=>'77', 'uses' =>'ExpenseController@ExpensDetailcreateOrEdit'));
-    Route::get('/expense/expense-detail-delete/{id}',array('as'=>'Expense Detail Delete' ,'action_id'=>'80', 'uses' =>'ExpenseController@destroyDetail'));
-    Route::get('/expense/download/{id}',array('as'=>'Expense Detail List' ,'action_id'=>'77', 'uses' =>'ExpenseController@getDownload'));
+    Route::get('expense/expense',array('as'=>'Expenses' , 'action_id'=>'77', 'uses' =>'ExpenseController@expenseDetailIndex'));
+    Route::get('/expense/expense-detail-list',array('as'=>'Expense List' ,'action_id'=>'77', 'uses' =>'ExpenseController@ajaxExpenseDetailList'));
+    Route::get('/expense/expense-detail-list/{id}',array('as'=>'Expense List' ,'action_id'=>'77', 'uses' =>'ExpenseController@showDetail'));
+    Route::post('/expense/expense-detail',array('as'=>'Expense Entry' ,'action_id'=>'77', 'uses' =>'ExpenseController@ExpensDetailcreateOrEdit'));
+    Route::get('/expense/expense-detail-delete/{id}',array('as'=>'Expense Delete' ,'action_id'=>'80', 'uses' =>'ExpenseController@destroyDetail'));
+    Route::get('/expense/download/{id}',array('as'=>'Expense List' ,'action_id'=>'77', 'uses' =>'ExpenseController@getDownload'));
 });
 

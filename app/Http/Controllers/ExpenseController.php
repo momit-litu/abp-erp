@@ -55,7 +55,7 @@ class ExpenseController extends Controller
 
             $expenseCategory['parent_name'] = (is_null($expenseCategory->parent_id)) ? "" : $expenseCategory->parent->category_name;
 
-            $expenseCategory['status'] = ($expenseCategory->status == 1) ? "<button class='btn btn-sm btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-success' disabled>In-active</button>";
+            $expenseCategory['status'] = ($expenseCategory->status == 'Active') ? "<button class='btn btn-xs btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-warning' disabled>In-active</button>";
             $expenseCategory['actions'] = "";
 
             if ($edit_permisiion > 0) {
@@ -145,7 +145,7 @@ class ExpenseController extends Controller
                 ExpneseCategory::create([
                     'category_name' => $request['expense_category_name'],
                     'parent_id' => $request['parent_id'],
-                    'status' => (isset($request['status'])) ? $request['status'] : 'Inactive'
+                    'status' => (isset($request['is_active'])) ? 'Active' : 'Inactive'
                 ]);
                 DB::commit();
                 $return['response_code'] = 1;
@@ -185,7 +185,8 @@ class ExpenseController extends Controller
                 DB::beginTransaction();
                 $expneseCategory->category_name = $request['expense_category_name'];
                 $expneseCategory->parent_id = $request['parent_id'];
-                $expneseCategory->status = (isset($request['status'])) ? 'Active' : 'Inactive';
+                $expneseCategory->status = (isset($request['is_active'])) ? 'Active' : 'Inactive';
+                //dd($expneseCategory);
                 $expneseCategory->update();
 
                 DB::commit();
@@ -211,7 +212,7 @@ class ExpenseController extends Controller
         $data['module_name'] = "Expenses";
         $data['sub_module'] = "Expense Head";
 
-        $data['parentExpneseHead'] = ExpneseCategory::all();
+        $data['parentExpneseHead'] = ExpneseCategory::where('status','Active')->get();
         // action permissions
         $admin_user_id = Auth::user()->id;
         $add_action_id = 73;// Module Management
@@ -233,7 +234,7 @@ class ExpenseController extends Controller
         $return_arr = array();
         foreach ($expenseHeadList as $expenseHead) {
             $expenseHead['category_name'] = (is_null($expenseHead->expense_category_id)) ? "" : $expenseHead->expensecategory->category_name;
-            $expenseHead['status'] = ($expenseHead->status == 1) ? "<button class='btn btn-sm btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-success' disabled>In-active</button>";
+            $expenseHead['status'] = ($expenseHead->status == 'Active') ? "<button class='btn btn-xs btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-warning' disabled>In-active</button>";
             $expenseHead['actions'] = "";
 
             if ($edit_permisiion > 0) {
@@ -282,7 +283,7 @@ class ExpenseController extends Controller
                 ExpenseHead::create([
                     'expense_head_name' => $request['expense_head_name'],
                     'expense_category_id' => $request['expense_category_id'],
-                    'status' => (isset($request['status'])) ? $request['status'] : 'Inactive'
+                    'status' => (isset($request['is_active'])) ? 'Active': 'Inactive'
                 ]);
                 DB::commit();
                 $return['response_code'] = 1;
@@ -322,7 +323,7 @@ class ExpenseController extends Controller
                 DB::beginTransaction();
                 $expneseHead->expense_head_name = $request['expense_head_name'];
                 $expneseHead->expense_category_id = $request['expense_category_id'];
-                $expneseHead->status = (isset($request['status'])) ? 'Active' : 'Inactive';
+                $expneseHead->status = (isset($request['is_active'])) ? 'Active' : 'Inactive';
                 $expneseHead->update();
 
                 DB::commit();
@@ -389,9 +390,9 @@ class ExpenseController extends Controller
     {
         $data['page_title'] = $this->page_title;
         $data['module_name'] = "Expenses";
-        $data['sub_module'] = "Expense Detail";
+        $data['sub_module'] = "Expenses";
 
-        $data['parentExpneseHead'] = ExpenseHead::all();
+        $data['parentExpneseHead'] = ExpenseHead::where('status','Active')->get();
         // action permissions
         $admin_user_id = Auth::user()->id;
         $add_action_id = 77;// Module Management
@@ -413,11 +414,8 @@ class ExpenseController extends Controller
         $return_arr = array();
         foreach ($expenseDetailList as $expenseDetail) {
             $expenseDetail['expense_head_name'] = (is_null($expenseDetail->expense_head_id)) ? "" : $expenseDetail->expensehead->expense_head_name;
-            $image_path = asset('assets/images/expense');
-            $expenseDetail['expense_attach'] = ($expenseDetail->attachment != "" || $expenseDetail->attachment != null) ? '<img height="40" width="50" src="' . $image_path . '/' . $expenseDetail->attachment . '" alt="image" />' : '<img height="40" width="50" src="' . $image_path . '/no-user-image.png' . '" alt="image" />';
-            if($expenseDetail->status == 0){			$expenseDetail['status']="<button class='btn btn-xs btn-warning' disabled>In-active</button>";}
-            else if($expenseDetail->status == 1){	$expenseDetail['status']="<button class='btn btn-xs btn-success' disabled>Active</button>";}
-            //$expenseDetail['status'] = ($expenseDetail->status === 'Active') ? "<button class='btn btn-sm btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-success' disabled>In-active</button>";
+            
+            $expenseDetail['status'] = ($expenseDetail->status == 'Active') ? "<button class='btn btn-xs btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
             $expenseDetail['actions'] = "";
 
 
@@ -442,15 +440,15 @@ class ExpenseController extends Controller
 
         // update
         if (!is_null($request->input('edit_id')) && $request->input('edit_id') != "") {
-            $response_data = $this->editExpenseDetail($request->all(), $request->input('edit_id'), $request->file('attachment'));
+            $response_data = $this->editExpenseDetail($request->all(), $request->input('edit_id'));
         } // new entry
         else {
-            $response_data = $this->createExpenseDetail($request->all(), $request->file('attachment'));
+            $response_data = $this->createExpenseDetail($request->all());
         }
         return $response_data;
     }
 
-    private function createExpenseDetail($request, $photo)
+    private function createExpenseDetail($request)
     {
         //dd($request);
         try {
@@ -458,7 +456,6 @@ class ExpenseController extends Controller
                 'expense_head_id' => 'required',
                 'amount' => 'required',
                 'details' => 'required',
-                'attachment' => 'required',
             ];
             $validation = \Validator::make($request, $rule);
             //dd($request);
@@ -469,22 +466,25 @@ class ExpenseController extends Controller
                 return json_encode($return);
             } else {
                 DB::beginTransaction();
-                $StudentImage = $photo;
-                if (isset($StudentImage)) {
-                    $type = $StudentImage->getClientOriginalExtension();
-                    $imageName = time().'.'.$type;
-                    $directory = 'assets/images/expense/';
-                    $StudentImage->move($directory, $imageName);
-                    $imgURL = $directory.$imageName;
-                }
-                Expense::create([
+                $Expense = Expense::create([
                     'expense_head_id'   => $request['expense_head_id'],
                     'amount'            => $request['amount'],
                     'details'           => $request['details'],
-                    'attachment'        => $imgURL,
                     'payment_status'    => $request['payment_status'],
-                    'status' => (isset($request['status'])) ? $request['status'] : 'Inactive'
+                    'status' => (isset($request['is_active'])) ? 'Active' : 'Inactive'
                 ]);
+
+              
+                $photo = (isset($request['attachment']) && $request['attachment']!= "")?$request['attachment']:"";
+                if ($photo!="") {
+					$ext = $photo->getClientOriginalExtension();
+                    $photoFullName = $photo->getClientOriginalName().time(). '.' . $ext;
+                    $upload_path = 'assets/images/expense/';
+                    $success = $photo->move($upload_path, $photoFullName);
+					$Expense->attachment = $photoFullName;
+					$Expense->update();
+                }
+
                 DB::commit();
                 $return['response_code'] = 1;
                 $return['message'] = "Expense Detail saved successfully";
@@ -498,7 +498,7 @@ class ExpenseController extends Controller
         }
     }
 
-    private function editExpenseDetail($request, $id, $photo)
+    private function editExpenseDetail($request, $id)
     {
         try {
             if ($id == "") {
@@ -523,27 +523,27 @@ class ExpenseController extends Controller
             } else {
 
                 DB::beginTransaction();
-                $StudentImage = $photo;
-                if ($StudentImage) {
-                    $image_name = time();
-                    $ext = $StudentImage->getClientOriginalExtension();
-                    $image_full_name = $image_name . '.' . $ext;
-                    $upload_path = 'assets/images/expense/';
-                    $success = $StudentImage->move($upload_path, $image_full_name);
-                    unlink('assets/images/expense/'.$expensedetail->attachment);
-                    $profileImage = $image_full_name;
-
-                } else {
-                    $profileImage = $expensedetail->attachment;
-                }
-
-
                 $expensedetail->expense_head_id = $request['expense_head_id'];
                 $expensedetail->amount = $request['amount'];
                 $expensedetail->details = $request['details'];
-                $expensedetail->attachment = $profileImage;
                 $expensedetail->payment_status = $request['payment_status'];
-                $expensedetail->status = (isset($request['status'])) ? 'Active' : 'Inactive';
+                $expensedetail->status = (isset($request['is_active'])) ? 'Active' : 'Inactive';
+                $expensedetail->update();
+
+
+                $photo = (isset($request['attachment']) && $request['attachment']!= "")?$request['attachment']:"";
+                if ($photo != "") {
+                    $old_image = $expensedetail->attachment;
+                    $image_name = time();
+                    $ext = $photo->getClientOriginalExtension();
+                    $image_full_name = $image_name . '.' . $ext;
+                    $upload_path = 'assets/images/expense/';
+                    $success = $photo->move($upload_path, $image_full_name);
+                    $expensedetail->attachment = $image_full_name;
+                    if(!is_null($old_image) && $expensedetail->attachment != $old_image){
+                        File::delete($upload_path.$old_image); 
+                    }
+                }
                 $expensedetail->update();
 
                 DB::commit();
@@ -569,9 +569,8 @@ class ExpenseController extends Controller
     }
     public function showDetail($id)
     {
-
         if ($id == "") return 0;
-        $expenseDetail = Expense::findOrFail($id);
+        $expenseDetail = Expense::with('expenseHead')->findOrFail($id);
         return json_encode(array('expense' => $expenseDetail));
 
     }

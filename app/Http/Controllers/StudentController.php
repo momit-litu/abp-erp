@@ -196,12 +196,8 @@ class StudentController extends Controller
         return $response_data;
     }
 
-<<<<<<< HEAD
 
     private function createStudent($request, $photo, $documents)
-=======
-    private function createStudent($request, $photo)
->>>>>>> 56f6a7868c26eed37706b067e6c584ef393ae32c
     {
         try {
             $rule = [

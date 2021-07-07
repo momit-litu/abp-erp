@@ -10,7 +10,7 @@
 							<span class="d-inline-block pr-2">
 								<i class="pe-7s-cash icon-gradient bg-mean-fruit"></i>
 							</span>
-                                <span class="d-inline-block">Expense Detail Management</span>
+                                <span class="d-inline-block">Expense Management</span>
                             </div>
                             <div class="page-title-subheading opacity-10">
                                 <nav class="" aria-label="breadcrumb">
@@ -34,9 +34,9 @@
                         </div>
                     </div>
                     <div class="page-title-actions">
-                        <button type="button" onclick='actionAdd()' title="Add a new action" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary">
+                        <button type="button" onclick='expenseAdd()' title="Add a new expense" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary">
                             <i class="fa fa-plus"></i>
-                            Add New Expense Detail
+                            Add New Expense
                         </button>
                     </div>
                 </div>
@@ -46,15 +46,13 @@
                     <table class="table table-bordered table-hover expense_detail_table" id="expense_detail_table" style="width:100% !important">
                         <thead>
                         <tr>
-
                             <th>ID</th>
-                            <th>Expense Head Name</th>
+                            <th>Expense Head</th>
                             <th>Amount</th>
-                            <th>Detail</th>
-                            <th>Attachment</th>
+                            <th>Details</th>
                             <th>Payment Status</th>
                             <th class="hidden-xs">Status</th>
-                            <th width='80'>Actions</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -81,55 +79,57 @@
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="hidden" name="edit_id" id="edit_id">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" > Expense Head Name </label>
-                                            <div class="col-md-12  col-xs-6">
-                                                <select class="form-control col-lg-12"  name="expense_head_id" id="expense_head_id">
-                                                    <option value=""  selected>Select Expense Head Name</option>
-                                                    @foreach($parentExpneseHead as $parentHead)
-                                                        <option value="{{$parentHead->id}}">{{$parentHead->expense_head_name}}</option>
-                                                    @endforeach
-                                                </select>
+                                        <input type="hidden" name="edit_id" id="edit_id">            
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <div class="position-relative form-group">
+                                                    <label  class="">Expense Head Name<span class="required">*</span></label>
+                                                    <select class="form-control col-lg-12"  name="expense_head_id" id="expense_head_id">
+                                                        <option value=""  selected>Select Expense Head Name</option>
+                                                        @foreach($parentExpneseHead as $parentHead)
+                                                            <option value="{{$parentHead->id}}">{{$parentHead->expense_head_name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" >Amount<span class="required">*</span></label>
-                                            <div class="col-md-12  col-xs-6">
-                                                <input type="text" id="amount" name="amount" class="form-control col-lg-12" />
+                                        <div class="form-row">
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label  class="">Amount<span class="required">*</span></label>
+                                                    <input type="text" id="amount" name="amount" class="form-control col-lg-12" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label  class="">Payment Status<span class="required">*</span></label>
+                                                    <select class="form-control col-lg-12" id="payment_status" name="payment_status" >
+                                                        <option value="Due">Due</option>
+                                                        <option value="Partial">Partial</option>
+                                                        <option value="Paid">Paid</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" >Details<span class="required">*</span></label>
-                                            <div class="col-md-12  col-xs-6">
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <label  >Details</label>
                                                 <textarea type="text" id="details" name="details" class="form-control col-lg-12" ></textarea>
+                                                &nbsp;
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" >Attachment<span class="required">*</span></label>
-                                            <div class="col-md-6  col-xs-6">
-                                                <input type="file" id="attachment" name="attachment" class="form-control col-lg-12" />
-                                            </div>
-                                            <div class="col-md-6  col-xs-6">
-                                                <div id="file-attached"></div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" >Payment Status<span class="required">*</span></label>
-                                            <div class="col-md-6  col-xs-6">
-                                                <select class="form-control col-lg-12" id="payment_status" name="payment_status" >
-                                                    <option value="Due">Due</option>
-                                                    <option value="Partial">Partial</option>
-                                                    <option value="Paid">Paid</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" >Is Active</label>
-                                            <div class="col-md-4 col-sm-4 col-xs-6">
+                                        <div class="form-row">
+                                            <div class="col-md-6">
+                                                <label  >Is Active</label>
                                                 <input type="checkbox" id="is_active" name="is_active" checked="checked" class="form-control col-lg-12"/>
                                             </div>
+                                            <div class="col-md-6">
+                                                <label  >Attachment</label>
+                                                <input type="file" id="attachment" name="attachment" class="form-control col-lg-12" />
+                                                <div class="attached-file"></div>
+                                            </div>
                                         </div>
+                                       
                                         <div class="ln_solid"></div>
                                     </div>
                                 </div>
@@ -175,19 +175,6 @@
                                 <div class="row">
                                     <div class="col-md-4 col-xs-12">
                                         <div class="thumbnail text-center photo_view_postion_b" >
-                                            <div class="expense_image">
-
-                                            </div>
-                                            <br>
-                                            <span id="id"> </span>
-                                            @php
-                                                $trackname = "<script> document.getElementByID('id').value; </script>";
-                                          $id = $trackname;
-                                          echo $id;
-
-                                            @endphp
-
-                                            <a href="{{ url('/expense/download',$id) }}" class="btn btn-primary"> Download </a>
                                         </div>
                                     </div>
                                     <div class="col-md-8 col-xs-12">
@@ -195,19 +182,13 @@
 
                                             <span id="expense_head_name"></span>
                                             <p><div id="status_div"></div></p>
-
                                         </div>
                                         <hr>
                                         <div class="col-md-12">
-
                                             <p><span id="amount"></span></p>
                                             <p><span id="details"></span></p>
                                             <p><span id="payment_status"></span></p>
-
                                         </div>
-
-
-
                                     </div>
                                 </div>
                             </div>
@@ -223,9 +204,9 @@
 @section('JScript')
 
     <script>
-        const profile_image_url = "<?php echo asset('assets/images/expense'); ?>";
+        const expense_attachment_url = "<?php echo asset('assets/images/expense'); ?>";
     </script>
-    <script type="text/javascript" src="{{ asset('assets/js/page-js/expense/expense_detail.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/page-js/expense/expense.js')}}"></script>
 @endsection
 
 

@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="page-title-actions">
-                        <button type="button" onclick='actionAdd()' title="Add a new action" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary">
+                        <button type="button" onclick='expenseHeadAdd()' title="Add a new action" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary">
                             <i class="fa fa-plus"></i>
                             Add New Expense Head
                         </button>
@@ -134,7 +134,7 @@
     </div>
 @endsection
 @section('JScript')
-    <script type="text/javascript" src="{{ asset('assets/js/page-js/expense/expense_head.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/page-js/expense/expense.js')}}"></script>
 @endsection
 
 

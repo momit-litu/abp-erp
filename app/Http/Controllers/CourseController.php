@@ -233,8 +233,8 @@ class CourseController extends Controller
 						]);
 					}
 				}				
-				$photo = $request['course_profile_image'];
-                if (isset($photo)) {
+				$photo = (isset($request['course_profile_image']) && $request['course_profile_image']!= "")?$request['course_profile_image']:"";
+                if ($photo!="") {
 					$ext = $photo->getClientOriginalExtension();
                     $photoFullName = $photo->getClientOriginalName().time(). '.' . $ext;
                     $upload_path = 'assets/images/courses/';

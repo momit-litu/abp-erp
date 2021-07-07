@@ -15,5 +15,8 @@ class ExpenseHead extends Model
         return $this->belongsTo(ExpneseCategory::class, 'expense_category_id', 'id');
     }
 
-
+    public function expenses()
+    {
+        return $this->hasMany(Expnese::class, 'expense_head_id', 'id');
+    }
 }
