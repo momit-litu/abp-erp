@@ -30,8 +30,8 @@ Route::post('auth/forget/password/{user_id}/verify',array('as'=>'New Password Su
 Route::post('ckeditor/upload', 'CKEditorController@upload')->name('ckeditor.image-upload');
 
 Route::get('/load-user-groups', array('as'=>'user-group' , 'uses' =>'AdminController@loadUserGroups'));
-Route::post('/units-autosuggest',array('as'=>'Unit Autosuggest list', 'uses' =>'UnitController@unitAutoComplete'));
-Route::post('/courses-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@courseAutoComplete'));
+Route::post('/student-autosuggest',array('as'=>'Student Autosuggest list', 'uses' =>'StudentController@studentAutoComplete'));
+Route::post('/course-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@courseAutoComplete'));
 
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
@@ -120,12 +120,20 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/batch/delete/{id}',array('as'=>'Batch Delete' , 'action_id'=>'84', 'uses' =>'BatchController@destroy'));
 	
 
+	Route::get('/batch-students/{id}',array('as'=>'Batch Students' ,'action_id'=>'81', 'uses' =>'BatchController@studentShow'));
+	Route::post('/batch-student',array('as'=>'Batch Student Entry' , 'action_id'=>'82', 'uses' =>'BatchController@enrollStudent'));
+	
+
+
+
 	//students
 	Route::get('student',array('as'=>'Student' , 'action_id'=>'38', 'uses' =>'StudentController@index'));
 	Route::get('/students',array('as'=>'Student List' ,  'action_id'=>'38','uses' =>'StudentController@showList'));
 	Route::get('/student/{id}',array('as'=>'Student View' , 'action_id'=>'38', 'uses' =>'StudentController@show'));
 	Route::post('/student',array('as'=>'Student Entry', 'action_id'=>'39', 'uses' =>'StudentController@createOrEdit'));
 	Route::get('/student/delete/{id}',array('as'=>'Student Delete', 'action_id'=>'41', 'uses' =>'StudentController@destroy'));
+
+
 
 	// expense
 	Route::get('expense/expense-category',array('as'=>'Expense Category' , 'action_id'=>'66', 'uses' =>'ExpenseController@categoryIndex'));
@@ -145,6 +153,6 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
     Route::get('/expense/expense-detail-list/{id}',array('as'=>'Expense List' ,'action_id'=>'77', 'uses' =>'ExpenseController@showDetail'));
     Route::post('/expense/expense-detail',array('as'=>'Expense Entry' ,'action_id'=>'77', 'uses' =>'ExpenseController@ExpensDetailcreateOrEdit'));
     Route::get('/expense/expense-detail-delete/{id}',array('as'=>'Expense Delete' ,'action_id'=>'80', 'uses' =>'ExpenseController@destroyDetail'));
-    Route::get('/expense/download/{id}',array('as'=>'Expense List' ,'action_id'=>'77', 'uses' =>'ExpenseController@getDownload'));
+
 });
 

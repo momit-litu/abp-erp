@@ -274,13 +274,23 @@ $(document).ready(function () {
 				$("#study_mode").val(data['study_mode']);
 				$("#youtube_video_link").val(data['youtube_video_link']);
 				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
-				editors.objective.setData(data['objective']);
-				editors.accredited_by.setData(data['accredited_by']);
-				editors.semester_details.setData(data['semester_details']);
-				editors.assessment.setData(data['assessment']);
-				editors.grading_system.setData(data['grading_system']);
-				editors.requirements.setData(data['requirements']);
-				editors.experience_required.setData(data['experience_required']);
+
+
+				objective 			= (data['objective'] != null)?data['objective']:"";
+				accredited_by 		= (data['accredited_by'] != null)?data['accredited_by']:"";
+				semester_details 	= (data['semester_details'] != null)?data['semester_details']:"";
+				assessment 			= (data['assessment'] != null)?data['assessment']:"";
+				grading_system 		= (data['grading_system'] != null)?data['grading_system']:"";
+				requirements 		= (data['requirements'] != null)?data['requirements']:"";
+				experience_required = (data['experience_required'] != null)?data['experience_required']:"";
+
+				editors.objective.setData(objective);
+				editors.accredited_by.setData(semester_details);
+				editors.semester_details.setData(semester_details);
+				editors.assessment.setData(assessment);
+				editors.grading_system.setData(grading_system);
+				editors.requirements.setData(requirements);
+				editors.experience_required.setData(experience_required);
 
 				var photo = (data["course_profile_image"]!=null && data["course_profile_image"]!="")?data["course_profile_image"]:'no-user-image.png';
 				$("#course_image").attr("src", course_profile_image+"/"+photo);

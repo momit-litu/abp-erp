@@ -12,7 +12,7 @@ class BatchFee extends Model
     public function batch(){
 		return $this->hasOne('App\Models\Batch','batch_id','id');
 	}
-    public function installment(){
+    public function installments(){
 		return $this->hasMany('App\Models\BatchFeesDetail','batch_fees_id','id');
 	}
 }

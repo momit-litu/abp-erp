@@ -146,14 +146,10 @@ class StudentController extends Controller
     {
         $term = $_REQUEST['term'];
 
-        $data = Student::select('id', 'first_name', 'last_name', 'email')
+        $data = Student::select('id', 'name', 'email')
             ->where([
                 ['status', '=', 'Active'],
-                ['first_name', 'like', '%' . $term . '%']
-            ])
-            ->orwhere([
-                ['status', '=', 'Active'],
-                ['last_name', 'like', '%' . $term . '%']
+                ['name', 'like', '%' . $term . '%']
             ])
             ->orwhere([
                 ['status', '=', 'Active'],
@@ -166,7 +162,7 @@ class StudentController extends Controller
 
         if ($data_count > 0) {
             foreach ($data as $row) {
-                $json[] = array('id' => $row["id"], 'label' => $row["first_name"] . " " . $row["last_name"] . " (" . $row["email"] . ")");
+                $json[] = array('id' => $row["id"], 'label' => $row["name"] . " (" . $row["email"] . ")");
             }
         } else {
             $json[] = array('id' => "0", 'label' => "Not Found !!!");
