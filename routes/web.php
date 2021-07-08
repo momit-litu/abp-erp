@@ -31,7 +31,7 @@ Route::post('ckeditor/upload', 'CKEditorController@upload')->name('ckeditor.imag
 
 Route::get('/load-user-groups', array('as'=>'user-group' , 'uses' =>'AdminController@loadUserGroups'));
 Route::post('/units-autosuggest',array('as'=>'Unit Autosuggest list', 'uses' =>'UnitController@unitAutoComplete'));
-Route::post('/courses-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@qualificationAutoComplete'));
+Route::post('/courses-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@courseAutoComplete'));
 
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
@@ -112,6 +112,13 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/course/delete/{id}',array('as'=>'Course Delete' , 'action_id'=>'28', 'uses' =>'CourseController@destroy'));
 
 
+	// Batches 
+	Route::get('/batch',array('as'=>'Batch', 'action_id'=>'81', 'uses' =>'BatchController@index'));
+	Route::get('/batches',array('as'=>'Batch List' ,'action_id'=>'81', 'uses' =>'BatchController@showList'));
+	Route::get('/batch/{id}',array('as'=>'Batch Details' ,'action_id'=>'81', 'uses' =>'BatchController@show'));
+	Route::post('/batch',array('as'=>'Batch Entry' , 'action_id'=>'82', 'uses' =>'BatchController@createOrEdit'));
+	Route::get('/batch/delete/{id}',array('as'=>'Batch Delete' , 'action_id'=>'84', 'uses' =>'BatchController@destroy'));
+	
 
 	//students
 	Route::get('student',array('as'=>'Student' , 'action_id'=>'38', 'uses' =>'StudentController@index'));

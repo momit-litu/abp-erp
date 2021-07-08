@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class BatchFee extends Model
 {
     protected $fillable= [
-        'id', 'course_id', 'batch_id', 'installment_duration','total_installment', 'amount',  'payment_type', 'fees',  'status'
+        'id',  'batch_id', 'plan_name', 'installment_duration','total_installment', 'payable_amount',  'payment_type',  'status'
     ];
-
     public function batch(){
 		return $this->hasOne('App\Models\Batch','batch_id','id');
+	}
+    public function installment(){
+		return $this->hasMany('App\Models\BatchFeesDetail','batch_fees_id','id');
 	}
 }

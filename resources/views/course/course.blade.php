@@ -112,8 +112,7 @@
 												<textarea name="objective" id="objective" class='ckeditor'></textarea>
 											</div>
 										</div>
-									</div>	
-									<button id='getdata'>Print data</button>					
+									</div>					
 									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">

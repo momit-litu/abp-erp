@@ -398,7 +398,7 @@ $(document).ready(function () {
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Amount :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['amount']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['details']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Payment Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['payment_status']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Attachment :</strong></div>"+"<div class='col-lg-9 col-md-8'><a href='"+expense_attachment_url+'/'+data["attachment"]+"'>"+data["attachment"]+"</a></div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Attachment :</strong></div>"+"<div class='col-lg-9 col-md-8'><a target='_blank' href='"+expense_attachment_url+'/'+data["attachment"]+"'>"+data["attachment"]+"</a></div></div>";
 					
 				$('#myModalLabelLg').html('Expense Details');
 				$('#modalBodyLg').html(modalHtml);
@@ -425,7 +425,7 @@ $(document).ready(function () {
                 $("#expense_head_id").val(data['expense_head_id']);
                 $("#amount").val(data['amount']);
     
-                $(".attached-file").html("<a href='"+expense_attachment_url+'/'+data["attachment"]+"'>"+data["attachment"]+"</a>");
+                $(".attached-file").html("<a target='_blank' href='"+expense_attachment_url+'/'+data["attachment"]+"'>"+data["attachment"]+"</a>");
                 $("#details").val(data['details']);
                 $("#payment_status").val(data['payment_status']);
                 $("#edit_id").val(data['id']);
