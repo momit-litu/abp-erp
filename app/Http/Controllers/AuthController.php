@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\System;
-use Illuminate\Http\Request;
-use App\Http\Requests;
+
 use App\Models\User;
+use App\Http\Requests;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+
+
 class AuthController extends Controller
 {
     /**
@@ -20,6 +24,7 @@ class AuthController extends Controller
         $description 		= \Request::route()->getAction();
         $this->page_desc 	= isset($description['desc']) ? $description['desc'] : $this->page_title;
     }
+
 
     /**
      * Show admin login page for admin

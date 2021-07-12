@@ -4,7 +4,7 @@ $(document).ready(function () {
 	var url = $('.site_url').val();
 
 	// icheck for the inputs
-	$('#batch_form').iCheck({
+	$('#payment_form').iCheck({
 		checkboxClass: 'icheckbox_flat-green',
 		radioClass: 'iradio_flat-green'
 	});
@@ -14,35 +14,31 @@ $(document).ready(function () {
 	});
 
 
-	batchAdd = function batchAdd(){
-		installment_plan=1;
+	paymentAdd = function paymentAdd(){
 		$("#clear_button").trigger('click');
-		$("#form-title").html('<i class="fa fa-plus"></i> Add  New Batch');
-		$("#save_batch").html('Save');	
+		$("#form-title").html('<i class="fa fa-plus"></i> Add  New Payment');
+		$("#save_payment").html('Save');	
 		$('#entry-form').modal('show');
 	}
 
-	batch_datatable = $('#batches_table').DataTable({
+	payment_datatable = $('#payments_table').DataTable({
 		destroy: true,
 		"order": [[ 0, 'desc' ]],
 		"processing": true,
 		"serverSide": false,
-		"ajax": url+"/batches",
+		"ajax": url+"/payments",
 		"aoColumns": [
 			{ mData: 'id'},
-			{ mData: 'batch_name'},
+			{ mData: 'student_name'},
 			{ mData: 'course_name' },
-			{ mData: 'start_date', className: "text-center"},
-			{ mData: 'end_date', className: "text-center"},			
-			{ mData: 'student_limit', className: "text-center"},
-			{ mData: 'total_enrolled_student', className: "text-center"},
-			{ mData: 'running_status', className: "text-center"},
-			{ mData: 'actions' , className: "text-center"},
+			{ mData: 'paid_date', className: "text-center"},
+			{ mData: 'paid_type', className: "text-center"},			
+			{ mData: 'paid_amount', className: "text-right"},
 		],
-		"columnDefs": [
+		/*"columnDefs": [
             { "targets": [ 0 ],  "visible": false },
 			{ "width": "110px", "targets":[ 8 ]},
-        ],
+        ],*/
 	});
 	
 	//autosuggest
@@ -173,7 +169,7 @@ $(document).ready(function () {
 	});
 
 	//Entry And Update Function For Module
-	$("#save_batch").on('click',function(){
+	$("#save_payment").on('click',function(){
 		event.preventDefault();
 		$.ajaxSetup({
 			headers:{
@@ -181,10 +177,10 @@ $(document).ready(function () {
 			}
 		});
 
-		var formData = new FormData($('#batch_form')[0]);
+		var formData = new FormData($('#payment_form')[0]);
 
-		if($.trim($('#batch_name').val()) == ""){
-			success_or_error_msg('#form_submit_error','danger',"Please Insert Batch","#batch_name");
+		if($.trim($('#payment_name').val()) == ""){
+			success_or_error_msg('#form_submit_error','danger',"Please Insert Payment","#payment_name");
 		}
 		else if($.trim($('#course_name').val()) == "" || $.trim($('#course_id').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Please enter Course name","#course_name");
@@ -201,7 +197,7 @@ $(document).ready(function () {
 		else{
 			// validate the installment details
 			$.ajax({
-				url: url+"/batch",
+				url: url+"/payment",
 				type:'POST',
 				data:formData,
 				async:false,
@@ -225,12 +221,12 @@ $(document).ready(function () {
 						toastr['error']( resultHtml, 'Failed!!!!');
 					}
 					else{
-						toastr['success']( 'Batch Saved Successfully', 'Success!!!');
+						toastr['success']( 'Payment Saved Successfully', 'Success!!!');
 						$('.modal').modal('hide');					
-						batch_datatable.ajax.reload();
+						payment_datatable.ajax.reload();
 						clear_form();
 						$('#unit_table tr:gt(0)').remove();
-						$("#save_batch").html('Save');
+						$("#save_payment").html('Save');
 					}
 					$(window).scrollTop();
 				 }
@@ -246,14 +242,14 @@ $(document).ready(function () {
 	
 
 	
-	//Batch detail View
-	batchView = function batchView(id){	
+	//Payment detail View
+	paymentView = function paymentView(id){	
 		$.ajax({
-			url: url+'/batch/'+id,
+			url: url+'/payment/'+id,
 			cache: false,
 			success: function(response){
 				var response = JSON.parse(response);
-				var data = response['batch'];
+				var data = response['payment'];
 				var statusHtml = (data['status']=="Active")?'<span class="badge badge-success">Active</span>':'<span class="badge badge-danger">In-active</span>';
 				if(data['running_status']=="Completed")
 					 runningStatusHtml = '<span class="badge badge-primary">Completed</span>'
@@ -264,7 +260,7 @@ $(document).ready(function () {
 
 				var end_date 	= (data['end_date'] ==null)?"":data['end_date'];
 				var details 	= (data['details'] ==null)?"":data['details'];
-				var modalHtml  ="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Batch Code :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['batch_name']+"</div></div>";
+				var modalHtml  ="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Payment Code :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['payment_name']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Course Title :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['course']['title']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Start Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['start_date']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>End Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+end_date+"</div></div>";
@@ -277,8 +273,8 @@ $(document).ready(function () {
 
 				modalHtml +="<div class='row '>&nbsp;<br><div class='col-lg-12'><strong>Payment Details:</strong></div>"+"<div class='col-lg-12'>";
 				modalHtml +="<table class='table table-bordered' style='width:100% !important'> <thead><tr><th>Plan Name</th><th class='text-center'>Total Inst. No</th><th class='text-center'>Duration (Month)</th><th class='text-right'>		Total Payable</th></tr></thead><tbody>";
-				if(!jQuery.isEmptyObject(data['batch_fees'])){
-					$.each(data['batch_fees'], function(i,dta){ 
+				if(!jQuery.isEmptyObject(data['payment_fees'])){
+					$.each(data['payment_fees'], function(i,dta){ 
 						var installment_duration = (dta['installment_duration']==0)?'':dta['installment_duration']; 
 						modalHtml 	+= "<tr class='table-active'><td>"+dta['plan_name']+"</td>"+"<td class='text-center'>"+dta['total_installment']+"</td>"+"<td class='text-center'>"+installment_duration+"</td>"+"<td class='text-right'>"+dta['payable_amount']+"</td>"+"</tr>";
 						if(dta['plan_name']!='Onetime'){
@@ -294,28 +290,28 @@ $(document).ready(function () {
 					});
 				}
 				modalHtml += "</tbody></table></div></div>";
-				$('#myModalLabelLg').html('Batch Details');
+				$('#myModalLabelLg').html('Payment Details');
 				$('#modalBodyLg').html(modalHtml);
 				$("#generic_modal_lg").modal();				
 			}
 		});
 	}
 
-	batchStudents = function batchStudents(id){	
+	paymentStudents = function paymentStudents(id){	
 		$.ajax({
-			url: url+'/batch-students/'+id,
+			url: url+'/payment-students/'+id,
 			cache: false,
 			success: function(response){
 				var modalHtml ="";
 				var response = JSON.parse(response);
-				var data = response['batch'];
+				var data = response['payment'];
 				var stuents = data['students']
 				
 				modalHtml +=`<div id="accordion" class="accordion-wrapper mb-3">
 								<div class="card">
 									<div id="headingOne" class="card-header text-right">
 										<button type="button" class='btn btn-primary col-md-12' data-toggle="collapse" data-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">
-											<h5 class="m-0 p-0">Enroll a student in this batch </h5>
+											<h5 class="m-0 p-0">Enroll a student in this payment </h5>
 										</button>
 									</div>
 									<div data-parent="#accordion" id="collapseOne1" aria-labelledby="headingOne" class="collapse text-left">
@@ -327,14 +323,14 @@ $(document).ready(function () {
 															<label class="">Student<span class="required">*</span></label>
 															<input type="text" id="student_name" name="student_name" required class="form-control col-lg-12"/>
 															<input type="hidden" id="student_id" required name="student_id"  />
-															<input type="hidden" id="batch_id" required name="batch_id" value="`+data['id']+`"  />
+															<input type="hidden" id="payment_id" required name="payment_id" value="`+data['id']+`"  />
 														</div>
 													</div>	
 													<div class="col-md-3">
 														<div class="position-relative form-group">
 															<label class="">Fee Payment Plan<span class="required">*</span></label>
-															<select id="batch_fees_id" name="batch_fees_id" class="form-control col-lg-12">`;
-																$.each(data['batch_fees'], function(i,dta){ 
+															<select id="payment_fees_id" name="payment_fees_id" class="form-control col-lg-12">`;
+																$.each(data['payment_fees'], function(i,dta){ 
 				modalHtml +=										`<option value="`+dta['id']+`">`+dta['plan_name']+` (`+dta['payable_amount']+`)</option>`;
 																});
 				modalHtml +=								`</select> 										
@@ -413,7 +409,7 @@ $(document).ready(function () {
 					})
 				}
 				modalHtml += "</tbody></table>";
-				$('#myModalLabelLg').html('Student details of batch  #'+data['batch_name']+" ("+data['course']['title']+")");
+				$('#myModalLabelLg').html('Student details of payment  #'+data['payment_name']+" ("+data['course']['title']+")");
 				$('#modalBodyLg').html(modalHtml);
 				$("#generic_modal_lg").modal();	
 				
@@ -456,14 +452,14 @@ $(document).ready(function () {
 							'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 						}
 					});					
-					if( $.trim($('#batch_id').val()) == "" || $.trim($('#student_name').val()) == "" || $.trim($('#student_name').val()) == ""){
+					if( $.trim($('#payment_id').val()) == "" || $.trim($('#student_name').val()) == "" || $.trim($('#student_name').val()) == ""){
 						return false;
 					}					
 					else{
 						$.ajax({
-							url: url+"/batch-student",
+							url: url+"/payment-student",
 							type:'POST',
-							data:{batch_id:$('#batch_id').val(), student_id:$('#student_id').val(),batch_fees_id:$('#batch_fees_id').val()
+							data:{payment_id:$('#payment_id').val(), student_id:$('#student_id').val(),payment_fees_id:$('#payment_fees_id').val()
 							},
 							async:false,
 							success: function(data){
@@ -508,14 +504,14 @@ $(document).ready(function () {
 							'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 						}
 					});					
-					if( $.trim($('#batch_id').val()) == "" || id == ""){
+					if( $.trim($('#payment_id').val()) == "" || id == ""){
 						return false;
 					}					
 					else{
 						$.ajax({
-							url: url+"/batch-student/delete",
+							url: url+"/payment-student/delete",
 							type:'POST',
-							data:{batch_id:$('#batch_id').val(), student_id:id},
+							data:{payment_id:$('#payment_id').val(), student_id:id},
 							async:false,
 							success: function(data){
 								var response = JSON.parse(data);								
@@ -564,14 +560,14 @@ $(document).ready(function () {
 							'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 						}
 					});					
-					if( $.trim($('#batch_id').val()) == "" || id == ""){
+					if( $.trim($('#payment_id').val()) == "" || id == ""){
 						return false;
 					}					
 					else{
 						$.ajax({
-							url: url+"/batch-student/update",
+							url: url+"/payment-student/update",
 							type:'POST',
-							data:{batch_id:$('#batch_id').val(), student_id:id},
+							data:{payment_id:$('#payment_id').val(), student_id:id},
 							async:false,
 							success: function(data){
 								var response = JSON.parse(data);								
@@ -613,21 +609,21 @@ $(document).ready(function () {
 	
 
 	//Edit function for Module
-	batchEdit = function batchEdit(id){
+	paymentEdit = function paymentEdit(id){
 		var edit_id = id;
 		installment_plan =1;
 		$("#clear_button").trigger('click');
 		$('#unit_table tr:gt(0)').remove();
-		$("#admin_user_add_button").html("<b> Edit Batch</b>");
+		$("#admin_user_add_button").html("<b> Edit Payment</b>");
 		
 		$.ajax({
-			url: url+'/batch/'+edit_id,
+			url: url+'/payment/'+edit_id,
 			cache: false,
 			success: function(response){
 				var response = JSON.parse(response);
-				var data = response['batch'];				
-				$("#save_batch").html('Update');
-				$("#batch_name").val(data['batch_name']);
+				var data = response['payment'];				
+				$("#save_payment").html('Update');
+				$("#payment_name").val(data['payment_name']);
 				$("#course_id").val(data['course_id']);
 				$("#course_name").val(data['course']['title']);
 				$("#start_date").val(data['start_date']);
@@ -639,8 +635,8 @@ $(document).ready(function () {
 				$("#details").val(data['details']);
 				$("#running_status").val(data['running_status']);
 				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
-				if(!jQuery.isEmptyObject(data['batch_fees'])){
-					$.each(data['batch_fees'], function(i,dta){
+				if(!jQuery.isEmptyObject(data['payment_fees'])){
+					$.each(data['payment_fees'], function(i,dta){
 							if(dta['plan_name']!='Onetime'){ 
 							var planData = {
 								plan_id: dta['id'].toString(), 
@@ -673,7 +669,7 @@ $(document).ready(function () {
 	}
 
 	//Delete Module
-	batchDelete = function batchDelete(id){
+	paymentDelete = function paymentDelete(id){
 		var delete_id = id;
 		swal({
 			title: "Are you sure?",
@@ -684,7 +680,7 @@ $(document).ready(function () {
 		}).then((willDelete) => {
 			if (willDelete) {
 				$.ajax({
-					url: url+'/batch/delete/'+delete_id,
+					url: url+'/payment/delete/'+delete_id,
 					cache: false,
 					success: function(data){
 						var response = JSON.parse(data);
@@ -693,7 +689,7 @@ $(document).ready(function () {
 						}
 						else{
 							success_or_error_msg('#form_submit_error',"success",response['message']);
-							batch_datatable.ajax.reload();
+							payment_datatable.ajax.reload();
 						}
 					}
 				});

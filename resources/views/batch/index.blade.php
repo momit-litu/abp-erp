@@ -87,7 +87,7 @@
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label class="">Batch <span class="required">*</span></label>
-												<input type="text" id="batch_name" name="code" required class="form-control col-lg-12"/>
+												<input type="text" id="batch_name" name="batch_name" required class="form-control col-lg-12"/>
 											</div>
 										</div>										
 									</div>
@@ -95,14 +95,15 @@
 										<div class="col-md-12">
 											<div class="position-relative form-group">
 												<label  >Course Name<span class="required">*</span></label>
-												<select id="level_id" name="level_id" class="form-control col-lg-12">
+												<!--<select id="level_id" name="level_id" class="form-control col-lg-12">
 													<option value="">Select Course</option>
 													@foreach($courses as $course )
 													<option value="{{$course->id}}">{{$course->code.'-'.$course->title}}</option>
 													@endforeach
-												</select>
-												<!--
-												<input type="text" id="course_name" name="course_name" class="form-control col-lg-12" /> -->
+												</select> -->
+												
+												<input type="text" id="course_name" required name="course_name" class="form-control col-lg-12" />
+												<input type="hidden" id="course_id" required name="course_id"  />
 											</div>
 										</div>
 									</div>	
@@ -110,7 +111,7 @@
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label  >Start Date<span class="required">*</span></label>
-												<input type="date" id="start_date" name="start_date" class="form-control col-lg-12 datepicker" />
+												<input type="date" id="start_date" name="start_date" class="form-control col-lg-12 datepicker" required />
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -119,12 +120,12 @@
 												<input type="date" id="end_date" name="end_date" class="form-control col-lg-12 datepicker" />
 											</div>
 										</div>
-									</div>		
+									</div>	
 									<div class="form-row">							
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label for="company_name" class="">Student Limit</label>
-												<input type="text" id="student_limit" name="student_limit"  class="form-control col-lg-12"/>
+												<label for="company_name" class="">Student Limit<span class="required">*</span></label>
+												<input type="text" id="student_limit" required name="student_limit"  class="form-control col-lg-12"/>
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -155,78 +156,44 @@
 										</div>
 										<div class="col-md-6">
 											<div class="position-relative form-group">
+												<label>Discount Fees (Applicable for all student)<span class="required">*</span></label>
+												<input type="text" id="discounted_fees" name="discounted_fees"  class="form-control col-lg-12"/>
+											</div>
+										</div>
+									</div>
+									<div class="form-row">									
+										<div class="col-md-6">
+											<div class="position-relative form-group">
 												<label for="company_name" class="">Active?</label>
 												<input type="checkbox" id="status" name="status" checked="checked" value="1" class="form-control col-lg-12"/>
 											</div>
 										</div>
 									</div>
-									<hr>
+									<hr>  
 									<div class="form-row bg-gray ">
-										<div class="col-md-8"><b>Installment plan Details</b></div><br>
-										<div class="col-md-4 text-right">
-											<button type="button" onclick='planAdd()' title="Add Installment Plan" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary ">
+										<div class="col-md-4"><b>Installment plan Details</b></div><br>
+										<div class="col-md-8 text-right">
+											<button type="button"  id="plan_add_button" title="Add Installment Plan" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary ">
 												<i class="fa fa-plus"></i>
 												Add Installment Plan
+											</button>
+											<button type="button"  id="plan_clear_button" title="Clear Installment Plan" data-placement="bottom" class="btn-shadow mr-3 btn btn-danger ">												
+												Clear
 											</button>
 										</div>
 										<br>											
 										<table class="table table-bordered  plan_table table-sm table-stripe" id="plan_table" style="width:100% !important"> 
 											<thead>
 												<tr  class="bg-light">
-													<th>Plan Name</th>
-													<th>Total Inst. No</th>
-													<th>Duration (Month)</th>						
+													<th>Plan Name</th>									
+													<th>Duration (Month)</th>		
+													<th>Total Inst. No</th>				
 													<th>Total Payable</th>
 													<th></th>
 												</tr>												
 											</thead>
 											<tbody>
-												<tr class="table-active">
-													<td><input type="text"  name="plan_name[]"  class="form-control col-lg-12"/></td>
-													<td class="text-center">
-														<input type="text"  name="total_installment[]"  class="form-control col-lg-10"/>
-													</td>
-													<td class="text-center">
-														<input type="text"  name="installment_duration[]"  class="form-control col-lg-10"/>
-													</td>
-													<td class="text-center">
-														<input type="text"  name="payable_amount[]"  class="form-control col-lg-10"/>
-													</td>
 												
-												</tr>
-												<tr>
-													<td colspan="2"  class="text-right"><b>Installment Details</b></td>
-													<td colspan="2">
-														<table class="table table-bordered table-sm installment_table" style="width:100% !important" id="1"> 
-															<thead class="thead-light">
-																<tr>
-																	<th>Inst. No</th>
-																	<th>Amount</th>	
-																	<th>
-																		<button type="button"  title="Add Installment" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary btn-sm add_installment_row">
-																			<i class="fa fa-plus"></i>		
-																		</button>	
-																	</th>		
-																</tr>										
-															</thead>
-															<tbody>
-																<tr>
-																	<td class="text-center">
-																		<input type="text"  name="installment_no[1][]"  class="form-control col-lg-10 input-sm"/>
-																	</td>
-																	<td class="text-center">
-																		<input type="text"  name="installment_amount[1][]"  class="form-control col-lg-10 input-sm"/>
-																	</td>
-																	<td>
-																		<button type="button"  title="Remove Installment" data-placement="bottom" class="btn-shadow mr-3 btn btn-danger btn-sm remove_installment_row">
-																			<i class="fa fa-trash"></i>		
-																		</button>	
-																	</td>
-																</tr>
-															</tbody>
-														</table>
-													</td>		
-												</tr>
 											</tbody>
 										</table>
 									</div>

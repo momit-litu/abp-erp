@@ -32,6 +32,7 @@ function createEditor( elementId ) {
         .catch( err => console.error( err.stack ) );
 }
 
+
 // className: danger, success, info, primary, default, warning
 function success_or_error_msg(div_to_show, class_name, message, field_id){
 	$(div_to_show).addClass('alert alert-custom alert-'+class_name).html(message).show("slow");

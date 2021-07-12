@@ -144,8 +144,8 @@ class CourseController extends Controller
 	public function CourseAutoComplete(Request $request, $showtype){
 		$term = $_REQUEST['term'];
 		$user = Auth::user();
-		if($showtype =='Center'){			
-			$centerCourses = Center::with(['Courses'=>function($c) use ($term){
+		if($showtype =='Student'){			
+			$centerCourses = Student::with(['Courses'=>function($c) use ($term){
 				$c->where([
                     ['Courses.status', '=', 'Active'],
                     ['title','like','%'.$term.'%']
