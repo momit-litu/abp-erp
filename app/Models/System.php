@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Mail\TestMail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 /*******************************
 #
@@ -162,30 +165,30 @@ class System extends Model
             }else{
                 return \Redirect::back()->with('message',"Invalid User ID!");
             }
-
-            $data['user_info'] = $user_info;
-            $data['reset_url'] = $reset_url;
+            $details = [
+            'user_info' => $user_info->first_name,
+            'reset_url' => $reset_url,
+            ];
 
             $user_email = $users_email;
             $user_name = $user_info->first_name;
 
-            return true;
+            Mail::to($user_email, $user_name)->send( new TestMail($details));
 
-            \Mail::send('forgot.forget-password-mail', $data, function($message) use ($user_email,$user_name) {
+//            Mail::send('forgot.forget-password-mail', $data, function($message) use ($user_email,$user_name) {
+//                $message->to($user_email,$user_name)->subject('Password Recovery');
+//
+//            });
 
-                $message->to($user_email,$user_name)->subject('Password Recovery');
+            // \App\Models\System::EventLogWrite('send-mail,forget-password-verification',json_encode($data));
 
-            });
-
-            //\App\Models\System::EventLogWrite('send-mail,forget-password-verification',json_encode($data));
-            \Session::flash('errormessage', 'Please check your inbox!');
+           // Session::flash('errormessage', 'Please check your inbox!');
 
 
         }catch (\Exception $e){
-
             $message = "Message : ".$e->getMessage().", File : ".$e->getFile().", Line : ".$e->getLine();
-            \App\Models\System::ErrorLogWrite($message);
-            \Session::flash('errormessage', $e->getMessage());
+            System::ErrorLogWrite($message);
+            Session::flash('errormessage', $e->getMessage());
             return false;
         }
 

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +21,14 @@ Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::get('auth/login',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@authPostLogin'));
+
+
+//Route::get('/send-email',function (){
+//    $mail = Mail::to('razibeee2014@gmail.com')->send(new TestMail());
+//    dd($mail);
+//    echo "Email has been Send";
+//});
+
 
 #ForgetPassword
 Route::get('auth/forget/password',array('as'=>'Forgot Password' , 'uses' =>'AuthController@forgetPasswordAuthPage'));
@@ -104,7 +114,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/unit/delete/{id}',array('as'=>'Unit Delete' , 'action_id'=>'24', 'uses' =>'UnitController@destroy'));
 
 
-	// Courses 
+	// Courses
 	Route::get('/course',array('as'=>'Courses', 'action_id'=>'25', 'uses' =>'CourseController@index'));
 	Route::get('/courses',array('as'=>'Course List' ,'action_id'=>'25', 'uses' =>'CourseController@showList'));
 	Route::get('/course/{id}',array('as'=>'Course Details' ,'action_id'=>'25', 'uses' =>'CourseController@show'));
@@ -112,13 +122,13 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/course/delete/{id}',array('as'=>'Course Delete' , 'action_id'=>'28', 'uses' =>'CourseController@destroy'));
 
 
-	// Batches 
+	// Batches
 	Route::get('/batch',array('as'=>'Batch', 'action_id'=>'81', 'uses' =>'BatchController@index'));
 	Route::get('/batches',array('as'=>'Batch List' ,'action_id'=>'81', 'uses' =>'BatchController@showList'));
 	Route::get('/batch/{id}',array('as'=>'Batch Details' ,'action_id'=>'81', 'uses' =>'BatchController@show'));
 	Route::post('/batch',array('as'=>'Batch Entry' , 'action_id'=>'82', 'uses' =>'BatchController@createOrEdit'));
 	Route::get('/batch/delete/{id}',array('as'=>'Batch Delete' , 'action_id'=>'84', 'uses' =>'BatchController@destroy'));
-	
+
 
 	//students
 	Route::get('student',array('as'=>'Student' , 'action_id'=>'38', 'uses' =>'StudentController@index'));
