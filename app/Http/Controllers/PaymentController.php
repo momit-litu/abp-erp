@@ -17,8 +17,7 @@ use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
 use Illuminate\Support\Facades\File;
 
-
-class BatchController extends Controller
+class PaymentController extends Controller
 {
     use HasPermission;
 	public function __construct(Request $request)
@@ -31,55 +30,47 @@ class BatchController extends Controller
     public function index()
     {
         $data['page_title'] 	= $this->page_title;
-		$data['module_name']	= "Batchs";
-		$data['sub_module']		= "Batches";
+		$data['module_name']	= "Payments";
+		$data['sub_module']		= "Payment Collections";
 		
-		$data['courses'] 		=Batch::where('status','Active')->get();
+		//$data['courses'] 		=StudentPayment::where('status','Active')->get();
 		// action permissions
         $admin_user_id  		= Auth::user()->id;
-        $add_action_id  		= 82; // Batch entry
+        $add_action_id  		= 87; // Payment entry
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
         $data['actions']['add_permisiion']= $add_permisiion;
 
-		return view('batch.index',$data);
+		return view('payment.payment',$data);
     }
 
 	public function showList(){
 		$admin_user_id 		= Auth::user()->id;
-		$edit_action_id 	= 83; // Batch edit
-		$delete_action_id 	= 84; // Batch delete
+		$edit_action_id 	= 88; // Batch edit
+		$delete_action_id 	= 89; // Batch delete
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
 
-	   $batches = Batch::with('course')->with('batch_fees')
+	   $payments = StudentPayment::with('enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')
 							->orderBy('created_at','desc')
 							->get();
-		//dd($batches);	
+		//dd($payments);	
         $return_arr = array();
-        foreach($batches as $batch){
-            $data['id'] 		= $batch->id;            
-			$data['batch_name'] = $batch->batch_name; 
-            $data['course_name']= "<a href='javascript:void(0)' onclick='showCourse(".$batch->course_id.")' />".$batch->course->title."</a>";
-            $data['start_date'] = $batch->start_date; 
-			$data['end_date']   = $batch->end_date;
-			$data['student_limit'] 		    = $batch->student_limit;
-			$data['total_enrolled_student'] = $batch->total_enrolled_student;
+        foreach($payments as $payment){
+            $data['id'] 		    = $payment->id;            
+			$data['student_name']   = $payment->enrollment->student->student_no.'-'.$payment->enrollment->student->name.' ('.$payment->enrollment->student->email.')'; 
+            $data['course_name']    = "<a href='javascript:void(0)' onclick='showBatch(".$payment->enrollment->batch->id.")' />".$payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name."</a>";
+            $data['paid_date']      = $payment->paid_date; 
+			$data['paid_type'] 		= $payment->paid_type;
+			$data['paid_amount']    = $payment->payable_amount;
 
-            $data['running_status'] 	= "";
-            if($batch->running_status == 'Completed')
-                $data['running_status'] 	= "<button class='btn btn-xs btn-primary' disabled>Completed</button>";
-            else if($batch->running_status == 'Running')    
-                $data['running_status'] 	= "<button class='btn btn-xs btn-success' disabled>Running</button>";
-            else if($batch->running_status == 'Upcoming')    
-                $data['running_status'] 	=  "<button class='btn btn-xs btn-info' disabled>Upcoming</button>";
-
-			$data['actions'] =" <button title='View' onclick='batchView(".$batch->id.")' id='view_" . $batch->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
-            $data['actions'] .=" <button title='View' onclick='batchStudents(".$batch->id.")' id='view_" . $batch->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='lnr-users'></i></button>&nbsp;";
+     
+			$data['actions'] =" <button title='View' onclick='paymentView(".$payment->id.")' id='view_" . $payment->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
+            $data['actions'] .=" <button title='View' onclick='paymentStudents(".$payment->id.")' id='view_" . $payment->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='lnr-users'></i></button>&nbsp;";
 		   if($edit_permisiion>0){
-                $data['actions'] .="<button onclick='batchEdit(".$batch->id.")' id=edit_" . $batch->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
+                $data['actions'] .="<button onclick='paymentEdit(".$payment->id.")' id=edit_" . $payment->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
             if ($delete_permisiion>0) {
-                $data['actions'] .=" <button onclick='batchDelete(".$batch->id.")' id='delete_" . $batch->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
+                $data['actions'] .=" <button onclick='paymentDelete(".$payment->id.")' id='delete_" . $payment->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
             }
 
             $return_arr[] = $data;
@@ -201,9 +192,9 @@ class BatchController extends Controller
 				StudentPayment::where('student_enrollment_id', $batchStudent->id)->delete();
 				$batchStudent->delete();
                 $batch = Batch::findOrFail($request['batch_id']);
-                $batch->total_enrolled_student = (($batch->total_enrolled_student)-1);
-                $batch->update();
-                $return['total_enrolled_student'] =$batch->total_enrolled_student;
+                $payment->total_enrolled_student = (($payment->total_enrolled_student)-1);
+                $payment->update();
+                $return['total_enrolled_student'] =$payment->total_enrolled_student;
 				$return['message'] = "Student removed successfully";
                 $return['response_code'] = 1;		
 			}
@@ -325,7 +316,7 @@ class BatchController extends Controller
                     // for the onetime payment plan
                     $oneTimeBatchFee = BatchFee::create([
                         'plan_name' =>  'Onetime',
-                        'batch_id' 	=>  $batch->id,
+                        'batch_id' 	=>  $payment->id,
                         'installment_duration' => 0,
                         'total_installment' =>  1,
                         'payable_amount' =>  ($request['discounted_fees'])?$request['discounted_fees']:$request['fees'],
@@ -344,7 +335,7 @@ class BatchController extends Controller
                             if(!is_null($plan_name)){
                                 $batchFee = BatchFee::create([
                                     'plan_name' =>  $plan_name,
-                                    'batch_id' 	=>  $batch->id,
+                                    'batch_id' 	=>  $payment->id,
                                     'total_installment' =>  $request['total_installment'][$key],
                                     'installment_duration' =>  $request['installment_duration'][$key],
                                     'payable_amount' =>  $request['payable_amount'][$key],
@@ -489,3 +480,4 @@ class BatchController extends Controller
 	}
 
 }
+

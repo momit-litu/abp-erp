@@ -53,7 +53,9 @@
 							<ul>
 								@foreach($menu['sub_menus'] as $sub_menu)		
 								<li class="{{isset($sub_module) && ($sub_module==$sub_menu['menu_title']) ? 'mm-active' : ''}}">
-									<a href="{{url($sub_menu['menu_url'])}}">
+									<a class="{{isset($sub_module) && ($sub_module==$sub_menu['menu_title']) ? 'mm-active' : ''}}"
+									
+									href="{{url($sub_menu['menu_url'])}}">
 										{{$sub_menu['menu_title']}}
 									</a>
 								</li>
