@@ -8,7 +8,6 @@ You can now sign in to {{ config('app.name') }} portal
 @component('mail::button', ['url' => config('app.url')  ])
 Sign in to {{ config('app.name') }} as {{$center->name}}
 @endcomponent
-
 Thanks,<br>
 {{ config('app.name') }}
 @endcomponent
