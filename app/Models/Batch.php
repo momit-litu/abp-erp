@@ -14,9 +14,9 @@ class Batch extends Model
       return $this->hasOne('App\Models\Course','id','course_id');
     }
     public function batch_fees(){
-      return $this->hasMany('App\Models\batchFee','batch_id','id');
+      return $this->hasMany('App\Models\BatchFee','batch_id','id');
     }
     public function students(){
-      return $this->belongsToMany('App\Models\Student','batch_students');	
+      return $this->belongsToMany('App\Models\Student','batch_students')->withPivot('id','total_payable', 'total_paid', 'status');
     }
 }

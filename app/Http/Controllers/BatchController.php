@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
-use App\Models\Level;
 use App\Models\Batch;
+use App\Models\Level;
 use App\Models\Course;
+use App\Models\Student;
 use App\Models\BatchFee;
-use App\Models\BatchFeesDetail;
+use App\Models\BatchStudent;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 use Illuminate\Http\Response;
+use App\Models\StudentPayment;
+use App\Models\BatchFeesDetail;
 use Illuminate\Support\Facades\File;
 
 
@@ -113,12 +116,142 @@ class BatchController extends Controller
     {
 		if($id=="") return 0;		
         $Batch = Batch::with('course', 'batch_fees','batch_fees.installments','students')->findOrFail($id);
+        //dd($Batch->students);
 		return json_encode(array('batch'=>$Batch));
     }
 
     public function enrollStudent(Request $request)
     {
-		dd($request->all());
+        try {
+            if($request['batch_id'] == "" || $request['student_id'] =="" || $request['batch_fees_id']==""){
+                $return['response_code'] = "0";
+                $return['errors'] = 'Validation failed';
+                 return json_encode($return);
+            }
+            else{	
+                $studentEnrollmentCheck = BatchStudent::where('batch_id',$request['batch_id'] )->where('student_id', $request['student_id'])->first();
+                if($studentEnrollmentCheck){
+                    $return['response_code'] = "0";
+                    $return['errors'] = 'Student already enrolled in thos batch';
+                     return json_encode($return);
+                }
+
+                $batchFee  = BatchFee::with('batch','installments')->findOrFail($request['batch_fees_id']);
+               // dd($batchFee);
+				$batchStudent = BatchStudent::create([
+                    'batch_id' 	    =>  $request['batch_id'],
+                    'student_id'	=>  $request['student_id'],
+                    'batch_fees_id' =>  $request['batch_fees_id'],
+                    'total_payable' =>  $batchFee->payable_amount,
+                    'balance'       =>  $batchFee->payable_amount,
+                ]);
+                if($batchStudent){
+                    $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
+                    $batchFee->batch->update();
+                    
+                    foreach($batchFee->installments as $key => $installment){
+                        if($key == 0) 
+                            $last_payment_date= date('Y-m-d');
+                        else if($key==1)                            
+                            $last_payment_date  = date('Y-m-d', strtotime($batchFee->batch->start_date. ' + '.$batchFee->installment_duration.' month'));
+                        else
+                            $last_payment_date  = date('Y-m-d', strtotime($last_payment_date. ' + '.$batchFee->installment_duration.' month'));
+
+                        $studentPayment = StudentPayment::create([
+                            'student_enrollment_id' =>  $batchStudent->id,
+                            'installment_no'        =>  $installment->installment_no,
+                            'payable_amount'        =>  $installment->amount,
+                            'last_payment_date'     =>  $last_payment_date,
+                        ]); 
+                    }
+                }
+             }				
+            DB::commit();
+            $return['response_code'] = 1;
+            $return['total_enrolled_student'] = $batchFee->batch->total_enrolled_student;
+            $return['student'] = Student::findOrFail($request['student_id']);
+            $return['message'] = "Batch saved successfully";
+            return json_encode($return);
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] 	= 0;
+			$return['errors'] = "Failed to save !".$e->getMessage();
+			return json_encode($return);
+		}
+
+    }
+    
+    public function removeStudent(Request $request)
+    {
+        if($request['batch_id']=="" || $request['student_id']==""){
+			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
+		}
+        $batchStudent = BatchStudent::with(['payments'=>function($p){
+            $p->where('paid_amount','>',0);
+        }])->where([['batch_id',$request['batch_id']], ['student_id',$request['student_id']]])->first();
+        $is_deletable = (count($batchStudent->payments)==0)?1:0; // 1:deletabe, 0:not-deletable
+        
+        if(empty($batchStudent)){
+			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No record found"));
+		}
+		try {			
+			DB::beginTransaction();
+			if($is_deletable){
+				StudentPayment::where('student_enrollment_id', $batchStudent->id)->delete();
+				$batchStudent->delete();
+                $batch = Batch::findOrFail($request['batch_id']);
+                $batch->total_enrolled_student = (($batch->total_enrolled_student)-1);
+                $batch->update();
+                $return['total_enrolled_student'] =$batch->total_enrolled_student;
+				$return['message'] = "Student removed successfully";
+                $return['response_code'] = 1;		
+			}
+			else{
+				$batchStudent->status = 'Inactive';
+				$batchStudent->update();
+                $return['status'] = 'Inactive';
+				$return['message'] = "Deletation is not possible, but deactivated the student";
+                $return['response_code'] = 2;
+			}
+			DB::commit();
+				
+			return json_encode($return);
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] 	= 0;
+			$return['errors'] = "Failed to delete !".$e->getMessage();
+			return json_encode($return);
+		}
+    }
+
+    public function reAddStudent(Request $request)
+    {
+        if($request['batch_id']=="" || $request['student_id']==""){
+			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
+		}
+        $batchStudent = BatchStudent::where([['batch_id',$request['batch_id']], ['student_id',$request['student_id']]])->first();
+               
+        if(empty($batchStudent)){
+			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No record found"));
+		}
+		try {			
+			DB::beginTransaction();
+			$batchStudent->status = 'Active';
+            $batchStudent->update();
+			DB::commit();
+            $return['message'] = "Student status updated";
+			$return['response_code'] = 1;
+			return json_encode($return);
+
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] 	= 0;
+			$return['errors'] = "Failed to delete !".$e->getMessage();
+			return json_encode($return);
+		}
     }
     
     

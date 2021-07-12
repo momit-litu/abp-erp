@@ -9,5 +9,7 @@ class BatchStudent extends Model
     protected $fillable= [
         'id', 'batch_id', 'student_id','batch_fees_id','total_payable','total_paid','balance','status'
     ];
-    
+    public function payments(){
+        return $this->hasMany('App\Models\StudentPayment','student_enrollment_id','id');
+      }
 }

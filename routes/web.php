@@ -120,9 +120,13 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/batch/delete/{id}',array('as'=>'Batch Delete' , 'action_id'=>'84', 'uses' =>'BatchController@destroy'));
 	
 
-	Route::get('/batch-students/{id}',array('as'=>'Batch Students' ,'action_id'=>'81', 'uses' =>'BatchController@studentShow'));
-	Route::post('/batch-student',array('as'=>'Batch Student Entry' , 'action_id'=>'82', 'uses' =>'BatchController@enrollStudent'));
+	//Batch student enroll
+	Route::get('/batch-students/{id}',array('as'=>'Batch Students List' ,'action_id'=>'85', 'uses' =>'BatchController@studentShow'));
+	Route::post('/batch-student',array('as'=>'Batch Student Entry' , 'action_id'=>'85', 'uses' =>'BatchController@enrollStudent'));
+	Route::post('/batch-student/delete',array('as'=>'Batch Student Delete' , 'action_id'=>'85', 'uses' =>'BatchController@removeStudent'));
+	Route::post('/batch-student/update',array('as'=>'Batch Student update' , 'action_id'=>'85', 'uses' =>'BatchController@reAddStudent'));
 	
+
 
 
 

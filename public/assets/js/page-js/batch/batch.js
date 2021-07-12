@@ -386,7 +386,7 @@ $(document).ready(function () {
 															<div class="widget-subheading">No of student already enrolled</div>
 														</div>
 														<div class="widget-content-right">
-															<div class="widget-numbers text-primary">`+data['total_enrolled_student']+`</div>
+															<div class="widget-numbers text-primary" id="total_enrolled_student">`+data['total_enrolled_student']+`</div>
 														</div>
 													</div>
 												</div>
@@ -396,11 +396,20 @@ $(document).ready(function () {
 								</div>
 							</div>				
 							`;
-				modalHtml +="<table class='table table-bordered table-sm' style='width:100% !important'> <thead><tr><th></th><th>Student No.</th><th>Full Name</th><th class='text-left'>Email</th><th class='text-center'>Contact No.</th><th class='text-center'>Status</th><th></th></tr></thead><tbody>";
+				modalHtml +="<table id='student_table' class='table table-bordered table-sm' style='width:100% !important'> <thead><tr><th></th><th>Student No.</th><th>Full Name</th><th class='text-left'>Email</th><th class='text-center'>Contact No.</th><th class='text-center'>Status</th><th></th></tr></thead><tbody>";
 
 				if(!jQuery.isEmptyObject(data['students'])){
-					$.each(data['students'], function(i,student){  
-						modalHtml 	+= "<tr><td>"+(i+1)+"</td><td>"+student['student_no']+"</td>"+"<td>"+student['name']+"</td>"+"<td class='text-left'>"+student['email']+"</td>"+"<td class='text-center'>"+student['contact_no']+"</td>"+"<td class='text-center'>"+student['status']+"<td><button type='button'  title='Remove Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs' onclick='removeStudent("+student['id']+")'><i class='fa fa-trash-alt'></i></button></td></tr>";
+					$.each(data['students'], function(i,student){ 
+						if(student['pivot']['status'] == 'Active') {
+							student_status = "<button class='btn btn-xs btn-success' disabled>"+student['pivot']['status']+"</button>";
+							std_button = "<button type='button'  title='Remove Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove-student' ><i class='fa fa-trash-alt'></i></button>";
+						}
+						else {
+							student_status = "<button class='btn btn-xs btn-danger' disabled>"+student['pivot']['status']+"</button>";
+							std_button = "<button type='button'  title='Add Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-success btn-xs add-student' ><i class='fa fa-check'></i></button>";
+						}
+
+						modalHtml 	+= "<tr><td>"+(i+1)+"</td><td>"+student['student_no']+"</td>"+"<td>"+student['name']+"</td>"+"<td class='text-left'>"+student['email']+"</td>"+"<td class='text-left'>"+student['contact_no']+"</td>"+"<td class='text-left'>"+student_status+"<td>"+std_button+"<input type='hidden' id='student_"+student['id']+"' value="+student['id']+" /></td></tr>";
 					})
 				}
 				modalHtml += "</tbody></table>";
@@ -434,7 +443,12 @@ $(document).ready(function () {
 					},
 				});
 
-
+				var student_data_table = $('#student_table').DataTable({
+					responsive: true,
+					paging:     false,
+					"info": false
+				});
+				
 				$('#save_student').on('click',function(){
 					event.preventDefault();
 					$.ajaxSetup({
@@ -446,7 +460,6 @@ $(document).ready(function () {
 						return false;
 					}					
 					else{
-						data = 
 						$.ajax({
 							url: url+"/batch-student",
 							type:'POST',
@@ -454,7 +467,6 @@ $(document).ready(function () {
 							},
 							async:false,
 							success: function(data){
-								return;
 								var response = JSON.parse(data);								
 								if(response['response_code'] == 0){
 									var errors	= response['errors'];						
@@ -471,7 +483,12 @@ $(document).ready(function () {
 									toastr['error']( resultHtml, 'Failed!!!!');
 								}
 								else{
-									toastr['success']( 'Student Enrollment Saved Successfully', 'Success!!!');//batch_datatable.ajax.reload();
+									var student = response['student'];
+									toastr['success']( 'Student Enrollment Saved Successfully', 'Success!!!');
+									student_status = ("<button class='btn btn-xs btn-success' disabled>"+student['status']+"</button>");
+									student_data_table.row.add([response['total_enrolled_student'],student['student_no'],student['name'],student['email'], student['contact_no'], student_status,"<button type='button'  title='Remove Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove-student'><i class='fa fa-trash-alt'></i></button><input type='hidden' id='student_"+student['id']+"' value="+student['id']+" />"]).draw();
+			
+									$('#total_enrolled_student').html(response['total_enrolled_student']);
 									$('#student_name').val("");
 									$('#student_id').val("");
 								}
@@ -480,10 +497,121 @@ $(document).ready(function () {
 						});
 					}
 				});	
+
+
+				$('.remove-student').on('click',function(){
+					var id = $(this).next('input').val();
+					var row = $(this)
+					event.preventDefault();
+					$.ajaxSetup({
+						headers:{
+							'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+						}
+					});					
+					if( $.trim($('#batch_id').val()) == "" || id == ""){
+						return false;
+					}					
+					else{
+						$.ajax({
+							url: url+"/batch-student/delete",
+							type:'POST',
+							data:{batch_id:$('#batch_id').val(), student_id:id},
+							async:false,
+							success: function(data){
+								var response = JSON.parse(data);								
+								if(response['response_code'] == 0){
+									var errors	= response['errors'];						
+									resultHtml = '<ul>';
+									if(typeof(errors)=='string'){
+										resultHtml += '<li>'+ errors + '</li>';
+									}
+									else{
+										$.each(errors,function (k,v) {
+											resultHtml += '<li>'+ v + '</li>';
+										});
+									}
+									resultHtml += '</ul>';
+									toastr['error']( resultHtml, 'Failed!!!!');
+								}
+								else if(response['response_code'] ==2){
+									row.removeClass('btn-outline-danger');
+									row.removeClass('remove-student');
+									row.addClass('btn-outline-success');
+									row.removeClass('add-student');
+									row.html("<i class='fa fa-check'></i>");
+									row.parent().prev('td').html("<button class='btn btn-xs btn-danger' disabled>Inactive</button>");
+									
+									toastr['success']( response['message'], 'Success!!!');
+									$('#total_enrolled_student').html(response['total_enrolled_student']);
+								}
+								else{
+									row.closest('tr').remove();
+									toastr['success']( response['message'], 'Success!!!');
+									$('#total_enrolled_student').html(response['total_enrolled_student']);
+								}
+								$(window).scrollTop();
+							 }
+						});
+					}
+				})
+
+				$('.add-student').on('click',function(){
+					var id = $(this).next('input').val();
+					var add_std_biutton =  $(this);
+					event.preventDefault();
+					$.ajaxSetup({
+						headers:{
+							'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+						}
+					});					
+					if( $.trim($('#batch_id').val()) == "" || id == ""){
+						return false;
+					}					
+					else{
+						$.ajax({
+							url: url+"/batch-student/update",
+							type:'POST',
+							data:{batch_id:$('#batch_id').val(), student_id:id},
+							async:false,
+							success: function(data){
+								var response = JSON.parse(data);								
+								if(response['response_code'] == 0){
+									var errors	= response['errors'];						
+									resultHtml = '<ul>';
+									if(typeof(errors)=='string'){
+										resultHtml += '<li>'+ errors + '</li>';
+									}
+									else{
+										$.each(errors,function (k,v) {
+											resultHtml += '<li>'+ v + '</li>';
+										});
+									}
+									resultHtml += '</ul>';
+									toastr['error']( resultHtml, 'Failed!!!!');
+								}
+								else{
+									add_std_biutton.removeClass('btn-outline-success');
+									add_std_biutton.removeClass('add-student');
+									add_std_biutton.addClass('btn-outline-danger');
+									add_std_biutton.removeClass('remove-student');
+									add_std_biutton.html("<i class='fa fa-trash-alt'></i>");
+									add_std_biutton.parent().prev('td').html("<button class='btn btn-xs btn-success' disabled>Active</button>");
+									toastr['success']( 'Student Added Successfully', 'Success!!!');
+								}
+								$(window).scrollTop();
+							 }
+						});
+					}
+				})
+
+				
 			}
 		});
 	}
-		
+	
+	
+	
+
 	//Edit function for Module
 	batchEdit = function batchEdit(id){
 		var edit_id = id;
