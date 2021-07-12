@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\test;
+use App\Models\System;
+use Illuminate\Http\Request;
+use App\Http\Requests;
 use App\Models\User;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -163,14 +165,15 @@ class AuthController extends Controller
 
 
         #UpdateRememberToken
-        $token = \App\System::RandomStringNum(16);
+        $token = System::RandomStringNum(16);
         \App\Models\User::where('id',$user_email->id)->update(['remember_token'=>$token]);
 
         $reset_url= url('auth/forget/password/'.$user_email->id.'/verify').'?token='.$token;
 		//echo $reset_url;die;
         //return \Redirect::to($reset_url);
 
-        \App\System::ForgotPasswordEmail($user_email->id, $reset_url);
+        $mail = System::ForgotPasswordEmail($user_email->id, $reset_url);
+
         return redirect('auth/forget/password')->with('message',"Please check your mail !.");
     }
 

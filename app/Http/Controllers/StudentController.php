@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TestMail;
 use DB;
 use Auth;
 use App\Models\User;
@@ -12,6 +13,7 @@ use App\Traits\HasPermission;
 use App\Models\StudentDocument;
 use App\Models\UserGroupMember;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 
 
 class StudentController extends Controller
@@ -106,17 +108,17 @@ class StudentController extends Controller
         }
         try {
             DB::beginTransaction();
-            if ($is_deletable) { 
+            if ($is_deletable) {
                 if(!empty($student->documents)){
                     foreach($student->documents as $deletedSDoc){
                         $path = 'assets/images/student/documents/';
-                        File::delete($path.$deletedSDoc->document_name);  
+                        File::delete($path.$deletedSDoc->document_name);
                         $deletedSDoc->delete();
                     }
                 }
                 if($student->user_profile_image != null){
                     $path = 'assets/images/student/';
-                    File::delete($path.$student->user_profile_image);  
+                    File::delete($path.$student->user_profile_image);
                 }
 
                 $user = User::where('student_id',$student->id)->firstOrFail();
@@ -131,7 +133,7 @@ class StudentController extends Controller
                 $return['message'] = "Deletation is not possible, but deactivated the student";
                 $return['response_code'] = 0;
             }
-            DB::commit();            
+            DB::commit();
             return json_encode($return);
         } catch (\Exception $e) {
             DB::rollback();
@@ -235,7 +237,7 @@ class StudentController extends Controller
                 // save the student
                 $student = Student::create([
                     'name' => $request['name'],
-                    'student_no' => $request['student_no'],                    
+                    'student_no' => $request['student_no'],
                     'email' => $request['email'],
                     'contact_no' => $request['contact_no'],
                     'emergency_contact' => $request['emergency_contact'],
@@ -279,7 +281,7 @@ class StudentController extends Controller
                         $upload_path = 'assets/images/student/documents/';
                         $success = $document->move($upload_path, $documentFullName);
 
-                        $studentDocument = StudentDocument::create([                            
+                        $studentDocument = StudentDocument::create([
                             'student_id'	=> $student->id,
                             'document_name'	=> $documentFullName,
                             'type'	        => $ext,
@@ -344,7 +346,7 @@ class StudentController extends Controller
                     $return['errors'][] = $request['email'] . " is already exists";
                     return json_encode($return);
                 }
-                
+
                 $student->student_no = $request['student_no'];
                 $student->name = $request['name'];
                 $student->email = $request['email'];
@@ -378,7 +380,7 @@ class StudentController extends Controller
                     $student->user_profile_image = $image_full_name;
                     $user->user_profile_image = $image_full_name;
                     if(!is_null($old_image) && $user->user_profile_image != $old_image){
-                        File::delete($upload_path.$old_image); 
+                        File::delete($upload_path.$old_image);
                     }
                 }
                 $student->update();
@@ -391,7 +393,7 @@ class StudentController extends Controller
                         $upload_path = 'assets/images/student/documents/';
                         $success = $document->move($upload_path, $documentFullName);
 
-                        $studentDocument = StudentDocument::create([                            
+                        $studentDocument = StudentDocument::create([
                             'student_id'	=> $student->id,
                             'document_name'	=> $documentFullName,
                             'type'	        => $ext,
@@ -399,12 +401,12 @@ class StudentController extends Controller
                     }
                 }
 
-                
-               
+
+
                 $deletedSDocs = $student->documents->except($oldDoc);
                 foreach($deletedSDocs as $deletedSDoc){
                     $path = 'assets/images/student/documents/';
-                    File::delete($path.$deletedSDoc->document_name);  
+                    File::delete($path.$deletedSDoc->document_name);
                     $deletedSDoc->delete();
                 }
 
@@ -421,4 +423,6 @@ class StudentController extends Controller
             return json_encode($return);
         }
     }
+
+
 }
