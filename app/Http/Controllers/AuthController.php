@@ -39,7 +39,7 @@ class AuthController extends Controller
 
         if (\Auth::check()) {
             \App\Models\User::LogInStatusUpdate("login");
-           // return redirect('dashboard');
+            return redirect('dashboard');
 
         } else {
             $data['page_title'] = $this->page_title;
@@ -194,7 +194,7 @@ class AuthController extends Controller
             $data['page_title'] = $this->page_title;
             return \View::make('auth.set-new-password',$data);
 
-        }else return redirect('auth/forget/password')->with('errormessage',"Sorry invalid token!");
+        } else return redirect('auth/forget/password')->with('errormessage',"Sorry invalid token!");
 
     }
 
