@@ -37,6 +37,11 @@ Route::post('ckeditor/upload', 'CKEditorController@upload')->name('ckeditor.imag
 Route::get('/load-user-groups', array('as'=>'user-group' , 'uses' =>'AdminController@loadUserGroups'));
 Route::post('/student-autosuggest',array('as'=>'Student Autosuggest list', 'uses' =>'StudentController@studentAutoComplete'));
 Route::post('/course-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@courseAutoComplete'));
+Route::get('/student-course-batch-autosuggest/{id}',array('as'=>'Student Course Batch Autosuggest list', 'uses' =>'PaymentController@courseBatchList'));
+Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
+
+
+
 
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
@@ -115,6 +120,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/course/{id}',array('as'=>'Course Details' ,'action_id'=>'25', 'uses' =>'CourseController@show'));
 	Route::post('/course',array('as'=>'Course Entry' , 'action_id'=>'26', 'uses' =>'CourseController@createOrEdit'));
 	Route::get('/course/delete/{id}',array('as'=>'Course Delete' , 'action_id'=>'28', 'uses' =>'CourseController@destroy'));
+	Route::get('/course-batches/{id}',array('as'=>'Batch List' ,'action_id'=>'25', 'uses' =>'CourseController@showBatchList'));
 
 
 	// Batches
@@ -132,13 +138,13 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/payment',array('as'=>'Payment Entry' , 'action_id'=>'87', 'uses' =>'PaymentController@createOrEdit'));
 	Route::get('/payment/delete/{id}',array('as'=>'Payment Delete' , 'action_id'=>'89', 'uses' =>'PaymentController@destroy'));
 
-	
-	// Batches
-	Route::get('/batch',array('as'=>'Batch', 'action_id'=>'81', 'uses' =>'BatchController@index'));
-	Route::get('/batches',array('as'=>'Batch List' ,'action_id'=>'81', 'uses' =>'BatchController@showList'));
-	Route::get('/batch/{id}',array('as'=>'Batch Details' ,'action_id'=>'81', 'uses' =>'BatchController@show'));
-	Route::post('/batch',array('as'=>'Batch Entry' , 'action_id'=>'82', 'uses' =>'BatchController@createOrEdit'));
-	Route::get('/batch/delete/{id}',array('as'=>'Batch Delete' , 'action_id'=>'84', 'uses' =>'BatchController@destroy'));
+	//Payment Schedule
+	Route::get('/payment-schedule',array('as'=>'Payment Schedule', 'action_id'=>'90', 'uses' =>'PaymentController@scheduleIndex'));
+	Route::get('/payment-schedules',array('as'=>'Payment Schedule List' ,'action_id'=>'90', 'uses' =>'PaymentController@scheduleShowList'));
+	Route::get('/payment-schedule/{id}',array('as'=>'Payment Schedule Details' ,'action_id'=>'90', 'uses' =>'PaymentController@scheduleShow'));
+	Route::post('/payment-schedule',array('as'=>'Payment Schedule Entry' , 'action_id'=>'91', 'uses' =>'PaymentController@scheduleUpdate'));
+	Route::get('/payment-schedule/delete/{id}',array('as'=>'Payment Schedule Delete' , 'action_id'=>'92', 'uses' =>'PaymentController@scheduleDestroy'));
+
 
 
 

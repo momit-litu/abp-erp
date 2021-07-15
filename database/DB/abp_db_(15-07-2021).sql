@@ -25,9 +25,9 @@ CREATE TABLE IF NOT EXISTS `actions` (
   KEY `FK_actions_menus_2` (`is_menu`),
   CONSTRAINT `FK_actions_menus` FOREIGN KEY (`module_id`) REFERENCES `menus` (`id`),
   CONSTRAINT `FK_actions_menus_2` FOREIGN KEY (`is_menu`) REFERENCES `menus` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.actions: ~46 rows (approximately)
+-- Dumping data for table abpdb.actions: ~52 rows (approximately)
 /*!40000 ALTER TABLE `actions` DISABLE KEYS */;
 INSERT INTO `actions` (`id`, `activity_name`, `module_id`, `is_menu`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 'Admin User Management', 4, 5, 1, NULL, NULL),
@@ -75,7 +75,15 @@ INSERT INTO `actions` (`id`, `activity_name`, `module_id`, `is_menu`, `status`, 
 	(81, 'Batch Management', 15, 35, 1, '2021-07-07 12:54:26', '2021-07-07 12:54:26'),
 	(82, 'Batch Entry', 15, NULL, 1, '2021-07-07 12:54:43', '2021-07-07 12:54:43'),
 	(83, 'Batch Update', 15, NULL, 1, '2021-07-07 12:55:01', '2021-07-07 12:55:01'),
-	(84, 'Batch Delete', 15, NULL, 1, '2021-07-07 12:55:12', '2021-07-07 12:55:12');
+	(84, 'Batch Delete', 15, NULL, 1, '2021-07-07 12:55:12', '2021-07-07 12:55:12'),
+	(85, 'Batch Student Enroll', 17, NULL, 1, '2021-07-10 07:45:23', '2021-07-10 07:45:23'),
+	(86, 'Payment Management', 36, 37, 1, '2021-07-12 07:31:30', '2021-07-12 07:34:12'),
+	(87, 'Payment Entry', 36, NULL, 1, '2021-07-12 07:35:49', '2021-07-12 07:35:49'),
+	(88, 'Payment Update', 37, NULL, 1, '2021-07-12 07:36:06', '2021-07-12 07:36:06'),
+	(89, 'Payment Delete', 36, NULL, 1, '2021-07-12 07:36:21', '2021-07-12 07:36:21'),
+	(90, 'Payment Schedule Management', 36, 38, 1, '2021-07-13 11:40:16', '2021-07-13 11:40:16'),
+	(91, 'Payment Schedule Edit', 36, NULL, 1, '2021-07-13 11:40:29', '2021-07-13 11:40:29'),
+	(92, 'Payment Schedule Delete', 36, NULL, 1, '2021-07-13 11:40:41', '2021-07-13 11:40:41');
 /*!40000 ALTER TABLE `actions` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.batches
@@ -86,6 +94,7 @@ CREATE TABLE IF NOT EXISTS `batches` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `fees` double NOT NULL DEFAULT 0,
+  `discounted_fees` double(22,0) NOT NULL DEFAULT 0,
   `student_limit` tinyint(2) NOT NULL DEFAULT 0,
   `total_enrolled_student` tinyint(2) NOT NULL DEFAULT 0,
   `details` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -96,12 +105,15 @@ CREATE TABLE IF NOT EXISTS `batches` (
   PRIMARY KEY (`id`),
   KEY `FK_batches_courses` (`course_id`),
   CONSTRAINT `FK_batches_courses` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batches: ~0 rows (approximately)
+-- Dumping data for table abpdb.batches: ~3 rows (approximately)
 /*!40000 ALTER TABLE `batches` DISABLE KEYS */;
-INSERT INTO `batches` (`id`, `course_id`, `batch_name`, `start_date`, `end_date`, `fees`, `student_limit`, `total_enrolled_student`, `details`, `running_status`, `status`, `created_at`, `updated_at`) VALUES
-	(1, 10, 'Batch001', '2021-10-01', '2021-09-30', 50000, 20, 0, NULL, 'Upcoming', 'Active', '2021-07-07 20:47:11', NULL);
+INSERT INTO `batches` (`id`, `course_id`, `batch_name`, `start_date`, `end_date`, `fees`, `discounted_fees`, `student_limit`, `total_enrolled_student`, `details`, `running_status`, `status`, `created_at`, `updated_at`) VALUES
+	(5, 9, '12', '2021-08-15', NULL, 50000, 48000, 20, 0, 'some details', 'Upcoming', 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(10, 9, '13', '2021-10-15', NULL, 60000, 55000, 30, 0, NULL, 'Upcoming', 'Active', '2021-07-08 14:31:13', '2021-07-08 14:31:13'),
+	(11, 9, '14', '2022-01-01', NULL, 50000, 44000, 20, 2, NULL, 'Upcoming', 'Active', '2021-07-08 18:50:31', '2021-07-12 08:21:31'),
+	(12, 10, '01', '2021-09-01', '2022-08-31', 25000, 20000, 30, 1, NULL, 'Upcoming', 'Active', '2021-07-14 15:28:26', '2021-07-14 15:28:50');
 /*!40000 ALTER TABLE `batches` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.batch_fees
@@ -109,9 +121,9 @@ CREATE TABLE IF NOT EXISTS `batch_fees` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `batch_id` bigint(20) unsigned NOT NULL,
   `plan_name` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `total_installment` tinyint(2) NOT NULL DEFAULT 1,
-  `installment_duration` tinyint(2) NOT NULL DEFAULT 0,
-  `payable_amount` double(8,2) NOT NULL DEFAULT 0.00,
+  `total_installment` tinyint(2) NOT NULL,
+  `installment_duration` tinyint(2) NOT NULL,
+  `payable_amount` double(8,2) NOT NULL,
   `payment_type` enum('Installment','Onetime') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Onetime',
   `status` enum('Active','Inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Active',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -119,13 +131,21 @@ CREATE TABLE IF NOT EXISTS `batch_fees` (
   PRIMARY KEY (`id`),
   KEY `FK_batch_fees_batches` (`batch_id`),
   CONSTRAINT `FK_batch_fees_batches` FOREIGN KEY (`batch_id`) REFERENCES `batches` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batch_fees: ~2 rows (approximately)
+-- Dumping data for table abpdb.batch_fees: ~10 rows (approximately)
 /*!40000 ALTER TABLE `batch_fees` DISABLE KEYS */;
 INSERT INTO `batch_fees` (`id`, `batch_id`, `plan_name`, `total_installment`, `installment_duration`, `payable_amount`, `payment_type`, `status`, `created_at`, `updated_at`) VALUES
-	(1, 1, '', 1, 0, 50000.00, 'Onetime', 'Active', NULL, NULL),
-	(2, 1, '', 3, 4, 54.00, 'Installment', 'Active', NULL, NULL);
+	(10, 5, 'Onetime', 1, 0, 48000.00, 'Onetime', 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(11, 5, '2Installment', 2, 6, 50000.00, 'Installment', 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(12, 5, '3Installment', 3, 4, 52000.00, 'Installment', 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(18, 10, 'Onetime', 1, 0, 55000.00, 'Onetime', 'Active', '2021-07-08 14:31:13', '2021-07-08 14:31:13'),
+	(19, 10, '2Installment', 2, 6, 60000.00, 'Installment', 'Active', '2021-07-08 14:31:13', '2021-07-08 14:31:13'),
+	(20, 11, 'Onetime', 1, 0, 44000.00, 'Onetime', 'Active', '2021-07-08 18:50:31', '2021-07-08 19:04:46'),
+	(21, 11, '3installment', 3, 4, 50000.00, 'Installment', 'Active', '2021-07-08 18:50:31', '2021-07-08 19:39:35'),
+	(23, 11, '2Installment', 2, 6, 50000.00, 'Installment', 'Active', '2021-07-08 19:39:35', '2021-07-08 19:39:35'),
+	(24, 12, 'Onetime', 1, 0, 20000.00, 'Onetime', 'Active', '2021-07-14 15:28:26', '2021-07-14 15:28:26'),
+	(25, 12, '2Installment', 2, 6, 22000.00, 'Installment', 'Active', '2021-07-14 15:28:26', '2021-07-14 15:28:26');
 /*!40000 ALTER TABLE `batch_fees` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.batch_fees_details
@@ -140,11 +160,57 @@ CREATE TABLE IF NOT EXISTS `batch_fees_details` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_batch_fees_details_batch_fees` (`batch_fees_id`),
   CONSTRAINT `FK_batch_fees_details_batch_fees` FOREIGN KEY (`batch_fees_id`) REFERENCES `batch_fees` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batch_fees_details: ~0 rows (approximately)
+-- Dumping data for table abpdb.batch_fees_details: ~18 rows (approximately)
 /*!40000 ALTER TABLE `batch_fees_details` DISABLE KEYS */;
+INSERT INTO `batch_fees_details` (`id`, `batch_fees_id`, `installment_no`, `amount`, `status`, `created_at`, `updated_at`) VALUES
+	(10, 10, 1, 48000.00, 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(11, 11, 1, 30000.00, 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(12, 11, 2, 20000.00, 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(13, 12, 1, 20000.00, 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(14, 12, 2, 20000.00, 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(15, 12, 3, 12000.00, 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
+	(22, 18, 1, 55000.00, 'Active', '2021-07-08 14:31:13', '2021-07-08 14:31:13'),
+	(23, 19, 1, 30000.00, 'Active', '2021-07-08 14:31:13', '2021-07-08 14:31:13'),
+	(24, 19, 2, 30000.00, 'Active', '2021-07-08 14:31:13', '2021-07-08 14:31:13'),
+	(25, 20, 1, 44000.00, 'Active', '2021-07-08 18:50:31', '2021-07-08 19:04:46'),
+	(41, 21, 1, 20000.00, 'Active', '2021-07-08 19:40:33', '2021-07-08 19:40:33'),
+	(42, 21, 2, 20000.00, 'Active', '2021-07-08 19:40:33', '2021-07-08 19:40:33'),
+	(43, 21, 3, 10000.00, 'Active', '2021-07-08 19:40:33', '2021-07-08 19:40:33'),
+	(44, 23, 1, 30000.00, 'Active', '2021-07-08 19:40:33', '2021-07-08 19:40:33'),
+	(45, 23, 2, 20000.00, 'Active', '2021-07-08 19:40:33', '2021-07-08 19:40:33'),
+	(46, 24, 1, 20000.00, 'Active', '2021-07-14 15:28:26', '2021-07-14 15:28:26'),
+	(47, 25, 1, 11000.00, 'Active', '2021-07-14 15:28:26', '2021-07-14 15:28:26'),
+	(48, 25, 2, 11000.00, 'Active', '2021-07-14 15:28:26', '2021-07-14 15:28:26');
 /*!40000 ALTER TABLE `batch_fees_details` ENABLE KEYS */;
+
+-- Dumping structure for table abpdb.batch_students
+CREATE TABLE IF NOT EXISTS `batch_students` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `batch_id` bigint(20) unsigned NOT NULL,
+  `student_id` bigint(20) unsigned NOT NULL,
+  `batch_fees_id` bigint(20) unsigned NOT NULL,
+  `total_payable` double(8,2) unsigned NOT NULL DEFAULT 0.00,
+  `total_paid` double(8,2) unsigned NOT NULL DEFAULT 0.00,
+  `balance` double(8,2) unsigned NOT NULL DEFAULT 0.00,
+  `status` enum('Active','Inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Active',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_batch_students_batches` (`batch_id`),
+  KEY `FK_batch_students_students` (`student_id`),
+  CONSTRAINT `FK_batch_students_batches` FOREIGN KEY (`batch_id`) REFERENCES `batches` (`id`),
+  CONSTRAINT `FK_batch_students_students` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table abpdb.batch_students: ~3 rows (approximately)
+/*!40000 ALTER TABLE `batch_students` DISABLE KEYS */;
+INSERT INTO `batch_students` (`id`, `batch_id`, `student_id`, `batch_fees_id`, `total_payable`, `total_paid`, `balance`, `status`, `created_at`, `updated_at`) VALUES
+	(25, 11, 28, 21, 48000.00, 0.00, 48000.00, 'Active', '2021-07-09 12:47:15', '2021-07-14 19:48:04'),
+	(33, 11, 21, 20, 44000.00, 44000.00, 0.00, 'Active', '2021-07-12 08:21:31', '2021-07-13 11:33:51'),
+	(34, 12, 28, 25, 21000.00, 11000.00, 10000.00, 'Active', '2021-07-14 15:28:50', '2021-07-14 20:21:19');
+/*!40000 ALTER TABLE `batch_students` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.courses
 CREATE TABLE IF NOT EXISTS `courses` (
@@ -184,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `courses` (
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
 INSERT INTO `courses` (`id`, `level_id`, `code`, `title`, `short_name`, `trainers`, `accredited_by`, `awarder_by`, `programme_duration`, `course_cover_image`, `semester_no`, `semester_details`, `assessment`, `grading_system`, `course_profile_image`, `objective`, `requirements`, `experience_required`, `youtube_video_link`, `tqt`, `glh`, `total_credit_hour`, `registration_fees`, `status`, `study_mode`, `created_at`, `updated_at`) VALUES
 	(9, 1, 'Q2021001', 'PGDHRM', '', NULL, NULL, NULL, NULL, NULL, 1, '1', '1', '1', NULL, '', '', '', '', 600, 0, 30, 500.00, 'Active', 'Online', '2021-06-22 13:19:12', '2021-07-05 12:52:54'),
-	(10, 1, 'PGDFinance', 'PGDFinance', '', NULL, NULL, NULL, NULL, NULL, 1, '1', '1', '1', NULL, '', '', '', '', 340, 0, 30, 20.00, 'Active', 'Online', '2021-07-05 12:53:43', '2021-07-05 12:53:51'),
+	(10, 1, 'PGDFinance', 'PGDFinance', 'PGDF', NULL, '<p>1</p>', NULL, NULL, NULL, 1, '<p>1</p>', '<p>1</p>', '<p>1</p>', NULL, NULL, NULL, NULL, NULL, 340, 70, 30, 20.00, 'Active', 'Online', '2021-07-05 12:53:43', '2021-07-14 15:26:36'),
 	(12, 12, '100001', 'Asssasasa as asdas dsdasd asd d HH', 'ASD', 'Trainers HH', '<p>Accredited HH</p>', 'Awarder HH', '4-12 Months HH', NULL, 4, '<p>Semester Details HH</p>', '<p>Assesment HH</p>', '<p>Grading System HH</p>', '1625568790.jpg', '<p>HHHHHHHHHHHHHHHHHHHH DD</p>', '<p>Requirements HH</p>', '<p>Experience Required HH</p>', 'youtube HH', 340, 70, 70, 20.00, 'Active', 'Campus', '2021-07-06 09:48:11', '2021-07-07 12:43:33');
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 
@@ -202,17 +268,17 @@ CREATE TABLE IF NOT EXISTS `courses_units` (
   KEY `qualification_units_qualification_id_foreign` (`course_id`) USING BTREE,
   CONSTRAINT `FK_courses_units_courses` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   CONSTRAINT `qualification_units_unit_id_foreign` FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table abpdb.courses_units: ~6 rows (approximately)
 /*!40000 ALTER TABLE `courses_units` DISABLE KEYS */;
 INSERT INTO `courses_units` (`id`, `unit_id`, `course_id`, `status`, `type`, `created_at`, `updated_at`) VALUES
 	(47, 23, 9, 'Active', 'Optional', '2021-07-05 12:52:54', '2021-07-05 12:52:54'),
 	(48, 24, 9, 'Active', 'Optional', '2021-07-05 12:52:54', '2021-07-05 12:52:54'),
-	(51, 23, 10, 'Active', 'Optional', '2021-07-05 12:53:51', '2021-07-05 12:53:51'),
-	(52, 24, 10, 'Active', 'Optional', '2021-07-05 12:53:51', '2021-07-05 12:53:51'),
 	(75, 23, 12, 'Active', 'Optional', '2021-07-07 12:43:33', '2021-07-07 12:43:33'),
-	(76, 24, 12, 'Active', 'Optional', '2021-07-07 12:43:33', '2021-07-07 12:43:33');
+	(76, 24, 12, 'Active', 'Optional', '2021-07-07 12:43:33', '2021-07-07 12:43:33'),
+	(77, 23, 10, 'Active', 'Optional', '2021-07-14 15:26:36', '2021-07-14 15:26:36'),
+	(78, 24, 10, 'Active', 'Optional', '2021-07-14 15:26:36', '2021-07-14 15:26:36');
 /*!40000 ALTER TABLE `courses_units` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.expenses
@@ -312,9 +378,9 @@ CREATE TABLE IF NOT EXISTS `menus` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.menus: ~19 rows (approximately)
+-- Dumping data for table abpdb.menus: ~22 rows (approximately)
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
 INSERT INTO `menus` (`id`, `module_name`, `menu_title`, `menu_url`, `parent_id`, `serial_no`, `menu_icon_class`, `status`, `created_at`, `updated_at`) VALUES
 	(4, 'Users', 'Users', '', 0, 6, 'pe-7s-users', 1, NULL, NULL),
@@ -335,7 +401,10 @@ INSERT INTO `menus` (`id`, `module_name`, `menu_title`, `menu_url`, `parent_id`,
 	(29, 'Expense Category', 'Expense Category', 'expense/expense-category', 28, 3, NULL, 1, '2021-06-12 07:42:11', '2021-06-12 07:43:50'),
 	(33, 'Expense Head', 'Expense Head', 'expense/expense-head', 28, 2, NULL, 1, '2021-07-06 12:20:14', '2021-07-06 12:20:14'),
 	(34, 'Expenses', 'Expenses', 'expense/expense', 28, 1, NULL, 1, '2021-07-06 12:20:27', '2021-07-06 12:20:27'),
-	(35, 'Batches', 'Batches', 'batch', 15, 1, NULL, 1, '2021-07-07 12:53:58', '2021-07-07 12:53:58');
+	(35, 'Batches', 'Batches', 'batch', 15, 1, NULL, 1, '2021-07-07 12:53:58', '2021-07-07 12:53:58'),
+	(36, 'Payments', 'Payments', '', 0, 3, 'pe-7s-cash', 1, '2021-07-12 07:30:58', '2021-07-12 07:30:58'),
+	(37, 'Payment Collections', 'Payment Collections', 'payment', 36, 1, NULL, 1, '2021-07-12 07:33:52', '2021-07-12 07:33:52'),
+	(38, 'Payment Schedules', 'Payment Schedules', 'payment-schedule', 36, 2, NULL, 1, '2021-07-13 11:39:43', '2021-07-13 11:39:43');
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.migrations
@@ -489,7 +558,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 -- Dumping data for table abpdb.settings: ~0 rows (approximately)
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` (`id`, `company_name`, `short_name`, `site_name`, `admin_email`, `admin_mobile`, `site_url`, `admin_url`, `logo`, `address`, `created_at`, `updated_at`) VALUES
-	(1, 'ABP BD', 'ABP', 'ABPBD', 'admin@abpbd.com', '45455', NULL, NULL, 'logo-inverse.png', 'sdfsd f, sdf sdf', NULL, '2021-06-08 06:20:17');
+	(1, 'Ace Learning', 'ALearning', 'Ace Learning', 'admin@ace-learning.com', '45455', NULL, NULL, 'logo-inverse.png', 'sdfsd f, sdf sdf', NULL, '2021-07-14 09:53:27');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.students
@@ -546,6 +615,40 @@ INSERT INTO `student_documents` (`id`, `student_id`, `document_name`, `type`) VA
 	(21, 28, 'bg_4.png1625724018.png', 'png');
 /*!40000 ALTER TABLE `student_documents` ENABLE KEYS */;
 
+-- Dumping structure for table abpdb.student_payments
+CREATE TABLE IF NOT EXISTS `student_payments` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `student_enrollment_id` bigint(20) unsigned NOT NULL,
+  `installment_no` int(11) unsigned NOT NULL DEFAULT 0,
+  `payable_amount` bigint(20) unsigned NOT NULL,
+  `paid_amount` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `payment_status` enum('Paid','Unpaid') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Unpaid',
+  `paid_type` enum('Cash','SSL') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Cash',
+  `last_payment_date` date DEFAULT NULL,
+  `paid_date` date DEFAULT NULL,
+  `details` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_refference_no` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `invoice_no` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `receive_status` enum('Received','Not Received') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Not Received',
+  `attachment` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_student_payments_batch_students` (`student_enrollment_id`),
+  CONSTRAINT `FK_student_payments_batch_students` FOREIGN KEY (`student_enrollment_id`) REFERENCES `batch_students` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table abpdb.student_payments: ~6 rows (approximately)
+/*!40000 ALTER TABLE `student_payments` DISABLE KEYS */;
+INSERT INTO `student_payments` (`id`, `student_enrollment_id`, `installment_no`, `payable_amount`, `paid_amount`, `payment_status`, `paid_type`, `last_payment_date`, `paid_date`, `details`, `payment_refference_no`, `invoice_no`, `receive_status`, `attachment`, `created_at`, `updated_at`) VALUES
+	(38, 25, 1, 20000, 0, 'Unpaid', 'Cash', '2021-07-12', NULL, NULL, NULL, NULL, 'Not Received', NULL, '2021-07-09 12:47:15', '2021-07-13 11:33:51'),
+	(39, 25, 2, 20000, 0, 'Unpaid', 'Cash', '2022-05-01', NULL, NULL, NULL, NULL, 'Not Received', NULL, '2021-07-09 12:47:15', '2021-07-13 11:27:21'),
+	(40, 25, 3, 8000, 0, 'Unpaid', 'Cash', '2022-09-01', NULL, NULL, NULL, NULL, 'Not Received', NULL, '2021-07-09 12:47:15', '2021-07-14 19:48:04'),
+	(48, 33, 1, 44000, 44000, 'Paid', 'Cash', '2021-07-12', '2021-07-14', NULL, '111', 'INV-000001', 'Received', NULL, '2021-07-12 08:21:31', '2021-07-13 11:33:51'),
+	(49, 34, 1, 11000, 11000, 'Paid', 'Cash', '2021-07-14', '2021-07-15', 'some details', '12334', 'INV-000002', 'Received', '1626276980image05_thumb.jpg', '2021-07-14 15:28:50', '2021-07-14 15:36:20'),
+	(50, 34, 2, 10000, 0, 'Unpaid', 'Cash', '2022-03-01', NULL, NULL, NULL, NULL, 'Not Received', NULL, '2021-07-14 15:28:50', '2021-07-14 19:47:46');
+/*!40000 ALTER TABLE `student_payments` ENABLE KEYS */;
+
 -- Dumping structure for table abpdb.units
 CREATE TABLE IF NOT EXISTS `units` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -593,7 +696,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table abpdb.users: ~3 rows (approximately)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `user_profile_image`, `contact_no`, `remarks`, `student_id`, `status`, `type`, `login_status`, `password`, `email_verified_at`, `remember_token`, `created_at`, `updated_at`) VALUES
-	(1, 'Momit', 'Hasan', 'momit@technolife.ee', '1616308888.jpg', '74645564654', NULL, NULL, 1, 'Admin', 0, '$2y$10$mIW4VQ9btgEIsWKD6AnDeOD8ysMvPIQ7JQXFDmnYr35NpvXKlpHv2', NULL, 'SMtmLpUM16y4huaPsaUd9rfMSjot9MMq1TW5jbBvQiMFslalsf39p22pq0nd', '2021-06-07 12:50:15', '2021-07-08 05:38:08'),
+	(1, 'Momit', 'Hasan', 'momit@technolife.ee', '1616308888.jpg', '74645564654', NULL, NULL, 1, 'Admin', 0, '$2y$10$zFj3Z1gRkrbgUvoNXF6cXubdAp8p54yy4kRgJ421RQNqllCEvHJka', NULL, NULL, '2021-06-07 12:50:15', '2021-07-14 15:23:45'),
 	(23, 'Muniff', 'Hasannn', 'munif@gmail.com', NULL, '6546468', 'sdr fsfsfsdff', 21, 0, 'Student', 0, '$2y$10$QQmSPi5wO7aCRjyxbu.6je640APp9Y7.McASuZrhyFmQPpWorDTIu', NULL, NULL, '2021-06-21 09:46:55', '2021-06-21 10:02:27'),
 	(24, 'Muntakim hasan', NULL, 'muntakim@gmail.com', '1625479466.jpg', '8646485', 'sdf hfsdj fhsdkfh sdnfhkl sdf', 28, 0, 'Student', 0, '$2y$10$UGgEOhSogRTdSwF9ymuwGu1QIXybBNS2akRAfQKK0AABANMJBXQsS', NULL, NULL, '2021-07-05 07:24:16', '2021-07-08 06:00:18');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
@@ -656,9 +759,9 @@ CREATE TABLE IF NOT EXISTS `user_group_permissions` (
   KEY `FK_user_group_permissions_actions` (`action_id`),
   CONSTRAINT `FK_user_group_permissions_actions` FOREIGN KEY (`action_id`) REFERENCES `actions` (`id`),
   CONSTRAINT `FK_user_group_permissions_user_groups` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=307 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=331 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.user_group_permissions: ~109 rows (approximately)
+-- Dumping data for table abpdb.user_group_permissions: ~137 rows (approximately)
 /*!40000 ALTER TABLE `user_group_permissions` DISABLE KEYS */;
 INSERT INTO `user_group_permissions` (`id`, `group_id`, `action_id`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 1, 1, 1, NULL, NULL),
@@ -780,7 +883,31 @@ INSERT INTO `user_group_permissions` (`id`, `group_id`, `action_id`, `status`, `
 	(303, 27, 83, 0, '2021-07-07 12:55:01', '2021-07-07 12:55:01'),
 	(304, 1, 84, 1, '2021-07-07 12:55:12', '2021-07-07 12:55:12'),
 	(305, 2, 84, 1, '2021-07-07 12:55:12', '2021-07-07 12:55:12'),
-	(306, 27, 84, 0, '2021-07-07 12:55:12', '2021-07-07 12:55:12');
+	(306, 27, 84, 0, '2021-07-07 12:55:12', '2021-07-07 12:55:12'),
+	(307, 1, 85, 1, '2021-07-10 07:45:23', '2021-07-10 07:45:23'),
+	(308, 2, 85, 0, '2021-07-10 07:45:23', '2021-07-10 07:45:23'),
+	(309, 27, 85, 0, '2021-07-10 07:45:23', '2021-07-10 07:45:23'),
+	(310, 1, 86, 1, '2021-07-12 07:31:30', '2021-07-12 07:31:30'),
+	(311, 2, 86, 0, '2021-07-12 07:31:30', '2021-07-12 07:31:30'),
+	(312, 27, 86, 0, '2021-07-12 07:31:30', '2021-07-12 07:31:30'),
+	(313, 1, 87, 1, '2021-07-12 07:35:49', '2021-07-12 07:35:49'),
+	(314, 2, 87, 0, '2021-07-12 07:35:49', '2021-07-12 07:35:49'),
+	(315, 27, 87, 0, '2021-07-12 07:35:49', '2021-07-12 07:35:49'),
+	(316, 1, 88, 1, '2021-07-12 07:36:06', '2021-07-12 07:36:06'),
+	(317, 2, 88, 0, '2021-07-12 07:36:06', '2021-07-12 07:36:06'),
+	(318, 27, 88, 0, '2021-07-12 07:36:06', '2021-07-12 07:36:06'),
+	(319, 1, 89, 1, '2021-07-12 07:36:21', '2021-07-12 07:36:21'),
+	(320, 2, 89, 0, '2021-07-12 07:36:21', '2021-07-12 07:36:21'),
+	(321, 27, 89, 0, '2021-07-12 07:36:21', '2021-07-12 07:36:21'),
+	(322, 1, 90, 1, '2021-07-13 11:40:16', '2021-07-13 11:40:16'),
+	(323, 2, 90, 0, '2021-07-13 11:40:16', '2021-07-13 11:40:16'),
+	(324, 27, 90, 0, '2021-07-13 11:40:16', '2021-07-13 11:40:16'),
+	(325, 1, 91, 1, '2021-07-13 11:40:29', '2021-07-13 11:40:29'),
+	(326, 2, 91, 0, '2021-07-13 11:40:29', '2021-07-13 11:40:29'),
+	(327, 27, 91, 0, '2021-07-13 11:40:29', '2021-07-13 11:40:29'),
+	(328, 1, 92, 1, '2021-07-13 11:40:41', '2021-07-13 11:40:41'),
+	(329, 2, 92, 0, '2021-07-13 11:40:41', '2021-07-13 11:40:41'),
+	(330, 27, 92, 0, '2021-07-13 11:40:41', '2021-07-13 11:40:41');
 /*!40000 ALTER TABLE `user_group_permissions` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

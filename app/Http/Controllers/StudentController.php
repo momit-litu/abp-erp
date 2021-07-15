@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\TestMail;
+use App\Models\BatchStudent;
 use DB;
 use Auth;
 use App\Models\User;
@@ -50,10 +51,10 @@ class StudentController extends Controller
     {
         $admin_user_id = Auth::user()->id;
         $userType = Auth::user()->type;
-        $edit_action_id = 40; // Student edit
-        $delete_action_id = 41; // Student delete
-        $edit_permisiion = $this->PermissionHasOrNot($admin_user_id, $edit_action_id);
-        $delete_permisiion = $this->PermissionHasOrNot($admin_user_id, $delete_action_id);
+ 
+        $edit_permisiion = $this->PermissionHasOrNot($admin_user_id, 40);
+        $delete_permisiion = $this->PermissionHasOrNot($admin_user_id, 41);
+        $payment_permisiion = $this->PermissionHasOrNot($admin_user_id, 90);
 
         $studentSql = Student::Select('id', 'name','student_no', 'email', 'contact_no', 'address', 'nid_no', 'user_profile_image', 'remarks', 'status');
 
@@ -75,9 +76,14 @@ class StudentController extends Controller
 
 
 			$data['actions']		=" <button title='View' onclick='studentView(".$student->id.")' id='view_" . $student->id . "' class='btn btn-xs btn-info btn-hover-shine admin-user-view' ><i class='lnr-eye'></i></button>";
-			if($edit_permisiion>0){
+
+            if($edit_permisiion>0){
 				$data['actions'] 	.=" <button title='Edit' onclick='studentEdit(".$student->id.")' id=edit_" . $student->id . " class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
 			}
+            if($payment_permisiion>0){
+				$data['actions'] 	.=" <button title='Edit' onclick='studentPayments(".$student->id.")' id=payment_" . $student->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-cash'></i></button>";
+			}
+			
 			if ($delete_permisiion > 0) {
 					$data['actions'] .=" <button title='Delete' onclick='studentDelete(".$student->id.")' id='delete_" . $student->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
 			}
@@ -92,7 +98,9 @@ class StudentController extends Controller
     {
         if ($id == "") return 0;
         $student = Student::with('documents')->findOrFail($id);
-        return json_encode(array('student' => $student));
+        $batchStudent = new BatchStudent();
+        $courses = $batchStudent->getBatchesByStudentId($student->id);
+        return json_encode(array('student' => $student, 'courses'=>$courses));
     }
 
     public function destroy($id)

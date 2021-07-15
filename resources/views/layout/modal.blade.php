@@ -60,16 +60,14 @@
 				</button>
 			</div>
       
-      <div class="modal-body" > 
+      <div class="modal-body " > 
         <div class="main-card mb-3 card">
-					<div class="card-body" id="modalBodyLg">
+					<div class="card-body printable" id="modalBodyLg">
           </div>
         </div>
       </div>
       <div class="modal-footer hidden-print">
         <button class="btn btn-primary  print-button-lg" style="display:none"  onclick="printWindow()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print</button>
-        <button class="btn btn-primary hidden-print" id="print-button-t" style="display:none"  onclick="printTranscript()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print Transcript</button>
-        <button class="btn btn-primary hidden-print" id="print-button-c" style="display:none"  onclick="printCertificate()"><span  class="glyphicon glyphicon-print" aria-hidden="true"></span> Print Certificate</button>
         <button type="button" class="btn btn-danger hidden-print" data-dismiss="modal">Close</button>
 	  </div>
     </div>

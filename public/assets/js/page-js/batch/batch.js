@@ -689,10 +689,10 @@ $(document).ready(function () {
 					success: function(data){
 						var response = JSON.parse(data);
 						if(response['response_code'] == 0){
-							success_or_error_msg('#form_submit_error',"danger",response['errors']);
+							toastr['error']( response['message'], 'Faild!!!');
 						}
 						else{
-							success_or_error_msg('#form_submit_error',"success",response['message']);
+							toastr['success']( response['message'], 'Success!!!');
 							batch_datatable.ajax.reload();
 						}
 					}

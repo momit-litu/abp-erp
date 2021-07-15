@@ -44,7 +44,7 @@
                 </div>
             </div>
 			<div class='row'>
-				<div class='col-lg-10'>
+				<div class='col-lg-12'>
             <div class="main-card mb-3 card">
                 <div class="card-body">
                     <table class="table table-bordered table-hover learners_table" id="students_table" style="width:100% !important">
@@ -280,11 +280,8 @@
                                         </div>
                                     </div>
                                     <hr>
-
-                                    <p>Attachments:</p>
-                                    
-                                    <div id='attachment_div'></div>
-                                    
+                                    <p>Attachments:</p>                                    
+                                    <div id='attachment_div'></div>                             
                                 </div>
                                 <div class="col-md-8 col-xs-12">
                                     <div class="" >
@@ -312,9 +309,12 @@
                                     <div class="col-md-12">
                                         <div id="remarks_details">
                                         </div>
-                                    </div>
-
+                                        <hr>
+                                    </div>                                 
                                 </div>
+                                <br> <br><br> <br>
+                               
+                                <div id="course_list" class="col-md-12"></div>   
                             </div>
                         </div>
                     </div>

@@ -451,10 +451,10 @@ $(document).ready(function () {
                     success: function(data){
                         var response = JSON.parse(data);
                         if(response['response_code'] == 0){
-                            success_or_error_msg('#master_message_div',"danger",response['errors']);
+                            toastr['error']( response['errors'], 'Error!!!');
                         }
                         else{
-                            success_or_error_msg('#master_message_div',"success",response['message']);
+                            toastr['success']( response['message'], 'Success!!!');
                             expense_detail_datatable.ajax.reload();
                         }
                     }

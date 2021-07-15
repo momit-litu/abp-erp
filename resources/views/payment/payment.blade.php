@@ -48,10 +48,13 @@
 						<tr> 
 							<th>ID</th>
 							<th>Student Name</th>
-							<th>Course Title</th>											
-							<th>Paid Date </th>
+							<th>Course Title</th>	
+							<th>Installment</th>
+							<th>Payment Month</th>												
+							<th>Payment Date </th>
 							<th>Type</th>
-							<th>Amount</th>							
+							<th>Amount</th>	
+							<th>Actions</th>								
 						</tr>
 					</thead>
 					<tbody>
@@ -84,18 +87,26 @@
 										<div class="col-md-12">
 											<div class="position-relative form-group">
 												<label class="">Student Name <span class="required">*</span></label>
-												<input type="text" id="payment_name" name="payment_name" required class="form-control col-lg-12"/>
+												<input type="text" id="student_name" required name="student_name" class="form-control col-lg-12" />
+												<input type="hidden" id="student_id" required name="student_id"  />
 											</div>
 										</div>										
-									</div>
+									</div> 
 									<div class="form-row">
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label  >Course & Batch<span class="required">*</span></label>
-												<input type="text" id="course_name" required name="course_name" class="form-control col-lg-12" />
-												<input type="hidden" id="course_id" required name="course_id"  />
-												<input type="hidden" id="student_enrollment_id" required name="student_enrollment_id"  />
+												<select id="course_name" required name="course_name" class="form-control col-lg-12">
+													
+												</select>
 												
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="position-relative form-group">
+												<label>Installment<span class="required">*</span></label>
+												<select id="installment_no" required name="installment_no" class="form-control col-lg-12">								
+												</select>												
 											</div>
 										</div>
 									</div>	
@@ -112,20 +123,20 @@
 												<input type="date" id="paid_date" name="paid_date" class="form-control col-lg-12 datepicker" required />
 											</div>
 										</div>
-									</div>	
-									<div class="form-row">							
+									</div>	 
+									<div class="form-row">							 
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label for="company_name" class="">Reference Number<span class="required">*</span></label>
+												<label for="company_name" class="">Reference Number</label>
 												<input type="text" id="payment_refference_no" required name="payment_refference_no"  class="form-control col-lg-12"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label class="">Payment Status </label>
-												<select id="running_status" name="running_status" class="form-control col-lg-12">
-													<option value="Not Received">Not Received</option>
-													<option value="Received">Received</option>	
+												<select id="receive_status" name="receive_status" class="form-control col-lg-12">
+													<option value="Received">Received</option>
+													<option value="Not Received">Not Received</option>	
 											</select>
 											</div>
 										</div>
@@ -143,6 +154,7 @@
 											<label>	<strong>Attachment</strong></label>
 											<hr>
 											<input type="file" class="form-control col-lg-12" name="attachment"  data-show-upload="true" data-show-caption="true" id="attachment" value="" >
+											<div id="attachment_div"></div>
 										</div>
 									</div>
 									<hr>  						
@@ -175,7 +187,11 @@
 </div>
 
 @endsection
-@section('JScript')		
+@section('JScript')	
+<script>
+	const logo = "<?php echo asset('assets/images/logo-inverse.png'); ?>";
+	const payment_attachment_url = "<?php echo asset('assets/images/payment'); ?>";
+</script>	
 <script type="text/javascript" src="{{ asset('assets/js/page-js/payment/payment.js')}}"></script>
 @endsection
 

@@ -32,6 +32,9 @@ function createEditor( elementId ) {
         .catch( err => console.error( err.stack ) );
 }
 
+printWindow =  function printWindow() {
+	window.print();
+}	
 
 // className: danger, success, info, primary, default, warning
 function success_or_error_msg(div_to_show, class_name, message, field_id){

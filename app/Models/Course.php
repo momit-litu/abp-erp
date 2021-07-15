@@ -14,10 +14,12 @@ class Course extends Model
 	
 	public function level(){
 		return $this->hasOne('App\Models\Level','id','level_id');
-	}
-	
+	}	
 	public function units(){
 		return $this->belongsToMany('App\Models\Unit','courses_units')->withPivot('type');
+	}
+	public function batch(){
+		return $this->hasMany('App\Models\Batch','id','course_id');
 	}
 	/*public function student(){
 		return $this->belongsToMany('App\Models\Student','center_qualifications');	

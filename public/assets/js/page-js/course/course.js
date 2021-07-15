@@ -48,7 +48,6 @@ $(document).ready(function () {
         ],
 	});
 	
-	//autosuggest
 	$.ajaxSetup({
 		headers:{
 			'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
@@ -328,10 +327,10 @@ $(document).ready(function () {
 					success: function(data){
 						var response = JSON.parse(data);
 						if(response['response_code'] == 0){
-							success_or_error_msg('#form_submit_error',"danger",response['errors']);
+							toastr['error']( response['message'], 'Faild!!!');
 						}
 						else{
-							success_or_error_msg('#form_submit_error',"success",response['message']);
+							toastr['success']( response['message'], 'Success!!!');
 							course_datatable.ajax.reload();
 						}
 					}
@@ -344,5 +343,59 @@ $(document).ready(function () {
 			}
 		});
 	}
+
+	
+	courseBatch = function courseBatch(id){	
+		$.ajax({
+			url: url+'/course-batches/'+id,
+			cache: false,
+			success: function(response){
+				var response = JSON.parse(response);
+
+				var batch_list_html = "";
+				if(!jQuery.isEmptyObject(response['batches'])){
+					batch_list_html +=`
+						<table class="table table-bordered table-hover batches_table" style="width:100% !important">
+							<thead>
+								<tr> 									
+									<th>Batch Name</th>										
+									<th class="text-center">Start Date </th>
+									<th class="text-center">End Date</th>
+									<th class="text-center">Course Fee</th>
+									<th class="text-center">Student Limit</th>								<th class="text-center">Enrolled Student</th>		
+									<th class="text-center">Status</th>
+								</tr>
+							</thead>
+							<tbody>`;
+
+
+					$.each(response['batches'], function(i,batch){
+						batch_list_html +=`
+								<tr> 									
+									<td>`+batch['batch_name']+`</td>	
+									<td class="text-center">`+batch['start_date']+`</td>	
+									<td class="text-center">`+batch['end_date']+`</td>	
+									<td>`+batch['fees']+`</td>	
+									<td class="text-center">`+batch['student_limit']+`</td>	
+									<td class="text-center">`+batch['total_enrolled_student']+`</td>		<td class="text-center">`+batch['running_status']+`</td>	
+								</tr>
+						`;
+					});
+					batch_list_html +=`
+							</tbody>
+						</table>
+					`;
+				}
+				else
+				batch_list_html += "<div class='alert alert-danger col-md-12'>No Batch Record Found</div>";
+
+				$('#myModalLabelLg').html('Batch List');
+				$('#modalBodyLg').html(batch_list_html);
+				$("#generic_modal_lg").modal();				
+			}
+		});
+	}
+
+
 });
 

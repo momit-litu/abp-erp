@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use App\Models\Batch;
 use App\Models\Level;
 use App\Models\Course;
 use App\Models\CourseUnit;
@@ -71,6 +72,9 @@ class CourseController extends Controller
 		   if($edit_permisiion>0){
                 $data['actions'] .="<button onclick='courseEdit(".$Course->id.")' id=edit_" . $Course->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
+			
+			$data['actions'] 	.=" <button title='Edit' onclick='courseBatch(".$Course->id.")' id=batch" . $Course->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-menu'></i></button>";
+
             if ($delete_permisiion>0) {
                 $data['actions'] .=" <button onclick='courseDelete(".$Course->id.")' id='delete_" . $Course->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
             }
@@ -78,6 +82,32 @@ class CourseController extends Controller
             $return_arr[] = $data;
         }
         return json_encode(array('data'=>$return_arr));
+	}
+
+	
+	public function showBatchList($id){
+	   $batches = Batch::where('course_id',$id)
+							->orderBy('created_at','desc')
+							->get();
+		//dd($batches);		
+        $return_arr = array();
+        foreach($batches as $batch){
+			if($batch->running_status == 'Completed')
+				$data['running_status'] 	= "<button class='btn btn-xs btn-primary' disabled>Completed</button>";
+			else if($batch->running_status == 'Running')    
+				$data['running_status'] 	= "<button class='btn btn-xs btn-success' disabled>Running</button>";
+			else if($batch->running_status == 'Upcoming')    
+				$data['running_status'] 	=  "<button class='btn btn-xs btn-info' disabled>Upcoming</button>";
+
+			$data['batch_name'] 	= $batch->batch_name;
+            $data['start_date'] 	= $batch->start_date;
+			$data['end_date'] 		= ($batch->end_date ==null)?"":$batch->end_date;
+			$data['fees'] 			= $batch->discounted_fees;
+			$data['student_limit'] 	= $batch->student_limit;
+			$data['total_enrolled_student'] = $batch->total_enrolled_student;
+            $return_arr[] = $data;
+        }
+        return json_encode(array('batches'=>$return_arr));
 	}
 
     public function createOrEdit(Request $request)
@@ -135,7 +165,7 @@ class CourseController extends Controller
 		catch (\Exception $e){
 			DB::rollback();
 			$return['response_code'] 	= 0;
-			$return['errors'] = "Failed to delete !".$e->getMessage();
+			$return['message'] = "Failed to delete !".$e->getMessage();
 			return json_encode($return);
 		}
 		
@@ -145,13 +175,13 @@ class CourseController extends Controller
 		$term = $_REQUEST['term'];
 		$user = Auth::user();
 		if($showtype =='Student'){			
-			$centerCourses = Student::with(['Courses'=>function($c) use ($term){
+			$studentCourses = Student::with(['Courses'=>function($c) use ($term){
 				$c->where([
                     ['Courses.status', '=', 'Active'],
                     ['title','like','%'.$term.'%']
                 ]);
 			}])->find($user->center_id);
-			$data = $centerCourses->Courses;
+			$data = $studentCourses->Courses;
 		}
 		else{
 			$data = Course::select('id', 'code', 'title')
@@ -179,6 +209,8 @@ class CourseController extends Controller
 		return json_encode($json);
 		
 	}
+	
+
 	
 	private function createCourse($request){
 		try {

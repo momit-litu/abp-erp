@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="{{ asset('assets/plugins/iCheck/skins/all.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/select2/select2.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" type="text/css" media="print"/>
 
 <!--<link rel="icon" href="{{ asset('assets/images/fevicon.png')}}" type="image/png" />-->
 @yield('style')

@@ -51,7 +51,7 @@ class BatchController extends Controller
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
 
-	   $batches = Batch::with('course')->with('batch_fees')
+	    $batches = Batch::with('course')->with('batch_fees')
 							->orderBy('created_at','desc')
 							->get();
 		//dd($batches);	
@@ -101,7 +101,6 @@ class BatchController extends Controller
 		else{
 			$response_data =  $this->createBatch($request->all());
 		}
-
         return $response_data;
     }
 

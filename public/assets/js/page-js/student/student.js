@@ -28,11 +28,10 @@ $(document).ready(function () {
 		],
 		"columnDefs": [
             { "targets": [ 0 ],  "visible": false },
-			{ "width": "80px", "targets":[ 6 ]},
+			{ "width": "110px", "targets":[ 7 ]},
         ],
 	});
 
-	//autosuggest
 	$.ajaxSetup({
 		headers:{
 			'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
@@ -149,7 +148,45 @@ $(document).ready(function () {
                     $("#remarks_details").html("");
                 }
 
-                console.log(profile_image_url)
+				var course_list_html = "";
+				if(!jQuery.isEmptyObject(response['courses'])){
+					course_list_html +=`
+						<h6><b>Course Information</b></h6>
+						<table class="table table-bordered table-hover batches_table" style="width:100% !important">
+							<thead>
+								<tr> 									
+									<th>Course Title</th>	
+									<th>Batch</th>										
+									<th class="text-center">Start Date </th>
+									<th class="text-center">End Date</th>
+									<th class="text-center">Credit Hr.</th>
+									<th class="text-center">Semister</th>												
+									<th class="text-center">Status</th>
+								</tr>
+							</thead>
+							<tbody>`;
+
+
+					$.each(response['courses'], function(i,course){
+						course_list_html +=`
+								<tr> 									
+									<td>`+course['course_name']+`</td>	
+									<td>`+course['batch_name']+`</td>										
+									<td class="text-center">`+course['start_date']+`</td>	
+									<td class="text-center">`+course['end_date']+`</td>	
+									<td class="text-center">`+course['total_credit_hour']+`</td>	
+									<td class="text-center">`+course['semester_no']+`</td>										
+									<td class="text-center">`+course['running_status']+`</td>	
+								</tr>
+						`;
+					});
+					course_list_html +=`
+							</tbody>
+						</table>
+					`;
+				}
+				$("#course_list").html(course_list_html);
+                //console.log(profile_image_url)
                 if (data["user_profile_image"]!=null && data["user_profile_image"]!="") {
                     $(".student_profile_image").html('<img style="width:100%" src="'+profile_image_url+'/'+data["user_profile_image"]+'" alt="User Image" class="img img-responsive">');
                 }
@@ -278,5 +315,145 @@ $(document).ready(function () {
 				});
 			}
 		});
+	}
+
+	studentPayments = function studentPayments(id){
+		var courseHtml = "";		
+		var tab_content = "";
+		$.ajax({
+			url: url+'/payment-schedule/'+id,
+			cache: false,
+			success: function(response){
+				var data = JSON.parse(response);
+			//	var data = response['payments'];
+				var modalHtml = "";
+				if(!jQuery.isEmptyObject(data['batchStudents'])){
+					$.each(data['batchStudents'], function(i,batch_student){ 
+						var installment_tr = "";
+						active= (i==0)?"active":"";
+						courseHtml += `
+							<a data-toggle="tab" href="#tab-`+batch_student['id']+`" class="mr-1 ml-1 border-0 btn-transition `+active+` btn btn-outline-primary course-tab" id="course-tab-`+batch_student['id']+`">`+batch_student['batch']['course']['title']+`</a>												
+						`;
+
+						if(!jQuery.isEmptyObject(batch_student['payments'])){
+							$.each(batch_student['payments'], function(j,payment){ 	
+								var invoice_no = (payment['invoice_no'] == null)?"":`<a href="javascript:void(0)" onclick="paymentInvoice(`+payment['id']+`)" >`+payment['invoice_no']+`</a>`;
+
+								var payment_status = (payment['payment_status']=='Paid')?"<button class='btn btn-xs btn-success' disabled>Paid</button>":"<button class='btn btn-xs btn-danger' disabled>Due</button>";
+	
+								installment_tr += 
+								`<tr>
+									<th class="text-center">`+payment['installment_no']+`</th>
+									<td class="text-center">`+payment['last_payment_date']+`</td>
+									<td class="text-right">`+payment['payable_amount']+`</td>
+									<td class="text-center">`+invoice_no+`</td>
+									<th class="text-center">`+payment_status+`</th>
+								</tr>`;
+							});
+						}
+						
+						if( batch_student['batch']['running_status'] == 'Completed')
+							batch_status = " <button class='btn btn-xs btn-success' disabled>Completed</button>";
+						else if( batch_student['batch']['running_status'] == 'Running')
+							batch_status = " <button class='btn btn-xs btn-primary' disabled>Running</button>";
+						else
+							batch_status = " <button class='btn btn-xs btn-info' disabled>Upcoming</button>";
+						
+						feeHtml = (batch_student['batch']['fees'] == batch_student['batch']['discounted_fees'])?`<span><b class="text-dark">`+batch_student['batch']['discounted_fees']+`</b></span>`:`<span class="pr-2"><b class="text-danger"><del>`+batch_student['batch']['fees']+`</del></b></span><span><b class="text-dark">`+batch_student['batch']['discounted_fees']+`</b></span>`;
+						
+						tab_content += `
+						<div class="tab-pane `+active+`" id="tab-`+batch_student['id']+`" role="tabpanel">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="card-shadow-primary profile-responsive card-border mb-3 card">
+										<ul class="list-group list-group-flush">
+											<li class="bg-warm-flame list-group-item">
+												<div class="widget-content p-0">
+													<div class="widget-content-wrapper">					
+														<div class="widget-content-left">
+															<div class="widget-heading text-dark opacity-7"><h5>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h5></div>
+															<div class="widget-heading text-dark opacity-7">Batch `+batch_student['batch']['batch_name']+batch_status+`</div>
+															<div class="widget-subheading opacity-10">Course Fee: `+feeHtml+`</div>
+														</div>												
+													</div>
+												</div>
+											</li>
+											<li class="p-0 list-group-item">
+												<div class="grid-menu grid-menu-2col">
+													<div class="no-gutters row">
+														<div class="col-sm-6">
+															<button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link disabled text-info">
+																<h5><strong>`+(batch_student['total_payable'])+`</strong></h5>
+																Payable Fee
+															</button>
+														</div>
+														<div class="col-sm-6">
+															<button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link disabled text-success">
+																<h5><strong>`+batch_student['total_paid']+`</strong></h5>
+																Total Paid
+															</button>
+														</div>
+														<div class="col-sm-6">
+															<button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link disabled text-danger">
+																<h5 ><strong>`+batch_student['balance']+`</strong></h5>
+																Balance
+															</button>
+														</div>
+														
+														<div class="col-sm-6">
+															<button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link disabled text-danger">
+																<h5><strong>`+batch_student['payments'].length+`</strong></h5>
+																Installment
+															</button>
+														</div>												
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>								
+								</div>
+								<div class="col-md-6">
+									<table class="mb-0 table-bordered table table-sm ">
+										<thead>
+										<tr>
+											<th class="text-center">Inst. No</th>
+											<th class="text-center">Payment Date</th>
+											<th class="text-right" width="100">Amount</th>
+											<th class="text-center">Invoice</th>
+											<th class="text-center">Status</th>											
+										</tr>
+										</thead>
+										<tbody>									
+											`+installment_tr+`											
+										</tbody>
+									</table>
+								</div>							
+							</div>
+						</div>
+						`;
+						//alert(tab_content)
+					});
+				}
+				//$('#course_tabs').html(courseHtml);				
+				//$('#schedule_details').html(tab_content);
+				
+				var paymentModalHtml =`
+
+					<div class="btn-actions-pane-left">
+						<div class="nav" id="course_tabs">
+						`+courseHtml+`						
+						</div>
+					</div>
+
+					<div class="tab-content" id="schedule_details">
+					`+tab_content+`
+					</div>				
+
+				`;
+				$('#myModalLabelLg').html('Payment Status');
+				$('#modalBodyLg').html(paymentModalHtml);
+				$("#generic_modal_lg").modal();			
+			}
+		});	
 	}
 });
