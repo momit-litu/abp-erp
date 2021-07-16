@@ -425,14 +425,23 @@ $(document).ready(function () {
 			cache: false,
 			success: function(response){
 				var response = JSON.parse(response);
-				var data = response['payment'];				
+				var data = response['payment'];
+				if(data['payment_status']=='Paid'){
+					fee =  data['paid_amount'];		
+					date = data['paid_date'];		
+				}	
+				else{
+					fee = data['payable_amount'];	
+					date = data['last_payment_date'];			
+				}
+				
 				$("#save_payment").html('Update');
 				$("#student_id").val(data['student_id']);
 				$("#student_name").val(data['student_name']);
 				$("#course_name").html("<option value='"+data['course_id']+"'>"+data['course_name']+"</option>");
-				$("#installment_no").html("<option value='"+data['installment_no_value']+"'>Install No. "+data['installment_no']+" ("+data['paid_amount']+")"+"</option>");
-				$("#paid_amount").val(data['paid_amount']);
-				$("#paid_date").val(data['paid_date']);
+				$("#installment_no").html("<option value='"+data['installment_no_value']+"'>Install No. "+data['installment_no']+" ("+fee+")"+"</option>");
+				$("#paid_amount").val(fee);
+				$("#paid_date").val(date);
 				$("#receive_status").val(data['receive_status']);
 				$("#payment_refference_no").val(data['payment_refference_no']);
 				$('#attachment_div').html("<a target='_blank' href='"+payment_attachment_url+"/"+data['attachment']+"'>"+data['attachment']+"</a>");
@@ -488,8 +497,7 @@ $(document).ready(function () {
 	var activeTab ="";
 	$("#show_schedule").on('click',function(){
 		if($('#payment_student_id').val() == "") return false;
-		var courseHtml = "";
-		
+		var courseHtml = "";		
 		var tab_content = "";
 		$.ajax({
 			url: url+'/payment-schedule/'+$('#payment_student_id').val(),

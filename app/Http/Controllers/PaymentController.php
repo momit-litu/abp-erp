@@ -72,6 +72,10 @@ class PaymentController extends Controller
             if($payment->payment_status=='Paid'){
                 $data['actions'] .=" <button title='View' onclick='paymentInvoice(".$payment->id.")' id='view_" . $payment->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='lnr-license'></i></button>&nbsp;";
             }
+
+            if($payment->payment_status=='Unpaid'){
+                $data['actions'] .=" <button title='View' onclick='paymentEdit(".$payment->id.")' id='edit_" . $payment->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='pe-7s-cash'></i></button>&nbsp;";
+            }
             if($edit_permisiion>0 &&  $payment->payment_status=='Paid'){
                 $data['actions'] .="<button onclick='paymentEdit(".$payment->id.")' id=edit_" . $payment->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
@@ -122,7 +126,7 @@ class PaymentController extends Controller
    
         $edit_id    =  $request->edit_id;
         $payment_id =  $request->installment_no;
-       //dd($request->all());
+        //dd($request->all());
         if(isset($request->request_type) && $request->request_type =='schedule'){
             if($request->input('student_enrollment_id') != "" )
                 $response_data = $this->studentPayment->addSchedule($request->all());
@@ -137,8 +141,7 @@ class PaymentController extends Controller
                 $removePaymentResponse =  $this->studentPayment->removePayment($request->input('edit_id'));
                 if($removePaymentResponse){
                     $response_data =  $this->studentPayment->savePayment($request->all());
-                }
-    
+                }    
             }
         } 
         return $response_data;

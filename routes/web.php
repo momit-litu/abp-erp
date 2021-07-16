@@ -36,10 +36,10 @@ Route::post('ckeditor/upload', 'CKEditorController@upload')->name('ckeditor.imag
 
 Route::get('/load-user-groups', array('as'=>'user-group' , 'uses' =>'AdminController@loadUserGroups'));
 Route::post('/student-autosuggest',array('as'=>'Student Autosuggest list', 'uses' =>'StudentController@studentAutoComplete'));
+Route::post('/units-autosuggest',array('as'=>'Unit Autosuggest list', 'uses' =>'UnitController@unitAutoComplete'));
 Route::post('/course-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@courseAutoComplete'));
 Route::get('/student-course-batch-autosuggest/{id}',array('as'=>'Student Course Batch Autosuggest list', 'uses' =>'PaymentController@courseBatchList'));
 Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
-
 
 
 
