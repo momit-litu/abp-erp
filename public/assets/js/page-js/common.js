@@ -1,3 +1,19 @@
+var url = $('.site_url').val();
+const profile_image_url 		= url+"/assets/images/student/";
+const logo 						= url+"/assets/images/logo-inverse.png";
+const payment_attachment_url 	= url+"/assets/images/payment/";
+
+$.ajaxSetup({
+	headers:{
+		'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+	}
+});
+
+$('.form').iCheck({
+	checkboxClass: 'icheckbox_flat-green',
+	radioClass	: 'iradio_flat-green'
+});
+
 
 
 $('.modal').on('hide.bs.modal', function (e) {
@@ -54,6 +70,8 @@ function clear_form(){
     });
 }
 
+
+// Notifications
 $(document).ready(function () {
 	// for get site url
 	var url = $('.site_url').val();

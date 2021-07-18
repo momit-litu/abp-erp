@@ -188,10 +188,6 @@
 
 @endsection
 @section('JScript')	
-<script>
-	const logo = "<?php echo asset('assets/images/logo-inverse.png'); ?>";
-	const payment_attachment_url = "<?php echo asset('assets/images/payment'); ?>";
-</script>	
 <script type="text/javascript" src="{{ asset('assets/js/page-js/payment/payment.js')}}"></script>
 @endsection
 

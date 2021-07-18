@@ -42,7 +42,6 @@ Route::get('/student-course-batch-autosuggest/{id}',array('as'=>'Student Course 
 Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
 
 
-
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
 	Route::get('/theme',array('as'=>'Theme' , 			'uses' =>'AdminController@welcome'));
@@ -137,6 +136,9 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/payment/{id}',array('as'=>'Payment Details' ,'action_id'=>'86', 'uses' =>'PaymentController@show'));
 	Route::post('/payment',array('as'=>'Payment Entry' , 'action_id'=>'87', 'uses' =>'PaymentController@createOrEdit'));
 	Route::get('/payment/delete/{id}',array('as'=>'Payment Delete' , 'action_id'=>'89', 'uses' =>'PaymentController@destroy'));
+	
+	Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'action_id'=>'89', 'uses' =>'PaymentController@emailInvoice'));
+	
 
 	//Payment Schedule
 	Route::get('/payment-schedule',array('as'=>'Payment Schedule', 'action_id'=>'90', 'uses' =>'PaymentController@scheduleIndex'));

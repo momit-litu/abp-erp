@@ -17,9 +17,13 @@ use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
 use Illuminate\Support\Facades\File;
 
+use App\Mail\customerInvoice;
+use App\Traits\CustomerNotification;
+
 class PaymentController extends Controller
 {
     use HasPermission;
+    use CustomerNotification; 
     //public $studentPayment;
 	public function __construct(Request $request)
     {
@@ -59,7 +63,7 @@ class PaymentController extends Controller
         $return_arr = array();
         foreach($payments as $payment){
             $data['id'] 		    = $payment->id;            
-			$data['student_name']   =  "<a href='javascript:void(0)' onclick='batchView(".$payment->enrollment->student->id.")' />".$payment->enrollment->student->student_no.'-'.$payment->enrollment->student->name.' ('.$payment->enrollment->student->email.")</a>"; 
+			$data['student_name']   =  "<a href='javascript:void(0)' onclick='studentView(".$payment->enrollment->student->id.")' />".$payment->enrollment->student->student_no.'-'.$payment->enrollment->student->name.' ('.$payment->enrollment->student->email.")</a>"; 
             $data['course_name']    = "<a href='javascript:void(0)' onclick='batchView(".$payment->enrollment->batch->id.")' />".$payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name."</a>";
             $data['installment']      = $payment->installment_no; 
             $data['payment_month']  = ($payment->paid_date==null)?date('M y', strToTime($payment->last_payment_date)):date('M y', strToTime($payment->paid_date)); 
@@ -123,7 +127,6 @@ class PaymentController extends Controller
         $admin_user_id 		= Auth::user()->id;
         $entry_permission = $this->PermissionHasOrNot($admin_user_id,87);
 
-   
         $edit_id    =  $request->edit_id;
         $payment_id =  $request->installment_no;
         //dd($request->all());
@@ -134,8 +137,9 @@ class PaymentController extends Controller
                 $response_data = $this->studentPayment->editSchedule($request->all()); 
         }
         else{
-            if($request->input('edit_id') == "" ||  $edit_id == $payment_id){
+            if($edit_id == "" ||  $edit_id == $payment_id){
                 $response_data =  $this->studentPayment->savePayment($request->all());
+                $this->invoiceNotification($edit_id); 
             }
             else{
                 $removePaymentResponse =  $this->studentPayment->removePayment($request->input('edit_id'));
@@ -143,7 +147,7 @@ class PaymentController extends Controller
                     $response_data =  $this->studentPayment->savePayment($request->all());
                 }    
             }
-        } 
+        }
         return $response_data;
     }
 
@@ -194,6 +198,13 @@ class PaymentController extends Controller
 		if($id=="") return 0;
         $paymentDetails = $this->studentPayment->getPaymentDetailsByStudentId($id);
 		return json_encode(array('batchStudents'=>$paymentDetails));
+    }
+
+    public function emailInvoice($id)
+    {
+		if($id=="") return false;
+        $this->invoiceNotification($id); 
+		return true;
     }
     
 }

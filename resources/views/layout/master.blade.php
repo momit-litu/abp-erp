@@ -52,7 +52,7 @@
 
 <button id="tostr-show"></button>
 <div class="app-drawer-overlay d-none animated fadeIn"></div>
-
+<input type="hidden" class="site_url" value="{{url('/')}}">
 
 <!--SCRIPTS INCLUDES-->
 
@@ -201,8 +201,9 @@
 
 <!--Tables Init-->
 <script src="{{ asset('assets/theme/assets/js/scripts-init/tables.js') }}"></script>
+
 <script src="{{ asset('assets/js/page-js/common.js')}}"></script>
-<input type="hidden" class="site_url" value="{{url('/')}}">
+<script src="{{ asset('assets/js/page-js/common-view.js')}}"></script>
 {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
 <script src="{{ asset('assets/js/sweetalert.min.js')}}"></script>
 <script src="{{ asset('assets/js/jquery-ui.min.js')}}"></script>

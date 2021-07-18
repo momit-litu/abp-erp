@@ -45,8 +45,9 @@
 							<input type="hidden" id="payment_student_id" required name="payment_student_id"  />
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<button class="btn btn-primary btn-lg" id="show_schedule" >Show Payment Schedule</button>
+							<button class="btn btn-info btn-lg" id="show_student_details" >Show Student Details</button>
 						</div>
 					</div>	
 				</div>

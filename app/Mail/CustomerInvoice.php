@@ -3,37 +3,25 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class TestMail extends Mailable
+
+class CustomerInvoice extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $details;
-
-
-
     /**
-
      * Create a new message instance.
-
      *
-
      * @return void
-
      */
-
-    public function __construct($details)
-
+    public function __construct($invoice)
     {
-
-        $this->details = $details;
-
+        $this->invoice 	= $invoice;
     }
-
-
 
     /**
      * Build the message.
@@ -42,10 +30,12 @@ class TestMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Password Recovery')
-            ->markdown('mails.forget-password-mail')
+       // return $this->view('view.name');
+       Log::debug('step3');
+        return $this->subject('ABPBD Incoice')
+            ->markdown('mails.customer-invoice')
             ->with([
-                'center' => 'All Data',
+                'invoice' => $this->invoice,
             ]);
     }
 }

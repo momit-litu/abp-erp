@@ -1,18 +1,5 @@
 // All the Setting related js functions will be here
 $(document).ready(function () {
-	// for get site url
-	var url = $('.site_url').val();
-
-	// icheck for the inputs
-	$('#payment_form').iCheck({
-		checkboxClass: 'icheckbox_flat-green',
-		radioClass: 'iradio_flat-green'
-	});
-	$('.flat_radio').iCheck({
-		//checkboxClass: 'icheckbox_flat-green'
-		radioClass: 'iradio_flat-green'
-	});
-
 
 	paymentAdd = function paymentAdd(){
 		$("#clear_button").trigger('click');
@@ -44,9 +31,7 @@ $(document).ready(function () {
         ],
 		"initComplete": function () {
             this.api().columns().every( function (key) {
-				var column = this;
-				console.log(column[0]);	
-			
+				var column = this;		
 				if(column[0] == 2 || column[0] == 4 ||  column[0] == 6  ){
 					var select = $('<select><option value=""></option></select>')
 						.appendTo( $(column.header()) )
@@ -66,69 +51,7 @@ $(document).ready(function () {
         }
 	});
 	
-//Batch detail View
-	batchView = function batchView(id){	
-		$.ajax({
-			url: url+'/batch/'+id,
-			cache: false,
-			success: function(response){
-				var response = JSON.parse(response);
-				var data = response['batch'];
-				var statusHtml = (data['status']=="Active")?'<span class="badge badge-success">Active</span>':'<span class="badge badge-danger">In-active</span>';
-				if(data['running_status']=="Completed")
-					runningStatusHtml = '<span class="badge badge-primary">Completed</span>'
-				else if(data['running_status']=="Running")
-					runningStatusHtml =  '<span class="badge badge-success">Running</span>';
-				else if(data['running_status']=="Upcoming")
-					runningStatusHtml =  '<span class="badge badge-info">Upcoming</span>';
 
-				var end_date 	= (data['end_date'] ==null)?"":data['end_date'];
-				var details 	= (data['details'] ==null)?"":data['details'];
-				var modalHtml  ="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Batch Code :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['batch_name']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Course Title :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['course']['title']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Start Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['start_date']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>End Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+end_date+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Student limit :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['student_limit']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Total Enrolled Student :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['total_enrolled_student']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+details+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Registration Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>£"+data['fees']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Discount Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>£"+data['discounted_fees']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+runningStatusHtml+statusHtml+"</div></div>";
-
-				modalHtml +="<div class='row '>&nbsp;<br><div class='col-lg-12'><strong>Payment Details:</strong></div>"+"<div class='col-lg-12'>";
-				modalHtml +="<table class='table table-bordered' style='width:100% !important'> <thead><tr><th>Plan Name</th><th class='text-center'>Total Inst. No</th><th class='text-center'>Duration (Month)</th><th class='text-right'>		Total Payable</th></tr></thead><tbody>";
-				if(!jQuery.isEmptyObject(data['batch_fees'])){
-					$.each(data['batch_fees'], function(i,dta){ 
-						var installment_duration = (dta['installment_duration']==0)?'':dta['installment_duration']; 
-						modalHtml 	+= "<tr class='table-active'><td>"+dta['plan_name']+"</td>"+"<td class='text-center'>"+dta['total_installment']+"</td>"+"<td class='text-center'>"+installment_duration+"</td>"+"<td class='text-right'>"+dta['payable_amount']+"</td>"+"</tr>";
-						if(dta['plan_name']!='Onetime'){
-							modalHtml 	+= "<tr><td colspan='2' class='text-right'><b>Installment Details</b></td><td colspan='2'><table class='table table-bordered table-sm' style='width:100% !important'> <thead class='thead-light'><tr><th class='text-center'>Inst. No</th><th class='text-right'>Amount</th></tr></thead><tbody>";
-							if(!jQuery.isEmptyObject(dta['installments'])){
-								$.each(dta['installments'], function(i,dt){ 
-									modalHtml 	+= "<tr><td class='text-center'>"+dt['installment_no']+"</td><td class='text-right'>"+dt['amount']+"</td></tr>";
-								});
-
-							}
-							modalHtml 	+="</tbody></table></td></tr>";
-						}
-					});
-				}
-				modalHtml += "</tbody></table></div></div>";
-				$('#myModalLabelLg').html('Batch Details');
-				$('#modalBodyLg').html(modalHtml);
-				$("#generic_modal_lg").modal();				
-			}
-		});
-	}
-
-	//autosuggest
-	$.ajaxSetup({
-		headers:{
-			'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-		}
-	});
-	
-	
 	$("#course_name").on('change',function(){
 		id = $(this).val();
 		$.ajax({
@@ -224,8 +147,6 @@ $(document).ready(function () {
 		},
 	});
 
-
-
 	//Entry And Update Function For Module
 	$("#save_payment").on('click',function(){
 		event.preventDefault();
@@ -299,8 +220,6 @@ $(document).ready(function () {
 		$('#course_name').html("");
 	});
 	
-
-	
 	//Payment detail View
 	paymentView = function paymentView(id){	
 		$.ajax({
@@ -349,72 +268,6 @@ $(document).ready(function () {
 		});
 	}
 	
-	paymentInvoice = function paymentInvoice(id){	
-		$.ajax({
-			url: url+'/payment/'+id,
-			cache: false,
-			success: function(response){
-				var response = JSON.parse(response);
-				var data = response['payment'];
-				var modalHtml = "";
-				
-				var invoiceHtml =
-				`<div class="modal-body printable" id="modalBody">
-					<div class="row">
-						<div class="col-md-6 text-left"><img src="`+logo+`"></div>
-						<div class="col-md-6 text-right">
-							<h3>Invoice</h3>
-							<h5>ABPBD</h5>
-							<p>Registered No. 10475324</p>
-						</div>
-					</div>
-					<div class="row padding-top-bottom-20 ">
-						<div class="col-md-8 text-left">
-							<p>To</p>
-							<p><strong>`+data['student_email']+`</strong></p>
-							<p>`+data['address']+`</p>
-							<p>Email: `+data['email']+`</p>
-							<p>Phone: `+data['contact_no']+`</p>
-						</div>
-						<div class="col-md-4 text-right">
-							<p>Invoice No.</p>
-							<p>`+data['invoice_no']+`</p>
-						</div>
-					</div>
-					<table class="table" style="width:100% !important">
-					<thead>
-						<tr>
-							<th class="text-left">Course Details</th>
-							<th class="text-center">Installment No</th>
-							<th class="text-right">Paid Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td class="text-left">`+data['course_name']+`</td>
-							<td class="text-center">`+data['installment_no']+`</td>
-							<td class="text-right">Tk`+data['paid_amount']+`</td>
-						</tr>
-					</tbody>
-					</table>
-					<div class="col-md-12 ">
-						<div class="col-md-6 text-left">
-							<br>
-							<p>Made payment in favour of 'ABPBD'</p>
-						</div>
-					</div>
-				</div>
-				`;	
-				
-				$('#myModalLabelLg').html("Invoice #"+data['invoice_no']);
-				$('#modalBodyLg').html(invoiceHtml);
-				$('.print-button-lg').show()
-				$("#generic_modal_lg").modal();
-
-			}
-		});
-	}
-
 	//Edit function for Module
 	paymentEdit = function paymentEdit(id){
 		var edit_id = id;
@@ -493,7 +346,6 @@ $(document).ready(function () {
 		$('#entry-form').modal('show');
 	}
 
-	
 	var activeTab ="";
 	$("#show_schedule").on('click',function(){
 		if($('#payment_student_id').val() == "") return false;
@@ -758,5 +610,10 @@ $(document).ready(function () {
 		});
 	}
 
+	
+	$("#show_student_details").on('click',function(){
+		if($('#payment_student_id').val() == "") return false;
+		studentView($('#payment_student_id').val());
+	});
 });
 
