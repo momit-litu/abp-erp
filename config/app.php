@@ -55,7 +55,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
-	'center_default_password'=>1234,
+	'student_default_password'=>1234,
 
     /*
     |--------------------------------------------------------------------------

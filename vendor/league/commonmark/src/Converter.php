@@ -14,9 +14,9 @@ namespace League\CommonMark;
 /**
  * Converts CommonMark-compatible Markdown to HTML.
  *
- * @deprecated This class is deprecated since league/commonmark 1.4, use CommonMarkConverter instead.
+ * @deprecated This class is deprecated since league/commonmark 1.4, use MarkdownConverter instead.
  */
-class Converter implements MarkdownConverterInterface
+class Converter implements ConverterInterface
 {
     /**
      * The document parser instance.
@@ -40,8 +40,8 @@ class Converter implements MarkdownConverterInterface
      */
     public function __construct(DocParserInterface $docParser, ElementRendererInterface $htmlRenderer)
     {
-        if (!($this instanceof CommonMarkConverter)) {
-            @trigger_error(sprintf('The %s class is deprecated since league/commonmark 1.4, use %s instead.', self::class, CommonMarkConverter::class), E_USER_DEPRECATED);
+        if (!($this instanceof MarkdownConverter)) {
+            @trigger_error(sprintf('The %s class is deprecated since league/commonmark 1.4, use %s instead.', self::class, MarkdownConverter::class), E_USER_DEPRECATED);
         }
 
         $this->docParser = $docParser;

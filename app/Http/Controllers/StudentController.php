@@ -267,7 +267,7 @@ class StudentController extends Controller
 					'first_name'	=> $request['name'],
 					'contact_no'	=> $request['contact_no'],
 					'email'			=> $request['email'],
-					'password' 		=> bcrypt('1234'),
+					'password' 		=> bcrypt(config('app.student_default_password')),
 					'type'			=> 'Student',
 					'student_id'	=> $student->id,
 				]);
@@ -281,7 +281,6 @@ class StudentController extends Controller
 					$group_member_data->status		= 1;
 					$group_member_data->save();
 				}
-
                 if (isset($documents) && !empty($documents)) {
                     foreach($documents as $document) {
                         $ext = $document->getClientOriginalExtension();
