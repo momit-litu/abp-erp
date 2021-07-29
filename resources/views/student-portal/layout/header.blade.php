@@ -39,6 +39,82 @@
                 </div>
                 <button class="close"></button>
             </div>
+			<ul class="header-megamenu nav">
+                <li class="btn-group nav-item">
+                    <a class="nav-link" data-toggle="dropdown" aria-expanded="false">
+                       <!-- <span class="badge badge-pill badge-danger ml-0 mr-2">4</span>-->
+                        Courses
+                        <i class="fa fa-angle-down ml-2 opacity-5"></i>
+                    </a>
+                    <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
+                        <div class="dropdown-menu-header">
+                            <div class="dropdown-menu-header-inner bg-secondary">
+                                <div class="menu-header-image opacity-5" style="background-image: url('../assets/theme/assets/images/dropdown-header/abstract1.jpg');"></div>
+                                <div class="menu-header-content">
+                                    <h5 class="menu-header-title">Courses</h5>
+                                    <!--<h6 class="menu-header-subtitle">Dropdown menus for everyone</h6>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="">
+                                <h6 tabindex="-1" class="dropdown-header">Overall</h6>
+                                <button type="button" tabindex="0" class="dropdown-item">Ongoing</button>
+                                <button type="button" tabindex="0" class="dropdown-item">Upcoming</button>
+                                <div tabindex="-1" class="dropdown-divider"></div>
+                                <h6 tabindex="-1" class="dropdown-header">My Course</h6>
+                                <button type="button" tabindex="0" class="dropdown-item">Registered</button>
+                                <button type="button" tabindex="0" class="dropdown-item">Completed</button>
+                                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                                </div>
+                                <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                    
+                <li class="btn-group nav-item">
+                    <a class="nav-link" data-toggle="dropdown" aria-expanded="false">
+                        <!--<span class="badge badge-pill badge-danger ml-0 mr-2">4</span>-->
+                        Payments
+                        <i class="fa fa-angle-down ml-2 opacity-5"></i>
+                    </a>
+                    <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
+                        <div class="dropdown-menu-header">
+                            <div class="dropdown-menu-header-inner bg-secondary">
+                                <div class="menu-header-image opacity-5" style="background-image: url('../assets/theme/assets/images/dropdown-header/abstract2.jpg');"></div>
+                                <div class="menu-header-content">
+                                    <h5 class="menu-header-title">Payments</h5>
+                                    <!--<h6 class="menu-header-subtitle">Dropdown menus for everyone</h6>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="">
+                                <!--<h6 tabindex="-1" class="dropdown-header">Overall</h6>-->
+                                <button type="button" tabindex="0" class="dropdown-item">Payments</button>
+                                <button type="button" tabindex="0" class="dropdown-item">Upcoming Payments</button>
+                                <button type="button" tabindex="0" class="dropdown-item">Payments Revise</button>                                
+                                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                                </div>
+                                <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="nav flex-column">
+                            <li class="nav-item-divider nav-item"></li>
+                            <li class="nav-item-btn nav-item">
+                                <button class="btn-wide btn-shadow btn btn-success btn-sm">Make Payment</button>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
         <div class="app-header-right">
             <div class="header-dots">
@@ -52,9 +128,9 @@
                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
                         <div class="dropdown-menu-header">
                             <div class="dropdown-menu-header-inner bg-plum-plate">
-                                <div class="menu-header-image" style="background-image: url('assets/images/dropdown-header/abstract4.jpg');"></div>
+                                <div class="menu-header-image" style="background-image: url('assets/theme/assets/images/dropdown-header/abstract4.jpg');"></div>
                                 <div class="menu-header-content text-white">
-                                    <h5 class="menu-header-title">Grid Dashboard</h5>                                        
+                                    <h5 class="menu-header-title">Dashboard</h5>                                        
                                 </div>
                             </div>
                         </div>
@@ -62,20 +138,26 @@
                             <div class="no-gutters row">
                                 <div class="col-sm-6 col-xl-4">
                                     <button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">
-                                        <i class="pe-7s-world icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"></i>
-                                        Automation
+                                        <i class="pe-7s-home icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"></i>
+                                        Home
                                     </button>
                                 </div>
                                 <div class="col-sm-6 col-xl-4">
                                     <button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">
-                                        <i class="pe-7s-piggy icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"> </i>
-                                        Reports
+                                        <i class="pe-7s-user icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"> </i>
+                                        Personal
                                     </button>
                                 </div>
                                 <div class="col-sm-6 col-xl-4">
                                     <button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">
-                                        <i class="pe-7s-config icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"> </i>
-                                        Settings
+                                        <i class="pe-7s-notebook icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"> </i>
+                                        Courses
+                                    </button>
+                                </div>
+                                <div class="col-sm-6 col-xl-4">
+                                    <button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link">
+                                        <i class="pe-7s-cash icon-gradient bg-night-fade btn-icon-wrapper btn-icon-lg mb-3"> </i>
+                                        Payments
                                     </button>
                                 </div>
                             </div>
@@ -93,7 +175,7 @@
                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
                         <div class="dropdown-menu-header mb-0">
                             <div class="dropdown-menu-header-inner bg-deep-blue">
-                                <div class="menu-header-image opacity-1" style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
+                                <div class="menu-header-image opacity-2" style="background-image: url('assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
                                 <div class="menu-header-content text-dark">
                                     <h5 class="menu-header-title">Notifications</h5>
                                     <h6 class="menu-header-subtitle">You have <b>21</b> unread messages</h6>
@@ -151,7 +233,7 @@
                                                                     <div class="avatar-wrapper mt-2 avatar-wrapper-overlap">
                                                                         <div class="avatar-icon-wrapper avatar-icon-sm">
                                                                             <div class="avatar-icon"><img
-                                                                                    src="assets/images/avatars/1.jpg"
+                                                                                    src="assets/theme/assets/images/avatars/1.jpg"
                                                                                     alt=""></div>
                                                                         </div>                                               
                                                                         <div class="avatar-icon-wrapper avatar-icon-sm avatar-icon-add">
@@ -305,7 +387,7 @@
                                 <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu-lg dropdown-menu dropdown-menu-right">
                                     <div class="dropdown-menu-header">
                                         <div class="dropdown-menu-header-inner bg-info">
-                                            <div class="menu-header-image opacity-2" style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
+                                            <div class="menu-header-image opacity-1" style="background-image: url('assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
                                             <div class="menu-header-content text-left">
                                                 <div class="widget-content p-0">
                                                     <div class="widget-content-wrapper">
@@ -321,7 +403,7 @@
 
                                                         </div>
                                                         <div class="widget-content-left">
-                                                            <div class="widget-heading">{{isset(\Auth::user()->name) ? \Auth::user()->name : 'SSSSSS'}}
+                                                            <div class="widget-heading">{{isset(\Auth::user()->first_name) ? \Auth::user()->first_name : ''}}
                                                             </div>
                                                         </div>
                                                         <div class="widget-content-right mr-2">
@@ -371,10 +453,10 @@
                         </div>
                         <div class="widget-content-left  ml-3 header-user-info">
                             <div class="widget-heading">
-                                Alina Mclourd
+                                {{isset(\Auth::user()->first_name) ? \Auth::user()->first_name : ''}}
                             </div>
                             <div class="widget-subheading">
-                                VP People Manager
+                                Student
                             </div>
                         </div>
                         <div class="widget-content-right header-user-info ml-3">

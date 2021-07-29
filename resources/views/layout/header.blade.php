@@ -52,7 +52,7 @@
                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
                         <div class="dropdown-menu-header">
                             <div class="dropdown-menu-header-inner bg-plum-plate">
-                                <div class="menu-header-image" style="background-image: url('assets/images/dropdown-header/abstract4.jpg');"></div>
+                                <div class="menu-header-image" style="background-image: url('assets/theme/assets/images/dropdown-header/abstract4.jpg');"></div>
                                 <div class="menu-header-content text-white">
                                     <h5 class="menu-header-title">Grid Dashboard</h5>                                        
                                 </div>
@@ -93,7 +93,7 @@
                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
                         <div class="dropdown-menu-header mb-0">
                             <div class="dropdown-menu-header-inner bg-deep-blue">
-                                <div class="menu-header-image opacity-1" style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
+                                <div class="menu-header-image opacity-1" style="background-image: url('assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
                                 <div class="menu-header-content text-dark">
                                     <h5 class="menu-header-title">Notifications</h5>
                                     <h6 class="menu-header-subtitle">You have <b>21</b> unread messages</h6>
@@ -151,7 +151,7 @@
                                                                     <div class="avatar-wrapper mt-2 avatar-wrapper-overlap">
                                                                         <div class="avatar-icon-wrapper avatar-icon-sm">
                                                                             <div class="avatar-icon"><img
-                                                                                    src="assets/images/avatars/1.jpg"
+                                                                                    src="assets/theme/assets/images/avatars/1.jpg"
                                                                                     alt=""></div>
                                                                         </div>                                               
                                                                         <div class="avatar-icon-wrapper avatar-icon-sm avatar-icon-add">
@@ -305,7 +305,7 @@
                                 <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu-lg dropdown-menu dropdown-menu-right">
                                     <div class="dropdown-menu-header">
                                         <div class="dropdown-menu-header-inner bg-info">
-                                            <div class="menu-header-image opacity-2" style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
+                                            <div class="menu-header-image opacity-2" style="background-image: url('assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
                                             <div class="menu-header-content text-left">
                                                 <div class="widget-content p-0">
                                                     <div class="widget-content-wrapper">
@@ -321,7 +321,7 @@
 
                                                         </div>
                                                         <div class="widget-content-left">
-                                                            <div class="widget-heading">{{isset(\Auth::user()->name) ? \Auth::user()->name : 'SSSSSS'}}
+                                                            <div class="widget-heading">{{isset(\Auth::user()->first_name) ? \Auth::user()->first_name : ''}}
                                                             </div>
                                                         </div>
                                                         <div class="widget-content-right mr-2">
@@ -371,10 +371,10 @@
                         </div>
                         <div class="widget-content-left  ml-3 header-user-info">
                             <div class="widget-heading">
-                                Alina Mclourd
+                                {{isset(\Auth::user()->first_name) ? \Auth::user()->first_name : ''}}
                             </div>
                             <div class="widget-subheading">
-                                VP People Manager
+                                ABP Admin
                             </div>
                         </div>
                         <div class="widget-content-right header-user-info ml-3">

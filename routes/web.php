@@ -14,13 +14,34 @@ use App\Mail\TestMail;
 |
 */
 
-#Login
-
 Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::get('auth/login',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@authPostLogin'));
+
+
+Route::group(['prefix' => 'portal'], function () {
+	Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+
+	Route::group(['middleware' => ['auth']], function () {		
+		Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'StudentPortalController@index'));
+		Route::get('/dashboard',array('as'=>'Dashboard' , 	'uses' =>'StudentPortalController@index'));
+		Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
+		Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
+		
+	});
+});
+
+
+
+
+
+#Login
+
+
+
 
 
 
@@ -42,8 +63,10 @@ Route::get('/student-course-batch-autosuggest/{id}',array('as'=>'Student Course 
 Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
 
 
+
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
+	
 	Route::get('/theme',array('as'=>'Theme' , 			'uses' =>'AdminController@welcome'));
 	Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'AdminController@index'));
 	Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
@@ -187,4 +210,6 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
     Route::get('/expense/expense-detail-delete/{id}',array('as'=>'Expense Delete' ,'action_id'=>'80', 'uses' =>'ExpenseController@destroyDetail'));
 
 });
+
+
 

@@ -29,11 +29,7 @@ class AppServiceProvider extends ServiceProvider
         //get the settings data from DB and deliver to master layout
 		view()->composer('layout.master', function($view){
 			$user 		= Auth::user();
-			$centerName	="Edupro Admin";
-			if($user->type == 'Center'){
-				$center		  	= Center::find($user->center_id);
-				$centerName		=	$center->short_name;
-			}
+			$centerName	="ABP Admin";
 			$view->with('centerNamee', $centerName);
 		});
 		view()->composer('layout.master', function($view){
@@ -41,10 +37,21 @@ class AppServiceProvider extends ServiceProvider
 			$view->with('site_settings',$site_settings);
 		});
 
+		view()->composer('student-portal.layout.master', function($view){
+			$user 		= Auth::user();
+			$studentName	=$user->first_name;
+			$view->with('studentName', $studentName);
+		});
+		view()->composer('student-portal.layout.master', function($view){
+			$site_settings = Setting::first();
+			$view->with('site_settings',$site_settings);
+		});
+
+
+
 		// get the menu list by depth 2 level
 		view()->composer('layout.sidebar', function($view){
 			$userId =  Auth::user()->id;
-
 
 			$menus = \DB::select('SELECT  DISTINCT m.module_name , m.*
                         FROM users u
@@ -94,6 +101,8 @@ class AppServiceProvider extends ServiceProvider
 			//dd($menu_n_submenu_array);
 			$view->with('menus',$menu_n_submenu_array);
 		});
+
+
     }
 }
 

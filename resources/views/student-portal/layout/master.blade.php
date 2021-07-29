@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="{{ asset('assets/plugins/select2/select2.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" type="text/css" media="print"/>
-
+<link rel="stylesheet" href="{{ asset('assets/css/abp.css') }}"/>
 <!--<link rel="icon" href="{{ asset('assets/images/fevicon.png')}}" type="image/png" />-->
 @yield('style')
 </head>
@@ -28,9 +28,9 @@
 <body>
 
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
-    @include('layout.header')
+    @include('student-portal.layout.header')
 	<div class="app-main">
-        @include('layout.sidebar')
+       
 		@yield('content')
         <div class="body-block-example-1 d-none">
             <div class="loader bg-transparent no-shadow p-0">
@@ -217,4 +217,4 @@
 </body>
 </html>
 
-@include('layout.modal')
+@include('student-portal.layout.modal')

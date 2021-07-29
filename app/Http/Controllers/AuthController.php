@@ -36,7 +36,7 @@ class AuthController extends Controller
      */
     public function authLogin()
     {
-
+       // echo "momit";die;
         if (\Auth::check()) {
             \App\Models\User::LogInStatusUpdate("login");
             return redirect('dashboard');
@@ -51,7 +51,6 @@ class AuthController extends Controller
                     ->first();
                 $data['user_info']=$user_info;
             }
-			//dd($data);
             return view('auth.login',$data);
         }
     }
@@ -92,7 +91,10 @@ class AuthController extends Controller
                 return redirect($url);
             }else {
                 \App\Models\User::LogInStatusUpdate(1);
-                return redirect('dashboard');
+                if(Auth::user()->type == 'Student')
+                    return redirect('student/dashboard');
+                else
+                    return redirect('dashboard');
             }
 
         } else {

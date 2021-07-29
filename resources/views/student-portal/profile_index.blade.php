@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('student-portal.layout.master')
 @section('content')
 @section('style')
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bils/profile.css') }}">
@@ -8,7 +8,7 @@
 		}
 	</style>
 @endsection
-<div class="app-main__outer">
+<div class="app-main__outer left-padding-0" >
 	<div class="app-main__inner">
 		<div class="app-page-title">
 			<div class="page-title-wrapper">

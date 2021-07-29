@@ -43,157 +43,9 @@ class AdminController extends Controller
 		$userType 			= Auth::user()->type;
 
 		if($userType == 'Student'){
-			$userStudentId 		= Auth::user()->student_id;
-			$student	  		= Student::find($userStudentId);
-			$data['studentName']=$student->name;
+		return view('student-portal.dashboard', array('page_title'=>$page_title, 'data'=>$data));
 		}
-		//dd($data);
-	/*	$dashboardComponents = array();
-		// edupro admin dashboard components
-		$activeCentres 			= $this->PermissionHasOrNot($admin_user_id,54 ); // Active Centres
-		$activeQualifications 	= $this->PermissionHasOrNot($admin_user_id,55 ); // Active Qualifications
-		$activeLearners 		= $this->PermissionHasOrNot($admin_user_id,56 ); // Active Learners
-		$pendingRegistrations 	= $this->PermissionHasOrNot($admin_user_id,57 ); // Pending  Registration
-		$pendingCertificateRequest 	= $this->PermissionHasOrNot($admin_user_id,60 ); // Pending Certificate Request
-		$dueInvoiceAmount 		= $this->PermissionHasOrNot($admin_user_id,59 ); // Due Invoice Amount
-		$certifiedLearners 		= $this->PermissionHasOrNot($admin_user_id,58 ); // Certified Learners
-		$registeredLearners 	= $this->PermissionHasOrNot($admin_user_id,61 ); // Registered Learners
-		$approvedQualifications = $this->PermissionHasOrNot($admin_user_id,62 ); // Approved Qualifications
 
-		$totalActiveCentres 		= "";
-		$totalActiveQualifications 	= "";
-		$totalActiveLearners 		= "";
-		$totalPendingRegistrations 	= "";
-		$totalPendingCertificateRequest = "";
-		$totalDueInvoiceAmount 		= "";
-		$totalCertifiedLearners 	= "";
-		$totalRegisteredLearners 	= "";
-		$totalApprovedQualifications= "";
-
-		if($activeCentres){
-			$totalActiveCentres = Center::where('status','Active')->count();
-			$activeCentresData = [
-				'name' 				=> 'Active Centres',
-				'backgroundColor' 	=> '#303192',
-				'totalNo' 			=> $totalActiveCentres,
-				'redirectTo'		=>'center'
-			];
-			$dashboardComponents[]=$activeCentresData;
-		}
-		if($activeQualifications){
-			$totalActiveQualifications = Qualification::where('status','Active')->count();
-			$activeQualificationsData = [
-				'name' 				=> 'Active Qualifications',
-				'backgroundColor' 	=> '#782b91',
-				'totalNo' 			=> $totalActiveQualifications,
-				'redirectTo'		=>'qualification'
-			];
-			$dashboardComponents[]=$activeQualificationsData;
-		}
-		if($activeLearners){
-			$totalActiveLearners = Student::where('status','Active')->count();
-			$activeLearnersData = [
-				'name' 				=> 'Active Learners',
-				'backgroundColor' 	=> '#d25c32',
-				'totalNo' 			=> $totalActiveLearners,
-				'redirectTo'		=>'learner'
-			];
-			$dashboardComponents[]=$activeLearnersData;
-		}
-		if($pendingRegistrations){
-			$pendingRegistrationsSql= Registration::where('approval_status','Requested');
-			if($userType == 'Center')
-				$pendingRegistrationsSql->where('center_id',$userCenterId);
-			$totalPendingRegistrations = $pendingRegistrationsSql->count();
-			$activeRegistrationsData = [
-				'name' 				=> 'Pending Registrations',
-				'backgroundColor' 	=> '#00a651',
-				'totalNo' 			=> $totalPendingRegistrations,
-				'redirectTo'		=>'registration'
-			];
-			$dashboardComponents[]=$activeRegistrationsData;
-		}
-		if($pendingCertificateRequest){
-			$pendingCertificateRequestSql= RegistrationLearner::whereNotNull('result_claim_date')->whereNull('certificate_no');
-			if($userType == 'Center')
-				$pendingCertificateRequestSql->with(['resgistration' => function ($r) use($userCenterId){
-						$r->where('center_id', $userCenterId);
-				}]);
-
-			$totalPendingCertificateRequest = $pendingCertificateRequestSql->count();
-			$pendingCertificateRequesData = [
-				'name' 				=> 'Pending Certificate Request',
-				'backgroundColor' 	=> '#0081c8',
-				'totalNo' 			=> $totalPendingCertificateRequest,
-				'redirectTo'		=>'certificate'
-			];
-			$dashboardComponents[]=$pendingCertificateRequesData;
-		}
-		if($dueInvoiceAmount){
-			$dueInvoiceAmountSql= Registration::
-				where([
-                    ['approval_status','Approved']
-                ])
-				->orwhere([
-                    ['approval_status','Requested']
-                ])->where('payment_status','Due');
-
-			if($userType == 'Center')
-				$dueInvoiceAmountSql->where('center_id',$userCenterId);
-			$totalDueInvoiceAmount = $dueInvoiceAmountSql->sum('registration_fees');
-
-			$dueInvoiceAmountData = [
-				'name' 				=> 'Due Invoice Amount',
-				'backgroundColor' 	=> '#7b143d',
-				'totalNo' 			=> '£'.$totalDueInvoiceAmount,
-				'redirectTo'		=>'registration'
-			];
-			$dashboardComponents[]=$dueInvoiceAmountData;
-		}
-		if($registeredLearners){
-			$registeredLearnersSql= RegistrationLearner::where('learner_id','!=','');
-			if($userType == 'Center')
-				$registeredLearnersSql->with(['registration'=> function($r) use($userCenterId){
-					$r->where('center_id',$userCenterId);
-				}]);
-			$totalRegisteredLearners = $registeredLearnersSql->count();
-			$registeredLearnersData = [
-				'name' 				=> 'Registered Learners',
-				'backgroundColor' 	=> '#b04631',
-				'totalNo' 			=> $totalRegisteredLearners,
-				'redirectTo'		=>'learner'
-			];
-			$dashboardComponents[]=$registeredLearnersData;
-		}
-		if($approvedQualifications){
-			$approvedQualificationsSql= CenterQualification::where('status','Active');
-			if($userType == 'Center')
-				$approvedQualificationsSql->where('center_id',$userCenterId);
-			$totalApprovedQualifications = $approvedQualificationsSql->count();
-
-			$approvedQualificationsData = [
-				'name' 				=> 'Approved Qualifications',
-				'backgroundColor' 	=> '#09bef2',
-				'totalNo' 			=> $totalApprovedQualifications,
-				'redirectTo'		=>'profile'
-			];
-			$dashboardComponents[]=$approvedQualificationsData;
-		}
-		if($certifiedLearners){
-			$certifiedLearnersSql= RegistrationLearner::whereNotNull('certificate_no');
-			if($userType == 'Center')
-				$certifiedLearnersSql->with(['registration'=> function($r) use($userCenterId){
-					$r->where('center_id',$userCenterId);
-				}]);
-			$totalCertifiedLearners = $certifiedLearnersSql->count();
-			$certifiedLearnersData = [
-				'name' 				=> 'Certified Learners',
-				'backgroundColor' 	=> '#cd148d',
-				'totalNo' 			=> $totalCertifiedLearners,
-				'redirectTo'		=>'certificate'
-			];
-			$dashboardComponents[]=$certifiedLearnersData;
-		}*/
         return view('admin.dashbord', array('page_title'=>$page_title, 'data'=>$data,/*'dashboardComponents'=>$dashboardComponents*/));
     }
 
@@ -651,18 +503,19 @@ class AdminController extends Controller
 
     }
 
-//****************************Admin personal profile*******************************
+//**************************** personal profile*******************************
 
     public function profileIndex(){
     	$data['page_title'] = $this->page_title;
 		$id 				= Auth::user()->id;
 		$user 				= User::find($id);
     	$data['user']		= $user;
-		/*if($user->student_id){
-			$studentCourses = Student::with('courses')->findOrFail($user->student_id);
-			$courses 		= $studentCourse->courses;
+		if(Auth::user()->type=='Student' && $user->student_id){
+			//$studentCourses = Student::with('courses')->findOrFail($user->student_id);
+			return view('student-portal.profile_index',$data);
 		}
-		$data['courses'] =$courses;*/
+
+		//$data['courses'] =$courses;
 		return view('admin.profile_index',$data);
     }
 

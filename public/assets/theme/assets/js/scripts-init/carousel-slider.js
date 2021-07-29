@@ -76,9 +76,11 @@ $( document ).ready(function() {
             slidesToShow: 1,
             speed: 500,
             dots: true,
+			autoplay: true,
+			autoplaySpeed: 10000,
             adaptiveHeight: true
         });
-
+		
     }, 2000);
 
 });
