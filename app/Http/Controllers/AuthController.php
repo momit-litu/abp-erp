@@ -92,7 +92,7 @@ class AuthController extends Controller
             }else {
                 \App\Models\User::LogInStatusUpdate(1);
                 if(Auth::user()->type == 'Student')
-                    return redirect('student/dashboard');
+                    return redirect('portal/dashboard');
                 else
                     return redirect('dashboard');
             }

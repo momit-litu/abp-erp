@@ -43,10 +43,13 @@ class AdminController extends Controller
 		$userType 			= Auth::user()->type;
 
 		if($userType == 'Student'){
-		return view('student-portal.dashboard', array('page_title'=>$page_title, 'data'=>$data));
+			return  redirect('portal');
+		}
+		else{
+			return view('admin.dashbord', array('page_title'=>$page_title, 'data'=>$data,/*'dashboardComponents'=>$dashboardComponents*/));
 		}
 
-        return view('admin.dashbord', array('page_title'=>$page_title, 'data'=>$data,/*'dashboardComponents'=>$dashboardComponents*/));
+        
     }
 
 	public function welcome(){

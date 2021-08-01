@@ -255,6 +255,8 @@ $(document).ready(function () {
 				var response = JSON.parse(response);
 				var data = response['batch'];
 				var statusHtml = (data['status']=="Active")?'<span class="badge badge-success">Active</span>':'<span class="badge badge-danger">In-active</span>';
+				var featuredHtml = (data['featured']=="Yes")?'<span class="badge badge-info">Featured</span>':'';
+				
 				if(data['running_status']=="Completed")
 					 runningStatusHtml = '<span class="badge badge-primary">Completed</span>'
 				else if(data['running_status']=="Running")
@@ -273,7 +275,7 @@ $(document).ready(function () {
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+details+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Registration Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>£"+data['fees']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Discount Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>£"+data['discounted_fees']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+runningStatusHtml+statusHtml+"</div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+runningStatusHtml+statusHtml+featuredHtml+"</div></div>";
 
 				modalHtml +="<div class='row '>&nbsp;<br><div class='col-lg-12'><strong>Payment Details:</strong></div>"+"<div class='col-lg-12'>";
 				modalHtml +="<table class='table table-bordered' style='width:100% !important'> <thead><tr><th>Plan Name</th><th class='text-center'>Total Inst. No</th><th class='text-center'>Duration (Month)</th><th class='text-right'>		Total Payable</th></tr></thead><tbody>";
@@ -639,6 +641,9 @@ $(document).ready(function () {
 				$("#details").val(data['details']);
 				$("#running_status").val(data['running_status']);
 				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
+				
+				(data['featured']=='No')?$("#featured").iCheck('uncheck'):$("#featured").iCheck('check');
+				
 				if(!jQuery.isEmptyObject(data['batch_fees'])){
 					$.each(data['batch_fees'], function(i,dta){
 							if(dta['plan_name']!='Onetime'){ 

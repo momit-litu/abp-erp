@@ -9,18 +9,18 @@
                         <i class="pe-7s-notebook  icon-gradient bg-mean-fruit">
                         </i>
                     </div>
-                    <div>Post graduateation on Human Reouserse Management (PGDHRM)
+                    <div>{{ $batch->course->title }}
                         <div class="page-title-subheading">
-                            Batch 01/2021
+                           {{$batch->course->short_name. $batch->batch_name }}
                         </div>
                     </div>
                 </div>
                 <div class="page-title-actions">
                     <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-info disabled">
-                        Ongoing
+                       {{ $batch->running_status }}
                     </button>
-                    <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark disabled" data-original-title="Example Tooltip">
-                       Batch Full
+                    <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-success disabled" data-original-title="Example Tooltip">
+                       {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Batch Full' }}
                     </button>
                 </div>    
             </div>
@@ -31,8 +31,8 @@
                 <div class="main-card mb-3 card">
                     <div class="card-body"><h5 class="card-title"></h5>
                         <div class="thumbnail text-center photo_view_postion_b" >
-                            <div class="student_profile_image">
-                                <img src="{{ asset('assets/images/courses').'/no-user-image.png' }}" />
+                            <div class="student_profile_image" >
+                                <img style="width:100%" src="{{ ($batch->course->course_profile_image)?asset('assets/images/courses/'.$batch->course->course_profile_image):asset('assets/images/courses').'/no-user-image.png' }}" />
                             </div>
                         </div>
                     </div>
@@ -82,14 +82,11 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="main-card mb-3 card">
                     <div class="card-body">
                         <h5 class="card-title">Details</h5>
                                 <p>
-                                    The objective of this qualification is to support professional development and practices in Islamic finance environment, whether an individual intends to develop career or aspire to enter this sector. It is applicable to roles in areas such as finance, banking, portfolio management, corporate finance, treasury, and consultancy. It provides a thorough grounding in areas such as Islamic economics, Islamic financial system, financial decision-making in IFIs, financial reporting and governance of IFIs. 
-
+                                    {{ strip_tags($batch->course->objective) }}
                                 </p>
                         <div class="row">
                             <div class="col-md-5">
@@ -163,10 +160,10 @@
                                     <div class="widget-chart-content text-white">
                                         <div class="widget-chart-flex">
                                             <div class="widget-title">Onetime Payment</div>
-                                            <div class="widget-subtitle text-warning"><del>50,000</del></div>
+                                            <div class="widget-subtitle text-warning"><del>{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:$batch->fees }}</del></div>
                                         </div>
                                         <div class="widget-chart-flex">
-                                            <div class="widget-numbers">45,000
+                                            <div class="widget-numbers">{{ $batch->discounted_fees }}
                                             </div>
                                             <!--<div class="widget-description ml-auto text-warning"><span class="pr-1">45</span>
                                                 <i class="fa fa-angle-up "></i>
@@ -176,21 +173,16 @@
                                 </div>
                                 <div class="card-body">
                                     <ul class="tabs-animated-shadow tabs-animated nav">
-                                        <li class="nav-item">
-                                            <a role="tab" class="nav-link active" id="tab-c-0" data-toggle="tab" href="#tab-animated-0">
-                                                <span>2Installment</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a role="tab" class="nav-link" id="tab-c-1" data-toggle="tab" href="#tab-animated-1">
-                                                <span>3Installment</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a role="tab" class="nav-link" id="tab-c-2" data-toggle="tab" href="#tab-animated-2">
-                                                <span>4Installment</span>
-                                            </a>
-                                        </li>
+                                        @foreach($batch->batch_fees as $key=>$batch_fee)		
+											@if($batch_fee->plan_name != "Onetime")
+											<li class="nav-item">
+												<a role="tab" class="nav-link {{($key==1)?'active':''}}" id="tab-c-0" data-toggle="tab" href="#tab-animated-{{$key}}">
+													<span>{{ $batch_fee->plan_name}}</span>
+												</a>
+											</li>
+											@endif
+										@endforeach
+										
                                     </ul>
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="tab-animated-0" role="tabpanel">
@@ -226,19 +218,9 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div class="tab-pane" id="tab-animated-1" role="tabpanel">
-                                            <p class="mb-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                                unknown
-                                                printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
-                                        </div>
-                                        <div class="tab-pane" id="tab-animated-2" role="tabpanel">
-                                            <p class="mb-0">It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-                                                PageMaker including versions of Lorem Ipsum.</p>
-                                        </div>
+                                        </div>                                       
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -259,29 +241,16 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="tab-eg11-0" role="tabpanel">
-                                <p>
-                                    Unit 1: Fiqh Muamalat (10 Credits) <br>
-                                    Unit 2: Islamic Economics (10 Credits)<br>
-                                    Unit 3: Fundamentals of Islamic Financial Systems (10 Credits)<br>
-                                    Unit 4: Operations of Islamic Financial Institutions (20 Credits)<br>
-                                    Unit 5: Supervisory Issues in Islamic Financial Institutions (10 Credits)<br>
-                                    Unit 6: Principles of Islamic Capital Markets (20 Credits)<br>
-                                    Unit 7:  Takaful and Retakaful (10 Credits) <br>
-                                    Unit 8:  Accounting & Auditing of IFIs (20 Credits)<br>
-                                    Unit 9:  Risk Management in Islamic Financial Systems (10 Credits)<br>
-
-                                </p>
+                                @foreach($batch->course->units as $key=>$unit)		
+                                      &nbsp; &nbsp; Unit {{$key+1}}: {{ strip_tags($unit->name) }} ({{$unit->tut}})</br>
+								@endforeach
                             </div>
-                            <div class="tab-pane" id="tab-eg11-1" role="tabpanel">
-                                <p>Semester Details</p>
-                            </div>
-                            <div class="tab-pane show" id="tab-eg11-2" role="tabpanel"><p>Requirements </p></div>
-                            <div class="tab-pane  show" id="tab-eg11-3" role="tabpanel"><p>Experience </p></div>
-                            <div class="tab-pane  show" id="tab-eg11-4" role="tabpanel"><p>Assessment </p></div>
-                            <div class="tab-pane  show" id="tab-eg11-5" role="tabpanel"><p>Grading_system </p></div>
+                            <div class="tab-pane" id="tab-eg11-1" role="tabpanel"><p>  		 <?php echo $batch->course->semester_details; ?></p></div>
+                            <div class="tab-pane show" id="tab-eg11-2" role="tabpanel"><p>   <?php echo $batch->course->requirements; ?> </p></div>
+                            <div class="tab-pane  show" id="tab-eg11-3" role="tabpanel"><p>  <?php echo $batch->course->experience_required; ?> </p></div>
+                            <div class="tab-pane  show" id="tab-eg11-4" role="tabpanel"><p>  <?php echo $batch->course->assessment; ?></p></div>
+                            <div class="tab-pane  show" id="tab-eg11-5" role="tabpanel"><p>  <?php echo $batch->course->grading_system; ?> </p></div>
                             <div class="tab-pane  show" id="tab-eg11-6" role="tabpanel"><p>
-                              
-                                    
                             </p></div>
                         </div>
                     </div>

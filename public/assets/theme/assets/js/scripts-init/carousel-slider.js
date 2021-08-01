@@ -9,7 +9,6 @@ $( document ).ready(function() {
             slidesToShow: 1,
             slidesToScroll: 1
         });
-
         $(".slick-slider-3").slick({
             dots: true,
             slidesToShow: 1,

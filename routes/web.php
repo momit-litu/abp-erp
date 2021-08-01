@@ -21,9 +21,13 @@ Route::get('auth/login',array('as'=>'Sign in', 'uses' =>'AuthController@authLogi
 Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@authPostLogin'));
 
 
+
+
+
 Route::group(['prefix' => 'portal'], function () {
 	Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+	Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@courseList'));
 
 	Route::group(['middleware' => ['auth']], function () {		
 		Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'StudentPortalController@index'));
@@ -37,13 +41,7 @@ Route::group(['prefix' => 'portal'], function () {
 
 
 
-
 #Login
-
-
-
-
-
 
 
 #ForgetPassword

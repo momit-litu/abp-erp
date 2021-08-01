@@ -168,6 +168,13 @@
 												<input type="checkbox" id="status" name="status" checked="checked" value="1" class="form-control col-lg-12"/>
 											</div>
 										</div>
+										<div class="col-md-6">
+											<div class="position-relative form-group">
+												<label for="company_name" class="">Featured?</label>
+												<input type="checkbox" id="featured" name="featured" checked="checked" value="1" class="form-control col-lg-12"/>
+											</div>
+										</div>
+										
 									</div>
 									<hr>  
 									<div class="form-row bg-gray ">

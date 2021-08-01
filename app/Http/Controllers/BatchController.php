@@ -318,7 +318,9 @@ class BatchController extends Controller
                     'student_limit' =>  $request['student_limit'],
                     'details' 		=>  $request['details'],
                     'running_status'=>  $request['running_status'],
-                    'status'        => (isset($request['status']))?'Active':'Inactive'
+                    'status'        => (isset($request['status']))?'Active':'Inactive',
+                    'featured'      => (isset($request['featured']))?'Yes':'No'
+                    
                 ]);
                 if($batch){               
                     // for the onetime payment plan
@@ -416,6 +418,7 @@ class BatchController extends Controller
                 $Batch->details 		= $request['details'];
                 $Batch->running_status 	= $request['running_status'];
                 $Batch->status 			= (isset($request['status']))?$request['status']:'Inactive';
+                $Batch->featured 		= (isset($request['featured']))?$request['featured']:'No';
                 $Batch->update();
 
                  // for the onetime payment plan

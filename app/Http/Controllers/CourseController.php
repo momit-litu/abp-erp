@@ -274,7 +274,6 @@ class CourseController extends Controller
 					$Course->course_profile_image = $photoFullName;
 					$Course->update();
                 }
-
 				DB::commit();
 				$return['response_code'] = 1;
 				$return['message'] = "Course saved successfully";

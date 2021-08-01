@@ -26,43 +26,27 @@
         </div> 
         <div class="row">
             <div class="col-md-8">
+			
                 <div class="main-card mb-3 card">
                     <div class="card-body"><h5 class="card-title">Featured</h5>
                         <div class="slider-light">
                             <div class="slick-slider-inverted">
-                                <div class="p-5 bg-ripe-malin">
+                                @foreach($data['featured_batches'] as $key=>$batch)
+								<div class="p-5 {{ $data['featured_batches_bg_color'][$key] }}">
                                     <div class="slider-content">
-                                        <h3>PGDHRM</h3>
+                                        <h3>{{ $batch->course->title}}</h3>
                                         <p>
-                                            ArchitectUI is like a dream. Some think it's too good to be true! Extensive collection of unified React Boostrap Components and Elements.
+                                           {{ strip_tags($batch->course->objective) }}
                                         </p>
                                         <button class="btn-icon btn btn-success btn-sm">View Profile</button>
                                     </div>
                                 </div>
-                                <div class="p-5 bg-premium-dark">
-                                    <div class="slider-content">
-                                        <h3>PGD Finance</h3>
-                                        <p>
-                                            Easily exclude the components you don't require. Lightweight, consistent
-                                            Bootstrap based styles across all elements and components
-                                        </p>
-                                        <button class="btn-icon btn btn-success btn-sm">View Profile</button>
-                                    </div>
-                                </div>
-                                <div class="p-5 bg-sunny-morning">
-                                    <div class="slider-content">
-                                        <h3>Marketing</h3>
-                                        <p>
-                                            We've included a lot of components that cover almost all use cases for
-                                            any type of application.
-                                        </p>
-                                        <button class="btn-icon btn btn-success btn-sm">View Profile</button>
-                                    </div>
-                                </div>
+								@endforeach
                             </div>
                         </div>
                     </div>
                 </div>
+				
             </div>
             <div class="col-md-4">
                 <div class="main-card mb-3 card">
@@ -129,6 +113,12 @@
                 <div class="main-card mb-3 card ">
                     <div class="card-body"> <h5 class="card-title">Ongoing course list</h5>
                         <div class="row">
+							@if(count($data['running_batches'])==0)
+							<div class="col-md-12 col-xs-12 alert alert-warning fade show">
+								Unfortunately not found any course
+							</div>
+							@else
+							@foreach($data['running_batches'] as $batch)
                             <div class="col-md-3 col-xs-12">
                                 <div class="card-hover-shadow card-border mb-3 card">
                                     <div class="dropdown-menu-header">
@@ -163,50 +153,73 @@
                                     </div>
                                 </div>
                             </div>
-                            
+                            @endforeach
+							@endif
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="main-card mb-3 card ">
-                    <div class="card-body"> <h5 class="card-title">Upcoming course list</h5>
-                        <div class="row">
+                    <div class="card-body"> 
+					<h5 class="card-title">Upcoming course list</h5>
+                                                <div class="row">
+							@if(count($data['upcoming_batches'])==0)
+							<div class="col-md-12 col-xs-12 alert alert-warning fade show">
+								Unfortunately not found any course
+							</div>
+							@else
+							@foreach($data['upcoming_batches'] as $batch)
                             <div class="col-md-3 col-xs-12">
                                 <div class="card-hover-shadow card-border mb-3 card">
                                     <div class="dropdown-menu-header">
-                                        <div class="dropdown-menu-header-inner  bg-grow-early ">
+                                        <div class="dropdown-menu-header-inner bg-plum-plate">
                                             <div class="menu-header-content">
-                                                <div><h5 class="menu-header-title">PGDHRM</h5><h6 class="menu-header-subtitle">Post Graduation on Human Resource Management</h6></div>
-                                                <div class="menu-header-btn-pane">
-                                                    <button class="mr-2 btn btn-dark btn-sm">View Promo Video</button>
-                                                
+                                                <div>
+												<h5 class="menu-header-title">{{$batch->course->short_name. $batch->batch_name }}</h5>
+												<h7 class="menu-header-subtitle">{{ $batch->course->title }}</h7>
+												</div>
+													<div class="menu-header-btn-pane">
+                                                    <a class="mr-2 btn btn-dark btn-sm" target="_blank" href="{{ $batch->course->youtube_video_link}}">View Promo Video</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p>Course Hour:100hr</p>
-                                        <p class="mb-0">Total Unit:40</p>
-                                        <p class="text-success">Course Fee: 50,000</p>
+                                        <p class="mb-0">Credit Hour : &nbsp;{{ $batch->course->total_credit_hour}}</p>
+                                        <p class="mb-0">Total Unit : &nbsp;{{ count($batch->course->units) }}</p>
+                                        <p >Semister No : {{ $batch->course->semester_no}}</p>
+										<p class="text-success mb-0">Start Date : {{ $batch->start_date}}</p>
+										<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
+										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p>
                                     </div>
-                                    <div class="d-block text-right card-footer">
-                                        <button class="btn-shadow-primary btn btn-success btn-sm">Interested?</button>
-                                        <button class="btn-shadow-primary btn btn-primary btn-sm">Details</button>
+                                    <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
+                                        <div class="widget-content-wrapper ">
+                                            <div class="widget-content-left">
+                                                <div class="widget-heading">Course Fee</div>
+                                                <div class="widget-subheading text-danger"><del>{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:$batch->fees }}</del></div>
+                                            </div>
+                                            <div class="widget-content-right">
+                                                <div class="widget-numbers text-warning"><span> {{ $batch->discounted_fees }}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-block text-center card-footer bg-light">
+                                        <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
+                                        <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-primary btn-sm">Details</a>
                                     </div>
                                 </div>
                             </div>
-                            
+                            @endforeach
+							@endif
                         </div>
                     </div>
                 </div>
             </div>
-        </div>             
-    </div>  
-    
+		</div>             
+    </div>   
 </div>
 @endsection
-
 
 @section('JScript')
     <script type="text/javascript" src="{{ asset('assets/js/page-js/setting/setting.js')}}"></script>
