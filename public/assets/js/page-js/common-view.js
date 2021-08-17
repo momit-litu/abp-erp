@@ -98,7 +98,7 @@ studentView = function studentView(id){
 
             $("#student-view-modal").modal();
             $("#student_number").html((data['student_no']!=null)?data['student_no']:"");
-            $("#student_name").html('<h5>'+data['name']+'</h5>');
+            $("#student_name_vw").html('<h5>'+data['name']+'</h5>');
             $("#student_contact").html(data['contact_no']);
             $("#student_emergency_contact").html(data['emergency_contact']);
             $("#email_div").html(data['email']);

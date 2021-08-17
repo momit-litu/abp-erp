@@ -2,7 +2,7 @@
 namespace App\Traits;
 use App\Models\Batch;
 use App\Models\Course;
-
+use Auth;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,13 +24,22 @@ trait PortalHelperModel
 	public function courseList($page=1, $limit=20, $type){ 
         // $type = 'Featured', //  'Completed','Running','Upcoming'
         try{
-			$batchesQuery   = Batch::with('course','batch_fees', 'course.units');
-		
+			$studentId 		= Auth::user()->student_id;
+			$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
+									->with(['students' => 	function ($query) use ($studentId) {
+										$query->where('student_id',$studentId);
+									}]);
+			
 			$batchesQuery 	= ($type=='Featured')?$batchesQuery->where('featured','Yes'):$batchesQuery->where('running_status',$type)->where('status','Active');
 			
             $totalBatches   = $batchesQuery->count();
             $batches        = $batchesQuery->orderBy('created_at','desc')->limit($limit)->offset(($page - 1) * $limit)->get();
-			
+		
+			/*foreach($batches as $batch){
+				dd($batch->students[0]->pivot);
+				total_paid
+			}*/
+
 			$total_pages 	= ($totalBatches > 0 ? ceil($totalBatches / $limit) : 0);
             $paginationData = $this->paginationResponse($total_pages, $page, $totalBatches, $limit);
 			return array('batches'=>$batches, 'paging'=>$paginationData);
@@ -38,7 +47,8 @@ trait PortalHelperModel
 
         }catch(\Exception $e){
             $message = "Message : ".$e->getMessage().", File : ".$e->getFile().", Line : ".$e->getLine();
-			return $this->errorResponse($message,404);
+			echo $message;
+			//return $this->errorResponse($message,404);
         }
     }
 

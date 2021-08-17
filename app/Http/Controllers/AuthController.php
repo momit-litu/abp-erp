@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\System;
-
 use App\Models\User;
+
 use App\Http\Requests;
+use App\Models\System;
+use App\Models\Student;
+use App\Models\UserGroup;
 use Illuminate\Http\Request;
+use App\Models\UserGroupMember;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -177,6 +181,77 @@ class AuthController extends Controller
 
         return redirect('auth/forget/password')->with('message',"Please check your mail !.");
     }
+
+
+    
+    public function registration()
+    {
+        if (\Auth::check()) {
+            return redirect('/dashboard');
+        } else {
+            $data['page_title'] = $this->page_title;
+            return view('auth.register',$data);
+        }
+    }
+
+
+    public function registrationSave(Request $request)
+    {
+
+        $v = \Validator::make($request->all(), [
+            'name' => 'Required',
+            'email' => 'Required|email|unique:users',
+            'contact' => 'Required|max:255',
+            'password' => 'required|min:4',
+            'confirm_password' => 'required|same:password',
+            'terms_condition' =>'accepted'
+        ]);
+
+        if ($v->fails()) {
+            return redirect()->back()->withErrors($v)->withInput();
+        }
+        else{
+              try{
+                DB::beginTransaction();
+                
+                // save the student
+                $student = Student::create([
+                    'name' => $request['name'],                   
+                    'email' => $request['email'],
+                    'contact_no' => $request['contact'],
+                    'register_type'=>'Self',
+                    'registration_completed'=>'No'
+                ]);
+                if($student){
+                    // create a student type user
+                    $studentUser = User::create([
+                        'first_name'	=> $request['name'],
+                        'contact_no'	=> $request['contact'],
+                        'email'			=> $request['email'],
+                        'password' 		=> bcrypt($request['password']),
+                        'type'			=> 'Student',
+                        'student_id'	=> $student->id,
+                    ]);
+
+                    $user_group = UserGroup::select('id')->where('type',2)->first();
+                    $group_member_data 				= new UserGroupMember();
+                    $group_member_data->group_id	= $user_group['id'];
+                    $group_member_data->user_id		= $studentUser->id;
+                    $group_member_data->status		= 1;
+                    $group_member_data->save();
+                }
+
+
+                DB::commit();
+                return redirect('login')->with('message',"Registration Success. Please Check your email to confirm registration");
+              }
+              catch (\Exception $e){
+				DB::rollback();
+                return redirect()->back()->with('errormessage',"Registration Success. Please Check your email to confirm registration");
+			}
+        }
+    }
+
 
     /**
      * creating form for new password

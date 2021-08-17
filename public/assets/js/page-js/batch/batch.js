@@ -430,7 +430,8 @@ $(document).ready(function () {
 							type: "post",
 							async:false,
 							data: {
-								term: request.term
+								term: request.term,
+								registration_completed: 'yes'
 							},
 							success: function(data) {
 								response(data);

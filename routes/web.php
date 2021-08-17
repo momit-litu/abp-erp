@@ -23,17 +23,19 @@ Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@au
 
 
 
-
 Route::group(['prefix' => 'portal'], function () {
 	Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
-	Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@courseList'));
+	//Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 
 	Route::group(['middleware' => ['auth']], function () {		
 		Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'StudentPortalController@index'));
 		Route::get('/dashboard',array('as'=>'Dashboard' , 	'uses' =>'StudentPortalController@index'));
 		Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
 		Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
+		Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
+		Route::get('/courses/my/{type}',array('as'=>'My Course List' , 	'uses' =>'StudentPortalController@showMyCourseList'));
+
 		
 	});
 });
@@ -43,12 +45,16 @@ Route::group(['prefix' => 'portal'], function () {
 
 #Login
 
+#register
+Route::get('auth/register',array('as'=>'Registration' ,  'uses' =>'AuthController@registration'));
+Route::post('auth/register',array('as'=>'Registration' , 'uses' =>'AuthController@registrationSave'));
 
 #ForgetPassword
 Route::get('auth/forget/password',array('as'=>'Forgot Password' , 'uses' =>'AuthController@forgetPasswordAuthPage'));
 Route::post('auth/forget/password',array('as'=>'Forgot Password' , 'uses' =>'AuthController@authForgotPasswordConfirm'));
 Route::get('auth/forget/password/{user_id}/verify',array('as'=>'Forgot Password Verify' , 'uses' =>'AuthController@authSystemForgotPasswordVerification'));
 Route::post('auth/forget/password/{user_id}/verify',array('as'=>'New Password Submit' , 'uses' =>'AuthController@authSystemNewPasswordPost'));
+
 
 
 Route::post('ckeditor/upload', 'CKEditorController@upload')->name('ckeditor.image-upload');

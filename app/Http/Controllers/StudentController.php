@@ -155,8 +155,24 @@ class StudentController extends Controller
     public function studentAutoComplete()
     {
         $term = $_REQUEST['term'];
-
-        $data = Student::select('id', 'name', 'email')
+        if(isset($_REQUEST['registration_completed']))
+        {
+            $data = Student::select('id', 'name', 'email')
+                ->where([
+                    ['status', '=', 'Active'],
+                    ['registration_completed', '=', 'Yes'],
+                    ['name', 'like', '%' . $term . '%']
+                ])
+                ->orwhere([
+                    ['status', '=', 'Active'],
+                    ['registration_completed', '=', 'Yes'],
+                    ['email', 'like', '%' . $term . '%']
+                ])
+                ->get();
+        }
+        else
+        {
+            $data = Student::select('id', 'name', 'email')
             ->where([
                 ['status', '=', 'Active'],
                 ['name', 'like', '%' . $term . '%']
@@ -166,6 +182,8 @@ class StudentController extends Controller
                 ['email', 'like', '%' . $term . '%']
             ])
             ->get();
+        }
+
 
 
         $data_count = $data->count();
@@ -368,6 +386,7 @@ class StudentController extends Controller
                 $student->how_know = $request['how_know'];
                 $student->passing_year = $request['passing_year'];
                 $student->status = (isset($request['status'])) ? "Active" : 'Inactive';
+                $student->registration_completed = "Yes";
                 $student->update();
 
                 $user->first_name = $request['name'];

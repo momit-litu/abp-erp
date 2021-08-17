@@ -234,6 +234,7 @@ class ExpenseController extends Controller
 
         $return_arr = array();
         foreach ($expenseHeadList as $expenseHead) {
+			//dd($expenseHead);
             $expenseHead['category_name'] = (is_null($expenseHead->expense_category_id)) ? "" : $expenseHead->expensecategory->category_name;
             $expenseHead['status'] = ($expenseHead->status == 'Active') ? "<button class='btn btn-xs btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-warning' disabled>In-active</button>";
             $expenseHead['actions'] = "";

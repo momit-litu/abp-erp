@@ -38,12 +38,6 @@ class StudentPortalController extends Controller
     {
         $page_title = $this->page_title;
 		$data['module_name']= "Dashboard";
-		$data['sub_module']	= "";
-		$data['studentName']	= "";
-
-		$user_id 		= Auth::user()->id;
-		$userType 		= Auth::user()->type;
-
 		$studentId 		= Auth::user()->student_id;
         $student	  	= Student::find($studentId);
         $data['student']=$student;
@@ -71,16 +65,44 @@ class StudentPortalController extends Controller
         return view('student-portal.dashboard', array('page_title'=>$page_title, 'data'=>$data,'student'=>$student));
     }
 
+    
+	public function showCourseList($type)
+    {
+        if($type != 'Running' && $type != 'Upcoming' && $type != 'Completed'){
+            return redirect()->back();
+        }
+        $page_title = $this->page_title;
+        $batcheResponse = $this->courseList(1,50, $type);
+        $data['type']   = $type;
+        $data['batches']= $batcheResponse['batches'];
+        $data['background']= ($type == 'Running')?"bg-happy-green":"bg-plum-plate";
 
+        return view('student-portal.course-list', array('page_title'=>$page_title, 'data'=>$data));
+    }
+
+    public function showMyCourseList($type)
+    {
+        if($type != 'Running' &&  $type != 'Completed'){
+            return redirect()->back();
+        }
+        $page_title = $this->page_title;
+
+        $runningBatcheResponse = $this->courseList(1,50, 'Running');
+ 
+        
+        $data['runningBatches']= $runningBatcheResponse['batches'];
+
+
+        $completedBatcheResponse = $this->courseList(1,50, 'Completed');
+        $data['completedBatches']= $completedBatcheResponse['batches'];
+
+        return view('student-portal.my-course-list', array('page_title'=>$page_title, 'data'=>$data));
+    }
+    
     public function courseDetails($id)
     {
         $page_title = $this->page_title;
 		$data['module_name']= "Dashboard";
-		$data['sub_module']	= "";
-		$data['studentName']	= "";
-		$user_id 		= Auth::user()->id;
-		$userType 		= Auth::user()->type;
-
 		$studentId 		= Auth::user()->student_id;
         $student	  	= Student::find($studentId);
         

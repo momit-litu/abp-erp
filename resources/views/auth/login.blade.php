@@ -36,7 +36,7 @@
                     <h4 class="mb-0">
                         <span class="d-block">Welcome back,</span>
                         <span>Please sign in to your account.</span></h4>
-                    <h6 class="mt-3">No account? <a href="javascript:void(0);" class="text-primary">Sign up now</a></h6>
+                    <h6 class="mt-3">No account? <a href="{{url('/auth/register')}}" class="text-primary">Sign up now</a></h6>
                     <div class="divider row"></div>
                     <div>
                         <form class="form-login" action="{{ url('auth/post/login') }}" method="post">

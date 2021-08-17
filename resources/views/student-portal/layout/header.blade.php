@@ -58,13 +58,13 @@
                         </div>
                         <div class="">
                             <div class="">
-                                <h6 tabindex="-1" href="{{url('potrtal/courses/')}}" class="dropdown-header">Overall</h6>
-                                <a tabindex="0" class="dropdown-item">Ongoing</a>
-                                <a tabindex="0" class="dropdown-item">Upcoming</a>
+                                <h6 tabindex="-1"  class="dropdown-header">Overall</h6>
+                                <a href="{{url('portal/courses/Running')}}" tabindex="0" class="dropdown-item">Ongoing</a>
+                                <a href="{{url('portal/courses/Upcoming')}}"  tabindex="0" class="dropdown-item">Upcoming</a>
                                 <div tabindex="-1" class="dropdown-divider"></div>
                                 <h6 tabindex="-1" class="dropdown-header">My Course</h6>
-                                <a tabindex="0" class="dropdown-item">Registered</a>
-                                <a tabindex="0" class="dropdown-item">Completed</a>
+                                <a href="{{url('portal/courses/my/Running')}}" tabindex="0" class="dropdown-item">Registered</a>
+                                <a href="{{url('portal/courses/my/Completed')}}" tabindex="0" class="dropdown-item">Completed</a>
                                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                                     <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
                                 </div>

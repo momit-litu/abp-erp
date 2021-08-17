@@ -1,74 +1,90 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+@extends('auth.layout.login-master')
+@section('login-content')
+<div class="app-container">
+    <div class="h-100">
+        <div class="h-100 no-gutters row">
+            <div class="d-none d-lg-block col-lg-4">
+                <div class="slider-light">
+                    <div class="slick-slider">
+                        <div>
+                            <div class="position-relative h-100 d-flex justify-content-center align-items-center bg-plum-plate" tabindex="-1">
+                                <div class="slide-img-bg" style="background-image: url({{ asset('assets/theme/assets/images/originals/city.jpg')}}"></div>
+                                <div class="slider-content"><h3>Perfect Balance</h3>
+                                    <p>ArchitectUI is like a dream. Some think it's too good to be true! Extensive collection of unified React Boostrap Components and Elements.</p></div>
                             </div>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                        <div>
+                            <div class="position-relative h-100 d-flex justify-content-center align-items-center bg-premium-dark" tabindex="-1">
+                                <div class="slide-img-bg" style="background-image: url({{ asset('assets/theme/assets/images/originals/citynights.jpg')}}"></div>
+                                <div class="slider-content"><h3>Scalable, Modular, Consistent</h3>
+                                    <p>Easily exclude the components you don't require. Lightweight, consistent Bootstrap based styles across all elements and components</p></div>
                             </div>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                        <div>
+                            <div class="position-relative h-100 d-flex justify-content-center align-items-center bg-sunny-morning" tabindex="-1">
+                                <div class="slide-img-bg" style="background-image: url({{ asset('assets/theme/assets/images/originals/cityDARK.jpg')}}"></div>
+                                <div class="slider-content"><h3>Complex, but lightweight</h3>
+                                    <p>We've included a lot of components that cover almost all use cases for any type of application.</p></div>
                             </div>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                    </div>
+                </div>
+            </div>
+            <div class="h-100 d-flex bg-white justify-content-center align-items-center col-md-12 col-lg-8">
+                <div class="mx-auto app-login-box col-sm-12 col-md-10 col-lg-9">
+                    <div class="app-logo"><img src="{{ asset('assets/images/logo-inverse.png')}}" /> </div>
+                    <h4 class="mb-0">
+                        <span class="d-block">Welcome</span>
+                        <span>It only takes a few seconds to create your account.</span></h4>
+                    <div class="divider row"></div>
+                    <div>
+                        <form class="form-register" action="{{ url('auth/register') }}" method="post">
+                            <input type="hidden" name="_token" value="{{csrf_token()}}">
+                            <div class="form-row">
+                                @if(Session::has('message'))
+                                <div class="alert alert-success btn-squared col-md-12" role="alert">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    {{ Session::get('message') }}
+                                </div>
+                                @endif
+                                @if(Session::has('errormessage'))
+                                <div class="alert alert-danger btn-squared  col-md-12" role="alert">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    {{ Session::get('errormessage') }}
+                                </div>
+                                @endif
                             </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group"><label for="exampleEmail" class="">Name<span class="text-danger">*</span></label><input name="name" id="name" placeholder="Name here..." type="text" class="form-control @error('name') is-invalid @enderror" ></div>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group"><label for="exampleEmail" class="">Email<span class="text-danger">*</span></label><input  recuired name="email" id="email" placeholder="Email here..." type="email" class="form-control @error('email') is-invalid @enderror"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group"><label for="examplePassword" class="">Contact No <span class="text-danger">*</span></label><input recuired name="contact" id="contact" placeholder="Contact No here..." type="text" class="form-control @error('contact') is-invalid @enderror"></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group"><label for="examplePassword" class="">Password<span class="text-danger">*</span></label><input  recuired name="password" id="password" placeholder="Password here..." type="password" class="form-control @error('password') is-invalid @enderror"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group"><label for="examplePassword" class="">Confirm Password<span class="text-danger">*</span></label><input  recuired name="confirm_password" id="confirm_password" placeholder="Confirm Password ..." type="password" class="form-control @error('confirm_password') is-invalid @enderror"></div>
+                                </div>
+                            </div>
+                            <div class="mt-3 position-relative form-check"><input name="terms_condition" id="terms_condition" type="checkbox" class="form-check-input @error('email') is-invalid @enderror"><label for="exampleCheck" class="form-check-label" >Accept our <a href="{{url('/terms')}}">Terms and Conditions</a>.</label></div>
+                            <div class="divider row"></div>
+                            <div class="mt-4 d-flex align-items-center"><h5 class="mb-0">Already have an account? <a href="{{url('/login')}}" class="text-primary">Sign in</a></h5>
+                                <div class="ml-auto">
+                                    <button type="submit" class="btn btn-primary btn-lg">Registration</button>
+                                </div>
+                            </div>
+                           
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -26,7 +26,7 @@
                           <div class="col-md-8 col-xs-12">
                               <div class="" >
                                   <h5><span id="student_number"></span></h5>
-                                  <span id="student_name"></span>
+                                  <span id="student_name_vw"></span>
                                   <p><div id="status_div"></div><span id="type_div"></span></p>
                                   <div id="group_div"></div></p>
                               </div>
