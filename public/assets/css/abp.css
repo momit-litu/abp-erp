@@ -5,3 +5,7 @@
 .fixed-title-height {
     height: 80px;
 }
+
+.required {
+    color: red;
+}

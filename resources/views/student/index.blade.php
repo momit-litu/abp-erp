@@ -90,8 +90,7 @@
                                 @csrf
                                 <input type="hidden" name="id" id="id">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        
+                                    <div class="col-md-12">                                        
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <div class="position-relative form-group">
@@ -177,7 +176,7 @@
                                                 <div class="position-relative form-group">
                                                     <label>Passing Year</label>
                                                     <input type="date" id="passing_year" name="passing_year"  class="form-control col-lg-12"/>
-                                                    <input type="text" class="form-control" data-toggle="datepicker-year">
+                                                    
                                                 </div>
                                             </div> 
                                             <div class="col-md-6">
@@ -218,7 +217,8 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-6">
-                                                <label>	<strong>Certificate, Transcript and NID</strong></label>
+                                                <label>	<strong>Certificate, Transcript and NID</strong></label><br>
+                                                <small class="text-danger">You have to select all the documents at a time</small>
                                                 <hr>
                                                 <input type="file" class="form-control col-lg-12" name="documents[]"  data-show-upload="true" data-show-caption="true" id="documents" value="" multiple>
                                                 <table class="mb-0 table table-bordered" id='attachment_table'>                                                

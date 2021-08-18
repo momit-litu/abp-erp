@@ -18,6 +18,9 @@ class BatchStudent extends Model
     public function batch(){
         return $this->hasOne('App\Models\Batch','id','batch_id');
     }
+    public function batch_fee(){
+        return $this->hasOne('App\Models\BatchFee','id','batch_id');
+      }
 
     public function getBatchesByStudentId($studentId)
     {

@@ -1,9 +1,10 @@
 <?php
 namespace App\Traits;
+use Auth;
 use App\Models\Batch;
 use App\Models\Course;
-use Auth;
 use Illuminate\Support\Str;
+use App\Models\StudentPayment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -21,25 +22,32 @@ trait PortalHelperModel
 		]);
 	}
 
-	public function courseList($page=1, $limit=20, $type){ 
+	public function courseList($page=1, $limit=20, $type, $my=""){ 
         // $type = 'Featured', //  'Completed','Running','Upcoming'
         try{
 			$studentId 		= Auth::user()->student_id;
-			$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
-									->with(['students' => 	function ($query) use ($studentId) {
-										$query->where('student_id',$studentId);
-									}]);
 			
+			if($my!=""){
+				$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
+								->whereHas('students',	function ($query) use ($studentId) {
+									$query->where('batch_students.status','Active')->where('student_id',$studentId);
+								});
+			}
+			else{
+				$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
+									->with(['students' => 	function ($query) use ($studentId) {
+										$query->where('batch_students.status','Active')->where('student_id',$studentId);
+									}]);
+			}
 			$batchesQuery 	= ($type=='Featured')?$batchesQuery->where('featured','Yes'):$batchesQuery->where('running_status',$type)->where('status','Active');
 			
             $totalBatches   = $batchesQuery->count();
             $batches        = $batchesQuery->orderBy('created_at','desc')->limit($limit)->offset(($page - 1) * $limit)->get();
 		
-			/*foreach($batches as $batch){
-				dd($batch->students[0]->pivot);
-				total_paid
-			}*/
-
+		/*	foreach($batches as $batch){
+				dd($batch);
+			}
+		*/
 			$total_pages 	= ($totalBatches > 0 ? ceil($totalBatches / $limit) : 0);
             $paginationData = $this->paginationResponse($total_pages, $page, $totalBatches, $limit);
 			return array('batches'=>$batches, 'paging'=>$paginationData);
@@ -55,20 +63,25 @@ trait PortalHelperModel
 	
 	public function courseDetailsByBatchId($batchId){ 
         try{
-			$batchesQuery   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units')->first();
-			return $batchesQuery;
+			$studentId 		= Auth::user()->student_id;
+			$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units')
+									->with(['students' => 	function ($query) use ($studentId) {
+										$query->where('batch_students.status','Active')->where('student_id',$studentId);
+									}])
+									->find($batchId);
+									 
+			//$payments = "";
+			if($batch->students->count()  >0){
+				$enrollmentId 	= $batch->students[0]->pivot->id;
+				$batch['payments']		=StudentPayment::with('enrollment','enrollment.batch_fee','enrollment.batch_fee.installments')->where('student_enrollment_id',$enrollmentId)->get();
+			}
+			//dd($batch);
+			return $batch;
 
 
         }catch(\Exception $e){
-            $message = "Message : ".$e->getMessage().", File : ".$e->getFile().", Line : ".$e->getLine();
-			return $this->errorResponse($message,404);
+			return 0;
         }
     }
 	
-
-    public function getBatchList($param){
-		
-		return true;
-	}
-
 }

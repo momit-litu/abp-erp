@@ -263,7 +263,7 @@ class StudentController extends Controller
                 // save the student
                 $student = Student::create([
                     'name' => $request['name'],
-                    'student_no' => $request['student_no'],
+                   // 'student_no' => $request['student_no'],
                     'email' => $request['email'],
                     'contact_no' => $request['contact_no'],
                     'emergency_contact' => $request['emergency_contact'],
@@ -280,37 +280,42 @@ class StudentController extends Controller
                     'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
                 ]);
 
-                // create a student type user
-                $studentUser = User::create([
-					'first_name'	=> $request['name'],
-					'contact_no'	=> $request['contact_no'],
-					'email'			=> $request['email'],
-					'password' 		=> bcrypt(config('app.student_default_password')),
-					'type'			=> 'Student',
-					'student_id'	=> $student->id,
-				]);
+                if($student){
+                    $student->student_no =str_pad($student->id,5,'0',STR_PAD_LEFT);
+                    $student->save();
 
-                //insert student user group permission
-				$user_groups = UserGroup::select('id')->where('type',2)->get();
-				foreach ($user_groups as $user_group ) {
-					$group_member_data 				= new UserGroupMember();
-					$group_member_data->group_id	= $user_group['id'];
-					$group_member_data->user_id		= $studentUser->id;
-					$group_member_data->status		= 1;
-					$group_member_data->save();
-				}
-                if (isset($documents) && !empty($documents)) {
-                    foreach($documents as $document) {
-                        $ext = $document->getClientOriginalExtension();
-                        $documentFullName = $document->getClientOriginalName().time(). '.' . $ext;
-                        $upload_path = 'assets/images/student/documents/';
-                        $success = $document->move($upload_path, $documentFullName);
+                    // create a student type user
+                    $studentUser = User::create([
+                        'first_name'	=> $request['name'],
+                        'contact_no'	=> $request['contact_no'],
+                        'email'			=> $request['email'],
+                        'password' 		=> bcrypt(config('app.student_default_password')),
+                        'type'			=> 'Student',
+                        'student_id'	=> $student->id,
+                    ]);
 
-                        $studentDocument = StudentDocument::create([
-                            'student_id'	=> $student->id,
-                            'document_name'	=> $documentFullName,
-                            'type'	        => $ext,
-                        ]);
+                    //insert student user group permission
+                    $user_groups = UserGroup::select('id')->where('type',2)->get();
+                    foreach ($user_groups as $user_group ) {
+                        $group_member_data 				= new UserGroupMember();
+                        $group_member_data->group_id	= $user_group['id'];
+                        $group_member_data->user_id		= $studentUser->id;
+                        $group_member_data->status		= 1;
+                        $group_member_data->save();
+                    }
+                    if (isset($documents) && !empty($documents)) {
+                        foreach($documents as $document) {
+                            $ext = $document->getClientOriginalExtension();
+                            $documentFullName = $document->getClientOriginalName().time(). '.' . $ext;
+                            $upload_path = 'assets/images/student/documents/';
+                            $success = $document->move($upload_path, $documentFullName);
+
+                            $studentDocument = StudentDocument::create([
+                                'student_id'	=> $student->id,
+                                'document_name'	=> $documentFullName,
+                                'type'	        => $ext,
+                            ]);
+                        }
                     }
                 }
 

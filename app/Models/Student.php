@@ -19,4 +19,7 @@ class Student extends Model
 	public function centers(){
 		return $this->belongsToMany('App\Models\Batch','batch_students');	
 	}
+	public function batches(){
+		return $this->belongsToMany('App\Models\Batch','batch_students')->withPivot('id','total_payable', 'total_paid', 'status');
+	}
 }

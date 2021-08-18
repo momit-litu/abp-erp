@@ -212,54 +212,179 @@
         <div class="main-card mb-3 card">
               <div class="card-body printable">
                 <div class="card-body">
-        
-                  <div id="smartwizard" class="sw-main sw-theme-default">
-                      <ul class="forms-wizard nav nav-tabs step-anchor">
+                  <div>
+                      <ul class="forms-wizard nav nav-tabs">
                           <li class="nav-item active">
-                              <a href="#step-1" class="nav-link">
-                                  <em>1</em><span>Account Information</span>
+                              <a href="javascript:void(0)" class="nav-link">
+                                  <em>1</em><span>Student Information</span>
                               </a>
                           </li>
                           <li class="nav-item">
-                              <a href="#step-2" class="nav-link">
-                                  <em>2</em><span>Payment Information</span>
+                              <a href="javascript:void(0)" class="nav-link">
+                                  <em>2</em><span>Course Information</span>
                               </a>
                           </li>
                           <li class="nav-item">
-                              <a href="#step-3" class="nav-link">
+                              <a href="javascript:void(0)" class="nav-link">
                                   <em>3</em><span>Confirmation</span>
                               </a>
                           </li>
                       </ul>
 
                       <div class="form-wizard-content sw-container tab-content" style="min-height: 353.583px;">
-                          <div id="step-1" class="tab-pane step-content" style="display: block;">
-                              <div class="form-row">
-                                  <div class="col-md-6">
-                                      <div class="position-relative form-group"><label for="exampleEmail55">Email</label><input name="email" id="exampleEmail55" placeholder="with a placeholder" type="email" class="form-control">
-                                      </div>
-                                  </div>
-                                  <div class="col-md-6">
-                                      <div class="position-relative form-group"><label for="examplePassword22">Password</label><input name="password" id="examplePassword22" placeholder="password placeholder" type="password" class="form-control"></div>
-                                  </div>
-                              </div>
-                              <div class="position-relative form-group"><label for="exampleAddress">Address</label><input name="address" id="exampleAddress" placeholder="1234 Main St" type="text" class="form-control"></div>
-                              <div class="position-relative form-group"><label for="exampleAddress2">Address 2</label><input name="address2" id="exampleAddress2" placeholder="Apartment, studio, or floor" type="text" class="form-control">
-                              </div>
-                              <div class="form-row">
-                                  <div class="col-md-6">
-                                      <div class="position-relative form-group"><label for="exampleCity">City</label><input name="city" id="exampleCity" type="text" class="form-control"></div>
-                                  </div>
-                                  <div class="col-md-4">
-                                      <div class="position-relative form-group"><label for="exampleState">State</label><input name="state" id="exampleState" type="text" class="form-control"></div>
-                                  </div>
-                                  <div class="col-md-2">
-                                      <div class="position-relative form-group"><label for="exampleZip">Zip</label><input name="zip" id="exampleZip" type="text" class="form-control"></div>
-                                  </div>
-                              </div>
-                              <div class="position-relative form-check"><input name="check" id="exampleCheck" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label">Check me out</label></div>
+                          <div id="student-info" class="tab-pane step-content" style="display: block;">
+                            <form id="student_form" autocomplete="off" name="student_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
+                            @csrf
+                            <input type="hidden" name="id" id="id">
+                            <div class="row">                                
+                                <div class="col-md-12"> 
+                                   <!-- <h6>Please provide the information carefully</h6>  -->    
+                                   <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="position-relative form-group">
+                                            <label for="first_name" class="">Student Number</label>
+                                            <input type="text" id="student_no" disabled name="student_no"  class="form-control col-lg-4"/>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <div class="position-relative form-group">
+                                                <label for="first_name" class="">Full Name<span class="required text-danger">*</span></label>
+                                                <input type="text" id="name" name="name" required class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Contact No (WhatsApp)<span class="required text-danger">*</span></label>
+                                                <input type="text" id="contact_no" name="contact_no" required class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Ememergency Contact<span class="required">*</span></label>
+                                                <input required type="text" id="emergency_contact" name="emergency_contact" class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Email<span class="required text-danger">*</span></label>
+                                                <input type="email" id="email" name="email" required class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Date of Birth <span class="required">*</span></label>
+                                                <input type="date" id="date_of_birth" name="date_of_birth" required class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>                                           
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>NID No<span class="required">*</span></label>
+                                                <input type="text" required id="nid" name="nid" class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Postal  Address<span class="required">*</span></label>
+                                                <input type="text" id="address" name="address" required class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="short_name" class="">Mode of Study </label>
+                                                <select id="study_mode" name="study_mode" class="form-control col-lg-12">
+                                                <option value="Online">Online</option>
+                                                <option value="Campus">Campus</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="short_name" class="">Last Qualification  <span class="required">*</span></label>
+                                                <select id="last_qualification" name="last_qualification" class="form-control col-lg-12">
+                                                <option value="Masters bachelor">Masters bachelor</option>
+                                                <option value="Others">Others</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">                                            
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Passing Year <span class="required">*</span></label>
+                                                <input type="date" required id="passing_year" name="passing_year"  class="form-control col-lg-12"/>
+                                            </div>
+                                        </div> 
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Current Employment <span class="required">*</span></label>
+                                                <input type="text" required id="current_emplyment" name="current_emplyment" class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="short_name" class="">How do you know ABP?</label>
+                                                <select id="how_know" name="how_know" class="form-control col-lg-12">
+                                                <option value='From a Trainee of ABP'>From a Trainee of ABP</option>
+                                                <option value='From FaceBook'>From FaceBook</option>
+                                                <option value='By google search'>By google search</option>
+                                                <option value='From office colleague'>From office colleague</option>
+                                                <option value='From Email'>From Email</option>
+                                                <option value='Other'>Other</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <div class="position-relative form-group">
+                                                <label>Remarks</label>
+                                                <textarea rows="2" cols="100" id="remarks" name="remarks" class="form-control col-lg-12"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <label>	<strong>Certificate, Transcript and NID</strong></label><br>
+                                            <small class="text-danger">You have to select all the documents at a time</small>
+                                            <hr>
+                                            <input type="file" class="form-control col-lg-12" name="documents[]"  data-show-upload="true" data-show-caption="true" id="documents" value="" multiple>
+                                            <table class="mb-0 table table-bordered" id='attachment_table'>                                                
+                                            </table>
+                                        </div>
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-4">
+                                            <label><strong> Student Photo</strong></label>
+                                            <hr>
+                                            <img src="{{asset('assets/images/user/admin')}}/no-user-image.png" width="70%" height="70%" class="img-thumbnail" id="user_image">
+                                            <span class="btn btn-light-grey btn-file">
+                                                <span class="fileupload-new"><i class="fa fa-picture-o"></i> </span>
+                                                <input type="file" class="form-control col-lg-12" name="user_profile_image" id="user_profile_image" value="">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div id="student_form_submit_error" class="text-center" style="display:none"></div>
+                                </div>
+                            </div>
                           </div>
-                          <div id="step-2" class="tab-pane step-content">
+                          <div id="course-info" class="tab-pane step-content">
                               <div id="accordion" class="accordion-wrapper mb-3">
                                   <div class="card">
                                       <div id="headingOne" class="card-header">
@@ -302,7 +427,7 @@
                                   </div>
                               </div>
                           </div>
-                          <div id="step-3" class="tab-pane step-content">
+                          <div id="payment-info" class="tab-pane step-content">
                               <div class="no-results">
                                   <div class="swal2-icon swal2-success swal2-animate-success-icon">
                                       <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255);"></div>
@@ -323,21 +448,21 @@
                       </div>
                   </div>
                   <div class="divider"></div>
-                  <div class="clearfix">
-                      <button type="button" id="reset-btn" class="btn-shadow float-left btn btn-link">Reset</button>
-                      <button type="button" id="next-btn" class="btn-shadow btn-wide float-right btn-pill btn-hover-shine btn btn-primary">Next</button>
-                      <button type="button" id="prev-btn" class="btn-shadow float-right btn-wide btn-pill mr-3 btn btn-outline-secondary">Previous</button>
-                  </div>
               </div>
               </div>
         </div>
       </div>
-      <div class="modal-footer hidden-print">
-        <button class="btn btn-info  email-button-lg" style="display:none"  ><i class="fa fa-envelope"></i></i></span> Email</button>
-
-        <button class="btn btn-primary  print-button-lg" style="display:none"  onclick="printWindow()"><i class="pe-7s-print"></i> Print</button>
-        <button type="button" class="btn btn-danger hidden-print" data-dismiss="modal">Close</button>
-      </div>
+      <div class="modal-footer">
+        <div class="col-md-12" style="display: flex; flex-direction: row;">
+            <div class="col-md-6 text-left">
+                    <button type="submit" id="save_student" class="btn btn-success  btn-lg btn-block">Save Student Information And Continue</button>
+            </div>
+            <div class="col-md-6 text-right">
+                <button type="button" id="clear_button" class="btn btn-warning">Clear</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
     </div>
   </div>
 </div>

@@ -12,11 +12,12 @@ use \App\Models\Course;
 use \App\Models\Student;
 use App\Models\UserGroup;
 use App\Models\WebAction;
+use App\Models\BatchStudent;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 use \App\Models\StudentCourse;
-use App\Models\UserGroupMember;
 
+use App\Models\UserGroupMember;
 use App\Traits\PortalHelperModel;
 use App\Models\UserGroupPermission;
 
@@ -82,20 +83,19 @@ class StudentPortalController extends Controller
 
     public function showMyCourseList($type)
     {
-        if($type != 'Running' &&  $type != 'Completed'){
+        if($type != 'Running'  && $type != 'Upcoming' &&  $type != 'Completed'){
             return redirect()->back();
         }
         $page_title = $this->page_title;
 
-        $runningBatcheResponse = $this->courseList(1,50, 'Running');
- 
-        
+        $runningBatcheResponse = $this->courseList(1,50, 'Running', 'my');
         $data['runningBatches']= $runningBatcheResponse['batches'];
-
-
-        $completedBatcheResponse = $this->courseList(1,50, 'Completed');
+        $upcomingBatcheResponse = $this->courseList(1,50, 'Upcoming', 'my');
+        $data['upcomingBatches']= $upcomingBatcheResponse['batches'];
+        $completedBatcheResponse = $this->courseList(1,50, 'Completed', 'my');
         $data['completedBatches']= $completedBatcheResponse['batches'];
 
+      //  dd($data);
         return view('student-portal.my-course-list', array('page_title'=>$page_title, 'data'=>$data));
     }
     
@@ -109,8 +109,21 @@ class StudentPortalController extends Controller
         
         $data['student']=$student;
         $batchDetails   = $this->courseDetailsByBatchId($id);
-        
+        if(!$batchDetails){
+            return redirect()->back();
+        }
         return view('student-portal.course-details', array('page_title'=>$page_title, 'data'=>$data,'student'=>$student, 'batch'=>$batchDetails));
     }
+
+
+    public function studentShow()
+    {
+        $studentId 		= Auth::user()->student_id; 
+        $student = Student::with('documents')->findOrFail($studentId);
+        $batchStudent = new BatchStudent();
+        $courses = $batchStudent->getBatchesByStudentId($student->id);
+        return json_encode(array('student' => $student, 'courses'=>$courses));
+    }
+
 
 }

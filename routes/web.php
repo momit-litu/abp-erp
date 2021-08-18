@@ -36,6 +36,8 @@ Route::group(['prefix' => 'portal'], function () {
 		Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 		Route::get('/courses/my/{type}',array('as'=>'My Course List' , 	'uses' =>'StudentPortalController@showMyCourseList'));
 
+		Route::get('/student-info',array('as'=>'Student Details' , 'uses' =>'StudentPortalController@studentShow'));
+		Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
 		
 	});
 });

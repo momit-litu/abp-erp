@@ -9,9 +9,27 @@
                         <i class="pe-7s-notebook  icon-gradient bg-mean-fruit">
                         </i>
                     </div>
-                    <div>{{ $batch->course->title }}
-                        <div class="page-title-subheading">
-                           {{$batch->course->short_name. $batch->batch_name }}
+                    <div>{{ $batch->course->title.' ('.$batch->course->short_name. $batch->batch_name.')' }}
+                        <div class="page-title-subheading opacity-10">
+                            <nav class="" aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a>
+                                            <i aria-hidden="true" class="fa fa-home"></i>&nbsp;ABP
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="{{url('dashboard')}}">Dashboards</a>
+                                    </li>
+                                    <li class="active breadcrumb-item" aria-current="page">
+                                        @if($batch->students->count()>0)
+                                            <a href="{{url('portal/courses/my/'.$batch->running_status)}}">My Course List </a>
+                                        @else
+                                        <a href="{{url('portal/courses/'.$batch->running_status)}}">Course List </a>
+                                        @endif
+                                    </li>
+                                </ol>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -19,9 +37,14 @@
                     <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-info disabled">
                        {{ $batch->running_status }}
                     </button>
-                    <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-success disabled" data-original-title="Example Tooltip">
-                       {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Batch Full' }}
-                    </button>
+                    @if($batch->students->count()>0)
+                        <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Registered already</button>
+                    @else
+                        <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-success disabled" data-original-title="Example Tooltip">
+                            {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Batch Full' }}
+                        </button>
+                    @endif
+                    
                 </div>    
             </div>
         </div> 
@@ -89,21 +112,16 @@
                                     {{ strip_tags($batch->course->objective) }}
                                 </p>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">
                                                 <div class="widget-content-left">
-                                                    <div class="widget-heading">Alina Mcloughlin</div>
-                                                    <div class="widget-subheading">A short profile description</div>
+                                                    <div class="widget-heading">Course Title</div>
+                                                    <div class="widget-subheading">{{ $batch->course->title.' ('.$batch->course->short_name.')' }}</div>
                                                 </div>
-                                                <div class="widget-content-right">
-                                                    <div role="group" class="btn-group-sm btn-group">
-                                                        <button type="button" class="btn-shadow btn btn-primary">Hire</button>
-                                                        <button type="button" class="btn-shadow btn btn-primary">Fire</button>
-                                                    </div>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </li>
@@ -111,11 +129,17 @@
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">                               
                                                 <div class="widget-content-left">
-                                                    <div class="widget-heading">Ruben Tillman</div>
-                                                    <div class="widget-subheading">Etiam sit amet orci eget eros faucibus</div>
+                                                    <div class="widget-heading">Batch</div>
+                                                    <div class="widget-subheading">{{ $batch->batch_name}}</div>
                                                 </div>
                                                 <div class="widget-content-right">
-                                                    <div class="badge badge-danger">NEW</div>
+                                                    @if($batch->running_status=='Running')
+                                                        <div class="badge badge-info">{{ $batch->running_status}}</div>
+                                                    @elseif($batch->running_status=='Completed')
+                                                        <div class="badge badge-success">{{ $batch->running_status}}</div>
+                                                    @elseif($batch->running_status=='Upcooming')
+                                                        <div class="badge badge-warning">{{ $batch->running_status}}</div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -124,103 +148,161 @@
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">
                                                 <div class="widget-content-left">
-                                                    <div class="widget-heading">Vinnie Wagstaff</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <button class="btn-pill btn-hover-shine btn btn-focus btn-sm">Details</button>
+                                                    <div class="widget-heading">Trainer</div>
+                                                    <div class="widget-subheading">{{  $batch->course->trainers}}</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="widget-content p-0">
-                                            <div class="widget-content-wrapper">                                                    
+                                            <div class="widget-content-wrapper">
                                                 <div class="widget-content-left">
-                                                    <div class="widget-heading">Ella-Rose Henry</div>
-                                                    <div class="widget-subheading">Lorem ipsum dolor sit amet, consectetuer</div>
-                                                </div>
-                                                <div class="widget-content-right">
-                                                    <div class="widget-numbers text-primary"><span class="count-up-wrapper">$101</span></div>
-                                                </div>
+                                                    <div class="widget-heading">Total Credit Hour</div>
+                                                    <div class="widget-subheading">{{  $batch->course->tqt}}</div>
+                                                </div>                                               
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">Study Mode</div>
+                                                    <div class="widget-subheading">{{  $batch->course->study_mode}}</div>
+                                                </div>                                                
                                             </div>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <br>
-                                    <button type="button" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg col-md-12"  data-toggle="modal" data-target="#registration-modal">
-                                        Register to this course
-                                    </button>
+                                    @if($batch->students->count()==0)
+                                        <button type="button" id="start_registration" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg col-md-12">
+                                            Register to this course
+                                        </button>
+                                    @endif
                                 </li>
                                 </ul>
                             </div>
-                            <div class="col-md-2"></div>
+                            <div class="col-md-1"></div>
                             <div class="col-md-5">
-                                <h5 class="card-title">Fees Details</h5>
-                                <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
-                                    <div class="widget-chart-content text-white">
-                                        <div class="widget-chart-flex">
-                                            <div class="widget-title">Onetime Payment</div>
-                                            <div class="widget-subtitle text-warning"><del>{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:$batch->fees }}</del></div>
-                                        </div>
-                                        <div class="widget-chart-flex">
-                                            <div class="widget-numbers">{{ $batch->discounted_fees }}
+                                @if($batch->payments != "")
+                                    <h5 class="card-title">Payment Details</h5>
+                                    <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
+                                        <div class="widget-chart-content text-white">
+                                            <div class="widget-chart-flex">
+                                                <div class="widget-title">Total Payable
+                                                    <div class="text-warning"><del>{{ ($batch->students[0]->pivot->total_payable < $batch->discounted_fees)?$batch->students[0]->pivot->total_payable:"" }}</del></div>
+                                                </div>  
+                                                <div class="widget-subtitle">Total Paid
+                                                    <div class="text-dark">{{ ($batch->students[0]->pivot->total_payable <  $batch->discounted_fees)?".":"" }}
+                                                    </div>    
+                                                </div>                                              
                                             </div>
-                                            <!--<div class="widget-description ml-auto text-warning"><span class="pr-1">45</span>
-                                                <i class="fa fa-angle-up "></i>
-                                            </div>-->
+                                            <div class="widget-chart-flex">
+                                                <div class="widget-numbers widget-numbers ">{{ $batch->students[0]->pivot->total_payable }}
+                                                </div>
+                                                <div class="widget-description  widget-numbers">
+                                                    @if($batch->payments[0]->payment_status == 'Paid')
+                                                        <span class="text-success">{{ $batch->students[0]->pivot->total_paid}}</span>
+                                                    @else
+                                                        <span class="text-danger">{{ $batch->students[0]->pivot->total_paid}}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="tabs-animated-shadow tabs-animated nav">
-                                        @foreach($batch->batch_fees as $key=>$batch_fee)		
-											@if($batch_fee->plan_name != "Onetime")
-											<li class="nav-item">
-												<a role="tab" class="nav-link {{($key==1)?'active':''}}" id="tab-c-0" data-toggle="tab" href="#tab-animated-{{$key}}">
-													<span>{{ $batch_fee->plan_name}}</span>
-												</a>
-											</li>
-											@endif
-										@endforeach
-										
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="tab-animated-0" role="tabpanel">
-                                            <table class="mb-0 table-bordered table table-sm ">
-                                                <thead>
-                                                <tr>
-                                                    <th class="text-center">Installment No</th>
-                                                    <th class="text-center">Month</th>
-                                                    <th class="text-right">Amount</th>                                                    
-                                                </tr>
-                                                </thead>
-                                                <tbody>									
+                                    <div class="card-body">
+                                        <table class="mb-0 table-bordered table table-sm ">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">Ins. No</th>
+                                                <th class="text-center">Month</th>
+                                                <th class="text-right">Amount</th> 
+                                                <th class="text-center">Staus</th> 
+                                                <th class="text-center"></th>                                                   
+                                            </tr>
+                                            </thead>
+                                            <tbody>	
+                                                @foreach($batch->payments as $key=>$payment)		
                                                     <tr>
-                                                        <th class="text-center">1</th>
-                                                        <td class="text-center">6</td>
-                                                        <td class="text-right">11000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th class="text-center">2</th>
-                                                        <td class="text-center">6</td>
-                                                        <td class="text-right">11000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th class="text-center">3</th>
-                                                        <td class="text-center">6</td>
-                                                        <td class="text-right">11000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2" class="text-right"><b>Total Payable Amount</b></td>
-                                                        <td class="text-right"><b>
-                                                         33,000 </b>
+                                                        <th class="text-center">{{$payment->installment_no}}</th>
+                                                        <td class="text-center">{{$payment->last_payment_date}}</td>
+                                                        <td class="text-right">{{$payment->payable_amount}}</td>
+                                                        <td class="text-center">
+                                                            @if(strtotime($payment->last_payment_date)< strtotime(date('Y-m-d')) && $payment->payment_status != 'Paid')
+                                                                <span class='text-danger'>Due</span>
+                                                            @elseif(strtotime($payment->last_payment_date)>= strtotime(date('Y-m-d')) && $payment->payment_status != 'Paid')
+                                                                <span class='text-warning'>Upcoming</span>
+                                                            @else
+                                                                <span class='text-success'>Paid</span>
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if($payment->payment_status != 'Paid')
+                                                                <button class='btn btn-sm btn-info'>Pay</button>
+                                                            @endif
                                                         </td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>                                       
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
+                                @else
+                                    <h5 class="card-title">Fees Details</h5>
+                                    <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
+                                        <div class="widget-chart-content text-white">
+                                            <div class="widget-chart-flex">
+                                                <div class="widget-title">Onetime Payment</div>
+                                                <div class="widget-subtitle text-warning"><del>{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:$batch->fees }}</del></div>
+                                            </div>
+                                            <div class="widget-chart-flex">
+                                                <div class="widget-numbers">{{ $batch->discounted_fees }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="tabs-animated-shadow tabs-animated nav">
+                                            @foreach($batch->batch_fees as $key=>$batch_fee)		
+                                                @if($batch_fee->plan_name != "Onetime")
+                                                <li class="nav-item">
+                                                    <a role="tab" class="nav-link {{($key==1)?'active':''}}" id="tab-c-0" data-toggle="tab" href="#tab-animated-{{$key}}">
+                                                        <span>{{ $batch_fee->plan_name}}</span>
+                                                    </a>
+                                                </li>
+                                                @endif
+                                            @endforeach
+                                            
+                                        </ul>
+                                        <div class="tab-content">
+                                            @foreach($batch->batch_fees as $key=>$batch_fee)
+                                            @if($batch_fee->plan_name != "Onetime")
+                                            <div class="tab-pane {{($key==1)?'active':''}}" id="tab-animated-{{$key}}" role="tabpanel">
+                                                <table class="mb-0 table-bordered table table-sm ">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="text-center">Installment No</th>
+                                                        <th class="text-center">Month Duration</th>
+                                                        <th class="text-right">Amount</th>                                                   
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>										
+                                                        @foreach($batch_fee->installments as $k=>$installment)
+                                                        <tr>
+                                                            <th class="text-center">{{$installment->installment_no}}</th>
+                                                            <td class="text-center">{{$batch_fee->installment_duration}}</td>
+                                                            <td class="text-right">{{$installment->amount}}</td>                                               
+                                                        </tr>
+                                                        @endforeach  
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            @endif
+                                            @endforeach                                       
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -256,21 +338,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                
-            </div>
-            <div class="col-md-12">
-                
-            </div>
         </div>             
     </div>  
-    
 </div>
+
 
 @endsection
 
 
 @section('JScript')
-    <script type="text/javascript" src="{{ asset('assets/js/page-js/setting/setting.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/page-js/student-portal/student-portal.js')}}"></script>
 @endsection
 

@@ -223,6 +223,8 @@ class AuthController extends Controller
                     'registration_completed'=>'No'
                 ]);
                 if($student){
+                    $student->student_no =str_pad($student->id,5,'0',STR_PAD_LEFT);
+                    $student->save();
                     // create a student type user
                     $studentUser = User::create([
                         'first_name'	=> $request['name'],

@@ -38,7 +38,7 @@
                                         <p>
                                            {{ strip_tags($batch->course->objective) }}
                                         </p>
-                                        <button class="btn-icon btn btn-success btn-sm">View Profile</button>
+                                        <a href="{{ url('portal/course/'.$batch->id)}}" class="btn-icon btn btn-success btn-sm">View Profile</a>
                                     </div>
                                 </div>
 								@endforeach
