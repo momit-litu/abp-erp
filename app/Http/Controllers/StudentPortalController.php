@@ -16,9 +16,9 @@ use App\Models\WebAction;
 use App\Models\BatchStudent;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
-
 use \App\Models\StudentCourse;
 use App\Models\StudentPayment;
+use App\Models\StudentRevisePayment;
 use App\Models\StudentDocument;
 use App\Models\UserGroupMember;
 use App\Traits\PortalHelperModel;
@@ -352,21 +352,16 @@ class StudentPortalController extends Controller
             }
             else{	
 
-                $batchFee  = StudentPayment::with('enrollment')->findOrFail($request['revise_payment_id']);
-                dd($batchFee);
-			/*	$batchStudent = BatchStudent::create([
-                    'batch_id' 	    =>  $request['register_batch_id'],
-                    'student_id'	=>  $studentId,
-                    'batch_fees_id' =>  $request['batch_fees_id'],
-                    'total_payable' =>  $batchFee->payable_amount,
-                    'balance'       =>  $batchFee->payable_amount,
-                    'status'        => 'Inactive',
-                ]);*/
+                $batchFee  = StudentPayment::findOrFail($request['revise_payment_id']);
+				$studentRevisePayment = StudentRevisePayment::create([
+                    'student_enrollment_id' =>  $batchFee->student_enrollment_id,
+                    'revise_details'        =>  $request['revise_payment_details']
+                ]);
                 
              }				
             DB::commit();
             $return['response_code'] = 1;
-            $return['message'] = "Registration successfully";
+            $return['message'] = "";
             return json_encode($return);
         } 
 		catch (\Exception $e){

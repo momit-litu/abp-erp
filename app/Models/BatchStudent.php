@@ -12,6 +12,9 @@ class BatchStudent extends Model
     public function payments(){
         return $this->hasMany('App\Models\StudentPayment','student_enrollment_id','id');
     }
+    public function revise_requests(){
+        return $this->hasMany('App\Models\StudentRevisePayment','student_enrollment_id','id');
+    }
     public function student(){
         return $this->hasOne('App\Models\Student','id','student_id');
     }

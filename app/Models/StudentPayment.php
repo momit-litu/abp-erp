@@ -160,7 +160,7 @@ class StudentPayment extends Model
     public function getPaymentDetailsByStudentId($student_id)
     {
 
-      $studentPayments = BatchStudent::with('payments','batch','batch.course')->where('student_id',$student_id)->orderBy('id', 'DESC')->get()->toArray();
+      $studentPayments = BatchStudent::with('payments','revise_requests','batch','batch.course')->where('student_id',$student_id)->orderBy('id', 'DESC')->get()->toArray();
      // dd($studentPayments);
       return $studentPayments;
     }
