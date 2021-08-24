@@ -20,6 +20,7 @@ use App\Models\BatchFeesDetail;
 use App\Models\StudentRevisePayment;
 use App\Traits\CustomerNotification;
 use Illuminate\Support\Facades\File;
+use App\Models\NotificationTemplate;
 
 class PaymentController extends Controller
 {
@@ -69,7 +70,7 @@ class PaymentController extends Controller
             $data['installment']      = $payment->installment_no; 
             $data['payment_month']  = ($payment->paid_date==null)?date('M y', strToTime($payment->last_payment_date)):date('M y', strToTime($payment->paid_date)); 
             $data['paid_date']      = $payment->paid_date; 
-			$data['payment_status'] = $payment->payment_status;
+			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";
 			$data['paid_amount']    = ($payment->payment_status =='Paid')? "<span class='text-success'>".$payment->payable_amount."</span>":"<span class='text-danger'>".$payment->payable_amount."</span>";
 
      
@@ -80,6 +81,8 @@ class PaymentController extends Controller
 
             if($payment->payment_status=='Unpaid'){
                 $data['actions'] .=" <button title='View' onclick='paymentEdit(".$payment->id.")' id='edit_" . $payment->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='pe-7s-cash'></i></button>&nbsp;";
+                $data['actions'] .=" <button title='View' onclick='paymentSMS(".$payment->id.")' id='sms_" . $payment->id . "' class='btn btn-xs btn-success btn-hover-shine' ><i class='lnr-envelope'></i></button>&nbsp;";
+                
             }
             if($edit_permisiion>0 &&  $payment->payment_status=='Paid'){
                 $data['actions'] .="<button onclick='paymentEdit(".$payment->id.")' id=edit_" . $payment->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
@@ -153,12 +156,18 @@ class PaymentController extends Controller
     }
 
 
-
     public function show($id)
     {
 		if($id=="") return 0;
         $paymentDetails = $this->studentPayment->getPaymentDetailByPaymentId($id);
-		return json_encode(array('payment'=>$paymentDetails));
+        // Payment due sms = 1
+        $smsBody = NotificationTemplate::find(1);
+        $studentName = $paymentDetails['only_student_name'];
+        $payableAmount = $paymentDetails['payable_amount'];
+        $lastPaymentDate = $paymentDetails['last_payment_date'];
+
+        $smsBodyText = str_replace(array('[student_name]', '[payment_amount]','[payment_date]'), array($studentName,$payableAmount , $lastPaymentDate), $smsBody->details);
+		return json_encode(array('payment'=>$paymentDetails, 'sms_body'=>$smsBodyText));
     }
 
     public function destroy($id)
@@ -201,7 +210,6 @@ class PaymentController extends Controller
 		return json_encode(array('batchStudents'=>$paymentDetails));
     }
 
-
 	
     public function reviseIndex()
     {
@@ -238,7 +246,6 @@ class PaymentController extends Controller
         $revisePayment = StudentRevisePayment::with('enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')->where('id',$id)->first();
 		return json_encode(array('revisePayment'=>$revisePayment));
     }
-
 
     
     public function reviseUpdate(Request $request)

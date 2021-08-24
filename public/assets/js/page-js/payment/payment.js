@@ -32,7 +32,7 @@ $(document).ready(function () {
 		"initComplete": function () {
             this.api().columns().every( function (key) {
 				var column = this;		
-				if(column[0] == 2 || column[0] == 4 ||  column[0] == 6  ){
+				if(/*column[0] == 2 || */column[0] == 4 ||  column[0] == 6  ){
 					var select = $('<select><option value=""></option></select>')
 						.appendTo( $(column.header()) )
 						.on( 'change', function () {
@@ -301,6 +301,120 @@ $(document).ready(function () {
 				$("#edit_id").val(data['id']);
 				$("#details").val(data['details']);
 				$('#entry-form').modal('show');
+			}
+		});
+	}
+
+	paymentSMS = function paymentSMS(id){
+		var edit_id = id;
+		$("#admin_user_add_button").html("<b> Send SMS</b>");		
+		$.ajax({
+			url: url+'/payment/'+edit_id,
+			cache: false,
+			success: function(response){
+				var response = JSON.parse(response);
+				var data = response['payment'];
+				var sms_body = response['sms_body'];
+				var modalHtml = "";
+				if(data['payment_status']=="Paid")
+				{
+					var paymentStatusHtml = '<span class="badge badge-success">Paid</span> ';
+					var paidstatusHtml = (data['paid_type']=="Cash")?'<span class="badge badge-info">Cash</span> ':'<span class="badge badge-info">SSL</span> ';
+					var statusHtml = (data['receive_status']=="Received")?'<span class="badge badge-success">Received</span> ':'<span class="badge badge-danger">Not Received</span> ';
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Invoice No :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['invoice_no']+"</div></div>";
+				}
+				else{
+					var paymentStatusHtml = '<span class="badge badge-danger">Due</span> ';
+					var paidstatusHtml = "";
+					var statusHtml = "";
+				}
+				
+								
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+paymentStatusHtml+paidstatusHtml+statusHtml+"</div></div>";
+				modalHtml  +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Student :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['student_name']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Course & Batch :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['course_name']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Installment :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['installment_no']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Payable Amount :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['payable_amount']+"</div></div>";
+			
+				if(data['payment_status']=="Paid"){	
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Paid Amount :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['paid_amount']+"</div></div>";	
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Refference No. :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['payment_refference_no']+"</div></div>";
+				}
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Payment Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['last_payment_date']+"</div></div>";	
+				if(data['payment_status']=="Paid"){				
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Paid Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['paid_date']+"</div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['details']+"</div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Attachment :</strong></div>"+"<div class='col-lg-9 col-md-8'><a target='_blank' href='"+payment_attachment_url+"/"+data['attachment']+"'>"+data['attachment']+"</a></div></div>";
+				}
+
+				modalHtml +=`
+					<div class='row margin-top-5'>
+						<div class='col-lg-12 '>
+						<br><br>
+							<input type="hidden" name="sms_payment_id" id="sms_payment_id" value="`+data['id']+`" >	
+							<div class="form-row">
+								<div class="col-md-12">
+									<div class="position-relative form-group">
+										<label for="" class=""><b>SMS Body</b></label>
+										<textarea 
+										required id="sms_payment_details"  name="sms_payment_details"  class="form-control col-md-12">`+sms_body+`</textarea>
+									</div>
+									<button id="send_sms" class="btn btn-success" ><i class="lnr-envelope"></i> &nbsp; Send SMS</button>
+								</div>
+							</div>                           
+						</div>
+					</div>
+				`;
+				
+				$('#myModalLabelLg').html('Send SMS');
+				$('#modalBodyLg').html(modalHtml);
+				$("#generic_modal_lg").modal();
+				
+				$("#send_sms").on('click',function(){
+					$.ajaxSetup({
+						headers:{
+							'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+						}
+					});
+			
+					if($.trim($('#sms_payment_details').val()) == "" || $.trim($('#sms_payment_id').val()) == ""){
+						return false;
+					}
+					else{
+						// validate the installment details
+						$.ajax({
+							url: url+"/sms/due-payment",
+							type:'POST',
+							data:{
+								payment_id:$('#sms_payment_id').val(),
+								details:$('#sms_payment_details').val()
+							},
+							async:false,
+					
+							success: function(data){
+								var response = JSON.parse(data);
+								if(response['response_code'] == 0){
+									var errors	= response['message'];						
+									resultHtml = '<ul>';
+									if(typeof(errors)=='string'){
+										resultHtml += '<li>'+ errors + '</li>';
+									}
+									else{
+										$.each(errors,function (k,v) {
+											resultHtml += '<li>'+ v + '</li>';
+										});
+									}
+									resultHtml += '</ul>';
+									toastr['error']( resultHtml, 'Failed!!!!');
+								}
+								else{
+									toastr['success']( 'SMS Sent Successfully', 'Success!!!');
+								}
+								$(window).scrollTop();
+							 }
+						});
+					}
+				});
 			}
 		});
 	}

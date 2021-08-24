@@ -29,9 +29,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-	'ussBnbMicroservice'=>[
-		'base_uri'=>env('USSBNBMS_BASE_URL'),
-		'secret'=>env('USSBNBMS_SECRET_KEY')
+	'smsService'=>[
+		'sms_user_id'=>env('SMS_USER_ID'),
+		'sms_user_password'=>env('SMS_USER_PASSWORD'),
 	],	
 
 ];

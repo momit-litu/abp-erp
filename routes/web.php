@@ -212,7 +212,11 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/revise-payments',array('as'=>'Payment Revise List' ,'action_id'=>'93', 'uses' =>'PaymentController@reviseShowList'));
 	Route::get('/revise-payments/{id}',array('as'=>'Payment Revise Details' ,'action_id'=>'93', 'uses' =>'PaymentController@reviseShow'));
 	Route::post('/revise-payments',array('as'=>'Payment Revise Update' , 'action_id'=>'93', 'uses' =>'PaymentController@reviseUpdate'));
-	
+
+
+	//Notifications
+	//SMS	
+	Route::post('/sms/due-payment',array('as'=>'Send SMS' , 'action_id'=>'94', 'uses' =>'NotificationController@sendPaymentDueSMS'));
 
 	//Batch student enroll
 	Route::get('/batch-students/{id}',array('as'=>'Batch Students List' ,'action_id'=>'85', 'uses' =>'BatchController@studentShow'));

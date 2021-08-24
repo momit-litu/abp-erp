@@ -175,8 +175,7 @@
                                             <br>
                                             <h6 class="card-title">Previous Revise Request</h6>
                                             <ul class="list-group list-group-flush">
-                                                @foreach ($batch_student['revise_requests'] as $k=>$revise)	    
-                                                
+                                                @foreach ($batch_student['revise_requests'] as $k=>$revise)
                                                 <li class="list-group-item">
                                                     <div class="widget-content p-0">
                                                         <div class="widget-content-wrapper">
