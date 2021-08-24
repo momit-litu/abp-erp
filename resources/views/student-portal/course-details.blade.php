@@ -68,11 +68,11 @@
                             <div class="widget-content">
                                 <div class="widget-content-wrapper">
                                     <div class="widget-content-right ml-0 mr-3">
-                                        <div class="widget-numbers text-success">1896</div>
+                                        <div class="widget-numbers text-success"> {{ $batch->student_limit}}</div>
                                     </div>
                                     <div class="widget-content-left">
-                                        <div class="widget-heading">Total Cirtified Student</div>
-                                        <div class="widget-subheading">need to provide some slogan</div>
+                                        <div class="widget-heading">Total Seat</div>
+                                        <div class="widget-subheading">No of seat may increase</div>
                                     </div>
                                 </div>
                             </div>
@@ -81,11 +81,11 @@
                             <div class="widget-content">
                                 <div class="widget-content-wrapper">
                                     <div class="widget-content-right ml-0 mr-3">
-                                        <div class="widget-numbers text-warning">14</div>
+                                        <div class="widget-numbers text-warning">{{$batch->total_enrolled_student}}</div>
                                     </div>
                                     <div class="widget-content-left">
-                                        <div class="widget-heading">Completed Batch</div>
-                                        <div class="widget-subheading">need to provide some slogan</div>
+                                        <div class="widget-heading">Total Enrolled Student</div>
+                                        <div class="widget-subheading"></div>
                                     </div>
                                 </div>
                             </div>
@@ -94,11 +94,16 @@
                             <div class="widget-content">
                                 <div class="widget-content-wrapper">
                                     <div class="widget-content-right ml-0 mr-3">
-                                        <div class="widget-numbers text-danger">2</div>
+                                        <div class="widget-numbers text-danger"> 
+                                            <span  class=" {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->student_limit-$batch->total_enrolled_student) }}</span>
+                                        </div>
                                     </div>
                                     <div class="widget-content-left">
-                                        <div class="widget-heading">Open Batch</div>
-                                        <div class="widget-subheading">Batch 15 , Bach 16</div>
+                                        <div class="widget-heading">
+                                            <span  class=" {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">
+                                                {{ ($batch->total_enrolled_student<$batch->student_limit)?"Available":"Booked" }}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -107,6 +112,14 @@
                 </div>
                 <div class="main-card mb-3 card">
                     <div class="card-body">
+                        @if($batch->students->count()==1 && $batch->students[0]->pivot->status =='Inactive')
+                            <div class="alert alert-danger ">
+                                <button class="btn btn-sm btn-danger disabled">Registration Pending</button><br>
+                                You registration to this course is still pending. Please make the payment to enroll.
+                            </div>
+                        @endif
+
+
                         <h5 class="card-title">Details</h5>
                                 <p>
                                     {{ strip_tags($batch->course->objective) }}
@@ -148,6 +161,28 @@
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">
                                                 <div class="widget-content-left">
+                                                    <div class="widget-heading">Start Date</div>
+                                                    <div class="widget-subheading">{{ $batch->start_date}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    @if($batch->end_date!='')
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">End Date</div>
+                                                    <div class="widget-subheading">{{ $batch->end_date}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    @endif
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
                                                     <div class="widget-heading">Trainer</div>
                                                     <div class="widget-subheading">{{  $batch->course->trainers}}</div>
                                                 </div>
@@ -181,6 +216,7 @@
                                             Register to this course
                                         </button>
                                     @endif
+
                                 </li>
                                 </ul>
                             </div>
@@ -240,7 +276,10 @@
                                                         </td>
                                                         <td class="text-center">
                                                             @if($payment->payment_status != 'Paid')
-                                                                <button class='btn btn-sm btn-info'>Pay</button>
+                                                                
+                                                            <a class="btn" data-target="#payment-modal" role="button" data-toggle="modal">Launch demo modal</a>
+                                                            
+                                                            <a class='btn btn-sm btn-info' onClick="makePayment({{$payment->id}},{{$payment->payable_amount}})">Pay</a>
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -294,7 +333,13 @@
                                                             <td class="text-center">{{$batch_fee->installment_duration}}</td>
                                                             <td class="text-right">{{$installment->amount}}</td>                                               
                                                         </tr>
-                                                        @endforeach  
+                                                        @endforeach 
+                                                        <tr>
+                                                            <td colspan="2" class="text-right"><b>Total Payable Amount</b></td>
+                                                            <td class="text-right"><b>
+                                                           {{$batch_fee->installments->sum('amount')}}</b>
+                                                            </td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -307,9 +352,6 @@
                         </div>
                     </div>
                 </div>
-               
-                
-
                 <div class="main-card mb-3 card">
                     <div class="card-body"><h5 class="card-title">More Details:</h5>
                         <ul class="nav nav-tabs nav-justified">

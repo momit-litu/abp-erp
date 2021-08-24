@@ -95,9 +95,10 @@
                         <div class="">
                             <div class="">
                                 <!--<h6 tabindex="-1" class="dropdown-header">Overall</h6>-->
-                                <button type="button" tabindex="0" class="dropdown-item">Payments</button>
-                                <button type="button" tabindex="0" class="dropdown-item">Upcoming Payments</button>
-                                <button type="button" tabindex="0" class="dropdown-item">Payments Revise</button>                                
+                                <a href="{{url('portal/payments/all')}}" tabindex="0" class="dropdown-item">Payments</a>
+                                <a href="{{url('portal/payments/upcoming')}}" tabindex="0" class="dropdown-item">Upcoming Payments</a>
+
+                                <a href="{{url('portal/revise-payments')}}" tabindex="0" class="dropdown-item">Revise Payment</a>                  
                                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                                     <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
                                 </div>
@@ -109,7 +110,7 @@
                         <ul class="nav flex-column">
                             <li class="nav-item-divider nav-item"></li>
                             <li class="nav-item-btn nav-item">
-                                <button class="btn-wide btn-shadow btn btn-success btn-sm">Make Payment</button>
+                                <a href="{{url('portal/payments/all')}}" tabindex="0" class="btn-wide btn-shadow btn btn-success btn-sm">Make Payments</a>
                             </li>
                         </ul>
                     </div>

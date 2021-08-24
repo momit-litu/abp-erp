@@ -30,7 +30,6 @@
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
     @include('student-portal.layout.header')
 	<div class="app-main">
-       
 		@yield('content')
         <div class="body-block-example-1 d-none">
             <div class="loader bg-transparent no-shadow p-0">
@@ -49,7 +48,6 @@
         </div>
     </div>
 </div>
-
 <button id="tostr-show"></button>
 <div class="app-drawer-overlay d-none animated fadeIn"></div>
 <input type="hidden" class="site_url" value="{{url('/')}}">
@@ -58,6 +56,7 @@
 
 <!--CORE-->
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/metismenu"></script>
 
@@ -171,10 +170,10 @@
 <script src="{{ asset('assets/theme/assets/js/vendors/rating.js') }}"></script>
 <script src="{{ asset('assets/theme/assets/js/scripts-init/rating.js') }}"></script>
 
-<!--Perfect Scrollbar -->
+<!--Perfect Scrollbar 
 <script src="{{ asset('assets/theme/assets/js/vendors/scrollbar.js') }}"></script>
 <script src="{{ asset('assets/theme/assets/js/scripts-init/scrollbar.js') }}"></script>
-
+-->
 <!--Toastr-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/theme/assets/js/scripts-init/toastr.js') }}"></script>
@@ -211,6 +210,7 @@
 
 <!--<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>-->
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
+
 
 @yield('JScript')
 

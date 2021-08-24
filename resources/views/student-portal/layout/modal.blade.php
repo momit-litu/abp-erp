@@ -198,6 +198,7 @@
 	</div>
 </div>
 
+@if(isset($batch))
 <div class="modal fade" id="registration-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document"> <!-- modal-lg-->
     <div class="modal-content">
@@ -210,21 +211,21 @@
       
       <div class="modal-body " > 
         <div class="main-card mb-3 card">
-              <div class="card-body printable">
+              <div class="card-body">
                 <div class="card-body">
                   <div>
                       <ul class="forms-wizard nav nav-tabs">
-                          <li class="nav-item active">
+                          <li id="student-info-nav-item" class="nav-item active">
                               <a href="javascript:void(0)" class="nav-link">
                                   <em>1</em><span>Student Information</span>
                               </a>
                           </li>
-                          <li class="nav-item">
+                          <li id="course-info-nav-item" class="nav-item">
                               <a href="javascript:void(0)" class="nav-link">
                                   <em>2</em><span>Course Information</span>
                               </a>
                           </li>
-                          <li class="nav-item">
+                          <li id="success-info-nav-item" class="nav-item">
                               <a href="javascript:void(0)" class="nav-link">
                                   <em>3</em><span>Confirmation</span>
                               </a>
@@ -274,7 +275,7 @@
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
                                                 <label>Email<span class="required text-danger">*</span></label>
-                                                <input type="email" id="email" name="email" required class="form-control col-lg-12"/>
+                                                <input type="email" id="student_email" name="student_email" required class="form-control col-lg-12"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -295,7 +296,7 @@
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
                                                 <label>Postal  Address<span class="required">*</span></label>
-                                                <input type="text" id="address" name="address" required class="form-control col-lg-12"/>
+                                                <input type="text" id="student_address_field" name="student_address_field" required class="form-control col-lg-12"/>
                                             </div>
                                         </div>
                                     </div>
@@ -383,51 +384,54 @@
                                     <div id="student_form_submit_error" class="text-center" style="display:none"></div>
                                 </div>
                             </div>
+                            </form>
                           </div>
                           <div id="course-info" class="tab-pane step-content">
-                              <div id="accordion" class="accordion-wrapper mb-3">
-                                  <div class="card">
-                                      <div id="headingOne" class="card-header">
-                                          <button type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block">
-                                              <span class="form-heading">Account Information<p>Enter your user informations below</p></span>
-                                          </button>
-                                      </div>
-                                      <div data-parent="#accordion" id="collapseOne" aria-labelledby="headingOne" class="collapse show">
-                                          <div class="card-body">
-                                              <div class="form-row">
-                                                  <div class="col-md-6">
-                                                      <div class="position-relative form-group">
-                                                          <label for="exampleEmail2">Email</label>
-                                                          <input name="email" id="exampleEmail2" placeholder="with a placeholder" type="email" class="form-control">
-                                                      </div>
-                                                  </div>
-                                                  <div class="col-md-6">
-                                                      <div class="position-relative form-group">
-                                                          <label for="examplePassword">Password</label>
-                                                          <input name="password" id="examplePassword" placeholder="password placeholder" type="password" class="form-control">
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                              <div class="position-relative form-group">
-                                                  <label for="exampleAddress">Address</label><input name="address" id="exampleAddress" placeholder="1234 Main St" type="text" class="form-control"></div>
-                                              <div class="position-relative form-group"><label for="exampleAddress2">Address 2</label><input name="address2" id="exampleAddress2" placeholder="Apartment, studio, or floor" type="text" class="form-control"></div>
-                                              <div class="form-row">
-                                                  <div class="col-md-6">
-                                                      <div class="position-relative form-group"><label for="exampleCity">City</label><input name="city" id="exampleCity" type="text" class="form-control"></div>
-                                                  </div>
-                                                  <div class="col-md-4">
-                                                      <div class="position-relative form-group"><label for="exampleState">State</label><input name="state" id="exampleState" type="text" class="form-control"></div>
-                                                  </div>
-                                                  <div class="col-md-2">
-                                                      <div class="position-relative form-group"><label for="exampleZip">Zip</label><input name="zip" id="exampleZip" type="text" class="form-control"></div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
+                            <form id="course_form" autocomplete="off" name="course_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
+                                @csrf
+                                <input type="hidden" name="register_batch_id" id="register_batch_id"  value="{{ $batch->id }}">
+                                <div class="row">                                
+                                    <div class="col-md-12"> 
+                                       <!-- <h6>Please provide the information carefully</h6>  -->    
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <div class="position-relative form-group">
+                                                    <label for="first_name" class="">Course Name</label>
+                                                    <input type="text" id="register_course_name" disabled name="register_course_name" disabled class="form-control col-lg-12" value="{{ $batch->course->title.' ('.$batch->course->short_name.')' }}"/>
+                                                </div>
+                                            </div>
+                                        </div>                                
+                                        <div class="form-row">
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="first_name" class="">Batch </label>
+                                                    <input type="text" id="register_course_name" disabled name="register_course_name" disabled class="form-control col-lg-4" value="{{ $batch->batch_name }}"/>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <div class="position-relative form-group">
+                                                    <label for="first_name" class="">Course Fee Plan </label>
+                                                    <select id="batch_fees_id" name="batch_fees_id" class="form-control col-lg-12">
+                                                        @foreach($batch->batch_fees as $key=>$batch_fee)
+                    								    <option value="{{$batch_fee->id}}">{{$batch_fee->plan_name.' ('.$batch_fee->payable_amount.')'}}</option>;
+                                                        @endforeach
+                            						</select> 	
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        <div class="mt-3 position-relative form-check"><input name="terms_condition" id="terms_condition" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label" >Accept our <a href="{{url('/terms')}}">Terms and Conditions</a>.</label></div>   
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div id="course_form_submit_error" class="text-center" style="display:none"></div>
+                                    </div>
+                                </div>
+                                </form>
                           </div>
-                          <div id="payment-info" class="tab-pane step-content">
+                          <div id="success-info" class="tab-pane step-content">
                               <div class="no-results">
                                   <div class="swal2-icon swal2-success swal2-animate-success-icon">
                                       <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255);"></div>
@@ -437,11 +441,12 @@
                                       <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255);"></div>
                                       <div class="swal2-success-circular-line-right" style="background-color: rgb(255, 255, 255);"></div>
                                   </div>
-                                  <div class="results-subtitle mt-4">Finished!</div>
-                                  <div class="results-title">You arrived at the last form wizard step!</div>
+                                  <div class="results-subtitle mt-4">Success!</div>
+                                  <div class="results-title">Your registration has been successfull!</div>
                                   <div class="mt-3 mb-3"></div>
+                                  <div class="results-title">Your Have to make the payment to activate the enrollment in this course!</div>
                                   <div class="text-center">
-                                      <button class="btn-shadow btn-wide btn btn-success btn-lg">Finish</button>
+                                      <button class="btn-shadow btn-wide btn btn-success btn-lg" >Make Payment</button>
                                   </div>
                               </div>
                           </div>
@@ -455,10 +460,10 @@
       <div class="modal-footer">
         <div class="col-md-12" style="display: flex; flex-direction: row;">
             <div class="col-md-6 text-left">
-                    <button type="submit" id="save_student" class="btn btn-success  btn-lg btn-block">Save Student Information And Continue</button>
+                <button type="submit" id="save_student" class="btn btn-success  btn-lg btn-block" style="display: block;">Save Student Information And Continue</button>
+                <button type="submit" id="enroll_student" class="btn btn-success  btn-lg btn-none" style="display: none;">Confirm Registration</button>
             </div>
             <div class="col-md-6 text-right">
-                <button type="button" id="clear_button" class="btn btn-warning">Clear</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -466,4 +471,63 @@
     </div>
   </div>
 </div>
+@endif
 
+<div class="modal fade" id="payment-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document"> <!-- modal-lg-->
+      <div class="modal-content">
+        <div class="modal-header">
+                  <h5 class="modal-title">Payment</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+        
+        <div class="modal-body " > 
+          <div class="main-card mb-3 card">
+                  <div class="card-body">                
+                    <form id="payment_form" autocomplete="off" name="payment_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
+                    @csrf
+                    <input type="hidden" name="payment_id" id="payment_id">
+                    <div class="row">                                
+                        <div class="col-md-12"> 
+                            <!-- <h6>Please provide the information carefully</h6>  -->    
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <div class="position-relative form-group">
+                                        <label for="first_name" class="">Payment Amount</label>
+                                        <input type="text" id="payment_amount" disabled name="payment_amount"  class="form-control col-lg-4"/>
+                                    </div>
+                                </div>
+                            </div>                                
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div id="payment_form_submit_error" class="text-center" style="display:none"></div>
+                        </div>
+                    </div>
+                    </form> 
+                    <div class="divider"></div>
+                </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-12" style="display: flex; flex-direction: row;">
+              <div class="col-md-6 text-left">
+                <button class="your-button-class" id="sslczPayBtn"
+                    token="if you have any token validation"
+                    postdata="your javascript arrays or objects which requires in backend"
+                    order="If you already have the transaction generated for current order"
+                    endpoint="{{url('pay-via-ajax')}}">Make Payment
+                </button>
+              </div>
+              <div class="col-md-6 text-right">               
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+              </div>
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  

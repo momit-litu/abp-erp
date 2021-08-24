@@ -10,16 +10,20 @@ use \App\Models\User;
 use App\Models\Batch;
 use \App\Models\Course;
 use \App\Models\Student;
+use App\Models\BatchFee;
 use App\Models\UserGroup;
 use App\Models\WebAction;
 use App\Models\BatchStudent;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
-use \App\Models\StudentCourse;
 
+use \App\Models\StudentCourse;
+use App\Models\StudentPayment;
+use App\Models\StudentDocument;
 use App\Models\UserGroupMember;
 use App\Traits\PortalHelperModel;
 use App\Models\UserGroupPermission;
+use Illuminate\Support\Facades\File;
 
 
 
@@ -29,7 +33,7 @@ class StudentPortalController extends Controller
     use PortalHelperModel;
     public function __construct(Request $request)
     {
-
+        $this->studentPayment =new StudentPayment();
         $this->page_title = $request->route()->getName();
         $description = \Request::route()->getAction();
         $this->page_desc = isset($description['desc']) ? $description['desc'] : $this->page_title;
@@ -123,6 +127,255 @@ class StudentPortalController extends Controller
         $batchStudent = new BatchStudent();
         $courses = $batchStudent->getBatchesByStudentId($student->id);
         return json_encode(array('student' => $student, 'courses'=>$courses));
+    }
+
+    
+    public function studentEdit(Request $request)
+    {
+
+        $studentId 		= Auth::user()->student_id; 
+        if (!is_null($request->input('id')) && $request->input('id') != "") {
+            $response_data = $this->editStudent($request->all(), $request->input('id'), $request->file('user_profile_image') , $request->file('documents') );
+        } // new entry
+         else {
+            $return['response_code'] = 0;
+            $return['errors'] = "Please check the information properly or refresh the page and try again";
+            $response_data = json_encode($return);
+        }
+        return $response_data;
+    }
+
+    public function studentEnroll(Request $request)
+    {        
+        $studentId 		= Auth::user()->student_id; 
+        try {
+            if($request['register_batch_id'] == "" || $request['batch_fees_id']==""){
+                $return['response_code'] = "0";
+                $return['errors'] = 'Validation failed';
+                 return json_encode($return);
+            }
+            else{	
+                $studentEnrollmentCheck = BatchStudent::where('batch_id',$request['register_batch_id'] )->where('student_id', $studentId)->first();
+                if($studentEnrollmentCheck){
+                    $return['response_code'] = "0";
+                    $return['errors'] = 'Student already enrolled in thos batch';
+                     return json_encode($return);
+                }
+
+                $batchFee  = BatchFee::with('batch','installments')->findOrFail($request['batch_fees_id']);
+               // dd($batchFee);
+				$batchStudent = BatchStudent::create([
+                    'batch_id' 	    =>  $request['register_batch_id'],
+                    'student_id'	=>  $studentId,
+                    'batch_fees_id' =>  $request['batch_fees_id'],
+                    'total_payable' =>  $batchFee->payable_amount,
+                    'balance'       =>  $batchFee->payable_amount,
+                    'status'        => 'Inactive',
+                ]);
+                if($batchStudent){
+                    $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
+                    $batchFee->batch->update();
+                    
+                    foreach($batchFee->installments as $key => $installment){
+                        if($key == 0) 
+                            $last_payment_date= date('Y-m-d');
+                        else if($key==1)                            
+                            $last_payment_date  = date('Y-m-d', strtotime($batchFee->batch->start_date. ' + '.$batchFee->installment_duration.' month'));
+                        else
+                            $last_payment_date  = date('Y-m-d', strtotime($last_payment_date. ' + '.$batchFee->installment_duration.' month'));
+
+                        $studentPayment = StudentPayment::create([
+                            'student_enrollment_id' =>  $batchStudent->id,
+                            'installment_no'        =>  $installment->installment_no,
+                            'payable_amount'        =>  $installment->amount,
+                            'last_payment_date'     =>  $last_payment_date,
+                        ]); 
+                    }
+                }
+             }				
+            DB::commit();
+            $return['response_code'] = 1;
+            $return['message'] = "Registration successfully";
+            return json_encode($return);
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] 	= 0;
+			$return['errors'] = "Failed to register !".$e->getMessage();
+			return json_encode($return);
+		}
+
+    }
+
+    private function editStudent($request, $id, $photo, $documents)
+    {
+        //dd($request);
+        try {
+            if ($id == "") {
+                return json_encode(array('response_code' => 0, 'errors' => "Invalid request! "));
+            }
+
+            $student = Student::with('documents','user')->findOrFail($id);
+            $user    = User::where('student_id',$id)->firstOrFail();
+            $oldDoc  = (isset($request['std_docs']))?json_decode(json_encode($request['std_docs']), true):"";
+
+            if (empty($student)) {
+                return json_encode(array('response_code' => 0, 'errors' => "Invalid request! No student found"));
+            }
+
+            $rule = [
+                'name' => 'required|string',
+                'date_of_birth' => 'required',
+                'student_address_field' => 'required',
+                'contact_no' => 'Required|max:13',
+                'student_email' => 'Required|email',
+                'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',
+                'documents.*' => 'max:5000',
+            ];
+            $validation = \Validator::make($request, $rule);
+            //dd($request);
+
+            if ($validation->fails()) {
+                $return['response_code'] = "0";
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            } else {
+                DB::beginTransaction();
+                $currentStatus 		= $student->status;
+
+                $emailVerification = Student::where([['email', $request['student_email']], ['id', '!=', $id]])->first();
+                if (isset($emailVerification->id)) {
+                    $return['response_code'] = "0";
+                    $return['errors'][] = $request['student_email'] . " is already exists";
+                    return json_encode($return);
+                }
+
+                $student->name = $request['name'];
+                $student->email = $request['student_email'];
+                $student->contact_no = $request['contact_no'];
+                $student->emergency_contact = $request['emergency_contact'];
+                $student->address = $request['student_address_field'];
+                $student->nid_no = $request['nid'];
+                $student->date_of_birth = $request['date_of_birth'];
+                $student->study_mode = $request['study_mode'];
+                $student->current_emplyment = $request['current_emplyment'];
+                $student->last_qualification = $request['last_qualification'];
+                $student->how_know = $request['how_know'];
+                $student->passing_year = $request['passing_year'];
+                $student->registration_completed = "Yes";
+                $student->update();
+
+                $user->first_name = $request['name'];
+                $user->email = $request['student_email'];
+                $user->contact_no = $request['contact_no'];
+                $user->remarks = $request['remarks'];
+                $user->status = (isset($request['status'])) ? "Active" : 'Inactive';
+
+                $StudentImage = $photo;
+                if (isset($StudentImage) && $StudentImage!="") {
+                    $old_image = $student->user_profile_image;
+                    $image_name = time();
+                    $ext = $StudentImage->getClientOriginalExtension();
+                    $image_full_name = $image_name . '.' . $ext;
+                    $upload_path = 'assets/images/student/';
+                    $success = $StudentImage->move($upload_path, $image_full_name);
+                    $student->user_profile_image = $image_full_name;
+                    $user->user_profile_image = $image_full_name;
+                    if(!is_null($old_image) && $user->user_profile_image != $old_image){
+                        File::delete($upload_path.$old_image);
+                    }
+                }
+                $student->update();
+                $user->update();
+
+                if (isset($documents) && !empty($documents)) {
+                    foreach($documents as $document) {
+                        $ext = $document->getClientOriginalExtension();
+                        $documentFullName = $document->getClientOriginalName().time(). '.' . $ext;
+                        $upload_path = 'assets/images/student/documents/';
+                        $success = $document->move($upload_path, $documentFullName);
+
+                        $studentDocument = StudentDocument::create([
+                            'student_id'	=> $student->id,
+                            'document_name'	=> $documentFullName,
+                            'type'	        => $ext,
+                        ]);
+                    }
+                }
+
+                $deletedSDocs = $student->documents->except($oldDoc);
+                foreach($deletedSDocs as $deletedSDoc){
+                    $path = 'assets/images/student/documents/';
+                    File::delete($path.$deletedSDoc->document_name);
+                    $deletedSDoc->delete();
+                }
+
+
+                DB::commit();
+                $return['response_code'] = 1;
+                $return['message'] = "Student Updated successfully";
+                return json_encode($return);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $return['response_code'] = 0;
+            $return['errors'] = "Failed to update !" . $e->getMessage();
+            return json_encode($return);
+        }
+    }
+
+      
+	public function showPaymentList($type)
+    {
+        if($type != 'all' && $type != 'upcoming'){
+            return redirect()->back();
+        }
+        $page_title = $this->page_title;
+        $studentId 		= Auth::user()->student_id; 
+        $paymentDetails = $this->studentPayment->getPaymentDetailsByStudentId($studentId);
+
+        $batcheResponse = $this->courseList(1,50, $type);
+        $data['type']   = $type;
+
+        return view('student-portal.payment-list', array('page_title'=>$page_title, 'batchStudents'=>$paymentDetails,  'data'=>$data));
+    }  
+
+    
+    public function savePaymentRevise(Request $request)
+    {        
+        $studentId 		= Auth::user()->student_id; 
+        try {
+            if($request['revise_payment_id'] == "" || $request['revise_payment_details']==""){
+                $return['response_code'] = "0";
+                $return['errors'] = 'Please enter details';
+                 return json_encode($return);
+            }
+            else{	
+
+                $batchFee  = StudentPayment::with('enrollment')->findOrFail($request['revise_payment_id']);
+                dd($batchFee);
+			/*	$batchStudent = BatchStudent::create([
+                    'batch_id' 	    =>  $request['register_batch_id'],
+                    'student_id'	=>  $studentId,
+                    'batch_fees_id' =>  $request['batch_fees_id'],
+                    'total_payable' =>  $batchFee->payable_amount,
+                    'balance'       =>  $batchFee->payable_amount,
+                    'status'        => 'Inactive',
+                ]);*/
+                
+             }				
+            DB::commit();
+            $return['response_code'] = 1;
+            $return['message'] = "Registration successfully";
+            return json_encode($return);
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] 	= 0;
+			$return['errors'] = "Failed to register !".$e->getMessage();
+			return json_encode($return);
+		}
+
     }
 
 

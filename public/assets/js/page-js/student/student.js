@@ -43,37 +43,16 @@ $(document).ready(function () {
 
 
 		if($.trim($('#name').val()) == ""){
-            success_or_error_msg('#student_form_submit_error','danger',"Please enter Full name","#name");
+            success_or_error_msg('#form_submit_error','danger',"Please enter Full name","#name");
 		}
 		else if($.trim($('#email').val()) == ""){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter email","#email");
+			success_or_error_msg('#form_submit_error','danger',"Please enter email","#email");
 		}
 		else if($.trim($('#contact_no').val()) == "" || !($.isNumeric($('#contact_no').val()))){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter contact no","#contact_no");
-		}
-		else if($.trim($('#emergency_contact').val()) == "" || !($.isNumeric($('#emergency_contact').val()))){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter emergency contact no","#emergency_contact");
-		}
-		else if($.trim($('#emergency_contact').val()) == "" || !($.isNumeric($('#emergency_contact').val()))){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter emergency contact no","#emergency_contact");
+			success_or_error_msg('#form_submit_error','danger',"Please enter contact no","#contact_no");
 		}
 		else if($.trim($('#date_of_birth').val()) == ""){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter date of birth","#date_of_birth");
-		}
-		else if($.trim($('#nid').val()) == ""){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter NID No","#nid");
-		}
-		else if($.trim($('#address').val()) == ""){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter address","#address");
-		}
-		else if($.trim($('#last_qualification').val()) == ""){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter last qualification","#last_qualification");
-		}
-		else if($.trim($('#passing_year').val()) == ""){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter  passing year","#passing_year");
-		}
-		else if($.trim($('#current_emplyment').val()) == ""){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter last current emplyment","#current_emplyment");
+			success_or_error_msg('#form_submit_error','danger',"Please enter date of birth","#date_of_birth");
 		}
 		else{
 			$.ajax({

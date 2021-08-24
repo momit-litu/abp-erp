@@ -1,16 +1,24 @@
 // All the Setting related js functions will be here
+
+(function (window, document) {
+	var loader = function () {
+		var script = document.createElement("script"), tag = document.getElementsByTagName("script")[0];
+		script.src = "https://sandbox.sslcommerz.com/embed.min.js?" + Math.random().toString(36).substring(7);
+		tag.parentNode.insertBefore(script, tag);
+	};
+	window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+})(window, document);
+
 $(document).ready(function () {
 	
-	$.ajaxSetup({
-		headers:{
-			'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-		}
-	});
+		$("#start_registration").on('click',function(){
+		$('.step-content').css('display','none');
+		$('#student-info').css('display','block');
+		$('.nav-item').removeClass('active');
+		$('#student-info-nav-item').addClass('active');
+		$('#save_student').css('display','block');
+		$('#enroll_student').css('display','none');
 
-	
-
-	
-	$("#start_registration").on('click',function(){
 		$.ajax({
 			url: url+'/portal/student-info/',
 			cache: false,
@@ -21,10 +29,10 @@ $(document).ready(function () {
 				$("#id").val(data['id']);
 				$("#name").val(data['name']);
 				$("#student_no").val(data['student_no']);
-				$("#email").val(data['email']);
+				$("#student_email").val(data['email']);
 				$("#contact_no").val(data['contact_no']);
 				$("#emergency_contact").val(data['emergency_contact']);
-				$("#address").val(data['address']);
+				$("#student_address_field").val(data['address']);
 				$("#nid").val(data['nid_no']);
 				$("#date_of_birth").val(data['date_of_birth']);
 				$("#study_mode").val(data['study_mode']);
@@ -61,22 +69,42 @@ $(document).ready(function () {
 		event.preventDefault();
 		var formData = new FormData($('#student_form')[0]);
 
-
 		if($.trim($('#name').val()) == ""){
-            success_or_error_msg('#form_submit_error','danger',"Please enter Full name","#name");
+            success_or_error_msg('#student_form_submit_error','danger',"Please enter Full name","#name");
 		}
-		else if($.trim($('#email').val()) == ""){
-			success_or_error_msg('#form_submit_error','danger',"Please enter email","#email");
+		else if($.trim($('#student_email').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter email","#student_email");
 		}
 		else if($.trim($('#contact_no').val()) == "" || !($.isNumeric($('#contact_no').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please enter contact no","#contact_no");
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter contact no","#contact_no");
+		}
+		else if($.trim($('#emergency_contact').val()) == "" || !($.isNumeric($('#emergency_contact').val()))){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter emergency contact no","#emergency_contact");
+		}
+		else if($.trim($('#emergency_contact').val()) == "" || !($.isNumeric($('#emergency_contact').val()))){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter emergency contact no","#emergency_contact");
 		}
 		else if($.trim($('#date_of_birth').val()) == ""){
-			success_or_error_msg('#form_submit_error','danger',"Please enter date of birth","#date_of_birth");
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter date of birth","#date_of_birth");
+		}
+		else if($.trim($('#nid').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter NID No","#nid");
+		}
+		else if($.trim($('#student_address_field').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter address","#student_address_field");
+		}
+		else if($.trim($('#last_qualification').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter last qualification","#last_qualification");
+		}
+		else if($.trim($('#passing_year').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter  passing year","#passing_year");
+		}
+		else if($.trim($('#current_emplyment').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter last current emplyment","#current_emplyment");
 		}
 		else{
 			$.ajax({
-				url: url+"/student",
+				url: url+"/portal/student-info",
                 type:'POST',
                 data:formData,
                 async:false,
@@ -88,29 +116,144 @@ $(document).ready(function () {
 					var response = JSON.parse(data);
 					if(response['response_code'] == 0){
 						var errors	= response['errors'];
-						resultHtml = '<ul>';
+						
 						if(typeof(errors)=='string'){
-							resultHtml += '<li>'+ errors + '</li>';
+							resultHtml = errors;
 						}
 						else{
+							resultHtml = '<ul>';
 							$.each(errors,function (k,v) {
 								resultHtml += '<li>'+ v + '</li>';
 							});
+							resultHtml += '</ul>';
 						}
-						resultHtml += '</ul>';
+						
 						toastr['error'](resultHtml,  'Failed!!!!');
 					}
 					else{
-						toastr['success']('Student saved successfully',  'Success!!!');
-						$('.modal').modal('hide')
-						student_datatable.ajax.reload();
-						clear_form();
-						$("#save_student").html('Save');
-						$("#user_image").attr("src", "src");
-						$("#id").val('');
+						toastr['success']('Student information updated successfully',  'Success!!!');
+						$('.step-content').css('display','none');
+						$('#course-info').css('display','block');
+						$('.nav-item').removeClass('active');
+						$('#course-info-nav-item').addClass('active');
+						$('#save_student').css('display','none');
+						$('#enroll_student').css('display','block');
 					}
 				 }
 			});
 		}
 	});
+
+
+	//Entry And Update Function For Module
+	$("#enroll_student").on('click',function(){
+		event.preventDefault();
+		var formData = new FormData($('#course_form')[0]);
+
+		if($.trim($('#register_batch_id').val()) == ""){
+			success_or_error_msg('#course_form_submit_error','danger',"Please refresh the page and try again","#register_batch_id");
+		}
+		else if($.trim($('#batch_fees_id').val()) == ""){
+			success_or_error_msg('#course_form_submit_error','danger',"Please select a fee plan","#batch_fees_id");
+		}
+		else if(!$('#terms_condition:checked').length){
+			success_or_error_msg('#course_form_submit_error','danger',"Please accept the terms and condition","");
+		}
+		else{
+			$.ajax({
+				url: url+"/portal/student-enroll",
+				type:'POST',
+				data:formData,
+				async:false,
+				cache:false,
+				contentType:false,
+				processData:false,
+				success: function(data){
+					console.log(data)
+					var response = JSON.parse(data);
+					if(response['response_code'] == 0){
+						var errors	= response['errors'];
+						
+						if(typeof(errors)=='string'){
+							resultHtml = errors;
+						}
+						else{
+							resultHtml = '<ul>';
+							$.each(errors,function (k,v) {
+								resultHtml += '<li>'+ v + '</li>';
+							});
+							resultHtml += '</ul>';
+						}
+						
+						toastr['error'](resultHtml,  'Failed!!!!');
+					}
+					else{
+						toastr['success']('Student registration has been successfull',  'Success!!!');
+						$('.step-content').css('display','none');
+						$('#success-info').css('display','block');
+						$('.nav-item').removeClass('active');
+						$('#success-info-nav-item').addClass('active');
+						$('#save_student').css('display','none');
+						$('#enroll_student').css('display','none');
+					}
+				}
+			});
+		}
+	});
+
+
+	$("#save_revise_request").on('click',function(){
+		event.preventDefault();
+		var formData = new FormData($('#revise_form')[0]);
+		if($.trim($('#revise_payment_id').val()) == ""){
+			return false;
+		}
+		else{
+			$.ajax({
+				url: url+"/portal/payment/revise",
+				type:'POST',
+				data:formData,
+				async:false,
+				cache:false,
+				contentType:false,
+				processData:false,
+				success: function(data){
+					console.log(data)
+					var response = JSON.parse(data);
+					if(response['response_code'] == 0){
+						var errors	= response['errors'];
+						
+						if(typeof(errors)=='string'){
+							resultHtml = errors;
+						}
+						else{
+							resultHtml = '<ul>';
+							$.each(errors,function (k,v) {
+								resultHtml += '<li>'+ v + '</li>';
+							});
+							resultHtml += '</ul>';
+						}
+						
+						toastr['error'](resultHtml,  'Failed!!!!');
+					}
+					else{
+						toastr['success']('Request has been successful',  'Success!!!');
+						$('#revise_payment_details').val("")
+					}
+				}
+			});
+		}
+	});
+
+
+
+makePayment = function(payment_id, amount){
+	$('#payment_amount').val(amount);
+	$('#sslczPayBtn').attr('postdata',payment_id);
+	//alert(	$('#payment_amount').val())
+	//alert(	$('#payment_amount').val())
+	//$('#payment-modal').show();
+	$('#sslczPayBtn').trigger('click');
+}
+
 });

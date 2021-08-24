@@ -475,13 +475,13 @@ $(document).ready(function () {
 												</td>
 												<td colspan="3"></td>
 											</tr>
-											<tr>
+											<!--<tr>
 												<td colspan="2"  class="text-right"><b>Original Payable Amount</b></td>
 												<td>
 													<input type="text" class="form-control text-right total_payable_original" disabled value="`+batch_student['total_payable']+`">
 												</td>
 												<td colspan="3"></td>
-											</tr>
+											</tr> -->
 										</tbody>
 									</table>
 									

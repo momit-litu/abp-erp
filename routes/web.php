@@ -14,6 +14,32 @@ use App\Mail\TestMail;
 |
 */
 
+Route::get('/example1',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@exampleEasyCheckout'));
+Route::post('/pay-via-ajax',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@payViaAjax'));
+// SSLCOMMERZ Start
+/*Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
+Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
+
+Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
+Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+
+Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);*/
+//SSLCOMMERZ END
+
+
+
+
+
+
+
+
+
+
+
 Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
@@ -36,8 +62,15 @@ Route::group(['prefix' => 'portal'], function () {
 		Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 		Route::get('/courses/my/{type}',array('as'=>'My Course List' , 	'uses' =>'StudentPortalController@showMyCourseList'));
 
+		
+		Route::get('/payments/{type}',array('as'=>'Payment List' , 	'uses' =>'StudentPortalController@showPaymentList'));
+		Route::post('/payment/revise',array('as'=>'Revise Payment' , 	'uses' =>'StudentPortalController@savePaymentRevise'));
+
 		Route::get('/student-info',array('as'=>'Student Details' , 'uses' =>'StudentPortalController@studentShow'));
 		Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
+		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));
+		
+		
 		
 	});
 });

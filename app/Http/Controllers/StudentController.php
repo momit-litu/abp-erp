@@ -344,8 +344,8 @@ class StudentController extends Controller
             // $hardUpdate_permission = $this->PermissionHasOrNot($admin_user_id,42);
             $student = Student::with('documents','user')->findOrFail($id);
             $user = User::where('student_id',$id)->firstOrFail();
-            $oldDoc  =json_decode(json_encode($request['std_docs']), true) ;
-
+            $oldDoc  = (isset($request['std_docs']))?json_decode(json_encode($request['std_docs']), true):"";
+    
             if (empty($student)) {
                 return json_encode(array('response_code' => 0, 'errors' => "Invalid request! No student found"));
             }
@@ -433,7 +433,7 @@ class StudentController extends Controller
                 }
 
 
-
+                
                 $deletedSDocs = $student->documents->except($oldDoc);
                 foreach($deletedSDocs as $deletedSDoc){
                     $path = 'assets/images/student/documents/';
