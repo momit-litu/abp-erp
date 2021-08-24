@@ -276,10 +276,7 @@
                                                         </td>
                                                         <td class="text-center">
                                                             @if($payment->payment_status != 'Paid')
-                                                                
-                                                            <a class="btn" data-target="#payment-modal" role="button" data-toggle="modal">Launch demo modal</a>
-                                                            
-                                                            <a class='btn btn-sm btn-info' onClick="makePayment({{$payment->id}},{{$payment->payable_amount}})">Pay</a>
+                                                                    <a class='btn btn-sm btn-info' onClick="makePayment({{$payment->id}},{{$payment->payable_amount}})">Pay</a>
                                                             @endif
                                                         </td>
                                                     </tr>

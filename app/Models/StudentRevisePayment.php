@@ -15,5 +15,6 @@ class StudentRevisePayment extends Model
     public function enrollment(){
         return $this->hasOne('App\Models\BatchStudent','id','student_enrollment_id');
     }
+    
 
 }

@@ -615,5 +615,118 @@ $(document).ready(function () {
 		if($('#payment_student_id').val() == "") return false;
 		studentView($('#payment_student_id').val());
 	});
+
+
+	revise_datatable = $('#revise_table').DataTable({
+		destroy: true,
+		"order": [[ 0, 'desc' ]],
+		"processing": true,
+		"serverSide": false,
+		"ajax": url+"/revise-payments",
+		"aoColumns": [
+			{ mData: 'id'},
+			{ mData: 'student_name'},
+			{ mData: 'course_name' },
+			{ mData: 'details'},
+			{ mData: 'date', className: "text-center"},
+			{ mData: 'status', className: "text-center"},			
+			{ mData: 'actions', className: "text-left"},
+		],
+		"columnDefs": [
+            { "targets": [ 0 ],  "visible": false },
+			{ "width": "60px", "targets":[ 6 ]},
+        ],
+		"initComplete": function () {
+            this.api().columns().every( function (key) {
+				var column = this;		
+				if(column[0] == 1 || column[0] == 5  ){
+					var select = $('<select><option value=""></option></select>')
+						.appendTo( $(column.header()) )
+						.on( 'change', function () {
+							var val = $.fn.dataTable.util.escapeRegex(
+								$(this).val()
+							);
+							column
+								.search( val ? '^'+val+'$' : '', true, false )
+								.draw();
+						} );
+					column.data().unique().sort().each( function ( d, j ) {
+						select.append( '<option value="'+d+'">'+d+'</option>' )
+					} );
+				}
+            } );
+        }
+	});
+
+	
+	reviseEdit = function reviseEdit(id){
+		var edit_id = id;
+		$("#admin_user_add_button").html("<b> Edit Revise Payment Request</b>");		
+		$.ajax({
+			url: url+'/revise-payments/'+edit_id,
+			cache: false,
+			success: function(response){
+				var response = JSON.parse(response);
+				var data = response['revisePayment'];	
+				$("#student_name_div").html(data['enrollment']['student']['student_no']+"-"+data['enrollment']['student']['student_name']);
+				$("#course_name_div").html(data['enrollment']['batch']['course']['title']+" "+data['enrollment']['batch']['batch_name']);
+				$("#revise_details_div").html(data['revise_details']);
+				$("#revise_status").val(data['revise_status']);			
+				$("#edit_id").val(data['id']);
+				$('#entry-form').modal('show');	
+			}
+		});
+	}
+
+	$("#update_revise").on('click',function(){
+		event.preventDefault();
+		$.ajaxSetup({
+			headers:{
+				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+			}
+		});
+
+		var formData = new FormData($('#revise_form')[0]);
+
+		if($.trim($('#edit_id').val()) == "" || $.trim($('#edit_id').val()) == ""){
+			success_or_error_msg('#form_submit_error','danger',"Please refresh page and try again","#edit_id");
+		}
+		else{
+			// validate the installment details
+			$.ajax({
+				url: url+"/revise-payments",
+				type:'POST',
+				data:formData,
+				async:false,
+				cache:false,
+				contentType:false,
+				processData:false,
+				success: function(data){
+					var response = JSON.parse(data);
+					if(response['response_code'] == 0){
+						var errors	= response['errors'];						
+						resultHtml = '<ul>';
+						if(typeof(errors)=='string'){
+							resultHtml += '<li>'+ errors + '</li>';
+						}
+						else{
+							$.each(errors,function (k,v) {
+								resultHtml += '<li>'+ v + '</li>';
+							});
+						}
+						resultHtml += '</ul>';
+						toastr['error']( resultHtml, 'Failed!!!!');
+					}
+					else{
+						toastr['success']( 'Payment revise status changed successfully', 'Success!!!');
+						$('.modal').modal('hide');					
+						revise_datatable.ajax.reload();
+					}
+					$(window).scrollTop();
+				 }
+			});
+		}
+	});
+
 });
 

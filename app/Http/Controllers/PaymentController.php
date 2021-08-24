@@ -11,14 +11,15 @@ use App\Models\Student;
 use App\Models\BatchFee;
 use App\Models\BatchStudent;
 use Illuminate\Http\Request;
+use App\Mail\customerInvoice;
 use App\Traits\HasPermission;
 use Illuminate\Http\Response;
 use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
-use Illuminate\Support\Facades\File;
 
-use App\Mail\customerInvoice;
+use App\Models\StudentRevisePayment;
 use App\Traits\CustomerNotification;
+use Illuminate\Support\Facades\File;
 
 class PaymentController extends Controller
 {
@@ -200,12 +201,89 @@ class PaymentController extends Controller
 		return json_encode(array('batchStudents'=>$paymentDetails));
     }
 
+
+	
+    public function reviseIndex()
+    {
+        $data['page_title'] 	= $this->page_title;
+		$data['module_name']	= "Payments";
+		$data['sub_module']		= "Revise Requests";
+
+		return view('payment.payment-revise');
+    }
+
+	public function reviseShowList(){
+	   $revisePayments = StudentRevisePayment::with('enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')
+        ->orderBy('created_at','desc')->get();
+
+        $return_arr = array();
+        foreach($revisePayments as $payment){
+            $data['id'] 		 = $payment->id;            
+			$data['student_name']=  "<a href='javascript:void(0)' onclick='studentView(".$payment->enrollment->student->id.")' />".$payment->enrollment->student->student_no.'-'.$payment->enrollment->student->name.' ('.$payment->enrollment->student->email.")</a>"; 
+            $data['course_name'] = "<a href='javascript:void(0)' onclick='batchView(".$payment->enrollment->batch->id.")' />".$payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name."</a>";
+            $data['details']    = $payment->revise_details; 
+            $data['date']       = $payment->created_at; 
+			$data['status']     = $payment->revise_status;
+
+            $data['actions'] =" <button title='View' onclick='reviseEdit(".$payment->id.")' id='edit_" . $payment->id . "' class='btn btn-xs btn-primary btn-hover-shine' ><i class='lnr-pencil'></i></button>&nbsp;";
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));
+	}
+
+
+    public function reviseShow($id)
+    {
+		if($id=="") return 0;
+        $revisePayment = StudentRevisePayment::with('enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')->where('id',$id)->first();
+		return json_encode(array('revisePayment'=>$revisePayment));
+    }
+
+
+    
+    public function reviseUpdate(Request $request)
+    {
+        try {
+            $rule = [ 
+				'edit_id' 		=> 'required',
+            ];
+            $validation = \Validator::make($request->all(), $rule);
+
+            if($validation->fails()){
+                $return['response_code'] = "0";
+				$return['errors'] = $validation->errors();
+				return json_encode($return);
+            }
+            else{
+				DB::beginTransaction();
+                $revisePayment = StudentRevisePayment::findOrFail($request->edit_id);
+                $revisePayment->revise_status = $request->revise_status;
+                $revisePayment->save();
+
+				DB::commit();
+				$return['response_code'] = 1;
+				$return['message'] = "Unit saved successfully";
+				return json_encode($return);
+            }
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] 	= 0;
+			$return['errors'] = "Failed to save !".$e->getMessage();
+			return json_encode($return);
+		}
+    }
+
     public function emailInvoice($id)
     {
 		if($id=="") return false;
         $this->invoiceNotification($id); 
 		return true;
     }
+
+
+
+
     
 }
 

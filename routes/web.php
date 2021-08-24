@@ -68,9 +68,7 @@ Route::group(['prefix' => 'portal'], function () {
 
 		Route::get('/student-info',array('as'=>'Student Details' , 'uses' =>'StudentPortalController@studentShow'));
 		Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
-		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));
-		
-		
+		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));	
 		
 	});
 });
@@ -210,7 +208,11 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/payment-schedule/delete/{id}',array('as'=>'Payment Schedule Delete' , 'action_id'=>'92', 'uses' =>'PaymentController@scheduleDestroy'));
 
 
-
+	Route::get('/revise-payment',array('as'=>'Payment Revise', 'action_id'=>'93', 'uses' =>'PaymentController@reviseIndex'));
+	Route::get('/revise-payments',array('as'=>'Payment Revise List' ,'action_id'=>'93', 'uses' =>'PaymentController@reviseShowList'));
+	Route::get('/revise-payments/{id}',array('as'=>'Payment Revise Details' ,'action_id'=>'93', 'uses' =>'PaymentController@reviseShow'));
+	Route::post('/revise-payments',array('as'=>'Payment Revise Update' , 'action_id'=>'93', 'uses' =>'PaymentController@reviseUpdate'));
+	
 
 	//Batch student enroll
 	Route::get('/batch-students/{id}',array('as'=>'Batch Students List' ,'action_id'=>'85', 'uses' =>'BatchController@studentShow'));
