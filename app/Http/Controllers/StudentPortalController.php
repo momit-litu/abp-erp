@@ -342,7 +342,8 @@ class StudentPortalController extends Controller
 
     
     public function savePaymentRevise(Request $request)
-    {        
+    {    
+        //dd($request->all());    
         $studentId 		= Auth::user()->student_id; 
         try {
             if($request['revise_payment_id'] == "" || $request['revise_payment_details']==""){

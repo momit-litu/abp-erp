@@ -95,7 +95,7 @@
                                                         
                                                         <div class="col-sm-6">
                                                             <button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link disabled text-danger">
-                                                                <h5><strong>{{--$batch_student['payments'].count() --}}</strong></h5>
+                                                                <h5><strong>{{count($batch_student['payments'])}}</strong></h5>
                                                                 
                                                                 Installment
                                                             </button>
@@ -155,7 +155,7 @@
                                                 If you want to change or customise the payment options. please write us with details. 
                                             </p>
                                             <div class="card-body">   
-                                                <form id="revise_form" autocomplete="off" name="payment_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
+                                                <form id="revise_form{{$payment['id']}}" autocomplete="off" name="payment_form{{$payment['id']}}" enctype="multipart/form-data" class="form form-horizontal form-label-left">
                                                     @csrf
                                                     <input type="hidden" name="revise_payment_id" id="revise_payment_id" value="{{$payment['id']}}" >
                                                     <div class="row">                     
@@ -166,7 +166,7 @@
                                                                     <textarea 
                                                                     required id="revise_payment_details"  name="revise_payment_details"  class="form-control col-md-12"></textarea>
                                                                 </div>
-                                                                <button id="save_revise_request" class="btn btn-primary" >Request Revise Payment</button>
+                                                                <button id="save_revise_request{{$payment['id']}}" class="btn btn-primary save_revise_request" >Request Revise Payment</button>
                                                             </div>
                                                         </div>                           
                                                     </div>

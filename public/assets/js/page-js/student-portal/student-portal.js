@@ -202,10 +202,12 @@ $(document).ready(function () {
 	});
 
 
-	$("#save_revise_request").on('click',function(){
+	$(".save_revise_request").on('click',function(){
 		event.preventDefault();
-		var formData = new FormData($('#revise_form')[0]);
-		if($.trim($('#revise_payment_id').val()) == ""){
+		form_id = $(this).closest('form').attr('id');
+		var formData = new FormData($('#'+form_id)[0]);
+
+		if($.trim($('#'+form_id+' > #revise_payment_id').val()) == ""){
 			return false;
 		}
 		else{
