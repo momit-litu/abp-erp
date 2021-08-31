@@ -123,7 +123,6 @@ class PaymentController extends Controller
         }        
         return json_encode(array('courses'=>$return_arr));	
 	}
-	
 
 
     public function createOrEdit(Request $request)

@@ -35,7 +35,7 @@ $(document).ready(function () {
 		],
         "columnDefs": [
             { "targets": [ 0 ],  "visible": false },
-			{ "width": "80px", "targets":[ 4 ]},
+			{ "width": "100px", "targets":[ 4 ]},
         ],
 	});
 
@@ -179,7 +179,7 @@ $(document).ready(function () {
 		],
         "columnDefs": [
             { "targets": [ 0 ],  "visible": false },
-			{ "width": "80px", "targets":[ 4 ]},
+			{ "width": "100px", "targets":[ 4 ]},
         ],
 	});
 
@@ -315,17 +315,40 @@ $(document).ready(function () {
 		"ajax": url+"/expense/expense-detail-list",
 		"aoColumns": [
 			{ mData: 'id'},
+            { mData: 'expense_category_name' },
 			{ mData: 'expense_head_name' },
 			{ mData: 'amount'},
+			{ mData: 'expense_date'},
 			{ mData: 'details'},
 			{ mData: 'payment_status'},
 			{ mData: 'status', className: "text-center"},
 			{ mData: 'actions' , className: "text-center"},
 		],
+		'order': [[0, 'desc']],
         "columnDefs": [
             { "targets": [ 0 ],  "visible": false },
-			{ "width": "80px", "targets":[ 6 ]},
+			{ "width": "120px", "targets":[ 8 ]},
         ],
+        "initComplete": function () {
+            this.api().columns().every(function (key) {
+                var column = this;
+                if (column[0] == 1 || column[0] == 2 || column[0] == 5) {
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.header()))
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                }
+            });
+        }
 	});
 
 //Entry And Update Function For Module
@@ -340,10 +363,13 @@ $(document).ready(function () {
         var formData = new FormData($('#expense_detail_form')[0]);
 
         if($.trim($('#expense_head_id').val()) == ""){
-            success_or_error_msg('#form_submit_error','danger',"Please Insert Expense Head","#expense_head_id");
+            success_or_error_msg('#form_submit_error','danger',"Please insert expense Head","#expense_head_id");
         }
         else if($.trim($('#amount').val()) == ""){
-            success_or_error_msg('#form_submit_error','danger',"Please Select a Expense Amount","#amount");
+            success_or_error_msg('#form_submit_error','danger',"Please select  Amount","#amount");
+        }
+        else if($.trim($('#expense_date').val()) == ""){
+            success_or_error_msg('#form_submit_error','danger',"Please select a date","#expense_date");
         }
         else{
             $.ajax({
@@ -393,13 +419,20 @@ $(document).ready(function () {
 				var response = JSON.parse(response);
 				var data = response['expense'];
 
-				var modalHtml  ="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Expense Head  :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['expense_head']['expense_head_name']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Date: :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['created_at']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Amount :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['amount']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['details']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Payment Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['payment_status']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Attachment :</strong></div>"+"<div class='col-lg-9 col-md-8'><a target='_blank' href='"+expense_attachment_url+'/'+data["attachment"]+"'>"+data["attachment"]+"</a></div></div>";
-					
+				 var category = (data['expense_head']['expensecategory']['parent']==null)?data['expense_head']['expensecategory']['category_name']:data['expense_head']['expensecategory']['parent']['category_name']+" -> "+data['expense_head']['expensecategory']['category_name'];
+				var modalHtml  ="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Expense Category  :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+category+"</div></div>";
+
+                modalHtml  +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Expense Head  :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['expense_head']['expense_head_name']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Date: :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['expense_date']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Amount :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['amount']+"</div></div>";
+				
+				if(data["details"] != null)
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['details']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Payment Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['payment_status']+"</div></div>";
+				
+				if(data["attachment"] != null)
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Attachment :</strong></div>"+"<div class='col-lg-9 col-md-8'><a target='_blank' href='"+expense_attachment_url+'/'+data["attachment"]+"'>"+data["attachment"]+"</a></div></div>";					
+				
 				$('#myModalLabelLg').html('Expense Details');
 				$('#modalBodyLg').html(modalHtml);
 				$("#generic_modal_lg").modal();				
@@ -418,15 +451,21 @@ $(document).ready(function () {
             success: function(response){
                 var response = JSON.parse(response);
                 var data = response['expense'];
-                console.log(data['attachment']);
+                
+                var category = (data['expense_head']['expensecategory']['parent']==null)?data['expense_head']['expensecategory']['category_name']:data['expense_head']['expensecategory']['parent']['category_name']+" -> "+data['expense_head']['expensecategory']['category_name'];
+
+                var expense_head_name = category+' -> '+data['expense_head']['expense_head_name'];
 
                 $("#save_expense_head").html('Update');
                 $("#clear_button").hide();
+                $("#expense_name").val(expense_head_name);
                 $("#expense_head_id").val(data['expense_head_id']);
                 $("#amount").val(data['amount']);
-    
-                $(".attached-file").html("<a target='_blank' href='"+expense_attachment_url+'/'+data["attachment"]+"'>"+data["attachment"]+"</a>");
-                $("#details").val(data['details']);
+				$("#expense_date").val(data['expense_date']);
+                if(data["attachment"] != null)
+                    $(".attached-file").html("<a target='_blank' href='"+expense_attachment_url+'/'+data["attachment"]+"'>"+data["attachment"]+"</a>");
+                else  $(".attached-file").html("");
+                $("#details").val((data['details']!=null)?data['details']:"");
                 $("#payment_status").val(data['payment_status']);
                 $("#edit_id").val(data['id']);
                 (data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
@@ -469,6 +508,33 @@ $(document).ready(function () {
     }
 
 
+$("#expense_name").autocomplete({
+		search: function() {
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/expense-autosuggest',
+              //  url: url+'/course-autosuggest/Admin',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+                    console.log(data);
+				}
+			});
+		},
+		appendTo : $('#entry-form'),
+		minLength: 2,
+		select: function(event, ui) {
+			var id = ui.item.id;
+			$(this).next().val(id);
+		},
+	});
+	
 
 	/*----- Comon Function Start -----*/
 	cancle_btn_show = function cancle_btn_show(){

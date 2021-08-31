@@ -47,8 +47,10 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+							<th>Expense Category</th>
                             <th>Expense Head</th>
                             <th>Amount</th>
+							<th>Expense Date</th>
                             <th>Details</th>
                             <th>Payment Status</th>
                             <th class="hidden-xs">Status</th>
@@ -83,13 +85,9 @@
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <div class="position-relative form-group">
-                                                    <label  class="">Expense Head Name<span class="required">*</span></label>
-                                                    <select class="form-control col-lg-12"  name="expense_head_id" id="expense_head_id">
-                                                        <option value=""  selected>Select Expense Head Name</option>
-                                                        @foreach($parentExpneseHead as $parentHead)
-                                                            <option value="{{$parentHead->id}}">{{$parentHead->expense_head_name}}</option>
-                                                        @endforeach
-                                                    </select>
+                                                     <label  class="">Expense Head Name<span class="required">*</span></label>
+                                                     <input type="text" id="expense_name" name="course_name" class="form-control col-lg-12 ui-autocomplete-input" placeholder="Expense Head Name" autocomplete="off">
+													 <input type="hidden" id="expense_head_id" required="" name="expense_head_id" value="4">
                                                 </div>
                                             </div>
                                         </div>
@@ -118,6 +116,15 @@
                                                 &nbsp;
                                             </div>
                                         </div>
+										
+										
+										<div class="form-row">										
+											<div class="col-md-6">
+												<label>Date</label>
+												<input id="expense_date" type="date" name="expense_date" required class="form-control col-lg-12" />
+											</div>
+										</div>
+										
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <label  >Is Active</label>

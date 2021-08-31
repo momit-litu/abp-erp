@@ -230,12 +230,14 @@ class ExpenseController extends Controller
         $edit_permisiion = $this->PermissionHasOrNot($admin_user_id, $edit_action_id);
         $delete_permisiion = $this->PermissionHasOrNot($admin_user_id, $delete_action_id);
 
-        $expenseHeadList = ExpenseHead::Select('id', 'expense_head_name', 'expense_category_id', 'status')->with('expensecategory')->orderBy('created_at', 'desc')->get();
+        $expenseHeadList = ExpenseHead::with('expensecategory', 'expensecategory.parent')->orderBy('created_at', 'desc')->get();
 
         $return_arr = array();
         foreach ($expenseHeadList as $expenseHead) {
 			//dd($expenseHead);
-            $expenseHead['category_name'] = (is_null($expenseHead->expense_category_id)) ? "" : $expenseHead->expensecategory->category_name;
+            $expenseHead['category_name'] = (is_null($expenseHead->expensecategory->parent)) ? $expenseHead->expensecategory->category_name:$expenseHead->expensecategory->parent->category_name." -> ".$expenseHead->expensecategory->category_name;
+
+
             $expenseHead['status'] = ($expenseHead->status == 'Active') ? "<button class='btn btn-xs btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-warning' disabled>In-active</button>";
             $expenseHead['actions'] = "";
 
@@ -411,12 +413,12 @@ class ExpenseController extends Controller
         $edit_permisiion = $this->PermissionHasOrNot($admin_user_id, $edit_action_id);
         $delete_permisiion = $this->PermissionHasOrNot($admin_user_id, $delete_action_id);
 
-        $expenseDetailList = Expense::Select('id', 'expense_head_id', 'amount', 'details', 'attachment', 'payment_status', 'status')->with('expensehead')->orderBy('created_at', 'desc')->get();
-
+        $expenseDetailList = Expense::with('expensehead','expenseHead.expensecategory','expenseHead.expensecategory.parent')->orderBy('created_at', 'desc')->get();
+       // dd($expenseDetailList);
         $return_arr = array();
         foreach ($expenseDetailList as $expenseDetail) {
+            $expenseDetail['expense_category_name'] = (is_null($expenseDetail->expensehead->expensecategory->parent)) ? $expenseDetail->expensehead->expensecategory->category_name:$expenseDetail->expensehead->expensecategory->parent->category_name." -> ".$expenseDetail->expensehead->expensecategory->category_name;
             $expenseDetail['expense_head_name'] = (is_null($expenseDetail->expense_head_id)) ? "" : $expenseDetail->expensehead->expense_head_name;
-            
             $expenseDetail['status'] = ($expenseDetail->status == 'Active') ? "<button class='btn btn-xs btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
             $expenseDetail['actions'] = "";
 
@@ -457,13 +459,14 @@ class ExpenseController extends Controller
             $rule = [
                 'expense_head_id' => 'required',
                 'amount' => 'required',
-                'details' => 'required',
+				'expense_date' => 'required',
+				
             ];
             $validation = \Validator::make($request, $rule);
             //dd($request);
 
             if ($validation->fails()) {
-                $return['result'] = "0";
+                $return['response_code'] = 0;
                 $return['errors'] = $validation->errors();
                 return json_encode($return);
             } else {
@@ -472,6 +475,7 @@ class ExpenseController extends Controller
                     'expense_head_id'   => $request['expense_head_id'],
                     'amount'            => $request['amount'],
                     'details'           => $request['details'],
+					'expense_date'      => $request['expense_date'],					
                     'payment_status'    => $request['payment_status'],
                     'status' => (isset($request['is_active'])) ? 'Active' : 'Inactive'
                 ]);
@@ -514,7 +518,6 @@ class ExpenseController extends Controller
             $rule = [
                 'expense_head_id' => 'required',
                 'amount' => 'required',
-                'details' => 'required',
             ];
             $validation = \Validator::make($request, $rule);
 
@@ -526,10 +529,11 @@ class ExpenseController extends Controller
 
                 DB::beginTransaction();
                 $expensedetail->expense_head_id = $request['expense_head_id'];
-                $expensedetail->amount = $request['amount'];
-                $expensedetail->details = $request['details'];
-                $expensedetail->payment_status = $request['payment_status'];
-                $expensedetail->status = (isset($request['is_active'])) ? 'Active' : 'Inactive';
+                $expensedetail->amount 			= $request['amount'];
+				$expensedetail->expense_date 	= $request['expense_date'];
+                $expensedetail->details 		= $request['details'];
+                $expensedetail->payment_status 	= $request['payment_status'];
+                $expensedetail->status 			= (isset($request['is_active'])) ? 'Active' : 'Inactive';
                 $expensedetail->update();
 
 
@@ -572,7 +576,7 @@ class ExpenseController extends Controller
     public function showDetail($id)
     {
         if ($id == "") return 0;
-        $expenseDetail = Expense::with('expenseHead')->findOrFail($id);
+         $expenseDetail = Expense::with('expenseHead','expenseHead.expensecategory','expenseHead.expensecategory.parent')->findOrFail($id);
         return json_encode(array('expense' => $expenseDetail));
 
     }
@@ -610,6 +614,32 @@ class ExpenseController extends Controller
             return json_encode($return);
         }
     }
+	
+	    public function expenseAutoComplete(Request $request){
+		$term = $_REQUEST['term'];
+		$user = Auth::user();
+		$data = ExpenseHead::with('expensecategory', 'expensecategory.parent')
+		       ->where([
+                    ['status', '=', 'Active'],
+                    ['expense_head_name','like','%'.$term.'%']
+                ])->get();
+
+		$data_count = $data->count();
+
+		if($data_count>0){
+			foreach ($data as $row) {
+                $headName  = ($row['expensecategory']['parent']==null)?$row['expensecategory']['category_name'].' -> '. $row["expense_head_name"]:$row['expensecategory']['parent']['category_name']." -> ".$row['expensecategory']['category_name'].' -> '. $row["expense_head_name"];
+				$json[] = array('id' => $row["id"],'label' => $headName);
+			}
+		}
+		else {
+			$json[] = array('id' => "0",'label' => "Not Found !!!");
+		}
+					//dd($json);
+		return json_encode($json);
+
+	}
+	
 }
 
 

@@ -18,8 +18,8 @@ class Course extends Model
 	public function units(){
 		return $this->belongsToMany('App\Models\Unit','courses_units')->withPivot('type');
 	}
-	public function batch(){
-		return $this->hasMany('App\Models\Batch','id','course_id');
+	public function batches(){
+		return $this->hasMany('App\Models\Batch','course_id','id');
 	}
 	/*public function student(){
 		return $this->belongsToMany('App\Models\Student','center_qualifications');	

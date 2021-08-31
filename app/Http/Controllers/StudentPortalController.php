@@ -9,6 +9,7 @@ use Validator;
 use \App\Models\User;
 use App\Models\Batch;
 use \App\Models\Course;
+use App\Models\Setting;
 use \App\Models\Student;
 use App\Models\BatchFee;
 use App\Models\UserGroup;
@@ -18,11 +19,11 @@ use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 use \App\Models\StudentCourse;
 use App\Models\StudentPayment;
-use App\Models\StudentRevisePayment;
 use App\Models\StudentDocument;
 use App\Models\UserGroupMember;
 use App\Traits\PortalHelperModel;
 use App\Models\UserGroupPermission;
+use App\Models\StudentRevisePayment;
 use Illuminate\Support\Facades\File;
 
 
@@ -374,5 +375,77 @@ class StudentPortalController extends Controller
 
     }
 
+    
+    public function checkoutShow($id)
+    {
+        $page_title = $this->page_title;
+		$data['module_name']= "Dashboard";
+		$studentId 		= Auth::user()->student_id;
+        $student	  	= Student::find($studentId);
+        $settings	  	= Setting::first();
+        $data['settings']= $settings;
+        $payment        = StudentPayment::with('enrollment','enrollment.batch','enrollment.batch.course')->where('payment_status',"!=","Paid")->find($id);
+    
+        if(!$payment){
+            return redirect()->back();
+        }
+        return view('student-portal.checkout', array('page_title'=>$page_title, 'data'=>$data,'student'=>$student, 'payment'=>$payment ));
+    }
+
+    public function sslPaymentSuccess(Request $request)
+    {     
+       
+      /*  return view('student-portal.complete');
+      //  $this->sendRequest($uri)
+        return redirect('portal/course/12')->with('message','Payment received successfully')->with('response_code',1);
+        echo "STOP";die;*/
+        try { 
+            $tran_id    = $request->input('tran_id');
+            $amount     = $request->input('amount');
+
+            DB::beginTransaction();
+            $payment = StudentPayment::with('enrollment','enrollment.student')->where('payment_refference_no',$tran_id)->first();
+            $studentPayment = new StudentPayment;
+
+            if (!empty($payment)) {
+                $payment_status =  (intval($payment->paid_amount+$amount) == intval($payment->payable_amount))?"Paid":"Partal";
+                $payment->paid_type      =  'SSL';
+                $payment->paid_amount    =  $payment->paid_amount + $amount;
+                $payment->payment_status =  $payment_status;
+                $payment->paid_date      =  date('Y-m-d');
+                $payment->invoice_no    = $studentPayment->getNextInvoiceNo();
+
+                if($payment->update())
+                    $studentPayment->updateStudentFees($payment->student_enrollment_id); 
+                else
+                    throw new Exception('Something wrong!! Please contact with ABP admin');
+            }
+            else{
+                throw new Exception('Something wrong!! Your payment process is failed');
+            }
+            DB::commit();
+
+            return redirect('portal/course/'.$payment->enrollment->batch_id)->with('message','Payment received successfully')->with('response_code',1);
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            $message   = "Failed !".$e->getMessage();
+            return redirect('portal/checkout/'.$payment->id)->with('message',$message)->with('response_code',0);
+        }        
+    }
+
+    public function sslPaymentFail(Request $request)
+    {    
+        $tran_id    = $request->input('tran_id');
+        $payment = StudentPayment::with('enrollment','enrollment.student')->where('payment_refference_no',$tran_id)->first();
+        
+        if (!empty($payment)) {
+            $payment->payment_refference_no = $tran_id;
+            $payment->update();
+            return redirect('portal/checkout/'.$payment->id)->with('message',"Your payment process is failed")->with('response_code',0);
+        }
+        else
+            return redirect('portal/dashboard')->with('message',"Your payment process is failed")->with('response_code',0);
+    }
 
 }

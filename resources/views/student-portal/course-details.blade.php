@@ -248,7 +248,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card-body">
+                                    <div class="card-body">                                     
                                         <table class="mb-0 table-bordered table table-sm ">
                                             <thead>
                                             <tr>
@@ -275,8 +275,8 @@
                                                             @endif
                                                         </td>
                                                         <td class="text-center">
-                                                            @if($payment->payment_status != 'Paid')
-                                                                    <a class='btn btn-sm btn-info' onClick="makePayment({{$payment->id}},{{$payment->payable_amount}})">Pay</a>
+                                                            @if($payment['payment_status'] != 'Paid')
+                                                                <a type="button" class="border-0 btn-transition btn btn-primary btn-sm" href="{{ url('portal/checkout/'.$payment['id'])}}">Pay</a>
                                                             @endif
                                                         </td>
                                                     </tr>

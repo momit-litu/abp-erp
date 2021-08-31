@@ -208,6 +208,7 @@ class AuthController extends Controller
         ]);
 
         if ($v->fails()) {
+            //dd($v);
             return redirect()->back()->withErrors($v)->withInput();
         }
         else{

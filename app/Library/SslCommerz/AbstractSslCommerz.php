@@ -57,7 +57,9 @@ abstract class AbstractSslCommerz implements SslCommerzInterface
 
         curl_setopt($curl, CURLOPT_URL, $this->getApiUrl());
         curl_setopt($curl, CURLOPT_HEADER, 0);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        //curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+		//print_r($_COOKIE['laravel_session']);die;
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("Cookie: laravel_session={$_COOKIE['laravel_session']}"));
         curl_setopt($curl, CURLOPT_TIMEOUT, 60);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 

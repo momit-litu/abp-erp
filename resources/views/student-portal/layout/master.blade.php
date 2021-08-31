@@ -30,6 +30,10 @@
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
     @include('student-portal.layout.header')
 	<div class="app-main">
+        <div style="display:none">
+            <div id="session_message"> {{(Session::has('message'))?Session::get('message'):""}}</div>
+            <div id="session_message_code"> {{(Session::has('message'))?Session::get('response_code'):""}}</div>
+        </div>
 		@yield('content')
         <div class="body-block-example-1 d-none">
             <div class="loader bg-transparent no-shadow p-0">

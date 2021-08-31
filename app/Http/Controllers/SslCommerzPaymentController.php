@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
-
 use DB;
+use Auth;
+use Session;
+use Validator;
+use \App\Models\User;
+
+use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Models\StudentPayment;
 use App\Library\SslCommerz\SslCommerzNotification;
+use Exception;
 
 class SslCommerzPaymentController extends Controller
 {
-
+/*
     public function exampleEasyCheckout()
     {
         return view('exampleEasycheckout');
@@ -88,29 +95,31 @@ class SslCommerzPaymentController extends Controller
         }
 
     }
-
+*/
     public function payViaAjax(Request $request)
     {
 
         # Here you have to receive all the order data to initate the payment.
         # Lets your oder trnsaction informations are saving in a table called "orders"
         # In orders table order uniq identity is "transaction_id","status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
-
+        //dd($request->all());
+        $payment = StudentPayment::with('enrollment','enrollment.student')->find($request->order);
+        $settings= Setting::first();
         $post_data = array();
-        $post_data['total_amount'] = '10'; # You cant not pay less than 10
+        $post_data['total_amount'] = $payment->payable_amount; # You cant not pay less than 10
         $post_data['currency'] = "BDT";
         $post_data['tran_id'] = uniqid(); // tran_id must be unique
 
         # CUSTOMER INFORMATION
-        $post_data['cus_name'] = 'Customer Name';
-        $post_data['cus_email'] = 'customer@mail.com';
-        $post_data['cus_add1'] = 'Customer Address';
-        $post_data['cus_add2'] = "";
-        $post_data['cus_city'] = "";
+        $post_data['cus_name']  = $payment->enrollment->student->name;
+        $post_data['cus_email'] = $payment->enrollment->student->email;
+        $post_data['cus_add1']  = $payment->enrollment->student->address;
+        $post_data['cus_add2']  = "";
+        $post_data['cus_city']  = "";
         $post_data['cus_state'] = "";
         $post_data['cus_postcode'] = "";
         $post_data['cus_country'] = "Bangladesh";
-        $post_data['cus_phone'] = '8801XXXXXXXXX';
+        $post_data['cus_phone'] = $payment->enrollment->student->contact_no;
         $post_data['cus_fax'] = "";
 
         # SHIPMENT INFORMATION
@@ -124,31 +133,21 @@ class SslCommerzPaymentController extends Controller
         $post_data['ship_country'] = "Bangladesh";
 
         $post_data['shipping_method'] = "NO";
-        $post_data['product_name'] = "Computer";
-        $post_data['product_category'] = "Goods";
-        $post_data['product_profile'] = "physical-goods";
+        $post_data['product_name'] = "Course Fee";
+        $post_data['product_category'] = "Online Course";
+        $post_data['product_profile'] = "ABP course";
 
         # OPTIONAL PARAMETERS
-        $post_data['value_a'] = "ref001";
+        $post_data['value_a'] = $payment->id;
         $post_data['value_b'] = "ref002";
         $post_data['value_c'] = "ref003";
         $post_data['value_d'] = "ref004";
 
 
         #Before  going to initiate the payment order status need to update as Pending.
-       /* $update_product = DB::table('orders')
-            ->where('transaction_id', $post_data['tran_id'])
-            ->updateOrInsert([
-                'name' => $post_data['cus_name'],
-                'email' => $post_data['cus_email'],
-                'phone' => $post_data['cus_phone'],
-                'amount' => $post_data['total_amount'],
-                'status' => 'Pending',
-                'address' => $post_data['cus_add1'],
-                'transaction_id' => $post_data['tran_id'],
-                'currency' => $post_data['currency']
-            ]);
-            */
+        $payment->payment_refference_no = $post_data['tran_id'] ;
+        //$payment->paid_type =   'SSL';
+        $payment->update();
 
         $sslc = new SslCommerzNotification();
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
@@ -161,55 +160,49 @@ class SslCommerzPaymentController extends Controller
 
     }
 
-    public function success(Request $request)
+    public function sslPaymentSuccess(Request $request)
     {
-        echo "Transaction is Successful";
-
-        $tran_id = $request->input('tran_id');
-        $amount = $request->input('amount');
-        $currency = $request->input('currency');
-
-        $sslc = new SslCommerzNotification();
-
-        #Check order status in order tabel against the transaction id or order id.
-        $order_detials = DB::table('orders')
-            ->where('transaction_id', $tran_id)
-            ->select('transaction_id', 'status', 'currency', 'amount')->first();
-
-        if ($order_detials->status == 'Pending') {
-            $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
-
-            if ($validation == TRUE) {
-                /*
-                That means IPN did not work or IPN URL was not set in your merchant panel. Here you need to update order status
-                in order table as Processing or Complete.
-                Here you can also sent sms or email for successfull transaction to customer
-                */
-                $update_product = DB::table('orders')
-                    ->where('transaction_id', $tran_id)
-                    ->update(['status' => 'Processing']);
-
-                echo "<br >Transaction is successfully Completed";
-            } else {
-                /*
-                That means IPN did not work or IPN URL was not set in your merchant panel and Transation validation failed.
-                Here you need to update order status as Failed in order table.
-                */
-                $update_product = DB::table('orders')
-                    ->where('transaction_id', $tran_id)
-                    ->update(['status' => 'Failed']);
-                echo "validation Fail";
-            }
-        } else if ($order_detials->status == 'Processing' || $order_detials->status == 'Complete') {
+        try { 
+            $tran_id    = $request->input('tran_id');
+            $amount     = $request->input('amount');
+            dd($request->all());
             /*
-             That means through IPN Order status already updated. Now you can just show the customer that transaction is completed. No need to udate database.
-             */
-            echo "Transaction is successfully Completed";
-        } else {
-            #That means something wrong happened. You can redirect customer to your product page.
-            echo "Invalid Transaction";
+            $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
+                        if ($validation == TRUE) {
+            */
+
+            DB::beginTransaction();
+            $sslc = new SslCommerzNotification();
+            $payment = StudentPayment::with('enrollment','enrollment.student')->where('payment_refference_no',$tran_id);
+            $studentPayment = new StudentPayment;
+
+            if (!empty($payment)) {
+                $payment->paid_type      =  'SSL';
+                $payment->paid_amount    =  $payment->paid_amount + $amount;
+                $payment->payment_status =  (($payment->paid_amount+$amount) == $payment->payable_amount)?'Paid':'Partial';
+                $payment->paid_date      =  date('Y-m-d');
+                $payment->$invoice_no    = $studentPayment->getNextInvoiceNo();
+                if($payment->update())
+                    $studentPayment->updateStudentFees($studentPayment->student_enrollment_id); 
+                else
+                    throw new Exception('Something wrong!! Please contact with ABP admin');
+                
+            }
+            else{
+                throw new Exception('Something wrong!! Your payment process is failed');
+            }
+            DB::commit();
+            $data['response_code'] = 1;
+            $data['message'] = "Payment received successfully";
+           
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            $data['response_code'] 	= 0;
+            $data['errors'] = "Failed !".$e->getMessage();
         }
 
+        dd($data);
 
     }
 

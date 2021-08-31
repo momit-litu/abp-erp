@@ -1,0 +1,502 @@
+
+$(document).ready(function () {
+
+	$("#expense_name").autocomplete({
+		search: function() {
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/expense-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		appendTo : $('#entry_form_div'),
+		minLength: 2,
+		select: function(event, ui) {
+			var id = ui.item.id;
+			$(this).next().val(id);
+		},
+		change: function( event, ui ) {
+			$(this).next().val( ui.item? ui.item.id : '' );
+		}
+	});
+
+
+	$("#show_course_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Course Status  ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+
+		course_datatable = $('#course_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/course-report",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'code', className: "text-center"},			
+				{ mData: 'title' },						
+				{ mData: 'noOfbatches', className: "text-center"},		
+				{ mData: 'noOfstudents', className: "text-center"},	
+				{ mData: 'noOfUnits', className: "text-center"},
+				{ mData: 'tqt' , className: "text-center"},
+				{ mData: 'level' , className: "text-center" },
+				{ mData: 'glh' , className: "text-center"},		
+			]
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_batch_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Batch Status  ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+		if($.trim($('#running_status').val()) != ""){
+			report_heading += " Status: "+$('#running_status').val();
+		}
+
+		batch_datatable = $('#batch_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/batch-report",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+					"running_status":$('#running_status').val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'batch_name'},			
+				{ mData: 'course_name'},		
+				{ mData: 'start_date' , className: "text-center"},		
+				{ mData: 'end_date' , className: "text-center"},		
+				{ mData: 'student_limit' , className: "text-center"},		
+				{ mData: 'total_enrolled_student' , className: "text-center"},		
+				{ mData: 'batch_fee' , className: "text-center" },		
+				{ mData: 'running_status' , className: "text-center"},			
+			]
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_student_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Batch Status  ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+		if($.trim($('#type').val()) != ""){
+			report_heading += " Type: "+$('#type').val();
+		}
+		if($.trim($('#study_mode').val()) != ""){
+			report_heading += " Study Mode: "+$('#study_mode').val();
+		}
+		if($.trim($('#register_type').val()) != ""){
+			report_heading += " Registered: "+$('#register_type').val();
+		}
+		if($.trim($('#status').val()) != ""){
+			report_heading += " Status: "+$('#status').val();
+		}
+
+		student_datatable = $('#student_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/student-report",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+					"running_status":$('#running_status').val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'student_no', className: "text-center"},			
+				{ mData: 'first_name'},		
+				{ mData: 'email' },		
+				{ mData: 'contact_no' , className: "text-center"},		
+				{ mData: 'emergency_contact' , className: "text-center"},		
+				{ mData: 'nid_no' , className: "text-center"},		
+				{ mData: 'date_of_birth' , className: "text-center" },		
+				{ mData: 'study_mode' , className: "text-center"},
+				{ mData: 'type' , className: "text-center"},
+				{ mData: 'register_type' , className: "text-center"},				
+				{ mData: 'status' , className: "text-center"},		
+			]
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_expense_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Expense Status  ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+		if($.trim($('#expense_head_id').val()) != ""){
+			report_heading += " expense head:  "+$('#expense_name').val();
+		}
+		if($.trim($('#expense_category_id').val()) != ""){
+			report_heading += " ("+$('#expense_category_id').val()+")";
+		}
+		expense_datatable = $('#expense_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/expense-report",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+					"expense_head_id":$("#expense_head_id").val(),
+					"expense_category_id":$("#expense_category_id").val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'category'},			
+				{ mData: 'head' },
+				{ mData: 'date'},
+				{ mData: 'details' },
+				{ mData: 'payment_status'},
+				{ mData: 'amount', className: "text-right"},			
+			],
+			"footerCallback": function ( row, data, start, end, display ) {
+				var api = this.api(), data;
+	 
+				// Remove the formatting to get integer data for summation
+				var intVal = function ( i ) {
+					return typeof i === 'string' ?
+						i.replace(/[\$,]/g, '')*1 :
+						typeof i === 'number' ?
+							i : 0;
+				};	 
+				// Total over this page
+				data = api.column( 5, { page: 'current'} ).data();
+				pageTotal = data.length ?
+					data.reduce( function (a, b) {
+							return intVal(a) + intVal(b);
+					} ) :
+					0;
+	 
+				// Update footer
+				$( api.column( 5 ).footer() ).html(pageTotal);
+			}
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+
+	$("#show_expense_income_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Expense Vs Income  ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+		
+		expense_income_table = $('#expense_income_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( 'font-size', 'inherit' );
+					}
+				}
+			],
+			"order": [[ 0, 'asc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/expense-income",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'serial'},			
+				{ mData: 'month' },
+				{ mData: 'income' , className: "text-right"},
+				{ mData: 'expense' , className: "text-right"},				
+				{ mData: 'balance' , className: "text-right"},			
+			],
+			"footerCallback": function ( row, data, start, end, display ) {
+				var api = this.api(), data;
+	 
+				// Remove the formatting to get integer data for summation
+				var intVal = function ( i ) {
+					return typeof i === 'string' ?
+						i.replace(/[\$,]/g, '')*1 :
+						typeof i === 'number' ?
+							i : 0;
+				};	 
+				// Total over this page
+				data = api.column( 2, { page: 'current'} ).data();
+				expenseTotal = data.length ?
+					data.reduce( function (a, b) {
+							return intVal(a) + intVal(b);
+					} ) :
+					0;
+				data = api.column( 3, { page: 'current'} ).data();
+				incomeTotal = data.length ?
+					data.reduce( function (a, b) {
+							return intVal(a) + intVal(b);
+					} ) :
+					0;
+				data = api.column( 4, { page: 'current'} ).data();
+				balanceTotal = data.length ?
+					data.reduce( function (a, b) {
+							return intVal(a) + intVal(b);
+					} ) :
+					0;
+	 
+				// Update footer
+				$( api.column( 2 ).footer() ).html(incomeTotal);
+				$( api.column( 3 ).footer() ).html(expenseTotal);
+				$( api.column( 4 ).footer() ).html(balanceTotal);
+			}
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+
+	$("#clear_button").on('click',function(){
+		clear_form();
+	});
+
+});
+

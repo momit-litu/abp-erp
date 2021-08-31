@@ -14,8 +14,8 @@ use App\Mail\TestMail;
 |
 */
 
-Route::get('/example1',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@exampleEasyCheckout'));
-Route::post('/pay-via-ajax',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@payViaAjax'));
+
+
 // SSLCOMMERZ Start
 /*Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
 Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
@@ -32,20 +32,15 @@ Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);*/
 
 
 
-
-
-
-
-
-
-
-
 Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::get('auth/login',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@authPostLogin'));
 
+
+Route::post('/sslcommerz/success',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentSuccess'));
+Route::post('/sslcommerz/fail',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentFail'));
 
 
 
@@ -62,18 +57,20 @@ Route::group(['prefix' => 'portal'], function () {
 		Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 		Route::get('/courses/my/{type}',array('as'=>'My Course List' , 	'uses' =>'StudentPortalController@showMyCourseList'));
 
-		
+		//Payment
+		Route::post('/sslcommerz/pay-via-ajax',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@payViaAjax'));
+	
+
 		Route::get('/payments/{type}',array('as'=>'Payment List' , 	'uses' =>'StudentPortalController@showPaymentList'));
 		Route::post('/payment/revise',array('as'=>'Revise Payment' , 	'uses' =>'StudentPortalController@savePaymentRevise'));
-
+		Route::get('/checkout/{id}',array('as'=>'Payment Checkout', 'uses' =>'StudentPortalController@checkoutShow'));
+		
 		Route::get('/student-info',array('as'=>'Student Details' , 'uses' =>'StudentPortalController@studentShow'));
 		Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
 		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));	
 		
 	});
 });
-
-
 
 
 #Login
@@ -97,8 +94,9 @@ Route::post('/student-autosuggest',array('as'=>'Student Autosuggest list', 'uses
 Route::post('/units-autosuggest',array('as'=>'Unit Autosuggest list', 'uses' =>'UnitController@unitAutoComplete'));
 Route::post('/course-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@courseAutoComplete'));
 Route::get('/student-course-batch-autosuggest/{id}',array('as'=>'Student Course Batch Autosuggest list', 'uses' =>'PaymentController@courseBatchList'));
+Route::post('/course-batch-autosuggest',array('as'=>'Course Batch Autosuggest list', 'uses' =>'CourseController@courseBatchAutoComplete'));
 Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
-
+Route::post('/expense-autosuggest',array('as'=>'Expense Autosuggest list', 'uses' =>'ExpenseController@expenseAutoComplete'));
 
 
 // need only authentication
@@ -217,6 +215,9 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	//Notifications
 	//SMS	
 	Route::post('/sms/due-payment',array('as'=>'Send SMS' , 'action_id'=>'94', 'uses' =>'NotificationController@sendPaymentDueSMS'));
+	Route::get('/sms/send',array('as'=>'Send SMS' , 'action_id'=>'96', 'uses' =>'NotificationController@sendSMSIndex'));
+	Route::post('/sms/send',array('as'=>'Send SMS' , 'action_id'=>'96', 'uses' =>'NotificationController@sendSMS'));
+
 
 	//Batch student enroll
 	Route::get('/batch-students/{id}',array('as'=>'Batch Students List' ,'action_id'=>'85', 'uses' =>'BatchController@studentShow'));
@@ -253,6 +254,33 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
     Route::get('/expense/expense-detail-list/{id}',array('as'=>'Expense List' ,'action_id'=>'77', 'uses' =>'ExpenseController@showDetail'));
     Route::post('/expense/expense-detail',array('as'=>'Expense Entry' ,'action_id'=>'77', 'uses' =>'ExpenseController@ExpensDetailcreateOrEdit'));
     Route::get('/expense/expense-detail-delete/{id}',array('as'=>'Expense Delete' ,'action_id'=>'80', 'uses' =>'ExpenseController@destroyDetail'));
+
+
+
+	// Reports
+	Route::get('course-report',array('as'=>'Course Report' , 'action_id'=>'97', 'uses' =>'ReportController@courseReport'));
+	Route::post('course-report',array('as'=>'Course Report' , 'action_id'=>'97', 'uses' =>'ReportController@courseReportList')); 
+
+	Route::get('batch-report',array('as'=>'Batch Report' , 'action_id'=>'98', 'uses' =>'ReportController@batchReport'));
+	Route::post('batch-report',array('as'=>'Batch Report' , 'action_id'=>'98', 'uses' =>'ReportController@batchReportList'));
+	
+	Route::get('student-report',array('as'=>'Student Report' , 'action_id'=>'99', 'uses' =>'ReportController@studentReport'));
+	Route::post('student-report',array('as'=>'Student Report' , 'action_id'=>'99', 'uses' =>'ReportController@studentReportList'));
+
+	Route::get('payment-schedule-report',array('as'=>'Payment Schedule Report' , 'action_id'=>'100', 'uses' =>'ReportController@paymentScheduleReport'));
+	Route::post('payment-schedule-report',array('as'=>'Payment Schedule Report' , 'action_id'=>'100', 'uses' =>'ReportController@paymentScheduleReportList'));
+
+	Route::get('payment-collection-report',array('as'=>'Payment Collection Report' , 'action_id'=>'101', 'uses' =>'ReportController@paymentCollectionReport'));
+	Route::post('payment-collection-report',array('as'=>'Payment Collection Report' , 'action_id'=>'101', 'uses' =>'ReportController@paymentCollectionReportList'));
+
+	Route::get('schedule-collection-report',array('as'=>'Schedule Collection Report' , 'action_id'=>'102', 'uses' =>'ReportController@scheduleCollectionReport'));
+	Route::post('schedule-collection-report',array('as'=>'Schedule Collection Report' , 'action_id'=>'102', 'uses' =>'ReportController@scheduleCollectionReportList'));
+
+	Route::get('expense-report',array('as'=>'Expense Report' , 'action_id'=>'103', 'uses' =>'ReportController@expenseReport'));
+	Route::post('expense-report',array('as'=>'Expense Report' , 'action_id'=>'103', 'uses' =>'ReportController@expenseReportList'));
+
+	Route::get('expense-income',array('as'=>'Expense Vs Income Report' , 'action_id'=>'104', 'uses' =>'ReportController@expenseIncome'));
+	Route::post('expense-income',array('as'=>'Expense Vs Income Report' , 'action_id'=>'104', 'uses' =>'ReportController@expenseIncomeList'));
 
 });
 

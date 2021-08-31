@@ -44,7 +44,7 @@ $(document).ready(function () {
             { "targets": [ 0 ],  "visible": false },
 			{ "width": "80px", "targets":[ 6 ]},
 			{ "width": "60px", "targets":[ 7 ]},
-			{ "width": "80px", "targets":[ 8 ]},
+			{ "width": "120px", "targets":[ 8 ]},
         ],
 	});
 	

@@ -36,13 +36,14 @@
 			</div>
 		</div>
 		<div class="main-card mb-3 card">
-			<div class="card-body"><h5 class="card-title">Search Student</h5>
+			<div class="card-body">
+				<h5 class="card-title">Search Student</h5>
 				<div>
 					<div class="form-row">							 
 						<div class="col-md-6">
 							<div class="position-relative form-group">
 								<input type="text" id="payment_student_name" required name="payment_student_name" class=" mr-2 form-control col-md-12" />
-							<input type="hidden" id="payment_student_id" required name="payment_student_id"  />
+								<input type="hidden" id="payment_student_id" required name="payment_student_id"  />
 							</div>
 						</div>
 						<div class="col-md-6">

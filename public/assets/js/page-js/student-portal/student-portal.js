@@ -247,15 +247,30 @@ $(document).ready(function () {
 		}
 	});
 
+	$("input[name='payment_gateway']").on('click', function(){
+		$('.payment_gateway_div').hide();	
+		if($("input[name='payment_gateway']:checked").val() == "bkash"){	
+			$('#bkash_div').show();
+		}
+		else if($("input[name='payment_gateway']:checked").val() == "rocket"){
+			$('#rocket_div').show();
+		}
+	})
 
 
-makePayment = function(payment_id, amount){
-	$('#payment_amount').val(amount);
-	$('#sslczPayBtn').attr('postdata',payment_id);
-	//alert(	$('#payment_amount').val())
-	//alert(	$('#payment_amount').val())
-	//$('#payment-modal').show();
-	$('#sslczPayBtn').trigger('click');
-}
+	makePayment = function(payment_id, amount){
+		if($("input[name='payment_gateway']:checked").val() == "card"){
+			$('#payment_amount').val(amount);
+			$('#sslczPayBtn').attr('postdata',payment_id);
+			$('#sslczPayBtn').attr('order',payment_id);
+			$('#sslczPayBtn').trigger('click');
+		}
+		else if($("input[name='payment_gateway']:checked").val() == "bkash"){	
+			alert('bkash')
+		}
+		else if($("input[name='payment_gateway']:checked").val() == "rocket"){
+			alert('rocket')
+		}		
+	}
 
 });

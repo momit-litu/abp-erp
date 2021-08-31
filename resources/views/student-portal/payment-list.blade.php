@@ -138,7 +138,7 @@
                                                 </th>
                                                 <td class="text-center">
                                                     @if($payment['payment_status'] != 'Paid')
-                                                    <button type="button" class="border-0 btn-transition btn btn-primary btn-sm" onclick="makePayment({{$payment['id']}}, {{$payment['payable_amount']}})">Pay</button>
+                                                    <a type="button" class="border-0 btn-transition btn btn-primary btn-sm" href="{{ url('portal/checkout/'.$payment['id'])}}">Pay</a>
                                                     @endif
                                                 </td>
                                             </tr>

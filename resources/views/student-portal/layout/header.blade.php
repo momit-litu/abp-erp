@@ -176,7 +176,7 @@
                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
                         <div class="dropdown-menu-header mb-0">
                             <div class="dropdown-menu-header-inner bg-deep-blue">
-                                <div class="menu-header-image opacity-2" style="background-image: url('assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
+                                <div class="menu-header-image opacity-2" style="background-image: url('../assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
                                 <div class="menu-header-content text-dark">
                                     <h5 class="menu-header-title">Notifications</h5>
                                     <h6 class="menu-header-subtitle">You have <b>21</b> unread messages</h6>
@@ -388,7 +388,7 @@
                                 <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu-lg dropdown-menu dropdown-menu-right">
                                     <div class="dropdown-menu-header">
                                         <div class="dropdown-menu-header-inner bg-info">
-                                            <div class="menu-header-image opacity-1" style="background-image: url('assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
+                                            <div class="menu-header-image opacity-1" style="background-image: url('../assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
                                             <div class="menu-header-content text-left">
                                                 <div class="widget-content p-0">
                                                     <div class="widget-content-wrapper">

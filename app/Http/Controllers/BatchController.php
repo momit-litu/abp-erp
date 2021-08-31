@@ -107,16 +107,16 @@ class BatchController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;		
-        $Batch = Batch::with('course', 'batch_fees','batch_fees.installments')->findOrFail($id);
-		return json_encode(array('batch'=>$Batch));
+        $batch = Batch::with('course', 'batch_fees','batch_fees.installments')->findOrFail($id);
+		return json_encode(array('batch'=>$batch));
     }
 
     public function studentShow($id)
     {
 		if($id=="") return 0;		
-        $Batch = Batch::with('course', 'batch_fees','batch_fees.installments','students')->findOrFail($id);
+        $batch = Batch::with('course', 'batch_fees','batch_fees.installments','students')->findOrFail($id);
         //dd($Batch->students);
-		return json_encode(array('batch'=>$Batch));
+		return json_encode(array('batch'=>$batch));
     }
 
     public function enrollStudent(Request $request)

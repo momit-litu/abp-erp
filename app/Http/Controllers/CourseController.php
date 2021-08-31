@@ -37,7 +37,7 @@ class CourseController extends Controller
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
         $data['actions']['add_permisiion']= $add_permisiion;
 
-		return view('Course.Course',$data);
+		return view('course.course',$data);
     }
 
 	public function showList(){
@@ -47,36 +47,36 @@ class CourseController extends Controller
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
 
-	   $Courses = Course::with('units')->with('level')
+	   $courses = Course::with('units')->with('level')
 							->orderBy('created_at','desc')
 							->get();
 				
         $return_arr = array();
-        foreach($Courses as $Course){
+        foreach($courses as $course){
 			$totalGlh =0;
-			foreach($Course->units as $unit){
+			foreach($course->units as $unit){
 				$totalGlh += $unit['glh'];
 			}
 			
-            $data['status'] 	= ($Course->status == 'Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
-            $data['id'] 		= $Course->id;
-			$data['code'] 		= $Course->code;
-            $data['title'] 		= $Course->title;
-			$data['tqt'] 		= $Course->tqt;
-			//$data['registration_fees'] = $Course->registration_fees;
-			$data['level'] 		= $Course->level->name;
+            $data['status'] 	= ($course->status == 'Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
+            $data['id'] 		= $course->id;
+			$data['code'] 		= $course->code;
+            $data['title'] 		= $course->title;
+			$data['tqt'] 		= $course->tqt;
+			//$data['registration_fees'] = $course->registration_fees;
+			$data['level'] 		= $course->level->name;
 			$data['glh'] 		= $totalGlh;
-			$data['noOfUnits'] 	= count($Course->units);
+			$data['noOfUnits'] 	= count($course->units);
 			
-			$data['actions'] =" <button title='View' onclick='courseView(".$Course->id.")' id='view_" . $Course->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
+			$data['actions'] =" <button title='View' onclick='courseView(".$course->id.")' id='view_" . $course->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
 		   if($edit_permisiion>0){
-                $data['actions'] .="<button onclick='courseEdit(".$Course->id.")' id=edit_" . $Course->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
+                $data['actions'] .="<button onclick='courseEdit(".$course->id.")' id=edit_" . $course->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
 			
-			$data['actions'] 	.=" <button title='Edit' onclick='courseBatch(".$Course->id.")' id=batch" . $Course->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-menu'></i></button>";
+			$data['actions'] 	.=" <button title='Edit' onclick='courseBatch(".$course->id.")' id=batch" . $course->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-menu'></i></button>";
 
             if ($delete_permisiion>0) {
-                $data['actions'] .=" <button onclick='courseDelete(".$Course->id.")' id='delete_" . $Course->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
+                $data['actions'] .=" <button onclick='courseDelete(".$course->id.")' id='delete_" . $course->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
             }
 
             $return_arr[] = $data;
@@ -130,8 +130,8 @@ class CourseController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;		
-        $Course = Course::with('units', 'level')->findOrFail($id);
-		return json_encode(array('course'=>$Course));
+        $course = Course::with('units', 'level')->findOrFail($id);
+		return json_encode(array('course'=>$course));
     }
 
     public function destroy($id)
@@ -139,21 +139,21 @@ class CourseController extends Controller
         if($id==""){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 		}			
-		$Course = Course::with('centers')->findOrFail($id);
-		$is_deletable = (count($Course->centers)==0)?1:0; // 1:deletabe, 0:not-deletable
-		if(empty($Course)){
+		$course = Course::with('batches')->findOrFail($id);
+		$is_deletable = (count($course->batch)==0)?1:0; // 1:deletabe, 0:not-deletable
+		if(empty($course)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Course found"));
 		}
 		try {			
 			DB::beginTransaction();
 			if($is_deletable){
-				CourseUnit::where('course_id', $Course->id)->delete();
-				$Course->delete();
+				CourseUnit::where('course_id', $course->id)->delete();
+				$course->delete();
 				$return['message'] = "Course Deleted successfully";
 			}
 			else{
-				$Course->status = 'Inactive';
-				$Course->update();
+				$course->status = 'Inactive';
+				$course->update();
 				$return['message'] = "Deletation is not possible, but deactivated the Course";
 			}
 			DB::commit();
@@ -171,7 +171,7 @@ class CourseController extends Controller
 		
     }
 	
-	public function CourseAutoComplete(Request $request, $showtype){
+	public function courseAutoComplete(Request $request, $showtype){
 		$term = $_REQUEST['term'];
 		$user = Auth::user();
 		if($showtype =='Student'){			
@@ -208,6 +208,34 @@ class CourseController extends Controller
 					//dd($json);
 		return json_encode($json);
 		
+	}
+	
+    public function courseBatchAutoComplete(){
+   		$term = $_REQUEST['term'];
+
+		$data = Batch::whereHas('course', function ($query) use ($term){
+			$query->where([
+				['status', '=', 'Active'],
+				['title','like','%'.$term.'%']
+			]);
+			$query->orwhere([
+				['status', '=', 'Active'],
+				['code','like','%'.$term.'%']
+			]);
+		})->get();
+
+		
+		$data_count = $data->count();
+		
+		if($data_count>0){
+			foreach ($data as $row) {
+				$json[] = array('id' => $row["id"],'label' => $row['course']["code"]." - ".$row['course']["title"]." , Batch: ".$row['batch_name'],);
+			}
+		}
+		else {
+			$json[] = array('id' => "0",'label' => "Not Found !!!");
+		}
+		return json_encode($json);	
 	}
 	
 

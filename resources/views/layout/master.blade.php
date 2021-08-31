@@ -16,9 +16,12 @@
     <meta name="msapplication-tap-highlight" content="no">
 
 <link rel="stylesheet" href="{{ asset('assets/theme/assets/css/base.css') }}">
+<link rel="stylesheet" href="{{ asset('/assets/css/abp.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/iCheck/skins/all.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/select2/select2.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('assets/css/select.dataTables.min.css') }}"/>
+<link rel="stylesheet" href="{{ asset('assets/css/buttons.dataTables.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" type="text/css" media="print"/>
 
 <!--<link rel="icon" href="{{ asset('assets/images/fevicon.png')}}" type="image/png" />-->
@@ -53,6 +56,8 @@
 <button id="tostr-show"></button>
 <div class="app-drawer-overlay d-none animated fadeIn"></div>
 <input type="hidden" class="site_url" value="{{url('/')}}">
+<input type="hidden" id="logo_name" value="{{$site_settings['logo']}}">
+<input type="hidden" id="fade_logo_name" value="{{$site_settings['fade_logo']}}">
 
 <!--SCRIPTS INCLUDES-->
 
@@ -195,6 +200,23 @@
 <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs4@1.10.19/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<script src="{{asset('assets/js/table-data.js')}}"></script>
+<!--<script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script> -->
+<script src="{{ asset('assets/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('assets/js/jszip.min.js')}}"></script>
+<script src="{{ asset('assets/js/pdfmake.min.js')}}"></script>
+<script src="{{ asset('assets/js/vfs_fonts.js')}}"></script>
+<script src="{{ asset('assets/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('assets/js/buttons.print.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/plugins/DataTables/media/js/jquery.dataTables.select.min.js')}}"></script>
+ 
+
+
+
 
 <!--Bootstrap Tables-->
 <script src="{{ asset('assets/theme/assets/js/vendors/tables.js') }}"></script>

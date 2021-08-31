@@ -1,6 +1,9 @@
-var url = $('.site_url').val();
+var url 			= $('.site_url').val();
+var fade_logo_name 	= $('#fade_logo_name').val();
+var fade_logo_url 	= url+"/assets/images/admin-upload/"+fade_logo_name;
+var logo_name 		= $('#logo_name').val();
+var logo 			= url+"/assets/images/admin-upload/"+logo_name;
 const profile_image_url 		= url+"/assets/images/student/";
-const logo 						= url+"/assets/images/logo-inverse.png";
 const payment_attachment_url 	= url+"/assets/images/payment/";
 
 $.ajaxSetup({
@@ -8,6 +11,7 @@ $.ajaxSetup({
 		'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 	}
 });
+
 
 $('.form').iCheck({
 	checkboxClass: 'icheckbox_flat-green',
@@ -38,7 +42,16 @@ toastr.options = {
 	"hideMethod": "fadeOut"
 };
 
+
+if($.trim($('#session_message').html())!=""){
+	toastr[($.trim($('#session_message_code').html())==0)?'error':'success']($.trim($('#session_message').html()),  '');
+}
+
+
+
 const editors = {};
+
+
 function createEditor( elementId ) {
     return ClassicEditor
         .create( document.getElementById( elementId ) )

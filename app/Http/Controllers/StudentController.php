@@ -184,10 +184,7 @@ class StudentController extends Controller
             ->get();
         }
 
-
-
         $data_count = $data->count();
-
         if ($data_count > 0) {
             foreach ($data as $row) {
                 $json[] = array('id' => $row["id"], 'label' => $row["name"] . " (" . $row["email"] . ")");

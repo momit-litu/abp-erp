@@ -80,22 +80,24 @@
                                     <div class="col-md-12">
                                         <input type="hidden" name="edit_id" id="edit_id">
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" >Expense Head Name<span class="required">*</span></label>
+                                            <label class="col-md-12  col-xs-6">Expense Head Name<span class="required">*</span></label>
                                             <div class="col-md-12  col-xs-6">
                                                 <input type="text" id="expense_head_name" name="expense_head_name" class="form-control col-lg-12" />
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" >Parent Category</label>
-                                            <div class="col-md-12  col-xs-6">
-                                                <select class="form-control col-lg-12"  name="expense_category_id" id="expense_category_id">
-                                                    <option value=""  selected>Select Expense Category Name</option>
-                                                    @foreach($parentExpneseHead as $parentHead)
-                                                        <option value="{{$parentHead->id}}">{{$parentHead->category_name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
+                                        <div class="form-group ">
+											<label class="col-md-12  col-xs-6"> Category</label>
+											<div class="col-md-12  col-xs-6">
+												<select class="form-control col-lg-12"  name="expense_category_id" id="expense_category_id">
+													<option value=""  selected>Select Expense Category Name</option>
+													@foreach($parentExpneseHead as $parentHead)
+														<option value="{{$parentHead->id}}">
+														 {{($parentHead->parent!=null)?$parentHead->parent->category_name." -> ".$parentHead->category_name:$parentHead->category_name}}
+														</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-6" >Is Active</label>
                                             <div class="col-md-4 col-sm-4 col-xs-6">
