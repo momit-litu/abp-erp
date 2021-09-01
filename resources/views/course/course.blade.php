@@ -117,13 +117,13 @@
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">TQT<span class="required">*</span></label>
-												<input type="text" id="tqt" name="tqt" required class="form-control col-lg-12"/>
+												<input type="text" id="tqt" name="tqt" value="0" required class="form-control col-lg-12"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label  class="">Course Credit Hour <span class="required">*</span></label>
-												<input type="text" id="total_credit_hour" name="total_credit_hour" class="form-control col-lg-12" />
+												<input type="text" id="total_credit_hour" name="total_credit_hour" class="form-control  col-lg-12"  value="0" />
 											</div>
 										</div>
 									</div>
@@ -131,7 +131,7 @@
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">GLH<span class="required">*</span></label>
-												<input type="text" id="glh" name="glh" required class="form-control col-lg-12"/>
+												<input type="text" id="glh" name="glh" required   value="0" class="form-control col-lg-12"/>
 											</div>
 										</div>	 
 										<div class="col-md-6">
@@ -195,7 +195,7 @@
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
-												<label  class="">Accredited By<span class="required">*</span></label>
+												<label  class="">Accredited By</label>
 												<textarea name="accredited_by" id="accredited_by" class='ckeditor'></textarea>
 											</div>
 										</div>
@@ -225,7 +225,7 @@
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
-												<label class="">Semester Details<span class="required">*</span></label>
+												<label class="">Semester Details</label>
 												<textarea name="semester_details" id="semester_details"></textarea>
 											</div>
 										</div>
@@ -233,7 +233,7 @@
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
-												<label  class="">Assesment<span class="required">*</span></label>
+												<label  class="">Assesment</label>
 												<textarea name="assessment" id="assessment"></textarea>
 											</div>
 										</div>
@@ -257,7 +257,7 @@
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
-												<label  class="">Experience Required<span class="required">*</span></label>
+												<label  class="">Experience Required</label>
 												<textarea name="experience_required" id="experience_required"></textarea>
 											</div>
 										</div>
@@ -265,7 +265,7 @@
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
-												<label  class="">Youtube Video Link<span class="required">*</span></label>
+												<label  class="">Youtube Video Link</label>
 												<input type="text" id="youtube_video_link" name="youtube_video_link" class="form-control col-lg-12" />
 											</div>
 										</div>

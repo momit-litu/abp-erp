@@ -104,7 +104,7 @@
 										</div>
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label for="short_name" class="">Total Unit Time </label>
+												<label for="short_name" class="">Total Unit Time<span class="required">*</span> </label>
 												<input type="text" id="tut" name="tut" class="form-control col-lg-12" />
 											</div>
 										</div>
@@ -112,7 +112,7 @@
 									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label for="company_name" class="">Credit Hours<span class="required">*</span></label>
+												<label for="company_name" class="">Total Credit<span class="required">*</span></label>
 												<input type="text" id="credit_hour" name="credit_hour" required class="form-control col-lg-12"/>
 											</div>
 										</div>
@@ -168,10 +168,6 @@
 
 @endsection
 @section('JScript')
-	<script>
-		const profile_image_url = "<?php echo asset('assets/images/user/admin'); ?>";
-	</script>
-	
 	<script type="text/javascript" src="{{ asset('assets/js/page-js/course/unit.js')}}"></script>
 @endsection
 

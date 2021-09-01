@@ -1806,7 +1806,12 @@ pre code {
 .table-bordered td {
     border: 1px solid #e9ecef;
 }
-
+/*
+.report-table-bordered th,
+.report-table-bordered td {
+    border: 1px solid #030d17;
+}
+*//
 .table-bordered thead th,
 .table-bordered thead td {
     border-bottom-width: 2px;
@@ -1817,6 +1822,10 @@ pre code {
 .table-borderless thead th,
 .table-borderless tbody + tbody {
     border: 0;
+}
+
+.table-bordered tbody td {
+    border-bottom-width: 2px;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {

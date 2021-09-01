@@ -28,7 +28,68 @@ $(document).ready(function () {
 			$(this).next().val( ui.item? ui.item.id : '' );
 		}
 	});
+	$("#expense_name").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
+	});
 
+	$("#student_name").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/student-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		minLength: 2,
+		select: function(event, ui) {
+			var id = ui.item.id;
+			$(this).next().val(id);
+		},
+	});
+	$("#student_name").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
+	});
+
+	$("#batch_name").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/course-batch-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		minLength: 2,
+		select: function(event, ui) {
+			var id = ui.item.id;
+			$(this).next().val(id);
+		},
+	});
+	$("#batch_name").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
+	});
+
+	
 
 	$("#show_course_status_report").on('click',function(){
 		event.preventDefault();
@@ -201,16 +262,16 @@ $(document).ready(function () {
 		if($.trim($('#to_date').val()) != ""){
 			report_heading += " To "+$('#to_date').val();
 		}
-		if($.trim($('#type').val()) != ""){
+		if($.trim($('#type').val()) != "All"){
 			report_heading += " Type: "+$('#type').val();
 		}
-		if($.trim($('#study_mode').val()) != ""){
+		if($.trim($('#study_mode').val()) != "All"){
 			report_heading += " Study Mode: "+$('#study_mode').val();
 		}
-		if($.trim($('#register_type').val()) != ""){
+		if($.trim($('#register_type').val()) != "All"){
 			report_heading += " Registered: "+$('#register_type').val();
 		}
-		if($.trim($('#status').val()) != ""){
+		if($.trim($('#status').val()) != "All"){
 			report_heading += " Status: "+$('#status').val();
 		}
 
@@ -266,7 +327,10 @@ $(document).ready(function () {
 				"data" : {
 					"from_date": $("#from_date").val(),
 					"to_date":$("#to_date").val(),
-					"running_status":$('#running_status').val(),
+					"type":$('#type').val(),
+					"register_type":$('#register_type').val(),
+					"study_mode":$('#study_mode').val(),
+					"status":$('#status').val(),
 				}
 			},
 			"aoColumns": [			
@@ -282,6 +346,334 @@ $(document).ready(function () {
 				{ mData: 'register_type' , className: "text-center"},				
 				{ mData: 'status' , className: "text-center"},		
 			]
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_payment_schedule_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Payment schedule report  ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+		if($.trim($('#student_name').val()) != ""){
+			report_heading += " Student: "+$('#student_name').val();
+		}
+		if($.trim($('#batch_name').val()) != ""){
+			report_heading += " Course: "+$('#batch_name').val();
+		}
+		if($.trim($('#payment_status').val()) != "All"){
+			report_heading += " Payment Status: "+$('#payment_status').val();
+		}
+
+		payment_schedule_datatable = $('#payment_schedule_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/payment-schedule-report",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+					"student_id":$('#student_id').val(),
+					"batch_id":$('#batch_id').val(),
+					"payment_status":$('#payment_status').val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'student_name',},			
+				{ mData: 'course_name'},		
+				{ mData: 'installment' , className: "text-center"},		
+				{ mData: 'payment_month' , className: "text-center"},		
+				{ mData: 'paid_date' , className: "text-center"},		
+				{ mData: 'payment_status' , className: "text-center"},		
+				{ mData: 'payable_amount' , className: "text-right" },					
+			],
+			"footerCallback": function ( row, data, start, end, display ) {
+				var api = this.api(), data;
+	 
+				// Remove the formatting to get integer data for summation
+				var intVal = function ( i ) {
+					return typeof i === 'string' ?
+						i.replace(/[\$,]/g, '')*1 :
+						typeof i === 'number' ?
+							i : 0;
+				};	 
+				// Total over this page
+				data = api.column( 6, { page: 'current'} ).data();
+				pageTotal = data.length ?
+					data.reduce( function (a, b) {
+							return intVal(a) + intVal(b);
+					} ) :
+					0;
+	 
+				// Update footer
+				$( api.column( 6 ).footer() ).html(pageTotal);
+			}
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_payment_collection_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Payment Collection ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+		if($.trim($('#student_name').val()) != ""){
+			report_heading += " Student: "+$('#student_name').val();
+		}
+		if($.trim($('#batch_name').val()) != ""){
+			report_heading += " Course: "+$('#batch_name').val();
+		}
+
+		payment_collection_datatable = $('#payment_collection_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/payment-collection-report",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+					"student_id":$('#student_id').val(),
+					"batch_id":$('#batch_id').val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'student_name',},			
+				{ mData: 'course_name'},		
+				{ mData: 'installment' , className: "text-center"},		
+				{ mData: 'payment_month' , className: "text-center"},		
+				{ mData: 'paid_date' , className: "text-center"},		
+				{ mData: 'paid_type' , className: "text-center"},		
+				{ mData: 'reference_no' , className: "text-center"},		
+				{ mData: 'invoice_no' , className: "text-center"},			
+				{ mData: 'payment_status' , className: "text-center"},		
+				{ mData: 'paid_amount' , className: "text-right" },					
+			],
+			"footerCallback": function ( row, data, start, end, display ) {
+				var api = this.api(), data;
+	 
+				// Remove the formatting to get integer data for summation
+				var intVal = function ( i ) {
+					return typeof i === 'string' ?
+						i.replace(/[\$,]/g, '')*1 :
+						typeof i === 'number' ?
+							i : 0;
+				};	 
+				// Total over this page
+				data = api.column( 9, { page: 'current'} ).data();
+				pageTotal = data.length ?
+					data.reduce( function (a, b) {
+							return intVal(a) + intVal(b);
+					} ) :
+					0;
+	 
+				// Update footer
+				$( api.column( 9 ).footer() ).html(pageTotal);
+			}
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_schedule_collection_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Schedule Vs Collection ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+		if($.trim($('#student_name').val()) != ""){
+			report_heading += " Student: "+$('#student_name').val();
+		}
+		if($.trim($('#batch_name').val()) != ""){
+			report_heading += " Course: "+$('#batch_name').val();
+		}
+
+		schedule_collection_datatable = $('#schedule_collection_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/schedule-collection-report",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+					"student_id":$('#student_id').val(),
+					"batch_id":$('#batch_id').val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'student_name',},			
+				{ mData: 'course_name'},		
+				{ mData: 'installment' , className: "text-center"},		
+				{ mData: 'payment_month' , className: "text-center"},		
+				{ mData: 'paid_date' , className: "text-center"},		
+				{ mData: 'paid_type' , className: "text-center"},			
+				{ mData: 'invoice_no' , className: "text-center"},			
+				{ mData: 'payment_status' , className: "text-center"},		
+				{ mData: 'payable_amount' , className: "text-right" },			
+				{ mData: 'paid_amount' , className: "text-right" },					
+			],
+			"footerCallback": function ( row, data, start, end, display ) {
+				var api = this.api(), data;
+	 
+				// Remove the formatting to get integer data for summation
+				var intVal = function ( i ) {
+					return typeof i === 'string' ?
+						i.replace(/[\$,]/g, '')*1 :
+						typeof i === 'number' ?
+							i : 0;
+				};	 
+				// Total over this page
+				data = api.column( 8, { page: 'current'} ).data();
+				payablePageTotal = data.length ?data.reduce( function (a, b) {	return intVal(a) + intVal(b);} ) :0;data = api.column( 9, { page: 'current'} ).data();
+				pageTotal = data.length ?data.reduce( function (a, b) {	return intVal(a) + intVal(b);} ) :0;	 
+				// Update footer
+				$( api.column( 8 ).footer() ).html(payablePageTotal);
+				$( api.column( 9 ).footer() ).html(pageTotal);
+			}
 		});
 			
 		$('#report-data').css('display','block');

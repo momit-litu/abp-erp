@@ -10,7 +10,7 @@
 							<span class="d-inline-block pr-2">
 								<i class="pe-7s-users icon-gradient bg-mean-fruit"></i>
 							</span>
-							<span class="d-inline-block">Batch Report</span>
+							<span class="d-inline-block">Schedule Vs Collection Report</span>
 						</div>
 						<div class="page-title-subheading opacity-10">
 							<nav class="" aria-label="breadcrumb">
@@ -37,7 +37,7 @@
 		</div>
 		<div class="main-card mb-3 card">
 			<div class="card-body report-form">
-				<form id="batch_form" name="batch_form" enctype="multipart/form-data" class="form form-horizontal form-label-left ba">
+				<form id="schedule_collection_status_form" name="schedule_collection_status_form" enctype="multipart/form-data" class="form form-horizontal form-label-left ba">
 					@csrf
 					<div class="form-row">							 
 						<div class="col-md-2">
@@ -51,24 +51,27 @@
 								<label class="control-label" >To</label>
 								<input type="date" id="to_date" name="to_date" class="form-control col-lg-12" />
 							</div>
-						</div>	
-						<div class="col-md-2">
+						</div>
+						<div class="col-md-4">
 							<div class="position-relative form-group">
-								<label class="control-label" >Status</label>
-								<select class="form-control col-lg-10" id="running_status"  name="running_status" autocomplete="off">
-									<option value="All"  selected>All</option>
-									<option value="Running">Running</option>
-									<option value="Upcoming" >Upcoming</option>
-									<option value="Completed" >Completed</option>
-								</select>
+								<label class="control-label" >Course & Batch</label>
+								<input type="text" id="batch_name" name="batch_name" class="form-control col-lg-12" />
+								<input type="hidden" id="batch_id" name="batch_id"/>
 							</div>
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-3">
+							<div class="position-relative form-group">
+								<label class="control-label" >Student</label>
+								<input type="text" id="student_name" name="student_name" class="form-control col-lg-12" />
+								<input type="hidden" id="student_id" name="student_id"/>
+							</div>
+						</div>
+						<div class="col-md-1">
 							<div class="position-relative form-group">
 								<label class="control-label" >&nbsp;</label>
 								<div class="col-md-8">
 									@if($actions['view_permisiion']>0)
-										<button type="submit" id="show_batch_status_report" class="btn btn-success btn-lg">Show</button>      
+										<button type="submit" id="show_schedule_collection_status_report" class="btn btn-success btn-lg">Show</button>      
 									</div>              
 								@endif 
 							</div>								
@@ -81,21 +84,37 @@
 		<div class="main-card mb-3 card" >
 			<div class="card-body" >
 				<div id='report-data' style="display: none">
-					<table class="table table-bordered table-hover batch_table" id="batch_table" style="width:100% !important"> 
+					<table class="table table-bordered report-table-bordered table-hover schedule_collection_table " id="schedule_collection_table" style="width:100% !important"> 
 						<thead>
 							<tr>
-								<th class="text-center">Batch Name</th>										
-								<th>Course Name</th>		
-								<th class="text-center">Start Date</th>
-								<th class="text-center">End Date</th>								
-								<th class="text-center">Student Limit</th>
-								<th class="text-center">Enrolled Students</th>	
-								<th class="text-center">Fee</th>
-								<th class="text-center">Status</th>
-							</tr>		
+								<th>Student</th>												
+								<th>Course</th>										
+								<th class="text-center">Installment</th>	
+								<th class="text-center">Payment Month</th>	
+								<th class="text-center">Paid Date</th>
+								<th class="text-center">Paid By</th>								
+								<th class="text-center">Invoice No.</th>	
+								<th class="text-center">Payment Status</th>
+								<th class="text-center">Payable Amount</th>
+								<th class="text-right">Paid Amount</th>									
+							</tr>
 						</thead>
 						<tbody>
-						</tbody>						
+						</tbody>
+						<tfoot>
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th>Total</th>										
+								<th class="text-right"></th>									
+							</tr>
+						</tfoot>
 					</table>
 				</div>		
 			</div>

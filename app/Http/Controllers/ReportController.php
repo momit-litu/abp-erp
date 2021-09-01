@@ -12,6 +12,7 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 use Illuminate\Http\Response;
+use App\Models\StudentPayment;
 use App\Models\ExpneseCategory;
 
 
@@ -115,7 +116,6 @@ class ReportController extends Controller
 	}
  
 
-	
     public function studentReport()
     {
         $data['page_title']     = $this->page_title;
@@ -146,7 +146,7 @@ class ReportController extends Controller
             $studentSQL->where('status','=',$request->status);
          if($request->study_mode != "All")  
             $studentSQL->where('study_mode','=',$request->study_mode);
-        *
+
         $studentes = $studentSQL->get();
         
         $return_arr = array();
@@ -168,6 +168,198 @@ class ReportController extends Controller
         return json_encode(array('data'=>$return_arr));	 
 	}
  
+
+    public function paymentScheduleReport()
+    {
+        $data['page_title']     = $this->page_title;
+        $data['module_name']    = "Reports";
+        $data['sub_module']     = "Payment Schedule Report";
+
+        $admin_user_id          = Auth::user()->id;
+        $view_action_id         = 100;
+        $view_permisiion        = $this->PermissionHasOrNot($admin_user_id, $view_action_id);
+        $data['actions']['view_permisiion'] = $view_permisiion;
+
+        return view('report.payment-schedule-report', $data);
+    }
+
+	public function paymentScheduleReportList(Request $request)
+    {
+		$paymentSQL  =  StudentPayment::with('enrollment','enrollment.batch.course');
+
+        if($request->from_date != "")
+            $paymentSQL->where('last_payment_date','>=',$request->from_date);
+        if($request->to_date != "")
+            $paymentSQL->where('last_payment_date','<=',$request->to_date);
+        if($request->payment_status != "All")  
+            $paymentSQL->where('payment_status','=',$request->payment_status);
+       
+        if($request->student_id != "")  {
+            $student_id = $request->student_id;
+            $paymentSQL->whereHas('enrollment.student', function($query) use ($student_id){
+                $query->where('id',$student_id);
+            });
+        }
+        else
+            $paymentSQL->with('enrollment.student');
+
+
+        if($request->batch_id != "") {
+            $batch_id = $request->batch_id;
+            $paymentSQL->whereHas('enrollment.batch', function($query) use ($batch_id){
+                $query->where('id',$batch_id);
+            });
+        }
+        else
+            $paymentSQL->with('enrollment.batch');
+            
+     
+
+        $payments = $paymentSQL->orderBy('created_at','desc')->get();
+        
+        $return_arr = array();
+        foreach($payments as $payment){
+            $data['student_name']   =  $payment->enrollment->student->name." ".$payment->enrollment->student->student_no; 
+            $data['course_name']    = $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
+            $data['installment']    = $payment->installment_no; 
+            $data['payment_month']  = date('M y', strToTime($payment->last_payment_date)); 
+            $data['paid_date']      = $payment->paid_date; 
+			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";
+			$data['payable_amount'] = $payment->payable_amount;
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));	 
+	}  
+
+
+    public function paymentCollectionReport()
+    {
+        $data['page_title']     = $this->page_title;
+        $data['module_name']    = "Reports";
+        $data['sub_module']     = "Payment Schedule Report";
+
+        $admin_user_id          = Auth::user()->id;
+        $view_action_id         = 101;
+        $view_permisiion        = $this->PermissionHasOrNot($admin_user_id, $view_action_id);
+        $data['actions']['view_permisiion'] = $view_permisiion;
+
+        return view('report.payment-collection-report', $data);
+    }
+
+	public function paymentCollectionReportList(Request $request)
+    {
+		$paymentSQL  =  StudentPayment::with('enrollment','enrollment.batch.course');
+
+        if($request->from_date != "")
+            $paymentSQL->where('last_payment_date','>=',$request->from_date);
+        if($request->to_date != "")
+            $paymentSQL->where('last_payment_date','<=',$request->to_date);
+        /*if($request->payment_status != "All")  
+            $paymentSQL->where('payment_status','=',$request->payment_status);
+       */
+        if($request->student_id != "")  {
+            $student_id = $request->student_id;
+            $paymentSQL->whereHas('enrollment.student', function($query) use ($student_id){
+                $query->where('id',$student_id);
+            });
+        }
+        else
+            $paymentSQL->with('enrollment.student');
+
+
+        if($request->batch_id != "") {
+            $batch_id = $request->batch_id;
+            $paymentSQL->whereHas('enrollment.batch', function($query) use ($batch_id){
+                $query->where('id',$batch_id);
+            });
+        }
+        else
+            $paymentSQL->with('enrollment.batch');
+            
+        $payments = $paymentSQL->where('payment_status','!=','Unpaid')->orderBy('created_at','desc')->get();
+        
+        $return_arr = array();
+        foreach($payments as $payment){
+            $data['student_name']   =  $payment->enrollment->student->name." ".$payment->enrollment->student->student_no; 
+            $data['course_name']    = $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
+            $data['installment']    = $payment->installment_no; 
+            $data['payment_month']  = date('M y', strToTime($payment->last_payment_date)); 
+            $data['paid_date']      = $payment->paid_date; 
+            $data['paid_type']      = $payment->paid_type; 
+            $data['reference_no']   = $payment->payment_refference_no; 
+            $data['invoice_no']     = $payment->invoice_no; 
+			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";  
+			$data['paid_amount'] = $payment->paid_amount;
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));	 
+	}  
+
+    public function scheduleCollectionReport()
+    {
+        $data['page_title']     = $this->page_title;
+        $data['module_name']    = "Reports";
+        $data['sub_module']     = "Expense Vs Income";
+
+        $admin_user_id          = Auth::user()->id;
+        $view_action_id         = 102;
+        $view_permisiion        = $this->PermissionHasOrNot($admin_user_id, $view_action_id);
+        $data['actions']['view_permisiion'] = $view_permisiion;
+
+        return view('report.schedule-collection-report', $data);
+    }
+
+	public function scheduleCollectionReportList(Request $request)
+    {
+		$paymentSQL  =  StudentPayment::with('enrollment','enrollment.batch.course');
+
+        if($request->from_date != "")
+            $paymentSQL->where('last_payment_date','>=',$request->from_date);
+        if($request->to_date != "")
+            $paymentSQL->where('last_payment_date','<=',$request->to_date);
+        /*if($request->payment_status != "All")  
+            $paymentSQL->where('payment_status','=',$request->payment_status);
+       */
+        if($request->student_id != "")  {
+            $student_id = $request->student_id;
+            $paymentSQL->whereHas('enrollment.student', function($query) use ($student_id){
+                $query->where('id',$student_id);
+            });
+        }
+        else
+            $paymentSQL->with('enrollment.student');
+
+
+        if($request->batch_id != "") {
+            $batch_id = $request->batch_id;
+            $paymentSQL->whereHas('enrollment.batch', function($query) use ($batch_id){
+                $query->where('id',$batch_id);
+            });
+        }
+        else
+            $paymentSQL->with('enrollment.batch');
+            
+        $payments = $paymentSQL->orderBy('created_at','desc')->get();
+        
+        
+        //dd($payments);
+        $return_arr = array();
+        foreach($payments as $payment){
+            $data['student_name']   =  $payment->enrollment->student->name." ".$payment->enrollment->student->student_no; 
+            $data['course_name']    = $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
+            $data['installment']    = $payment->installment_no; 
+            $data['payment_month']  = date('M y', strToTime($payment->last_payment_date)); 
+            $data['paid_date']      = $payment->paid_date; 
+            $data['paid_type']      = $payment->paid_type; 
+            $data['invoice_no']     = $payment->invoice_no; 
+			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";           
+			$data['payable_amount'] = $payment->payable_amount;
+            $data['paid_amount']    = $payment->paid_amount;
+
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));	 
+	}  
 
 	public function expenseReport()
     {
