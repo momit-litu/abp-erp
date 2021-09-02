@@ -14,15 +14,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-
+use App\Traits\StudentNotification;
 
 class AuthController extends Controller
 {
-    /**
-     * Class constructor.
-     * get current route name for page title.
-     *
-     */
+    use StudentNotification; 
+
     public function __construct(Request $request){
         $this->page_title 	= $request->route()->getName();
         $description 		= \Request::route()->getAction();
@@ -242,19 +239,35 @@ class AuthController extends Controller
                     $group_member_data->user_id		= $studentUser->id;
                     $group_member_data->status		= 1;
                     $group_member_data->save();
-                }
-
-
+                }                
                 DB::commit();
-                return redirect('login')->with('message',"Registration Success. Please Check your email to confirm registration");
+                $this->registrationEmail($student->id);
+                return redirect('login')->with('message',"Registration on process. Please Check your email to confirm registration");
               }
               catch (\Exception $e){
 				DB::rollback();
-                return redirect()->back()->with('errormessage',"Registration Success. Please Check your email to confirm registration");
+                return redirect()->back()->with('errormessage',"Registration faild. Please try again");
 			}
         }
     }
 
+    public function registrationComplete($id)
+    {
+        $student = Student::find($id);
+        if(!empty($student)){
+            $student->registration_completed = 'Yes';
+            $student->update();
+            $this->registrationConfirmEmail($student->id);
+            return redirect('login')->with('message',"Registration completed. Now you can login");
+        }
+        return redirect('error')->with('errormessage',"Invalid student request");
+    }
+
+    
+    public function errorRequest()
+    {
+        return view('auth.error');
+    }
 
     /**
      * creating form for new password
@@ -277,7 +290,6 @@ class AuthController extends Controller
         } else return redirect('auth/forget/password')->with('errormessage',"Sorry invalid token!");
 
     }
-
 
     /**
      * Set new password according to user

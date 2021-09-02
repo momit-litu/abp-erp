@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Auth;
-use Validator;
-use Session;
 use DB;
+use Auth;
+use Session;
+use Validator;
 use \App\Models\User;
-use App\Models\UserGroup;
-use App\Models\UserGroupMember;
-use App\Models\UserGroupPermission;
-use App\Models\WebAction;
 use \App\Models\Course;
-//use \App\Models\StudentCourse;
 use \App\Models\Student;
-
+use App\Models\UserGroup;
+use App\Models\WebAction;
+use Illuminate\Http\Request;
 use App\Traits\HasPermission;
+//use \App\Models\StudentCourse;
+use App\Models\UserGroupMember;
+
+use App\Models\UserGroupPermission;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -525,6 +526,7 @@ class AdminController extends Controller
     public function profileInfo(){
     	$id 			= Auth::user()->id;
     	$profile_info 	= User::get()->where('id',$id);
+		
     	return  json_encode($profile_info);
     }
 
@@ -596,7 +598,9 @@ class AdminController extends Controller
 
 	public function updatePassword(Request $request){
 		$rule = [
-            'current_password' => 'Required|max:255',
+          //  'current_password' => 'Required|max:255',
+			'new_password' => 'Required|max:255',
+			'confirm_password' => 'Required|max:255',
         ];
         $validation = Validator::make($request->all(), $rule);
         if ($validation->fails()) {
@@ -608,15 +612,10 @@ class AdminController extends Controller
 			try{
 				DB::beginTransaction();
 				$id = $request->change_pass_id;
-				$current_password = bcrypt($request->current_password);
-
-				$column_value = [
-					'password'=>$current_password,
-				];
-
-				$data = User::find($id);
-				if ($current_password == $data['password']) {
-					$data->update($column_value);
+				$user = User::find($id);
+				if ($request->new_password == $request->confirm_password) {
+					$user->password = bcrypt($request->new_password);
+					$user->update();
 					DB::commit();
 					$return['result'] = "1";
 					return json_encode($return);
@@ -629,7 +628,7 @@ class AdminController extends Controller
 			catch (\Exception $e){
 				DB::rollback();
 				$return['result'] = "0";
-				$return['errors'][] ="Faild to save";
+				$return['errors'][] =$e." Faild to save";
 				return json_encode($return);
 			}
 		}

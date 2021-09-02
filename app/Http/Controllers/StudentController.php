@@ -193,7 +193,6 @@ class StudentController extends Controller
             $json[] = array('id' => "0", 'label' => "Not Found !!!");
         }
         return json_encode($json);
-
     }
 
     public function createOrEdit(Request $request)
@@ -216,7 +215,6 @@ class StudentController extends Controller
 
         return $response_data;
     }
-
 
     private function createStudent($request, $photo, $documents)
     {
@@ -272,13 +270,14 @@ class StudentController extends Controller
                     'current_emplyment' => $request['current_emplyment'],
                     'last_qualification' => $request['last_qualification'],
                     'how_know' => $request['how_know'],
+                    'registration_completed' => "Yes",
                     'passing_year' => $request['passing_year'],
                     'user_profile_image' => $profileImage,
                     'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
                 ]);
 
                 if($student){
-                    $student->student_no =str_pad($student->id,5,'0',STR_PAD_LEFT);
+                    $student->student_no =($request['student_no']=="")?str_pad($student->id,5,'0',STR_PAD_LEFT):$request['student_no'];
                     $student->save();
 
                     // create a student type user
@@ -306,7 +305,6 @@ class StudentController extends Controller
                             $documentFullName = $document->getClientOriginalName().time(). '.' . $ext;
                             $upload_path = 'assets/images/student/documents/';
                             $success = $document->move($upload_path, $documentFullName);
-
                             $studentDocument = StudentDocument::create([
                                 'student_id'	=> $student->id,
                                 'document_name'	=> $documentFullName,
@@ -315,7 +313,7 @@ class StudentController extends Controller
                         }
                     }
                 }
-
+                $this->registrationConfirmEmail($student->id);
                 DB::commit();
                 $return['response_code'] = 1;
                 $return['message'] = "Student saved successfully";
@@ -451,6 +449,5 @@ class StudentController extends Controller
             return json_encode($return);
         }
     }
-
-
+    
 }

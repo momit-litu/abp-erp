@@ -61,12 +61,12 @@
 				</a>
 			</li>
 			<li class="nav-item" id="change_pass_menu_tab">
-				<a role="tab" class="nav-link show" href="#change_pass" id="change_pass_tab" data-toggle="tab"  aria-selected="false">
+				<a role="tab" class="nav-link show" href="#change_pass" id="change_password" data-toggle="tab"  aria-selected="false">
 					<span>Change Password</span>
 				</a>
 			</li>
 			<li class="nav-item" >
-				<a role="tab" class="nav-link show "  data-toggle="tab" href="#all_notification_div" id="notification_tab" aria-selected="true">
+				<a role="tab" class="nav-link show "  data-toggle="tab" href="#all_notification_div" id="notification" aria-selected="true">
 					<span>Notification</span>
 				</a>
 			</li>
@@ -160,7 +160,7 @@
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
-												<label for="company_name" class="">Address<span class="required">*</span></label>
+												<label for="company_name" class="">Address</label>
 												<input type="text" id="address" name="address" class="form-control col-lg-12" />
 											</div>
 										</div>
@@ -254,11 +254,5 @@
 @endsection
 
 @section('JScript')
-
-	<script>
-		var profile_image_url = "<?php echo asset('assets/images/user/admin'); ?>";
-	</script>
-
 	<script src="{{ asset('assets/js/page-js/admin/profile.js')}}"></script>
-
 @endsection

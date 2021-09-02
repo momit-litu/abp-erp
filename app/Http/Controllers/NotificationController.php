@@ -90,8 +90,7 @@ class NotificationController extends Controller
                 if(isset($request->student_ids))
                     $mobileNos =implode(',',  $request->student_ids);
 
-                
-
+        
                 echo $mobileNos;
                 dd($request->all());
                 //$paymentDetails = $this->studentPayment->getPaymentDetailByPaymentId($request->payment_id);
@@ -127,8 +126,8 @@ class NotificationController extends Controller
             $validation = \Validator::make($request->all(), $rule);
 
             if($validation->fails()){
-                $return['response_code'] = "0";
-				$return['errors'] = $validation->errors();
+                $return['response_code']    = "0";
+				$return['errors']           = $validation->errors();
 				return json_encode($return);
             }
             else{
@@ -143,15 +142,15 @@ class NotificationController extends Controller
                 $response = json_decode($this->SMSService->sendSMS($smsParam), true);
                 If($response['isError']) throw new Exception($response['message']);
 				DB::commit();
-				$return['response_code'] = 1;
-				$return['message'] = "SMS sent successfully";
+				$return['response_code']    = 1;
+				$return['message']          = "SMS sent successfully";
 				return json_encode($return);
             }
         } 
 		catch (\Exception $e){
 			DB::rollback();
-			$return['response_code'] 	= 0;
-			$return['message'] = $e->getMessage();
+			$return['response_code'] = 0;
+			$return['message']       = $e->getMessage();
 			return json_encode($return);
 		}
     }

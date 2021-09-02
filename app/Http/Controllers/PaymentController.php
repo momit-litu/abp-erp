@@ -17,15 +17,15 @@ use Illuminate\Http\Response;
 use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
 
-use App\Models\StudentRevisePayment;
-use App\Traits\CustomerNotification;
-use Illuminate\Support\Facades\File;
+use App\Traits\StudentNotification;
 use App\Models\NotificationTemplate;
+use App\Models\StudentRevisePayment;
+use Illuminate\Support\Facades\File;
 
 class PaymentController extends Controller
 {
     use HasPermission;
-    use CustomerNotification; 
+    use StudentNotification; 
     //public $studentPayment;
 	public function __construct(Request $request)
     {
@@ -66,7 +66,8 @@ class PaymentController extends Controller
         foreach($payments as $payment){
             $data['id'] 		    = $payment->id;            
 			$data['student_name']   =  "<a href='javascript:void(0)' onclick='studentView(".$payment->enrollment->student->id.")' />".$payment->enrollment->student->student_no.'-'.$payment->enrollment->student->name.' ('.$payment->enrollment->student->email.")</a>"; 
-            $data['course_name']    = "<a href='javascript:void(0)' onclick='batchView(".$payment->enrollment->batch->id.")' />".$payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name."</a>";
+            $data['course_name']    = "<a href='javascript:void(0)' onclick='batchView(".$payment->enrollment->batch->id.")' />".$payment->enrollment->batch->course->title."</a>";
+            $data['batch_name']      = $payment->enrollment->batch->batch_name; 
             $data['installment']      = $payment->installment_no; 
             $data['payment_month']  = ($payment->paid_date==null)?date('M y', strToTime($payment->last_payment_date)):date('M y', strToTime($payment->paid_date)); 
             $data['paid_date']      = $payment->paid_date; 
@@ -283,13 +284,19 @@ class PaymentController extends Controller
     public function emailInvoice($id)
     {
 		if($id=="") return false;
-        $this->invoiceNotification($id); 
+        $this->invoiceEmail($id);          
 		return true;
     }
 
+    public function emailRevisedPayment($id)
+    {
+		if($id=="") return false;
+        $this->paymentRevisedEmail($id); 
 
-
-
+        // $this->monthlyPaymentEmail(48);
+		return true;
+    }
+    
     
 }
 

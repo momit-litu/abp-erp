@@ -430,18 +430,18 @@
                                                 </li>
                                                 <li class="nav-item">
                                                     @if(\Auth::check())
-                                                    <a href="{{ url('my/profile?tab=change_password') }}" class="nav-link">Change Password </a>
+                                                    <a href="{{ url('profile?tab=change_password') }}" class="nav-link">Change Password </a>
                                                     @endif
                                                 </li>
-                                                <li class="nav-item">
+                                                <!--<li class="nav-item">
                                                     
                                                     <a href="javascript:void(0);" class="nav-link">Messages
                                                         <div class="ml-auto badge badge-warning">512
                                                         </div>
                                                     </a>
-                                                </li>
+                                                </li>-->
                                                 <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Notifications
+                                                    <a href="{{ url('profile?tab=notification') }}" class="nav-link">Notifications
                                                         <div class="ml-auto badge badge-danger">12
                                                         </div>
                                                     </a>

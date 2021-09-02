@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Setting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
@@ -9,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 
-class CustomerInvoice extends Mailable
+class studentRegistrationConfirmMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,9 +19,9 @@ class CustomerInvoice extends Mailable
      *
      * @return void
      */
-    public function __construct($invoice)
+    public function __construct($student)
     {
-        $this->invoice 	= $invoice;
+        $this->student 	= $student;
     }
 
     /**
@@ -31,11 +32,12 @@ class CustomerInvoice extends Mailable
     public function build()
     {
        // return $this->view('view.name');
-       Log::debug('step3');
-        return $this->subject('ABPBD Incoice')
-            ->markdown('mails.customer-invoice')
+        $settings = Setting::first();
+        return $this->subject($settings['company_name'].' student registration confirmation')
+            ->markdown('mails.student-registration-confirm')
             ->with([
-                'invoice' => $this->invoice,
+                'student' => $this->student,
+                'settings' => $settings
             ]);
     }
 }

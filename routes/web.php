@@ -78,6 +78,8 @@ Route::group(['prefix' => 'portal'], function () {
 #register
 Route::get('auth/register',array('as'=>'Registration' ,  'uses' =>'AuthController@registration'));
 Route::post('auth/register',array('as'=>'Registration' , 'uses' =>'AuthController@registrationSave'));
+Route::get('confirm/registration/{id}',array('as'=>'Registration' ,  'uses' =>'AuthController@registrationComplete'));
+Route::get('error',array('as'=>'Registration' ,  'uses' =>'AuthController@errorRequest'));
 
 #ForgetPassword
 Route::get('auth/forget/password',array('as'=>'Forgot Password' , 'uses' =>'AuthController@forgetPasswordAuthPage'));
@@ -196,7 +198,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/payment/delete/{id}',array('as'=>'Payment Delete' , 'action_id'=>'89', 'uses' =>'PaymentController@destroy'));
 	
 	Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'action_id'=>'89', 'uses' =>'PaymentController@emailInvoice'));
-	
+	Route::get('/email/payment-revised/{id}',array('as'=>'Revised Payment Email' , 'action_id'=>'91', 'uses' =>'PaymentController@emailRevisedPayment'));
 
 	//Payment Schedule
 	Route::get('/payment-schedule',array('as'=>'Payment Schedule', 'action_id'=>'90', 'uses' =>'PaymentController@scheduleIndex'));

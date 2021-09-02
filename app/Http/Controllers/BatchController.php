@@ -147,7 +147,6 @@ class BatchController extends Controller
                 if($batchStudent){
                     $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
                     $batchFee->batch->update();
-                    
                     foreach($batchFee->installments as $key => $installment){
                         if($key == 0) 
                             $last_payment_date= date('Y-m-d');
@@ -166,6 +165,7 @@ class BatchController extends Controller
                 }
              }				
             DB::commit();
+            $this->enrollmentEmail($batchStudent->id); 
             $return['response_code'] = 1;
             $return['total_enrolled_student'] = $batchFee->batch->total_enrolled_student;
             $return['student'] = Student::findOrFail($request['student_id']);

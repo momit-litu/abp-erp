@@ -48,9 +48,21 @@ if($.trim($('#session_message').html())!=""){
 }
 
 
+// load the specific tab from url
+var base_url = window.location.href
+var url_info = base_url.split('?');
+
+if(url_info.length>1){
+	var url_param = url_info[1];
+	var url_param_arr = url_param.split('=');
+	if(url_param_arr[1].length>0 && url_param_arr[0]=='tab'){
+		$('#'+url_param_arr[1]).trigger('click');
+	}
+}
+
+
 
 const editors = {};
-
 
 function createEditor( elementId ) {
     return ClassicEditor

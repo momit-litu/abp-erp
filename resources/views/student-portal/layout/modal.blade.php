@@ -323,8 +323,8 @@
                                     <div class="form-row">                                            
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
-                                                <label>Passing Year <span class="required">*</span></label>
-                                                <input type="date" required id="passing_year" name="passing_year"  class="form-control col-lg-12"/>
+                                                <label>Passing Year</label>
+                                                <input  type="date"  required id="passing_year" name="passing_year"  class="form-control col-lg-12"/>
                                             </div>
                                         </div> 
                                         <div class="col-md-6">

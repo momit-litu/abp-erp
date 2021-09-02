@@ -49,6 +49,7 @@
 							<th>ID</th>
 							<th>Student Name</th>
 							<th>Course Title</th>	
+							<th>Batch</th>	
 							<th>Installment</th>
 							<th>Payment Month</th>												
 							<th>Payment Date </th>
