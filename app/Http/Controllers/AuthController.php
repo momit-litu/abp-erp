@@ -257,7 +257,10 @@ class AuthController extends Controller
         if(!empty($student)){
             $student->registration_completed = 'Yes';
             $student->update();
+           
+            $this->registrationCompletedNotification($student);
             $this->registrationConfirmEmail($student->id);
+
             return redirect('login')->with('message',"Registration completed. Now you can login");
         }
         return redirect('error')->with('errormessage',"Invalid student request");

@@ -166,6 +166,9 @@ class BatchController extends Controller
              }				
             DB::commit();
             $this->enrollmentEmail($batchStudent->id); 
+            $batchStudent = BatchStudent::with('student','batch','batch.course')->find($batchStudent->id);
+            $this->courseEnrollmentNotificationForStudent($batchStudent); 
+
             $return['response_code'] = 1;
             $return['total_enrolled_student'] = $batchFee->batch->total_enrolled_student;
             $return['student'] = Student::findOrFail($request['student_id']);

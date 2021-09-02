@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use App\Models\User;
 use App\Models\Batch;
 use App\Models\Level;
 use App\Models\Course;
@@ -15,12 +16,13 @@ use App\Mail\customerInvoice;
 use App\Traits\HasPermission;
 use Illuminate\Http\Response;
 use App\Models\StudentPayment;
-use App\Models\BatchFeesDetail;
 
+use App\Models\BatchFeesDetail;
 use App\Traits\StudentNotification;
 use App\Models\NotificationTemplate;
 use App\Models\StudentRevisePayment;
 use Illuminate\Support\Facades\File;
+use App\Notifications\newPaymentByStudent;
 
 class PaymentController extends Controller
 {
@@ -143,7 +145,6 @@ class PaymentController extends Controller
         else{
             if($edit_id == "" ||  $edit_id == $payment_id){
                 $response_data =  $this->studentPayment->savePayment($request->all());
-                $this->invoiceNotification($edit_id); 
             }
             else{
                 $removePaymentResponse =  $this->studentPayment->removePayment($request->input('edit_id'));
@@ -283,6 +284,11 @@ class PaymentController extends Controller
 
     public function emailInvoice($id)
     {
+       // $batchStudent = BatchStudent::with('student','batch','batch.course')->find(33);
+        //$this->courseEnrollmentNotificationForAdmin($batchStudent); 
+       // $this->courseEnrollmentNotificationForStudent($batchStudent); 
+
+       // die;
 		if($id=="") return false;
         $this->invoiceEmail($id);          
 		return true;
@@ -297,6 +303,8 @@ class PaymentController extends Controller
 		return true;
     }
     
+
+
     
 }
 

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CertificateClaim extends Notification
+class newPaymentByStudentOwn extends Notification
 {
     use Queueable;
 
@@ -45,17 +45,11 @@ class CertificateClaim extends Notification
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
     }
-	
-	public function toDatabase($notifiable){
-		if($this->param->type == 'Claimed'){
-			$messageType = "Success";
-			$message	 = $this->param->totalCertificateNo." new certificate has been claimed by ". $this->param->centerName;
-		}
-		else if($this->param->type == 'Given'){
-			$messageType = "Success";
-			$message	 = " Certificate has been provided for ". $this->param->learnerName;
-		}
-		
+
+    public function toDatabase($notifiable){
+		$messageType = "Success";
+		$message	 = "Payment has been successfull of "."TK ".$this->param->paymentAmount;
+
         return [
 			'Type'		=>	$messageType,
 			'Message'	=>	$message

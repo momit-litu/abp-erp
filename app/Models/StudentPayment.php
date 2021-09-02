@@ -6,10 +6,11 @@ use App\Models\BatchStudent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Traits\StudentNotification;
 
 class StudentPayment extends Model
 {
+    use StudentNotification; 
     protected $fillable= [
         'id', 'student_enrollment_id', 'installment_no','payable_amount','paid_amount', 'payment_status',  'paid_type', 'last_payment_date',  'paid_date', 'payment_refference_no', 'receive_status','details',  'attachment', 'invoice_no'
     ];
@@ -145,6 +146,9 @@ class StudentPayment extends Model
                 }
 
                 DB::commit();
+                $payment = $this->with('enrollment','enrollment.student')->find($studentPayment->id);
+                $this->studentPaymentPaidNotification($payment);
+                $this->invoiceEmail($payment->id);
                 $return['response_code'] = 1;
                 $return['message'] = "Payment saved successfully";
                 return json_encode($return);

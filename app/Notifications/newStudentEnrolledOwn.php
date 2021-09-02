@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewStudentResgistration extends Notification
+class newStudentEnrolledOwn extends Notification
 {
     use Queueable;
 
@@ -16,9 +16,9 @@ class NewStudentResgistration extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($param)
     {
-        //
+        $this->param = json_decode(json_encode($param), FALSE);
     }
 
     /**
@@ -29,7 +29,7 @@ class NewStudentResgistration extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return [/*'mail',*/'database'];
     }
 
     /**
@@ -45,6 +45,16 @@ class NewStudentResgistration extends Notification
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
     }
+
+    public function toDatabase($notifiable){
+		$messageType = "Success";
+		$message	 = "Enrollment has been successfull in  ". $this->param->courseName;
+
+        return [
+			'Type'		=>	$messageType,
+			'Message'	=>	$message
+		];
+	}
 
     /**
      * Get the array representation of the notification.

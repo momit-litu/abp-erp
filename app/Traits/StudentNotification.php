@@ -1,6 +1,7 @@
 <?php
 namespace App\Traits;
 
+use App\Models\User;
 use App\Models\Student;
 use App\Mail\InvoiceMail;
 use Illuminate\Support\Str;
@@ -13,13 +14,20 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\studentRegistrationMail;
 use App\Mail\monthlyPaymentRequestMail;
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\newStudentCreated;
+use App\Notifications\newStudentEnrolled;
 use Illuminate\Database\Eloquent\Builder;
+use App\Notifications\newPaymentByStudent;
 use App\Mail\studentRegistrationConfirmMail;
+use App\Notifications\newStudentEnrolledOwn;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\newPaymentByStudentOwn;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait StudentNotification
 {
+	// email notifications
     public function invoiceEmail($paymentId){
         $studentPayment = new StudentPayment();
 		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
@@ -56,5 +64,28 @@ trait StudentNotification
 		Log::debug('step4');
 	}
 	
+	//DB notifications
+	public function studentPaymentPaidNotification($payment){
+		$notifyUsers = User::where('status','1')->where('type','Admin')->get();
+		Notification::send($notifyUsers, new newPaymentByStudent(array('type'=>'Success', 'studentName'=>$payment->enrollment->student->name, 'paymentId'=>$payment->id, 'paymentAmount'=>$payment->paid_amount )));
 
+		$notifyUser = User::where('student_id',$payment->enrollment->student->id)->get();
+		Notification::send($notifyUser, new newPaymentByStudentOwn(array('type'=>'Success',  'paymentId'=>$payment->id, 'paymentAmount'=>$payment->paid_amount )));
+	}
+
+	public function registrationCompletedNotification($student){
+		$notifyUsers = User::where('status','1')->where('type','Admin')->get();
+        Notification::send($notifyUsers, new newStudentCreated(array('type'=>'Success', 'studentName'=>$student->name )));	
+	}
+
+	public function courseEnrollmentNotificationForAdmin($batchStudent){
+		$notifyUsers = User::where('status','1')->where('type','Admin')->get();
+        Notification::send($notifyUsers, new newStudentEnrolled(array('type'=>'Success', 'studentName'=>$batchStudent->student->name, 'courseName'=>$batchStudent->batch->course->title )));	
+	}
+
+	public function courseEnrollmentNotificationForStudent($batchStudent){
+		$notifyUser = User::where('student_id',$batchStudent->student->id)->get();
+        Notification::send($notifyUser, new newStudentEnrolledOwn(array('type'=>'Success', 'studentName'=>$batchStudent->student->name, 'courseName'=>$batchStudent->batch->course->title )));
+	
+	}
 }

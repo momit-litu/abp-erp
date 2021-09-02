@@ -24,6 +24,8 @@ use App\Traits\PortalHelperModel;
 use App\Models\UserGroupPermission;
 use App\Models\StudentRevisePayment;
 use Illuminate\Support\Facades\File;
+use App\Notifications\newPaymentByStudent;
+
 
 class StudentPortalController extends Controller
 {
@@ -188,6 +190,13 @@ class StudentPortalController extends Controller
                 }
              }				
             DB::commit();
+            
+            // Notifications nd email
+            $this->enrollmentEmail($batchStudent->id); 
+            $batchStudent = BatchStudent::with('student','batch','batch.course')->find($batchStudent->id);
+            $this->courseEnrollmentNotificationForAdmin($batchStudent); 
+            $this->courseEnrollmentNotificationForStudent($batchStudent); 
+
             $return['response_code'] = 1;
             $return['message'] = "Registration successfully";
             return json_encode($return);
@@ -408,6 +417,8 @@ class StudentPortalController extends Controller
             else{
                 throw new Exception('Something wrong!! Your payment process is failed');
             }
+
+            $this->studentPaymentPaidNotification($payment);
             $this->invoiceEmail($payment->id);  
             DB::commit();
 
