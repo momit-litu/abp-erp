@@ -18,7 +18,7 @@ use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
 
 use App\Models\StudentRevisePayment;
-use App\Traits\CustomerNotification;
+use App\Traits\StudentNotification;
 use Illuminate\Support\Facades\File;
 use App\Models\NotificationTemplate;
 use App\Services\SMSService;
@@ -27,9 +27,9 @@ use Exception;
 class NotificationController extends Controller
 {
     use HasPermission;
-    use CustomerNotification; 
+    use StudentNotification; 
     public $SMSService;
-    //public $studentPayment;
+    public $studentPayment;
 	public function __construct(Request $request, SMSService $SMSService)
     {
         $this->SMSService = $SMSService;
@@ -131,9 +131,9 @@ class NotificationController extends Controller
 				return json_encode($return);
             }
             else{
-				DB::beginTransaction();
+				DB::beginTransaction();                
                 $paymentDetails = $this->studentPayment->getPaymentDetailByPaymentId($request->payment_id);
-               
+                
                 $mobileNo = $paymentDetails['contact_no'];
                 $smsParam = array(
                     'commaSeperatedReceiverNumbers'=>$mobileNo,
@@ -154,4 +154,37 @@ class NotificationController extends Controller
 			return json_encode($return);
 		}
     }
+
+    public function sendDuePaymentEmail(Request $request)
+    {
+        try {
+            $rule = [ 
+				'payment_id' => 'required',
+                'details' 	 => 'required',
+            ];
+            $validation = \Validator::make($request->all(), $rule);
+
+            if($validation->fails()){
+                $return['response_code']    = "0";
+				$return['errors']           = $validation->errors();
+				return json_encode($return);
+            }
+            else{
+				DB::beginTransaction();
+                $this->duePaymentEmail($request->payment_id); 
+                
+				DB::commit();
+				$return['response_code']    = 1;
+				$return['message']          = "Sent successfully";
+				return json_encode($return);
+            }
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] = 0;
+			$return['message']       = $e->getMessage();
+			return json_encode($return);
+		}
+    }
+
 }

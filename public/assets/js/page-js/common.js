@@ -111,7 +111,7 @@ $(document).ready(function () {
 	set_notification_time_out_fn = () =>{
         setTimeout(function(){
             loadNotifications();
-        }, 7000);
+        }, 10000);
     }
 
 	view_notification = () =>{
@@ -137,6 +137,7 @@ $(document).ready(function () {
 			type:'GET',
 			async:true,
 			success: function(response){
+
 				response 					= JSON.parse(response);
 				totalUnreadNotifications	= response['totalUnreadNotifications'];
 				html = '';
@@ -149,22 +150,28 @@ $(document).ready(function () {
 					  minute: '2-digit',
 					});
 
-					var read_status_class 	= (notification.read_at==null)?"alert-danger":"";
-					html +=' <li class="'+read_status_class+'"> ' +
-							'<a href="javascript:void(0)"> ' +
-								/*'<span class="label label-primary"><i class="fa fa-user"></i></span> ' +*/
-								'<span class="message"> '+notification.data.Message+'</span> ' +
-								'<span class="time"> '+created_at+'</span> ' +
-							'</a> ' +
-							'</li>'
+					var read_status_class 	= (notification.read_at==null)?"danger":"success";
+					html +=`
+						<div class="vertical-timeline-item vertical-timeline-element">
+							<div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-`+read_status_class+`"> </i></span>
+								<div class="vertical-timeline-element-content bounce-in">
+
+									<p>`+notification.data.Message+`<br><span class="text-`+read_status_class+`">`+created_at+`</span></p><span class="vertical-timeline-element-date"></span>
+								</div>
+							</div>
+						</div>
+
+
+						`;
+					
 
 				})
 
 				$('#notificationCount').html(totalUnreadNotifications)
 				if(page ==0)
-					$('#notification_list').html(html)
+					$('#student_notification_div').html(html)
 				else
-					$('#notification_list').append(html);
+					$('#student_notification_div').append(html);
 				//console.log(response)
 
 			}

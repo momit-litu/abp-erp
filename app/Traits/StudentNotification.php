@@ -22,6 +22,7 @@ use App\Mail\studentRegistrationConfirmMail;
 use App\Notifications\newStudentEnrolledOwn;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\duePaymentNotification;
 use App\Notifications\newPaymentByStudentOwn;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -32,36 +33,41 @@ trait StudentNotification
         $studentPayment = new StudentPayment();
 		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
 		Mail::to($payment['student_email'])->send(new InvoiceMail($payment));
-		Log::debug('step4');
 	}
+
     public function registrationEmail($studentId){
         $student = Student::find($studentId);
 		Mail::to($student['email'])->send(new studentRegistrationMail($student));
-		Log::debug('step4');
 	}
+
 	public function enrollmentEmail($enrollmentId){
 		$studentPayments = BatchStudent::with('payments','student','batch','batch.course','batch_fee','batch_fee.installments')->find($enrollmentId);
 		Mail::to($studentPayments['student']['email'])->send(new studentEnrollmentMail($studentPayments));
-		Log::debug('step4');
 	}
 
 	public function paymentRevisedEmail($enrollmentId){
 		$studentPayments = BatchStudent::with('payments','student','batch','batch.course','batch_fee','batch_fee.installments')->find($enrollmentId);
 		Mail::to($studentPayments['student']['email'])->send(new paymentRevisedMail($studentPayments));
-		Log::debug('step4');
 	}
 
 	public function monthlyPaymentEmail($paymentId){
 		$studentPayment = new StudentPayment();
 		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
+		$this->duePaymentNotification($payment); 
 		Mail::to($payment['student_email'])->send(new monthlyPaymentRequestMail($payment));
-		Log::debug('step4');
+	}
+
+	
+	public function duePaymentEmail($paymentId){
+		$studentPayment = new StudentPayment();
+		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
+		$this->duePaymentNotification($payment); 
+		Mail::to($payment['student_email'])->send(new monthlyPaymentRequestMail($payment));
 	}
 
 	public function registrationConfirmEmail($studentId){
         $student = Student::find($studentId);
 		Mail::to($student['email'])->send(new studentRegistrationConfirmMail($student));
-		Log::debug('step4');
 	}
 	
 	//DB notifications
@@ -86,6 +92,14 @@ trait StudentNotification
 	public function courseEnrollmentNotificationForStudent($batchStudent){
 		$notifyUser = User::where('student_id',$batchStudent->student->id)->get();
         Notification::send($notifyUser, new newStudentEnrolledOwn(array('type'=>'Success', 'studentName'=>$batchStudent->student->name, 'courseName'=>$batchStudent->batch->course->title )));
-	
 	}
+
+	public function duePaymentNotification($payment){
+
+		/*$studentPayment = new StudentPayment();
+		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);*/
+		$notifyUser = User::where('student_id',$payment['student_id'])->get();
+		Notification::send($notifyUser, new duePaymentNotification(array('type'=>'Success',  'paymentId'=>$payment['id'], 'paymentAmount'=>$payment['paid_amount'] )));
+	}
+
 }

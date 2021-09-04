@@ -21,8 +21,9 @@ class StudentPayment extends Model
 
     public function getPaymentDetailByPaymentId($id)
     {
+
         $payment = StudentPayment::with('enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')->where('id',$id)->orderBy('created_at','desc')->first();
-        // dd($payment->enrollment->batch->course);
+        // dd($payment);
         $return_arr['id']                       =  $payment->id;
         $return_arr['student_id']               =  $payment->enrollment->student->id;
         $return_arr['only_student_name']        =  $payment->enrollment->student->name;

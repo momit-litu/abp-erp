@@ -28,7 +28,7 @@ class PaymentController extends Controller
 {
     use HasPermission;
     use StudentNotification; 
-    //public $studentPayment;
+    public $studentPayment;
 	public function __construct(Request $request)
     {
         $this->studentPayment =new StudentPayment();
@@ -287,7 +287,7 @@ class PaymentController extends Controller
        // $batchStudent = BatchStudent::with('student','batch','batch.course')->find(33);
         //$this->courseEnrollmentNotificationForAdmin($batchStudent); 
        // $this->courseEnrollmentNotificationForStudent($batchStudent); 
-
+       
        // die;
 		if($id=="") return false;
         $this->invoiceEmail($id);          

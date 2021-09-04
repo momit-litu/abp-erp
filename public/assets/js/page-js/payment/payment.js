@@ -261,7 +261,8 @@ $(document).ready(function () {
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Attachment :</strong></div>"+"<div class='col-lg-9 col-md-8'><a target='_blank' href='"+payment_attachment_url+"/"+data['attachment']+"'>"+data['attachment']+"</a></div></div>";
 				}
 				
-					
+				$('.email-button-lg').hide();
+				$('.print-button-lg').hide();
 				$('#myModalLabelLg').html('Installment Details');
 				$('#modalBodyLg').html(modalHtml);
 				$("#generic_modal_lg").modal();				
@@ -418,6 +419,8 @@ $(document).ready(function () {
 				});
 			}
 		});
+		$('.email-button-lg').hide();
+		$('.print-button-lg').hide();
 	}
 
 	//Delete Module
