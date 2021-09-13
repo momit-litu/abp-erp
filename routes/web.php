@@ -38,7 +38,7 @@ Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::get('auth/login',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@authPostLogin'));
 
-
+Route::get('/payment/{id}',array('as'=>'Payment Details' , 'uses' =>'PaymentController@show'));
 Route::post('/sslcommerz/success',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentSuccess'));
 Route::post('/sslcommerz/fail',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentFail'));
 
@@ -62,6 +62,7 @@ Route::group(['prefix' => 'portal'], function () {
 	
 
 		Route::get('/payments/{type}',array('as'=>'Payment List' , 	'uses' =>'StudentPortalController@showPaymentList'));
+
 		Route::post('/payment/revise',array('as'=>'Revise Payment' , 	'uses' =>'StudentPortalController@savePaymentRevise'));
 		Route::get('/checkout/{id}',array('as'=>'Payment Checkout', 'uses' =>'StudentPortalController@checkoutShow'));
 		
@@ -122,7 +123,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/notification',array('as'=>'All Notifications', 		'uses' =>'AdminController@profileIndex'));
 	Route::get('/notifications',array('as'=>'All Notifications', 		'uses' =>'AdminController@ajaxNotificationList'));
 	Route::get('/notifications/{page}',array('as'=>'Notifications', 	'uses' =>'AdminController@notificationHome'));
-	Route::get('/notification/view',array('as'=>'Notification Read', 	'uses' =>'AdminController@notificationRead'));
+	Route::get('/notification/view/{id}',array('as'=>'Notification Read', 	'uses' =>'AdminController@notificationRead'));
 	Route::get('/update-notification',array('as'=>'Read Notifications', 'uses' =>'AdminController@updateNotification'));
 
 });
@@ -193,7 +194,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	//Payments
 	Route::get('/payment',array('as'=>'Payment', 'action_id'=>'86', 'uses' =>'PaymentController@index'));
 	Route::get('/payments',array('as'=>'Payment List' ,'action_id'=>'86', 'uses' =>'PaymentController@showList'));
-	Route::get('/payment/{id}',array('as'=>'Payment Details' ,'action_id'=>'86', 'uses' =>'PaymentController@show'));
+	//Route::get('/payment/{id}',array('as'=>'Payment Details' ,'action_id'=>'86', 'uses' =>'PaymentController@show'));
 	Route::post('/payment',array('as'=>'Payment Entry' , 'action_id'=>'87', 'uses' =>'PaymentController@createOrEdit'));
 	Route::get('/payment/delete/{id}',array('as'=>'Payment Delete' , 'action_id'=>'89', 'uses' =>'PaymentController@destroy'));
 	

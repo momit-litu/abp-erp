@@ -25,9 +25,9 @@ class AdminController extends Controller
 
     public function __construct(Request $request)
     {
-        $this->page_title = $request->route()->getName();
-        $description = \Request::route()->getAction();
-        $this->page_desc = isset($description['desc']) ? $description['desc'] : $this->page_title;
+        $this->page_title 	= $request->route()->getName();
+        $description 		= \Request::route()->getAction();
+        $this->page_desc 	= isset($description['desc']) ? $description['desc'] : $this->page_title;
 		if($request->type != "Admin" && $request->type != "Student"){
 			//not working right now
 			return redirect()->route('Dashboard');
@@ -36,10 +36,10 @@ class AdminController extends Controller
 
 	public function index()
     {
-        $page_title = $this->page_title;
+        $page_title 		= $this->page_title;
 		$data['module_name']= "Dashboard";
 		$data['sub_module']	= "";
-		$data['studentName']	= "";
+		$data['studentName']= "";
 		$admin_user_id 		= Auth::user()->id;
 		$userType 			= Auth::user()->type;
 
@@ -130,10 +130,12 @@ class AdminController extends Controller
 	public function ajaxAdminEntry(Request $request){
 		$rule = [
             'first_name' 		=> 'Required|max:220',
-            'contact_no' 		=> 'Required|max:13',
-            'email' 			=> 'Required|email',
+            'contact_no' 		=> 'Required|max:11|unique:users,contact_no',
+            'email' 			=> 'Required|email|unique:users',
             'user_profile_image'=> 'mimes:jpeg,jpg,png,svg'
         ];
+
+		
         $validation = Validator::make($request->all(), $rule);
         if ($validation->fails()) {
 			$return['result'] = "0";
@@ -531,12 +533,15 @@ class AdminController extends Controller
     }
 
     public function updateProfile(Request $request){
+		$user 		= User::find($request->edit_profile_id);
+	//	dd($dd);
 		$rule = [
-            'first_name' 		=> 'Required|max:220',
-            'contact_no' 		=> 'Required|max:13',
-            'email' 			=> 'Required|email',
-            'user_profile_image'=> 'mimes:jpeg,jpg,png,svg'
+			'first_name' 		=> 'Required|max:220',
+            'contact_no' 		=> 'Required|max:11|unique:users,contact_no,'. $user->id,
+            'email' 			=> 'Required|email|unique:users,email,'. $user->id,
+            'user_profile_image'=> 'mimes:jpeg,jpg,png,svg',
         ];
+		
         $validation = Validator::make($request->all(), $rule);
         if ($validation->fails()) {
 			$return['result'] = "0";
@@ -555,9 +560,9 @@ class AdminController extends Controller
 			}
 			try{
 				DB::beginTransaction();
-
+				
 				$data = [
-					'name'	=> $request->first_name,
+					'first_name'			=> $request->first_name,
 					'contact_no'	=> $request->contact_no,
 					'email'			=> $request->email,
 					'remarks'		=> $request->remarks,
@@ -569,20 +574,17 @@ class AdminController extends Controller
 					$image_name 				= time();
 					$ext 						= $admin_image->getClientOriginalExtension();
 					$image_full_name 			= $image_name.'.'.$ext;
-					$upload_path 				= 'assets/images/user/admin/';
+					$upload_path 				= ($user->type=='Admin')?'assets/images/user/admin/':'assets/images/user/student/';
 					$success					= $admin_image->move($upload_path,$image_full_name);
 					$data['user_profile_image'] = $image_full_name;
 				}
-
-				$user 		= User::find($request->edit_profile_id);
 				$old_image 	= $user->user_profile_image;
+				$user->update($data);
+				
 				if (isset($admin_image) && $old_image!="") {
 					$delete_img = $upload_path.$old_image;
-					unlink($delete_img);
+					//unlink($delete_img);
 				}
-
-				$user->update($data);
-
 				DB::commit();
 				$return['result'] = "1";
 				return json_encode($return);
@@ -590,7 +592,7 @@ class AdminController extends Controller
 			catch (\Exception $e){
 				DB::rollback();
 				$return['result'] 	= "0";
-				$return['errors'][] ="Faild to save";
+				$return['errors'][] ="Faild to save! ".$e;
 				return json_encode($return);
 			}
 		}
@@ -640,8 +642,8 @@ class AdminController extends Controller
 	}
 
 	public function notificationHome($page){
-		$page_no= $page;
-        $limit 	= 2;
+		$page_no= ($page == 'latest')?1:$page;
+        $limit 	= 10;
         $start 	= ($page_no*$limit)-$limit;
         $end   	= $limit;
 
@@ -653,9 +655,10 @@ class AdminController extends Controller
 		return json_encode($data);
 	}
 
-	public function notificationRead(){
+	public function notificationRead($id){
 		$user = User::find(Auth::user()->id);
-		$user->unreadNotifications->markAsRead();
+		//$user->unreadNotifications->markAsRead();
+		$user->unreadNotifications->where('id', $id)->markAsRead();
 	}
 
 	public function ajaxNotificationList(){
@@ -664,14 +667,27 @@ class AdminController extends Controller
 
 		$return_arr = array();
 		foreach($notifications as $notification){
-			$notification['status']	=(is_null($notification->read_at))?"<strong class='text-danger'>Un-read</strong>":"Read";
+			//dd($notification->data['Type']);
+			$function= "";
+			if($notification->data['Type'] == 'Students') $function = "viewStudent(".$notification->data['Id'].")".';';
+			if($notification->data['Type'] == 'Payments') $function = "paymentInvoice(".$notification->data['Id'].")".';';
+			if($notification->data['Type'] == 'Courses') $function = "redirectCourseView(".$notification->data['Id'].")".';';
+
+			$seenMessage 	= ($notification->read_at==null)?"notificationSeen('".$notification->id."')":"";
+
+			$notification['status']	=(is_null($notification->read_at))?"<strong class='text-danger'>Unread</strong>":"Read";
 			$notification['type'] 	= $notification->notifiable_type;
-			$notification['message']= (!is_null($notification->read_at))?$notification->data['Message']:"<strong class='text-danger'>".$notification->data['Message']."</strong>";
+			$message = '<div style="cursor:pointer" onClick="'.$function.$seenMessage.'">';
+
+			$message .= (!is_null($notification->read_at))?$notification->data['Message']:"<strong class='text-danger'>".$notification->data['Message']."</strong>";
+			$message .= "</div>";
+			$notification['message']= $message;
 			$notification['date']	= date("Y-m-d h:m", strtotime($notification->created_at));
-			if(is_null($notification->read_at))
+			
+			/*if(is_null($notification->read_at))
 				$notification['actions'] .="<button onclick='notificationSeen(".$notification->id.")' id=edit_" . $notification->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             else 
-				$notification['actions'] .="";
+				$notification['actions'] .="";*/
 			
 			$return_arr[] 			= $notification;
 		}

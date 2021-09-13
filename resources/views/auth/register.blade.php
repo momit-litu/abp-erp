@@ -56,20 +56,20 @@
                             </div>
                             <div class="form-row">
                                 <div class="col-md-6">
-                                    <div class="position-relative form-group"><label for="exampleEmail" class="">Name<span class="text-danger">*</span></label><input name="name" id="name" placeholder="Name here..." type="text" class="form-control @error('name') is-invalid @enderror" ></div>
+                                    <div class="position-relative form-group"><label for="exampleEmail" class="">Name<span class="text-danger">*</span></label><input name="name" id="name" placeholder="Name here..." type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" ></div>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-6">
-                                    <div class="position-relative form-group"><label for="exampleEmail" class="">Email<span class="text-danger">*</span></label><input  recuired name="email" id="email" placeholder="Email here..." type="email" class="form-control @error('email') is-invalid @enderror"></div>
+                                    <div class="position-relative form-group"><label for="exampleEmail" class="">Email<span class="text-danger">*</span></label><input  recuired name="email" id="email" placeholder="Email here..." type="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" ></div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="position-relative form-group"><label for="examplePassword" class="">Contact No <span class="text-danger">*</span></label><input recuired name="contact" id="contact" placeholder="Contact No here..." type="text" class="form-control @error('contact') is-invalid @enderror"></div>
+                                    <div class="position-relative form-group"><label for="examplePassword" class="">Contact No <span class="text-danger">*</span></label><input recuired name="contact" id="contact" placeholder="Contact No here..." type="text" class="form-control @error('contact') is-invalid @enderror" value="{{ old('contact') }}" ></div>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-6">
-                                    <div class="position-relative form-group"><label for="examplePassword" class="">Password<span class="text-danger">*</span></label><input  recuired name="password" id="password" placeholder="Password here..." type="password" class="form-control @error('password') is-invalid @enderror"></div>
+                                    <div class="position-relative form-group"><label for="examplePassword" class="">Password<span class="text-danger">*</span></label><input  recuired name="password" id="password" placeholder="Password here..." type="password" class="form-control @error('password') is-invalid @enderror" ></div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group"><label for="examplePassword" class="">Confirm Password<span class="text-danger">*</span></label><input  recuired name="confirm_password" id="confirm_password" placeholder="Confirm Password ..." type="password" class="form-control @error('confirm_password') is-invalid @enderror"></div>

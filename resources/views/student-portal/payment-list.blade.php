@@ -125,7 +125,7 @@
                                                 <td class="text-center">{{$payment['last_payment_date']}}</td>
                                                 <td class="text-right">{{$payment['payable_amount']}}</td>
                                                 <td class="text-center">
-                                                    @if($payment['invoice_no'] == null)
+                                                    @if($payment['invoice_no'] != null)
                                                         <a href="javascript:void(0)" onclick="paymentInvoice({{$payment['id']}})" >{{$payment['invoice_no']}}</a>
                                                     @endif
                                                 </td>

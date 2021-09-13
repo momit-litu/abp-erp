@@ -47,11 +47,12 @@ class newPaymentByStudentOwn extends Notification
     }
 
     public function toDatabase($notifiable){
-		$messageType = "Success";
+		$messageType = "Payments";
 		$message	 = "Payment has been successfull of "."TK ".$this->param->paymentAmount;
 
         return [
 			'Type'		=>	$messageType,
+            'Id'	    =>	$this->param->paymentId,
 			'Message'	=>	$message
 		];
 	}

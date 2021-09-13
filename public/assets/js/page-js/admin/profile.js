@@ -121,6 +121,10 @@ $(document).ready(function () {
 							$("#my_profile_tab").trigger('click');
 							$("#change_pass_menu_tab").addClass('hidden');
 							profile_info();
+							$("#new_password").val("");
+							$("#confirm_password").val("");
+							$("#current_password").val("");
+							
 						}
 						$(window).scrollTop();
 					}	
@@ -142,12 +146,10 @@ $(document).ready(function () {
 			{ mData: 'message'},
 			{ mData: 'date' , className: "text-center"},
 			{ mData: 'status', className: "text-center"},
-			{ mData: 'actions', className: "text-center"},
 		],
 		"columnDefs": [
 			{ "width": "120px", "targets": 1 },
 			{ "width": "100px", "targets": 2 },
-			{ "width": "80px", "targets": 3 },
         ],
 		"fixedColumns": true
 	});

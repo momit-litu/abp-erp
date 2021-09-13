@@ -47,11 +47,12 @@ class newStudentEnrolled extends Notification
     }
 
     public function toDatabase($notifiable){
-		$messageType = "Success";
+		$messageType = "Students";
 		$message	 = $this->param->studentName." enrolled in  ". $this->param->courseName;
 
         return [
 			'Type'		=>	$messageType,
+            'Id'	    =>	$this->param->studentId,
 			'Message'	=>	$message
 		];
 	}

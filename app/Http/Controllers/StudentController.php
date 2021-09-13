@@ -223,8 +223,8 @@ class StudentController extends Controller
                 'name' => 'required|string',
                 'date_of_birth' => 'required',
                 'address' => 'required',
-                'contact_no' => 'Required|max:13',
-                'email' => 'Required|email',
+                'contact_no' 		=> 'Required|max:11|unique:student,contact_no',
+                'email' 			=> 'Required|email|unique:student,email',
                 'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',
                 'documents.*' => 'max:5000',
             ];
@@ -349,8 +349,8 @@ class StudentController extends Controller
                 'name' => 'required|string',
                 'date_of_birth' => 'required',
                 'address' => 'required',
-                'contact_no' => 'Required|max:13',
-                'email' => 'Required|email',
+                'contact_no' 		=> 'Required|max:11|unique:student,contact_no,'. $student->id,
+                'email' 			=> 'Required|email|unique:student,email,'. $student->id,
                 'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',
                 'documents.*' => 'max:5000',
             ];

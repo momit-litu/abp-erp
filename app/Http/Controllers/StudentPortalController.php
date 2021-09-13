@@ -25,12 +25,14 @@ use App\Models\UserGroupPermission;
 use App\Models\StudentRevisePayment;
 use Illuminate\Support\Facades\File;
 use App\Notifications\newPaymentByStudent;
+use App\Traits\StudentNotification;
 
 
 class StudentPortalController extends Controller
 {
     use HasPermission;
     use PortalHelperModel;
+    use StudentNotification;
     public function __construct(Request $request)
     {
         $this->studentPayment   = new StudentPayment();
@@ -142,7 +144,7 @@ class StudentPortalController extends Controller
     }
 
     public function studentEnroll(Request $request)
-    {        
+    { 
         $studentId 		= Auth::user()->student_id; 
         try {
             if($request['register_batch_id'] == "" || $request['batch_fees_id']==""){
@@ -192,10 +194,11 @@ class StudentPortalController extends Controller
             DB::commit();
             
             // Notifications nd email
-            $this->enrollmentEmail($batchStudent->id); 
+           
             $batchStudent = BatchStudent::with('student','batch','batch.course')->find($batchStudent->id);
             $this->courseEnrollmentNotificationForAdmin($batchStudent); 
             $this->courseEnrollmentNotificationForStudent($batchStudent); 
+            $this->enrollmentEmail($batchStudent->id); 
 
             $return['response_code'] = 1;
             $return['message'] = "Registration successfully";
@@ -253,6 +256,7 @@ class StudentPortalController extends Controller
                     return json_encode($return);
                 }
 
+                
                 $student->name = $request['name'];
                 $student->email = $request['student_email'];
                 $student->contact_no = $request['contact_no'];
@@ -266,13 +270,15 @@ class StudentPortalController extends Controller
                 $student->how_know = $request['how_know'];
                 $student->passing_year = $request['passing_year'];
                 $student->registration_completed = "Yes";
+
+               
                 $student->update();
 
                 $user->first_name = $request['name'];
                 $user->email = $request['student_email'];
                 $user->contact_no = $request['contact_no'];
                 $user->remarks = $request['remarks'];
-                $user->status = (isset($request['status'])) ? "Active" : 'Inactive';
+               // $user->status = (isset($request['status'])) ? "Active" : 'Inactive';
 
                 $StudentImage = $photo;
                 if (isset($StudentImage) && $StudentImage!="") {
@@ -409,8 +415,14 @@ class StudentPortalController extends Controller
                 $payment->paid_date      =  date('Y-m-d');
                 $payment->invoice_no    = $studentPayment->getNextInvoiceNo();
 
-                if($payment->update())
+                if($payment->update()){
                     $studentPayment->updateStudentFees($payment->student_enrollment_id); 
+                    if($payment->enrollment->status == 'Inactive'){
+                        $enrollment = BatchStudent::find($payment->enrollment->id);
+                        $enrollment->status = "Active";
+                        $enrollment->save();
+                    }
+                }                   
                 else
                     throw new Exception('Something wrong!! Please contact with ABP admin');
             }

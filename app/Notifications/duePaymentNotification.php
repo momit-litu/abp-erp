@@ -47,11 +47,12 @@ class duePaymentNotification extends Notification
     }
 
     public function toDatabase($notifiable){
-		$messageType = "Success";
+		$messageType = "Payments";
 		$message	 = " You have a due payment of "."TK ".$this->param->paymentAmount.". Please make the payment.";
 
         return [
 			'Type'		=>	$messageType,
+            'Id'	    =>	$this->param->paymentId,
 			'Message'	=>	$message
 		];
 	}

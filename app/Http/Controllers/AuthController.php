@@ -196,17 +196,18 @@ class AuthController extends Controller
     {
 
         $v = \Validator::make($request->all(), [
-            'name' => 'Required',
-            'email' => 'Required|email|unique:users',
-            'contact' => 'Required|max:255',
-            'password' => 'required|min:4',
-            'confirm_password' => 'required|same:password',
-            'terms_condition' =>'accepted'
+            'name'      => 'Required',
+            'email'     => 'Required|email|unique:users',
+            'contact'   => 'Required|max:11|unique:users,contact_no',
+            'password'  => 'required|min:4|',
+            'confirm_password'  => 'required|same:password',
+            'terms_condition'   =>'accepted'
         ]);
 
         if ($v->fails()) {
-            //dd($v);
-            return redirect()->back()->withErrors($v)->withInput();
+           // dd($v);
+           // return redirect()->back()->withErrors($v)->withInput();
+            return redirect()->back()->withErrors($v)->withInput($request->except('password'));
         }
         else{
               try{
@@ -214,10 +215,10 @@ class AuthController extends Controller
                 
                 // save the student
                 $student = Student::create([
-                    'name' => $request['name'],                   
-                    'email' => $request['email'],
-                    'contact_no' => $request['contact'],
-                    'register_type'=>'Self',
+                    'name'          => $request['name'],                   
+                    'email'         => $request['email'],
+                    'contact_no'    => $request['contact'],
+                    'register_type' =>'Self',
                     'registration_completed'=>'No'
                 ]);
                 if($student){

@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Mail\TestMail;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\UsersForgetPasswordMail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 
 /*******************************
@@ -166,14 +167,14 @@ class System extends Model
                 return \Redirect::back()->with('message',"Invalid User ID!");
             }
             $details = [
-            'user_info' => $user_info->first_name,
-            'reset_url' => $reset_url,
+                'user_info' => $user_info->first_name,
+                'reset_url' => $reset_url,
             ];
 
             $user_email = $users_email;
             $user_name = $user_info->first_name;
 
-            Mail::to($user_email, $user_name)->send( new TestMail($details));
+            Mail::to($user_email, $user_name)->send( new UsersForgetPasswordMail($details));
 
 //            Mail::send('forgot.forget-password-mail', $data, function($message) use ($user_email,$user_name) {
 //                $message->to($user_email,$user_name)->subject('Password Recovery');

@@ -87,6 +87,7 @@
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
                             <span class="icon-wrapper-bg bg-danger"></span>
                             <i class="icon text-danger icon-anim-pulse ion-android-notifications"></i>
+                            <!--<span class="badge badge-pill badge-danger">2</span>-->
                             <span class="badge badge-dot badge-dot-sm badge-danger">Notifications</span>
                         </span>
                     </button>
@@ -96,24 +97,24 @@
                                 <div class="menu-header-image opacity-1" style="background-image: url('assets/theme/assets/images/dropdown-header/city3.jpg');"></div>
                                 <div class="menu-header-content text-dark">
                                     <h5 class="menu-header-title">Notifications</h5>
-                                    <h6 class="menu-header-subtitle">You have <b>21</b> unread messages</h6>
+                                    <h6 class="menu-header-subtitle">You have <b id="notificationCount" class='text-danger'></b> unread messages</h6>
                                 </div>
                             </div>
                         </div>
                         <ul class="tabs-animated-shadow tabs-animated nav nav-justified tabs-shadow-bordered p-3">
                             <li class="nav-item">
                                 <a role="tab" class="nav-link active" data-toggle="tab" href="#tab-messages-header">
-                                    <span>Students</span>
+                                    <span>Students</span> <span id="student_count"></span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a role="tab" class="nav-link" data-toggle="tab" href="#tab-events-header">
-                                    <span>Payments</span>
+                                    <span>Payments</span>  <span id="payment_count"></span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a role="tab" class="nav-link" data-toggle="tab" href="#tab-errors-header">
-                                    <span>Notification</span>
+                                    <span>Notice</span>
                                 </a>
                             </li>
                         </ul>
@@ -123,7 +124,7 @@
                                     <div class="scrollbar-container">
                                         <div class="p-3">
                                             <div class="notifications-box">
-                                                <div class="vertical-time-simple vertical-without-time vertical-timeline vertical-timeline--one-column" id="student_notification_div">                                                    
+                                                <div class="vertical-time-simple vertical-without-time vertical-timeline vertical-timeline--animate" id="student_notification_div">                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -134,57 +135,8 @@
                                 <div class="scroll-area-sm">
                                     <div class="scrollbar-container">
                                         <div class="p-3">
-                                            <div class="vertical-without-time vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
-                                                <div class="vertical-timeline-item vertical-timeline-element">
-                                                    <div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-success"> </i></span>
-                                                        <div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">All Hands Meeting</h4>
-                                                            <p>Lorem ipsum dolor sic amet, today at <a href="javascript:void(0);">12:00 PM</a></p><span class="vertical-timeline-element-date"></span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="vertical-timeline-item vertical-timeline-element">
-                                                    <div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-warning"> </i></span>
-                                                        <div class="vertical-timeline-element-content bounce-in"><p>Another meeting today, at <b class="text-danger">12:00 PM</b></p>
-                                                            <p>Yet another one, at <span class="text-success">15:00 PM</span></p><span class="vertical-timeline-element-date"></span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="vertical-timeline-item vertical-timeline-element">
-                                                    <div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-danger"> </i></span>
-                                                        <div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">Build the production release</h4>
-                                                            <p>Lorem ipsum dolor sit amit,consectetur eiusmdd tempor incididunt ut labore et dolore magna elit enim at minim veniam quis nostrud</p><span
-                                                                    class="vertical-timeline-element-date"></span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="vertical-timeline-item vertical-timeline-element">
-                                                    <div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-primary"> </i></span>
-                                                        <div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title text-success">Something not important</h4>
-                                                            <p>Lorem ipsum dolor sit amit,consectetur elit enim at minim veniam quis nostrud</p><span class="vertical-timeline-element-date"></span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="vertical-timeline-item vertical-timeline-element">
-                                                    <div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-success"> </i></span>
-                                                        <div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">All Hands Meeting</h4>
-                                                            <p>Lorem ipsum dolor sic amet, today at <a href="javascript:void(0);">12:00 PM</a></p><span class="vertical-timeline-element-date"></span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="vertical-timeline-item vertical-timeline-element">
-                                                    <div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-warning"> </i></span>
-                                                        <div class="vertical-timeline-element-content bounce-in"><p>Another meeting today, at <b class="text-danger">12:00 PM</b></p>
-                                                            <p>Yet another one, at <span class="text-success">15:00 PM</span></p><span class="vertical-timeline-element-date"></span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="vertical-timeline-item vertical-timeline-element">
-                                                    <div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-danger"> </i></span>
-                                                        <div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">Build the production release</h4>
-                                                            <p>Lorem ipsum dolor sit amit,consectetur eiusmdd tempor incididunt ut labore et dolore magna elit enim at minim veniam quis nostrud</p><span
-                                                                    class="vertical-timeline-element-date"></span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="vertical-timeline-item vertical-timeline-element">
-                                                    <div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-primary"> </i></span>
-                                                        <div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title text-success">Something not important</h4>
-                                                            <p>Lorem ipsum dolor sit amit,consectetur elit enim at minim veniam quis nostrud</p><span class="vertical-timeline-element-date"></span></div>
-                                                    </div>
-                                                </div>
+                                            <div class="ertical-time-simple vertical-without-time vertical-timeline vertical-timeline--animate vertical-timeline--one-column" id="payment_notification_div">
+     
                                             </div>
                                         </div>
                                     </div>
@@ -202,8 +154,8 @@
                                                 <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255);"></div>
                                                 <div class="swal2-success-circular-line-right" style="background-color: rgb(255, 255, 255);"></div>
                                             </div>
-                                            <div class="results-subtitle">All caught up!</div>
-                                            <div class="results-title">There are no system errors!</div>
+                                            <!--<div class="results-subtitle">All caught up!</div>-->
+                                            <div class="results-title">No Notice!</div>
                                         </div>
                                     </div>
                                 </div>
@@ -212,7 +164,8 @@
                         <ul class="nav flex-column">
                             <li class="nav-item-divider nav-item"></li>
                             <li class="nav-item-btn text-center nav-item">
-                                <button class="btn-shadow btn-wide btn-pill btn btn-focus btn-sm">View Latest Changes</button>
+                                <button class="mb-2 mr-2 btn  btn-sm btn-shadow btn-gradient-warning" onclick="loadMoreNotofication()">Load More</button>
+                                <button class="mb-2 mr-2 btn  btn-sm btn-shadow btn-gradient-info" onclick="loadAllNotofication()">All Notification</button>
                             </li>
                         </ul>
                     </div>
@@ -290,7 +243,7 @@
                                                 </li> --> 
                                                 <li class="nav-item">
                                                     <a href="{{ url('profile?tab=notification') }}" class="nav-link">Notifications
-                                                        <div class="ml-auto badge badge-danger">12
+                                                        <div class="ml-auto badge badge-danger" id="dropdown_notification_count">0
                                                         </div>
                                                     </a>
                                                 </li>

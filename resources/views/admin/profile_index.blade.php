@@ -235,7 +235,6 @@
 											<th>Message</th>
 											<th class="text-center" width="100">Date</th>
 											<th class="text-center" width='80'>Status</th>
-											<th class="text-center" width='80'>Action</th>
 										</tr>
 									</thead>
 									<tbody>

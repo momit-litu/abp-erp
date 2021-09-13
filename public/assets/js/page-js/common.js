@@ -3,7 +3,7 @@ var fade_logo_name 	= $('#fade_logo_name').val();
 var fade_logo_url 	= url+"/assets/images/admin-upload/"+fade_logo_name;
 var logo_name 		= $('#logo_name').val();
 var logo 			= url+"/assets/images/admin-upload/"+logo_name;
-const profile_image_url 		= url+"/assets/images/student/";
+const profile_image_url 		= url+"/assets/images/user/student/";
 const payment_attachment_url 	= url+"/assets/images/payment/";
 
 $.ajaxSetup({
@@ -99,8 +99,8 @@ function clear_form(){
 // Notifications
 $(document).ready(function () {
 	// for get site url
-	var url = $('.site_url').val();
 	var page =1;
+	var latestNotificationId ="";
 
 	$('.openDropdown').on('click', function (event) {
 		event.stopPropagation();
@@ -110,14 +110,14 @@ $(document).ready(function () {
 
 	set_notification_time_out_fn = () =>{
         setTimeout(function(){
-            loadNotifications();
-        }, 10000);
+            loadNotifications('latest');
+        }, 20000);
     }
 
-	view_notification = () =>{
+	notificationSeen = (id) =>{
 		if($.trim($('#notificationCount').html()) != 0){
 			$.ajax({
-				url: url+"/notification/view/",
+				url: url+"/notification/view/"+id,
 				type: 'GET',
 				async: true,
 			})
@@ -131,63 +131,119 @@ $(document).ready(function () {
 		}
 	}
 
-	loadNotifications = () =>{
+	redirectCourseView = (batch_id) =>{
+		window.location.href = url+"/course/"+batch_id;
+	}
+	
+	loadNotifications = (typepage) =>{
 		$.ajax({
-			url: url+'/notifications/'+page,
+			url: url+'/notifications/'+typepage,
 			type:'GET',
 			async:true,
 			success: function(response){
+				response 				= JSON.parse(response);
+				totalUnreadNotifications= response['totalUnreadNotifications'];
+				studentNotificationHtml = '';
+				paymentotificationHtml 	= '';
+				courseNotificationHtml 	= '';
 
-				response 					= JSON.parse(response);
-				totalUnreadNotifications	= response['totalUnreadNotifications'];
-				html = '';
-				$.each(response['notifications'], function (key, notification) {
-					created_at =  new Date(notification.created_at).toLocaleDateString('en-US', {
-					  day: '2-digit',
-					  month: '2-digit',
-					  year: '2-digit',
-					  hour: '2-digit',
-					  minute: '2-digit',
-					});
+				if(!jQuery.isEmptyObject(response)){
+					//$.each(response['notifications'], function (key, notification) {	
+					for(var key =0; key < response['notifications'].length; key++){
+						var notification = 	response['notifications'][key];					
+						var notificationId 		= notification.id;
+						
+						if(latestNotificationId == notificationId) {
+							break;
+						}
+						if(typepage ==1 && key==0) latestNotificationId = notificationId;
 
-					var read_status_class 	= (notification.read_at==null)?"danger":"success";
-					html +=`
-						<div class="vertical-timeline-item vertical-timeline-element">
-							<div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-`+read_status_class+`"> </i></span>
-								<div class="vertical-timeline-element-content bounce-in">
-
-									<p>`+notification.data.Message+`<br><span class="text-`+read_status_class+`">`+created_at+`</span></p><span class="vertical-timeline-element-date"></span>
+						var created_at =  new Date(notification.created_at).toLocaleDateString('en-US', {
+						day: '2-digit',
+						month: '2-digit',
+						year: '2-digit',
+						hour: '2-digit',
+						minute: '2-digit',
+						});					
+						var read_status_class 	= (notification.read_at==null)?"danger":"success";
+						var read_status 		= (notification.read_at==null)?"unread":"read";
+						var seen_message_html 	= (notification.read_at==null)?"notificationSeen('"+notification.id+"')":"";
+						
+						if(notification.data.Type == 'Students'){
+							studentNotificationHtml +=`
+							<div class="vertical-timeline-item vertical-timeline-element">
+								<div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-`+read_status_class+`"> </i></span>
+									<div class="vertical-timeline-element-content bounce-in `+read_status+`" style="cursor:pointer" onclick="studentView(`+notification.data.Id+`); `+seen_message_html+`"            >
+										<p>`+notification.data.Message+`<br><span class="text-`+read_status_class+`">`+created_at+`</span></p><span class="vertical-timeline-element-date"></span>
+									</div>
 								</div>
 							</div>
-						</div>
+							`;
+						}
+						else if(notification.data.Type == 'Payments'){
+							paymentotificationHtml +=`
+							<div class="vertical-timeline-item vertical-timeline-element">
+								<div><span class="vertical-timeline-element-icon bounce-in" ><i class="badge badge-dot badge-dot-xl badge-`+read_status_class+`"> </i></span>
+									<div class="vertical-timeline-element-content bounce-in `+read_status+`" style="cursor:pointer" onclick="paymentInvoice(`+notification.data.Id+`); `+seen_message_html+`">
+										<p>`+notification.data.Message+`<br><span class="text-`+read_status_class+`">`+created_at+`</span></p><span class="vertical-timeline-element-date"></span>
+									</div>
+								</div>
+							</div>
+							`;
+						}
+						else if(notification.data.Type == 'Courses'){
+							courseNotificationHtml +=`
+							<div class="vertical-timeline-item vertical-timeline-element">
+								<div><span class="vertical-timeline-element-icon bounce-in" ><i class="badge badge-dot badge-dot-xl badge-`+read_status_class+`"> </i></span>
+									<div class="vertical-timeline-element-content bounce-in `+read_status+`" style="cursor:pointer" onclick="redirectCourseView(`+notification.data.Id+`); `+seen_message_html+`">
+										<p>`+notification.data.Message+`<br><span class="text-`+read_status_class+`">`+created_at+`</span></p><span class="vertical-timeline-element-date"></span>
+									</div>
+								</div>
+							</div>
+							`;
+						}	
+					}//)
+					$('#notificationCount').html(totalUnreadNotifications);
+					$('#dropdown_notification_count').html(totalUnreadNotifications);
+					if(typepage ==1){
+						if($('#student_notification_div').length >0)
+							$('#student_notification_div').html(studentNotificationHtml);
+						if($('#course_notification_div').length >0)
+							$('#course_notification_div').html(courseNotificationHtml);	
 
+						$('#payment_notification_div').html(paymentotificationHtml);					
+					}					
+					else{
+						if($('#student_notification_div').length >0)
+							$('#student_notification_div').append(studentNotificationHtml);
+						if($('#course_notification_div').length >0)
+							$('#course_notification_div').append(courseNotificationHtml);
 
-						`;
-					
-
-				})
-
-				$('#notificationCount').html(totalUnreadNotifications)
-				if(page ==0)
-					$('#student_notification_div').html(html)
-				else
-					$('#student_notification_div').append(html);
-				//console.log(response)
-
+						$('#payment_notification_div').append(paymentotificationHtml);
+					}	
+					//console.log(response)
+					$('.unread').on('click', function () {
+						$(this).children().children().removeClass('text-danger');
+						$(this).children().children().addClass('text-success');
+						$(this).prev().children().removeClass('badge-danger');
+						$(this).prev().children().addClass('badge-success');
+					});
+					//page++;
+				}
 			}
 		})
-		page++;
-		//set_notification_time_out_fn()
+		set_notification_time_out_fn();
 	}
 
-	loadNotifications();
+	loadNotifications(page);
 
 	loadMoreNotofication = () =>{
-		loadNotifications();
+		page++;
+		loadNotifications(page);
 	}
 
 	loadAllNotofication = () =>{
-		window.location.href = url+"/notification";
+		window.location.href = url+"/profile?tab=notification";
 	}
 
 });

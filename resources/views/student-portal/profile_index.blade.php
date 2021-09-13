@@ -88,16 +88,14 @@
 										<div class="row">
 											<div class="col-md-12">
 												<div class="bio-image">														
-													<img src="{{asset('assets/images/user/admin')}}/{{ ($user->user_profile_image=="")?'no-user-image.png':$user->user_profile_image }}" class="img-thumbnail user_profile_img">
+													<img src="{{asset('assets/images/user/student')}}/{{ ($user->user_profile_image=="")?'no-user-image.png':$user->user_profile_image }}" class="img-thumbnail user_profile_img">
 												</div>
 											</div>
 										</div>	
 									</div>
 									<div class="col-md-8  col-xs-6">
+										<h4>Personal Information</h4>
 										<table class="table table-condensed table-hover">
-											<thead>
-											<tr><th>Personal Information</th></tr>
-											</thead>
 											<tbody>
 												<tr><td class="text-left"><b>{{$user->first_name.' '.$user->last_name}}</b></td></tr>
 												<tr><td class="text-left">
@@ -109,8 +107,6 @@
 												</tr>
 												<tr><td class="text-left"><i class='fa fa-phone'></i>{{$user->contact_no}}</td></tr>
 												<tr><td class="text-left"><i class='fa fa-envelope'></i>{{$user->email}}</td></tr>
-											
-												<tr><td class="text-left">Details: {{$user->remarks}}</td></tr>
 											</tbody>
 										</table>
 										<br>
@@ -130,16 +126,10 @@
 								<div class="col-md-9">
 									<input type="hidden" name="edit_profile_id" id="edit_profile_id" value="{{$user->id}}">
 									<div class="form-row">
-										<div class="col-md-6">
+										<div class="col-md-12">
 											<div class="position-relative form-group">
-												<label for="company_name" class="">First Name <span class="required">*</span></label>
+												<label for="company_name" class="">Full Name <span class="required">*</span></label>
 												<input type="text" id="first_name" name="first_name" value="{{$user->first_name}}" required class="form-control col-lg-12"/>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="position-relative form-group">
-												<label for="short_name" class="">Last Name</label>
-												<input type="text" id="last_name" name="last_name" value="{{$user->last_name}}" class="form-control col-lg-12" />
 											</div>
 										</div>
 									</div>
@@ -156,21 +146,12 @@
 												<input type="email" id="email" name="email" required value="{{$user->email}}" class="form-control col-lg-12"/>
 											</div>
 										</div>
-									</div>
-									<div class="form-row">
-										<div class="col-md-12">
-											<div class="position-relative form-group">
-												<label for="company_name" class="">Address</label>
-												<input type="text" id="address" name="address" class="form-control col-lg-12" />
-											</div>
-										</div>
-									</div>
-									
+									</div>						
 									<br/>									
 									<div class="ln_solid"></div>
 								</div>
 								<div class="col-md-3 text-center">									
-									<img src="{{asset('assets/images/user/admin')}}/{{ ($user->user_profile_image=="")?'no-user-image.png':$user->user_profile_image }}" width="70%" height="70%" class="img-thumbnail">
+									<img src="{{asset('assets/images/user/student')}}/{{ ($user->user_profile_image=="")?'no-user-image.png':$user->user_profile_image }}" width="70%" height="70%" class="img-thumbnail">
 									<span class="btn btn-light-grey btn-file">
 										<span class="fileupload-new"><i class="fa fa-picture-o"></i> Update image</span>
 										<input type="file" name="user_profile_image" id="user_profile_image" value="">
@@ -234,8 +215,7 @@
 										<tr>
 											<th>Message</th>
 											<th class="text-center" width="100">Date</th>
-											<th class="text-center" width='80'>Status</th>
-											<th class="text-center" width='80'>Action</th>
+											<th class="text-center" width='80'>Status</th>						
 										</tr>
 									</thead>
 									<tbody>

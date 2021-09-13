@@ -48,11 +48,12 @@ class newStudentCreated extends Notification
     }
 
     public function toDatabase($notifiable){
-		$messageType = "Success";
+		$messageType = "Students";
 		$message	 = "New student registration done. ". $this->param->studentName;
 
         return [
 			'Type'		=>	$messageType,
+            'Id'	    =>	$this->param->studentId,
 			'Message'	=>	$message
 		];
 	}
