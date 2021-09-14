@@ -457,4 +457,11 @@ class StudentPortalController extends Controller
             return redirect('portal/dashboard')->with('message',"Your payment process is failed")->with('response_code',0);
     }
 
+    
+    public function terms()
+    {
+        $page_title  = $this->page_title;
+        return view('student-portal.terms', array('page_title'=>$page_title));
+    }
+
 }

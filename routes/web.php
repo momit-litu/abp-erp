@@ -43,13 +43,13 @@ Route::post('/sslcommerz/success',array('as'=>'example1', 'uses' =>'StudentPorta
 Route::post('/sslcommerz/fail',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentFail'));
 
 
-
-Route::group(['prefix' => 'portal'], function () {
+Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], function () {
 	Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+	Route::get('terms',array('as'=>'Terms Condition', 'uses' =>'StudentPortalController@terms'));
 	//Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 
-	Route::group(['middleware' => ['auth']], function () {		
+	Route::group(['middleware' => ['auth','prevent-back-history']], function () {		
 		Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'StudentPortalController@index'));
 		Route::get('/dashboard',array('as'=>'Dashboard' , 	'uses' =>'StudentPortalController@index'));
 		Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));

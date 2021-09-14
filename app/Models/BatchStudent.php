@@ -22,7 +22,7 @@ class BatchStudent extends Model
         return $this->hasOne('App\Models\Batch','id','batch_id');
     }
     public function batch_fee(){
-        return $this->hasOne('App\Models\BatchFee','id','batch_id');
+        return $this->hasOne('App\Models\BatchFee','id','batch_fees_id');
       }
 
     public function getBatchesByStudentId($studentId)

@@ -370,7 +370,7 @@
                                         <div class="col-md-4">
                                             <label><strong> Student Photo</strong></label>
                                             <hr>
-                                            <img src="{{asset('assets/images/user/admin')}}/no-user-image.png" width="70%" height="70%" class="img-thumbnail" id="user_image">
+                                            <img src="{{asset('assets/images/user')}}/user.png" width="70%" height="70%" class="img-thumbnail" id="user_image">
                                             <span class="btn btn-light-grey btn-file">
                                                 <span class="fileupload-new"><i class="fa fa-picture-o"></i> </span>
                                                 <input type="file" class="form-control col-lg-12" name="user_profile_image" id="user_profile_image" value="">
@@ -421,7 +421,7 @@
                                                 </div>
                                             </div>
                                         </div>  
-                                        <div class="mt-3 position-relative form-check"><input name="terms_condition" id="terms_condition" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label" >Accept our <a href="{{url('/terms')}}">Terms and Conditions</a>.</label></div>   
+                                        <div class="mt-3 position-relative form-check"><input name="terms_condition" id="terms_condition" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label" >Accept our <a target="new" href="{{url('portal/terms')}}">Terms and Conditions</a>.</label></div>   
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -472,3 +472,5 @@
   </div>
 </div>
 @endif
+
+

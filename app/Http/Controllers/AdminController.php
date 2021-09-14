@@ -577,6 +577,10 @@ class AdminController extends Controller
 					$upload_path 				= ($user->type=='Admin')?'assets/images/user/admin/':'assets/images/user/student/';
 					$success					= $admin_image->move($upload_path,$image_full_name);
 					$data['user_profile_image'] = $image_full_name;
+				
+					$student = Student::find($user->student_id);
+					$student->user_profile_image = $image_full_name;
+					$student->save();
 				}
 				$old_image 	= $user->user_profile_image;
 				$user->update($data);

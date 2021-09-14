@@ -11,7 +11,7 @@
 
 $(document).ready(function () {
 	
-		$("#start_registration").on('click',function(){
+	$("#start_registration").on('click',function(){
 		$('.step-content').css('display','none');
 		$('#student-info').css('display','block');
 		$('.nav-item').removeClass('active');
@@ -48,7 +48,7 @@ $(document).ready(function () {
 						radioClass: 'iradio_flat-green'
 				});	
 				var photo = (data["user_profile_image"]!=null && data["user_profile_image"]!="")?data["user_profile_image"]:'no-user-image.png';
-				$("#user_image").attr("src", profile_image_url+"/"+photo);
+				$("#user_image").attr("src", profile_image_url+photo);
 
 				var attachment_html = "";
 				if(data['documents'].length >0){
@@ -144,7 +144,6 @@ $(document).ready(function () {
 		}
 	});
 
-
 	//Entry And Update Function For Module
 	$("#enroll_student").on('click',function(){
 		event.preventDefault();
@@ -201,7 +200,6 @@ $(document).ready(function () {
 		}
 	});
 
-
 	$(".save_revise_request").on('click',function(){
 		event.preventDefault();
 		form_id = $(this).closest('form').attr('id');
@@ -256,7 +254,6 @@ $(document).ready(function () {
 			$('#rocket_div').show();
 		}
 	})
-
 
 	makePayment = function(payment_id, amount){
 		if($("input[name='payment_gateway']:checked").val() == "card"){

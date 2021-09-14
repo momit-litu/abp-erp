@@ -42,6 +42,7 @@ trait StudentNotification
 
 	public function enrollmentEmail($enrollmentId){
 		$studentPayments = BatchStudent::with('payments','student','batch','batch.course','batch_fee','batch_fee.installments')->find($enrollmentId);
+		//dd($studentPayments);
 		Mail::to($studentPayments['student']['email'])->send(new studentEnrollmentMail($studentPayments));
 	}
 
@@ -91,7 +92,7 @@ trait StudentNotification
 
 	public function courseEnrollmentNotificationForStudent($batchStudent){
 		$notifyUser = User::where('student_id',$batchStudent->student->id)->get();
-        Notification::send($notifyUser, new newStudentEnrolledOwn(array('type'=>'Success', 'studentName'=>$batchStudent->student->name, 'courseId'=>$batchStudent->batch_id, 'courseName'=>$batchStudent->batch->course->title )));
+        Notification::send($notifyUser, new newStudentEnrolledOwn(array('type'=>'Success', 'studentId'=>$batchStudent->student_id, 'courseId'=>$batchStudent->batch_id, 'courseName'=>$batchStudent->batch->course->title )));
 	}
 
 	public function duePaymentNotification($payment){

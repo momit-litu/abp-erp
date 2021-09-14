@@ -452,7 +452,8 @@
                     <td class="content-cell">
                       <div class="f-fallback">
                         <h1>Dear {{$studentEnrollment['student']['name']}},</h1>
-                        <p><b>Congratulations</b>. Your enrollment has been successfull into the course  {<b>{$studentEnrollment['batch']['course']['title']}}, Batch:  {{$studentEnrollment['batch']['batch_name']}}</b>.</p>
+                        <p><b>Congratulations</b>. Your enrollment has been successfull into the course  
+                          {{$studentEnrollment['batch']['course']['title']}}, Batch:  {{$studentEnrollment['batch']['batch_name']}}</b>.</p>
                         <p>Here are the details :</p>
                         <!-- Discount -->
                         <table class="discount" align="left" width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -496,11 +497,11 @@
                                 <td width="40%"  align="center" class="purchase_item">{{$payment['last_payment_date'] }}</td>
                                 <td width="20%"  align="center" class="purchase_item">{{$payment['payment_status'] }}</td>
                                 <td width="20%"  align="right" class="purchase_item">TK {{$payment['payable_amount'] }}</td>
-                            </tr> 
+                            </tr>                              
+                            @endforeach  
                             <tr>
-                                <td colspan="3"  style="text-align:right !important"><b>Balance</b></td><td style="text-align:right !important"><b>TK {{($studentEnrollment['total_payable']-$studentEnrollment['paid_amount'] )}}</b></td>
-                            </tr>  
-                            @endforeach                
+                              <td colspan="3"  style="text-align:right !important"><b>Balance</b></td><td style="text-align:right !important"><b>TK {{($studentEnrollment['balance'])}}</b></td>
+                          </tr>               
                         </table>
   
                         <p class="danger">                         

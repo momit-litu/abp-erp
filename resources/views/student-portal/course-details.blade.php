@@ -118,12 +118,10 @@
                                 You registration to this course is still pending. Please make the payment to enroll.
                             </div>
                         @endif
-
-
                         <h5 class="card-title">Details</h5>
-                                <p>
-                                    {{ strip_tags($batch->course->objective) }}
-                                </p>
+                        <p>
+                            {{ strip_tags($batch->course->objective) }}
+                        </p>
                         <div class="row">
                             <div class="col-md-6">
                                 <ul class="list-group list-group-flush">

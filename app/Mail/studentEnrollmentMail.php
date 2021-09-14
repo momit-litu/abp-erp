@@ -30,7 +30,9 @@ class studentEnrollmentMail extends Mailable
     public function build()
     {
        // return $this->view('view.name');
+      
        $settings = Setting::first();
+       //dd($settings);
         return $this->subject($settings['company_name'].' course enrollment confirmation')
             ->markdown('mails.student-enrollment')
             ->with([

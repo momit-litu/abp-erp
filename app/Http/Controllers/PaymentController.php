@@ -284,11 +284,15 @@ class PaymentController extends Controller
 
     public function emailInvoice($id)
     {
-       // $batchStudent = BatchStudent::with('student','batch','batch.course')->find(33);
-        //$this->courseEnrollmentNotificationForAdmin($batchStudent); 
-       // $this->courseEnrollmentNotificationForStudent($batchStudent); 
-       
-       // die;
+         $batchStudent = BatchStudent::with('student','batch','batch.course')->find(35);
+        // $this->courseEnrollmentNotificationForAdmin($batchStudent); 
+        // $this->courseEnrollmentNotificationForStudent($batchStudent); 
+        // $batchStudent = BatchStudent::with('student','batch','batch.course')->find(33);
+        // $this->courseEnrollmentNotificationForAdmin($batchStudent); 
+        // $this->courseEnrollmentNotificationForStudent($batchStudent); 
+        // $this->enrollmentEmail($batchStudent->id); 
+        // die;
+    
 		if($id=="") return false;
         $this->invoiceEmail($id);          
 		return true;
