@@ -8,7 +8,7 @@ class Course extends Model
 {
 	protected $table ='courses';
     protected $fillable = [
-        'code','title','level_id','tqt','total_credit_hour','registration_fees','status','short_name','trainers', 'accredited_by','awarder_by', 'programme_duration','course_cover_image','semester_no','semester_details', 'assessment', 'grading_system', 'objective', 'requirements','experience_required','youtube_video_link', 'glh', 'study_mode'
+        'code','title','level_id','tqt','total_credit_hour','registration_fees','status','short_name','trainers', 'accredited_by','awarder_by', 'programme_duration','course_cover_image','semester_no','semester_details', 'assessment', 'grading_system', 'objective', 'requirements','experience_required','youtube_video_link', 'glh', 'study_mode','short_name_id'
     ];
 
 	

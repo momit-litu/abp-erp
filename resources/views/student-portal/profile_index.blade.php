@@ -88,7 +88,7 @@
 										<div class="row">
 											<div class="col-md-12">
 												<div class="bio-image">														
-													<img src="{{asset('assets/images/user/student')}}/{{ ($user->user_profile_image=="")?'no-user-image.png':$user->user_profile_image }}" class="img-thumbnail user_profile_img">
+													<img src="{{asset('assets/images/user/')}}/{{ ($user->user_profile_image=="")?'user.png':$user->user_profile_image }}" class="img-thumbnail user_profile_img">
 												</div>
 											</div>
 										</div>	
@@ -126,7 +126,7 @@
 								<div class="col-md-9">
 									<input type="hidden" name="edit_profile_id" id="edit_profile_id" value="{{$user->id}}">
 									<div class="form-row">
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">Full Name <span class="required">*</span></label>
 												<input type="text" id="first_name" name="first_name" value="{{$user->first_name}}" required class="form-control col-lg-12"/>
@@ -151,7 +151,7 @@
 									<div class="ln_solid"></div>
 								</div>
 								<div class="col-md-3 text-center">									
-									<img src="{{asset('assets/images/user/student')}}/{{ ($user->user_profile_image=="")?'no-user-image.png':$user->user_profile_image }}" width="70%" height="70%" class="img-thumbnail">
+									<img src="{{asset('assets/images/user')}}/{{ ($user->user_profile_image=="")?'user.png':$user->user_profile_image }}" width="70%" height="70%" class="img-thumbnail">
 									<span class="btn btn-light-grey btn-file">
 										<span class="fileupload-new"><i class="fa fa-picture-o"></i> Update image</span>
 										<input type="file" name="user_profile_image" id="user_profile_image" value="">

@@ -201,7 +201,7 @@ class AuthController extends Controller
             'contact'   => 'Required|max:11|unique:users,contact_no',
             'password'  => 'required|min:4|',
             'confirm_password'  => 'required|same:password',
-            'terms_condition'   =>'accepted'
+            'terms_condition'   =>'accepted',
         ]);
 
         if ($v->fails()) {
@@ -222,7 +222,7 @@ class AuthController extends Controller
                     'registration_completed'=>'No'
                 ]);
                 if($student){
-                    $student->student_no =str_pad($student->id,5,'0',STR_PAD_LEFT);
+                    $student->student_no = str_pad(($student->id+8000),6,'0',STR_PAD_LEFT);
                     $student->save();
                     // create a student type user
                     $studentUser = User::create([
@@ -232,6 +232,7 @@ class AuthController extends Controller
                         'password' 		=> bcrypt($request['password']),
                         'type'			=> 'Student',
                         'student_id'	=> $student->id,
+                        'status'        =>0
                     ]);
 
                     $user_group = UserGroup::select('id')->where('type',2)->first();
@@ -258,6 +259,10 @@ class AuthController extends Controller
         if(!empty($student)){
             $student->registration_completed = 'Yes';
             $student->update();
+            
+            $user = User::where('student_id', $student->id)->first();
+            $user->status = '1';
+            $user->update();
            
             $this->registrationCompletedNotification($student);
             $this->registrationConfirmEmail($student->id);

@@ -460,36 +460,42 @@
                               <td>
                                 <img  class="f-fallback email-masthead_name" src="{{ asset('assets/images/admin-upload/')."/".$settings['logo']}}" style="max-width:140px" /> 
                                 </td>
-                              <td>
-                                    <h1 class="align-right">Invoice</h1>
+                              <td align="right">
+                                  <h1 class="align-right" style="text-transform:uppercase">Money Receipt</h1>
                               </td>
                             </tr>
                             <tr>
-                                <td> </td>
-                                <td>
-                                    <p class="align-right purchase_heading"> Invoice No#{{$invoice['invoice_no']}}</p>
-                                </td>
+                              <td></td>
+                              <td align="right">                                   
+                                    <p class="align-right" style="font-size:12px">{{$settings['company_name']}}<br>
+                                      {{$settings['address']}}<br>
+                                      Mobile : +880{{$settings['company_name']}}<br>
+                                      www.abpbd.org</p>
+                              </td>
                             </tr>
                             <tr>
                               <td colspan="2">
                                 <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0">
                                   <tr>
-                                    <th class="purchase_heading"   style="border-bottom:0" align="left">
-                                      <p class="f-fallback">To,</p>
-                                    </th>
-                                    <th class="purchase_heading text-right" colspan="2" style="border-bottom:0" align="right">
-                                      <p class="f-fallback" style="text-align:right !important">Date {{Date('Y-m-d')}}</p>
-                                    </th>
-                                  </tr>
-                                  <tr>
-                                    <th class="purchase_heading" colspan="2" align="left">
+                                    <th class="purchase_heading" align="left">
+                                      <p class="f-fallback">Bill to,<br>
+                                        {{$invoice['student_name']}}
+                                      </p>
+                                      <br>
                                       <p class="f-fallback">
                                         {{$invoice['student_email']}},<br>
                                         {{$invoice['address']}}
                                       </p>
                                     </th>
-                                    <th class="purchase_heading" align="right">
-                                      <p class="f-fallback"></p>
+                                    <th class="purchase_heading"  colspan="2" align="right">
+                                      <p class="f-fallback" style="text-align:right !important">
+                                        Invoice Number :{{$invoice['invoice_no']}}</p>
+									                    <p class="f-fallback" style="text-align:right !important">
+                                        Invoice Date : {{Date('Y-m-d')}}</p>
+                                      <p class="f-fallback" style="text-align:right !important">
+                                        Payment Due :  {{Date('Y-m-d')}}</p>
+									                    <p class="f-fallback" style="text-align:right !important">
+                                        Amount Due (BDT) :  Tk{{$invoice['paid_amount']}}</p>
                                     </th>
                                   </tr>
                                   <tr>
@@ -504,18 +510,32 @@
                                     </th>
                                   </tr>
                                   <tr>
-                                    <td width="60%" class="purchase_item"><span class="f-fallback">{{$invoice['course_name']}}</span></td>
-                                    <td width="20%" align="center" class="purchase_item"><span class="f-fallback">{{$invoice['installment_no']}}</span></td>
-                                    <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">Tk {{$invoice['paid_amount']}}</span></td>
+                                    <td width="50%" class="purchase_item" style="font-size:12px"><span class="f-fallback">{{$invoice['course_name']}}</span></td>
+                                    <td width="20%" align="center" class="purchase_item" style="font-size:12px"><span class="f-fallback">{{$invoice['installment_no']}}</span></td>
+                                    <td class="align-right" width="20%" class="purchase_item" style="font-size:12px"><span class="f-fallback">Tk {{$invoice['paid_amount']}}</span></td>
                                   </tr>                                  
                                 </table>
                               </td>
                             </tr>
-                            <tr><td colspan="2">
+                            <tr>
+                              <td colspan="2"> 
                                 <br>
+                                <br> 
+                                <p style="text-align:left !important; font-size:12px">
+                                Notes/Terms:<br>
+                                  1. Fees are not refundable.<br>
+                                  2. Course fees are not .<br>
+                                  3. Course registration is valid for 12 months (PGD), for short course 4 months 
+                                </p>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="2"> 
                                 <br>
-                                <p style="text-align:center !important">Made payment in favour of ABPBD</p>
-                            </td></tr>
+                                <br> 
+                                <p style="text-align:center !important; font-size:12px">No signature required for electronic invoice </p>
+                              </td>
+                            </tr>
                           </table>
                         <br>
                         <p>If you have any questions, simply reply to this email or reach out to our <a href="{{$settings['support_url']}}">support team</a> for help.</p>

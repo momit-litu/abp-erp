@@ -98,7 +98,7 @@ $(document).ready(function () {
 
 	//Clear form
 	$("#clear_button").on('click',function(){
-		$("#user_profile_image").attr("src", profile_image_url+"/no-user-image.png");
+		$("#user_profile_image").attr("src", profile_image_url+"/user.png");
 		$('#attachment_table >tr').remove();
 		clear_form();
 	});
@@ -152,7 +152,7 @@ $(document).ready(function () {
 						checkboxClass: 'icheckbox_flat-green',
 						radioClass: 'iradio_flat-green'
 				});	
-				var photo = (data["user_profile_image"]!=null && data["user_profile_image"]!="")?data["user_profile_image"]:'no-user-image.png';
+				var photo = (data["user_profile_image"]!=null && data["user_profile_image"]!="")?data["user_profile_image"]:'user.png';
 				$("#user_image").attr("src", profile_image_url+"/"+photo);
 
 				var attachment_html = "";

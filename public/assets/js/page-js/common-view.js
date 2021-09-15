@@ -161,7 +161,7 @@ studentView = function studentView(id){
                 $(".student_profile_image").html('<img style="width:100%" src="'+profile_image_url+'/'+data["user_profile_image"]+'" alt="User Image" class="img img-responsive">');
             }
             else{
-                $(".student_profile_image").html('<img  style="width:100%" src="'+profile_image_url+'/no-user-image.png" alt="User Image" class="img img-responsive">');
+                $(".student_profile_image").html('<img  style="width:100%" src="'+profile_image_url+'/user.png" alt="User Image" class="img img-responsive">');
             }
 
             if(data['status']=='Active'){

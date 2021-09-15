@@ -52,7 +52,7 @@ class StudentPayment extends Model
 
     public function getNextInvoiceNo(){
         $lastInvoiceNo = $this->select(\DB::raw('MAX(SUBSTRING(invoice_no, 5,6)) as invoice_no'))->first();
-        $invoiceNo = (empty($lastInvoiceNo))?'INV-'.str_pad('1',6,0, STR_PAD_LEFT):'INV-'.str_pad(($lastInvoiceNo->invoice_no+1),6,0, STR_PAD_LEFT);
+        $invoiceNo = (empty($lastInvoiceNo))?'INV-'.str_pad('2000',6,0, STR_PAD_LEFT):'INV-'.str_pad(($lastInvoiceNo->invoice_no+1),6,0, STR_PAD_LEFT);
         return $invoiceNo ;
     }
 

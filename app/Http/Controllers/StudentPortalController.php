@@ -188,6 +188,9 @@ class StudentPortalController extends Controller
                             'payable_amount'        =>  $installment->amount,
                             'last_payment_date'     =>  $last_payment_date,
                         ]); 
+                        
+                        if($key == 0) 
+                            $studentFirstPaymentId = $studentPayment->id;
                     }
                 }
              }				
@@ -202,6 +205,7 @@ class StudentPortalController extends Controller
 
             $return['response_code'] = 1;
             $return['message'] = "Registration successfully";
+            $return['studentFirstPaymentId'] = $studentFirstPaymentId; 
             return json_encode($return);
         } 
 		catch (\Exception $e){
@@ -413,13 +417,19 @@ class StudentPortalController extends Controller
                 $payment->paid_amount    =  $payment->paid_amount + $amount;
                 $payment->payment_status =  $payment_status;
                 $payment->paid_date      =  date('Y-m-d');
-                $payment->invoice_no    = $studentPayment->getNextInvoiceNo();
+                $payment->invoice_no     = $studentPayment->getNextInvoiceNo();
 
                 if($payment->update()){
                     $studentPayment->updateStudentFees($payment->student_enrollment_id); 
                     if($payment->enrollment->status == 'Inactive'){
-                        $enrollment = BatchStudent::find($payment->enrollment->id);
-                        $enrollment->status = "Active";
+                        $enrollment             = BatchStudent::with('batch', 'batch.course')->find($payment->enrollment->id);
+                        $enrollment->status     = "Active";
+                        $lastEnrollmentIdSQL       = BatchStudent::where('batch_id', $enrollment->batch_id)
+                                                ->where('student_enrollment_id','!=','')->orderBy('created_at', 'desc')->first();
+                        $lastEnrollmentId = (!empty($lastEnrollmentIdSQL))?$lastEnrollmentIdSQL->student_enrollment_id:0;
+                        $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
+
+                        $enrollment->student_enrollment_id = $student_enrollment_id ;
                         $enrollment->save();
                     }
                 }                   

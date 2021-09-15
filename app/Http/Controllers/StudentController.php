@@ -15,11 +15,13 @@ use App\Models\StudentDocument;
 use App\Models\UserGroupMember;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
+use App\Traits\StudentNotification;
 
 
 class StudentController extends Controller
 {
     use HasPermission;
+    use StudentNotification;
 
     public function __construct(Request $request)
     {
@@ -223,8 +225,8 @@ class StudentController extends Controller
                 'name' => 'required|string',
                 'date_of_birth' => 'required',
                 'address' => 'required',
-                'contact_no' 		=> 'Required|max:11|unique:student,contact_no',
-                'email' 			=> 'Required|email|unique:student,email',
+                'contact_no' 		=> 'Required|max:11|unique:students,contact_no',
+                'email' 			=> 'Required|email|unique:students,email',
                 'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',
                 'documents.*' => 'max:5000',
             ];
@@ -277,7 +279,7 @@ class StudentController extends Controller
                 ]);
 
                 if($student){
-                    $student->student_no =($request['student_no']=="")?str_pad($student->id,5,'0',STR_PAD_LEFT):$request['student_no'];
+                    $student->student_no = str_pad(($student->id+8000),6,'0',STR_PAD_LEFT);
                     $student->save();
 
                     // create a student type user
@@ -349,8 +351,8 @@ class StudentController extends Controller
                 'name' => 'required|string',
                 'date_of_birth' => 'required',
                 'address' => 'required',
-                'contact_no' 		=> 'Required|max:11|unique:student,contact_no,'. $student->id,
-                'email' 			=> 'Required|email|unique:student,email,'. $student->id,
+                'contact_no' 		=> 'Required|max:11|unique:students,contact_no,'. $student->id,
+                'email' 			=> 'Required|email|unique:students,email,'. $student->id,
                 'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',
                 'documents.*' => 'max:5000',
             ];
@@ -372,7 +374,6 @@ class StudentController extends Controller
                     return json_encode($return);
                 }
 
-                $student->student_no = $request['student_no'];
                 $student->name = $request['name'];
                 $student->email = $request['email'];
                 $student->contact_no = $request['contact_no'];

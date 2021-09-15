@@ -60,7 +60,7 @@
                                         order="{{$payment->id}}"
                                         endpoint="{{url('portal/sslcommerz/pay-via-ajax')}}">Make Payment
                                     </button>
-                                    
+                               <!--     
                                    
                                     <div class="position-relative form-check">
                                         <label class="form-check-label"><input name="payment_gateway"  value="bkash" type="radio" class="form-check-input"> Bkash</label>
@@ -98,6 +98,8 @@
                                     </div>
                                     <br>
                                     <button onClick="makePayment({{$payment->id}},{{$payment->payable_amount}})" id="make_payment_btn" class="btn btn-primary" >Make Payment</button>
+
+                                -->
                                 </fieldset>
                             </div> 
                         </div>

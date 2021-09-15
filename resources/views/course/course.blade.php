@@ -90,12 +90,19 @@
 												<input type="text" id="code" name="code" required class="form-control col-lg-12"/>
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-3">
 											<div class="position-relative form-group">
 												<label  >Short Name<span class="required">*</span></label>
 												<input type="text" id="short_name" name="short_name" class="form-control col-lg-12" />
 											</div>
 										</div>
+										<div class="col-md-3">
+											<div class="position-relative form-group">
+												<label >Short Name For ID<span class="required">*</span></label>
+												<input type="text" id="short_name_id" name="short_name_id" class="form-control col-lg-12" />
+											</div>
+										</div>
+										
 									</div>
 									<div class="form-row">
 										<div class="col-md-12">

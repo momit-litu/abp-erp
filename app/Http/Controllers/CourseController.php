@@ -263,6 +263,7 @@ class CourseController extends Controller
                 $Course = Course::create([
                     'code' 				=>  $request['code'],
 					'short_name'		=>  $request['short_name'],
+					'short_name_id'		=>  $request['short_name_id'],
                     'title' 			=>  $request['title'],
 					'objective' 		=>  $request['objective'],
 					'tqt' 				=>  $request['tqt'],
@@ -346,6 +347,7 @@ class CourseController extends Controller
 
 				$Course->code 				= $request['code'];
 				$Course->short_name 		= $request['short_name'];
+				$Course->short_name_id 		= $request['short_name_id'];
 				$Course->title 				= $request['title'];
 				$Course->tqt 				= $request['tqt'];
 				$Course->objective 			= $request['objective'];

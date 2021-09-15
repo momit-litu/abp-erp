@@ -16,11 +16,13 @@ use Illuminate\Http\Response;
 use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
 use Illuminate\Support\Facades\File;
+use App\Traits\StudentNotification;
 
 
 class BatchController extends Controller
 {
     use HasPermission;
+    use StudentNotification;
 	public function __construct(Request $request)
     {
         $this->page_title = $request->route()->getName();
@@ -145,6 +147,16 @@ class BatchController extends Controller
                     'balance'       =>  $batchFee->payable_amount,
                 ]);
                 if($batchStudent){
+                    $enrollment             = BatchStudent::with('batch', 'batch.course')->find($batchStudent->id);
+
+                    $lastEnrollmentIdSQL       = BatchStudent::where('batch_id', $enrollment->batch_id)
+                                                    ->where('student_enrollment_id','!=','')->orderBy('created_at', 'desc')->first();
+                    $lastEnrollmentId = (!empty($lastEnrollmentIdSQL))?$lastEnrollmentIdSQL->student_enrollment_id:0;
+                    $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
+
+                    $enrollment->student_enrollment_id = $student_enrollment_id ;
+                    $enrollment->save();
+
                     $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
                     $batchFee->batch->update();
                     foreach($batchFee->installments as $key => $installment){

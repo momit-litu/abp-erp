@@ -54,7 +54,7 @@ $(document).ready(function () {
 						toastr['success']( 'Update Successful', 'Personal Information Updated');
 						$("#my_profile_tab").trigger('click');
 						$("#edit_profile_menu_tab").addClass('hidden');
-						profile_info();
+						//profile_info();
 					}
 					$(window).scrollTop();
 				 }	
@@ -120,7 +120,7 @@ $(document).ready(function () {
 							toastr['success']( 'Update Successful', 'Password Changed');		
 							$("#my_profile_tab").trigger('click');
 							$("#change_pass_menu_tab").addClass('hidden');
-							profile_info();
+							//profile_info();
 							$("#new_password").val("");
 							$("#confirm_password").val("");
 							$("#current_password").val("");

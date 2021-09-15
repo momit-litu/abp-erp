@@ -47,7 +47,7 @@ $(document).ready(function () {
 						checkboxClass: 'icheckbox_flat-green',
 						radioClass: 'iradio_flat-green'
 				});	
-				var photo = (data["user_profile_image"]!=null && data["user_profile_image"]!="")?data["user_profile_image"]:'no-user-image.png';
+				var photo = (data["user_profile_image"]!=null && data["user_profile_image"]!="")?data["user_profile_image"]:'user.png';
 				$("#user_image").attr("src", profile_image_url+photo);
 
 				var attachment_html = "";
@@ -168,7 +168,6 @@ $(document).ready(function () {
 				contentType:false,
 				processData:false,
 				success: function(data){
-					console.log(data)
 					var response = JSON.parse(data);
 					if(response['response_code'] == 0){
 						var errors	= response['errors'];
@@ -194,6 +193,9 @@ $(document).ready(function () {
 						$('#success-info-nav-item').addClass('active');
 						$('#save_student').css('display','none');
 						$('#enroll_student').css('display','none');
+						if(response['studentFirstPaymentId'])
+							$('.first_payment_id').attr('href',url+'/portal/checkout/'+response['studentFirstPaymentId'])
+
 					}
 				}
 			});

@@ -95,7 +95,7 @@
                                             <div class="col-md-12">
                                                 <div class="position-relative form-group">
                                                     <label for="first_name" class="">Student Number</label>
-                                                    <input type="text" id="student_no" name="student_no"  class="form-control col-lg-4"/>
+                                                    <input type="text" id="student_no" placeholder="Auto Generated No" disabled name="student_no"  class="form-control col-lg-4"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -132,7 +132,7 @@
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label>Date of Birth <span class="required">*</span></label>
-                                                    <input type="date" id="date_of_birth" name="date_of_birth" required class="form-control col-lg-12"/>
+                                                    <input type="date" id="date_of_birth" name="date_of_birth" required class="form-control col-lg-12" max="<?= date('Y-m-d'); ?>" />
                                                 </div>
                                             </div>                                           
                                         </div>

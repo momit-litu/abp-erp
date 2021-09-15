@@ -258,6 +258,7 @@ $(document).ready(function () {
 				var data = response['course'];				
 				$("#save_course").html('Update');
 				$("#short_name").val(data['short_name']);
+				$("#short_name_id").val(data['short_name_id']);
 				$("#trainers").val(data['trainers']);
 				$("#code").val(data['code']);
 				$("#title").val(data['title']);

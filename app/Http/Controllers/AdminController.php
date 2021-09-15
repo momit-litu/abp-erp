@@ -128,14 +128,24 @@ class AdminController extends Controller
 
 	//Admin User Entry And Update
 	public function ajaxAdminEntry(Request $request){
-		$rule = [
-            'first_name' 		=> 'Required|max:220',
-            'contact_no' 		=> 'Required|max:11|unique:users,contact_no',
-            'email' 			=> 'Required|email|unique:users',
-            'user_profile_image'=> 'mimes:jpeg,jpg,png,svg'
-        ];
 
-		
+		if ($request->id != ''){
+			$user 		= User::find($request->id);
+			$rule = [
+				'first_name' 		=> 'Required|max:220',
+				'contact_no' 		=> 'Required|max:11|unique:users,contact_no,'. $user->id,
+				'email' 			=> 'Required|email|unique:users,email,'. $user->id,
+				'user_profile_image'=> 'mimes:jpeg,jpg,png,svg',
+			];
+		}else{
+			$rule = [
+				'first_name' 		=> 'Required|max:220',
+				'contact_no' 		=> 'Required|max:11|unique:users,contact_no',
+				'email' 			=> 'Required|email|unique:users',
+				'user_profile_image'=> 'mimes:jpeg,jpg,png,svg'
+			];
+		}
+
         $validation = Validator::make($request->all(), $rule);
         if ($validation->fails()) {
 			$return['result'] = "0";
@@ -534,7 +544,6 @@ class AdminController extends Controller
 
     public function updateProfile(Request $request){
 		$user 		= User::find($request->edit_profile_id);
-	//	dd($dd);
 		$rule = [
 			'first_name' 		=> 'Required|max:220',
             'contact_no' 		=> 'Required|max:11|unique:users,contact_no,'. $user->id,
@@ -562,11 +571,17 @@ class AdminController extends Controller
 				DB::beginTransaction();
 				
 				$data = [
-					'first_name'			=> $request->first_name,
+					'first_name'	=> $request->first_name,
 					'contact_no'	=> $request->contact_no,
 					'email'			=> $request->email,
-					'remarks'		=> $request->remarks,
 				];
+					
+				$studentData = [
+					'name'			=> $request->first_name,
+					'contact_no'	=> $request->contact_no,
+					'email'			=> $request->email
+				];
+				
 
 				//if admin user Image provided
 				$admin_image = $request->file('user_profile_image');
@@ -584,6 +599,9 @@ class AdminController extends Controller
 				}
 				$old_image 	= $user->user_profile_image;
 				$user->update($data);
+
+				$student	=Student::where('id',$user->student_id)->first();
+				$student->update($studentData);
 				
 				if (isset($admin_image) && $old_image!="") {
 					$delete_img = $upload_path.$old_image;

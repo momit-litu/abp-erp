@@ -55,7 +55,7 @@
                     <div class="card-body"><h5 class="card-title"></h5>
                         <div class="thumbnail text-center photo_view_postion_b" >
                             <div class="student_profile_image" >
-                                <img style="width:100%" src="{{ ($batch->course->course_profile_image)?asset('assets/images/courses/'.$batch->course->course_profile_image):asset('assets/images/courses').'/no-user-image.png' }}" />
+                                <img style="width:100%" src="{{ ($batch->course->course_profile_image)?asset('assets/images/courses/'.$batch->course->course_profile_image):asset('assets/images').'/no_image.png' }}" />
                             </div>
                         </div>
                     </div>

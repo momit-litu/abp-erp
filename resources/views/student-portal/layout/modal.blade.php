@@ -446,7 +446,7 @@
                                   <div class="mt-3 mb-3"></div>
                                   <div class="results-title">Your Have to make the payment to activate the enrollment in this course!</div>
                                   <div class="text-center">
-                                      <button class="btn-shadow btn-wide btn btn-success btn-lg" >Make Payment</button>
+                                      <a href="" class="btn-shadow btn-wide btn btn-success btn-lg first_payment_id"  >Make Payment</a>
                                   </div>
                               </div>
                           </div>
