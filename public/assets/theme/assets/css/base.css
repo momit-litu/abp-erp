@@ -1811,8 +1811,8 @@ pre code {
 .report-table-bordered td {
     border: 1px solid #030d17;
 }
-*//
-.table-bordered thead th,
+*/
+/ .table-bordered thead th,
 .table-bordered thead td {
     border-bottom-width: 2px;
 }
@@ -35554,7 +35554,7 @@ button.toast-close-button {
     position: relative;
     z-index: 15;
     text-align: center;
-    margin: 0 6rem;
+    /* margin: 0 6rem; */
 }
 
 .slick-slider .slider-content h3 {

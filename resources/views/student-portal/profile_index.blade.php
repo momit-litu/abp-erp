@@ -1,15 +1,7 @@
 @extends('student-portal.layout.master')
 @section('content')
-@section('style')
-	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bils/profile.css') }}">
-	<style type="text/css" media="screen">
-		hr{
-			margin:0;
-		}
-	</style>
-@endsection
-<div class="app-main__outer left-padding-0" >
-	<div class="app-main__inner">
+<div class="app-main__outer">
+    <div class="app-main__inner">
 		<div class="app-page-title">
 			<div class="page-title-wrapper">
 				<div class="page-title-heading">
@@ -88,7 +80,7 @@
 										<div class="row">
 											<div class="col-md-12">
 												<div class="bio-image">														
-													<img src="{{asset('assets/images/user/')}}/{{ ($user->user_profile_image=="")?'user.png':$user->user_profile_image }}" class="img-thumbnail user_profile_img">
+													<img src="{{ ($user->user_profile_image!="")? asset('assets/images/user/student/'.$user->user_profile_image):asset('assets/images/user/user.png') }}" class="img-thumbnail user_profile_img">
 												</div>
 											</div>
 										</div>	

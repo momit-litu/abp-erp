@@ -30,6 +30,7 @@
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
     @include('student-portal.layout.header')
 	<div class="app-main">
+        @include('student-portal.layout.sidebar')
         <div style="display:none">
             <div id="session_message"> {{(Session::has('message'))?Session::get('message'):""}}</div>
             <div id="session_message_code"> {{(Session::has('message'))?Session::get('response_code'):""}}</div>

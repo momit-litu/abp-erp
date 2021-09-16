@@ -1,6 +1,6 @@
 @extends('student-portal.layout.master')
 @section('content')
-<div class="app-main__outer" style="width:100% !important; padding-left:0px">
+<div class="app-main__outer">
     <div class="app-main__inner">
         <div class="app-page-title">
             <div class="page-title-wrapper">
@@ -24,29 +24,28 @@
                 </div>    
             </div>
         </div> 
-        <div class="row">
+        <div class='row'>
             <div class="col-md-8">
-			
                 <div class="main-card mb-3 card">
-                    <div class="card-body"><h5 class="card-title">Featured</h5>
-                        <div class="slider-light">
-                            <div class="slick-slider-inverted">
+                    <div class="card-body">
+                        <h5 class="card-title">Featured</h5>
+                        <div class="slider-lightttttttt">
+                            <div class="slick-slider-inverteddddd">
                                 @foreach($data['featured_batches'] as $key=>$batch)
-								<div class="p-5 {{ $data['featured_batches_bg_color'][$key] }}">
+                                <div class="p-5 {{ $data['featured_batches_bg_color'][$key] }}">
                                     <div class="slider-content">
                                         <h3>{{ $batch->course->title}}</h3>
                                         <p>
-                                           {{ strip_tags($batch->course->objective) }}
+                                            {{ strip_tags($batch->course->objective) }}
                                         </p>
                                         <a href="{{ url('portal/course/'.$batch->id)}}" class="btn-icon btn btn-success btn-sm">View Profile</a>
                                     </div>
                                 </div>
-								@endforeach
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
-				
             </div>
             <div class="col-md-4">
                 <div class="main-card mb-3 card">
@@ -55,7 +54,7 @@
                             <div class="col-sm-6">
                                 <!--   <div class="widget-chart widget-chart-hover"> -->
                                 <div class="widget-chart ">
-                                   <!-- <div class="icon-wrapper rounded-circle">
+                                    <!-- <div class="icon-wrapper rounded-circle">
                                         <div class="icon-wrapper-bg bg-primary"></div>
                                         <i class="lnr-cog text-primary"></i></div> -->
                                     <div class="widget-numbers">1220</div>
@@ -70,46 +69,47 @@
                             <div class="col-sm-6">
                                 <div class="widget-chart">
                                     <!-- <div class="icon-wrapper rounded-circle">
-                                         <div class="icon-wrapper-bg bg-primary"></div>
-                                         <i class="lnr-cog text-primary"></i></div> -->
-                                     <div class="widget-numbers">450</div>
-                                     <div class="widget-subheading">Certified</div>
-                                     <div class="widget-description text-success">
-                                         <span class="pl-1">98% Success rate</span>
-                                     </div> 
-                                 </div>
+                                            <div class="icon-wrapper-bg bg-primary"></div>
+                                            <i class="lnr-cog text-primary"></i></div> -->
+                                        <div class="widget-numbers">450</div>
+                                        <div class="widget-subheading">Certified</div>
+                                        <div class="widget-description text-success">
+                                            <span class="pl-1">98% Success rate</span>
+                                        </div> 
+                                    </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="widget-chart">
                                     <!-- <div class="icon-wrapper rounded-circle">
-                                         <div class="icon-wrapper-bg bg-primary"></div>
-                                         <i class="lnr-cog text-primary"></i></div> -->
-                                     <div class="widget-numbers">19</div>
-                                     <div class="widget-subheading">Teachers</div>
-                                     <div class="widget-description text-success">
+                                            <div class="icon-wrapper-bg bg-primary"></div>
+                                            <i class="lnr-cog text-primary"></i></div> -->
+                                        <div class="widget-numbers">19</div>
+                                        <div class="widget-subheading">Teachers</div>
+                                        <div class="widget-description text-success">
                                         
-                                         <span class="pl-1">All the top class teachers</span>
-                                     </div> 
-                                 </div>
+                                            <span class="pl-1">All the top class teachers</span>
+                                        </div> 
+                                    </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="widget-chart">
                                     <!-- <div class="icon-wrapper rounded-circle">
-                                         <div class="icon-wrapper-bg bg-primary"></div>
-                                         <i class="lnr-cog text-primary"></i></div> -->
-                                     <div class="widget-numbers">25</div>
-                                     <div class="widget-subheading">Courses</div>
-                                     <div class="widget-description text-success">
-                                         <i class="fa fa-angle-up ">
-                                         </i>
-                                         <span class="pl-1">35 batches Ongoing</span>
-                                     </div> 
-                                 </div>
+                                            <div class="icon-wrapper-bg bg-primary"></div>
+                                            <i class="lnr-cog text-primary"></i></div> -->
+                                        <div class="widget-numbers">25</div>
+                                        <div class="widget-subheading">Courses</div>
+                                        <div class="widget-description text-success">
+                                            <i class="fa fa-angle-up ">
+                                            </i>
+                                            <span class="pl-1">35 batches Ongoing</span>
+                                        </div> 
+                                    </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+       
             <div class="col-md-12">
                 <div class="main-card mb-3 card ">
                     <div class="card-body"> 
@@ -241,8 +241,9 @@
                     </div>
                 </div>
             </div>
-		</div>             
-    </div>   
+        </div>
+    </div>
+</div>
 </div>
 @endsection
 
