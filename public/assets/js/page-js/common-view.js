@@ -9,53 +9,128 @@ paymentInvoice = function paymentInvoice(id){
         success: function(response){
             var response = JSON.parse(response);
             var data = response['payment'];
+            var settings = response['settings'];
+            var invoiceDetails = response['invoiceDetails'];
             var modalHtml = "";
             
             var invoiceHtml =
             `<div class="modal-body printable" id="modalBody">
-                <div class="row">
-                    <div class="col-md-6 text-left"><img src="`+logo+`"></div>
-                    <div class="col-md-6 text-right">
-                        <h3>Invoice</h3>
-                        <h5>ABPBD</h5>
-                        <p>Registered No. 10475324</p>
-                    </div>
-                </div>
-                <div class="row padding-top-bottom-20 ">
-                    <div class="col-md-8 text-left">
-                        <p>To</p>
-                        <p><strong>`+data['student_email']+`</strong></p>
-                        <p>`+data['address']+`</p>
-                        <p>Email: `+data['email']+`</p>
-                        <p>Phone: `+data['contact_no']+`</p>
-                    </div>
-                    <div class="col-md-4 text-right">
-                        <p>Invoice No.</p>
-                        <p>`+data['invoice_no']+`</p>
-                    </div>
-                </div>
-                <table class="table" style="width:100% !important">
-                <thead>
+                <table class="discount" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                <td>
+                    <img  class="f-fallback email-masthead_name"src="`+logo+`" style="max-width:140px" /> 
+                    </td>
+                <td align="right">
+                    <h1 class="align-right" style="text-transform:uppercase">Money Receipt</h1>
+                </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td align="right">                                   
+                            <p class="align-right" >`+settings['company_name']+`<br>
+                            `+settings['address']+`<br>
+                            Mobile : +880`+settings['company_name']+`<br>
+                            www.abpbd.org</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><hr></td>
+                </tr>
+                <tr>
+                <td colspan="2">
+                    <table class="" width="100%" cellpadding="0" cellspacing="0">
                     <tr>
-                        <th class="text-left">Course Details</th>
-                        <th class="text-center">Installment No</th>
-                        <th class="text-right">Paid Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-left">`+data['course_name']+`</td>
-                        <td class="text-center">`+data['installment_no']+`</td>
-                        <td class="text-right">Tk`+data['paid_amount']+`</td>
-                    </tr>
-                </tbody>
-                </table>
-                <div class="col-md-12 ">
-                    <div class="col-md-6 text-left">
+                        <td class="" align="left">
+                        <p >Bill to,<br>
+                            `+data['student_name']+`
                         <br>
-                        <p>Made payment in favour of 'ABPBD'</p>
-                    </div>
-                </div>
+                            `+data['student_email']+`,<br>
+                            `+data['address']+`
+                        </p>
+                        </td>
+                        <td class=""  colspan="2" align="right">
+                        <p  style="text-align:right !important">
+                            Invoice Number :  `+data['invoice_no']+`<br>                                
+                            Invoice Date :  `+data['paid_date']+`<br>
+                            Payment Due  :   `+data['last_payment_date']+`<br>
+                            <b>Amount Due (BDT):   ৳ `+data['paid_amount']+`</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><hr></td>
+                    </tr>
+                    <tr>
+                        <th class="" align="left">
+                        <p ><b>Course</b></p>
+                        </th>
+                        <th class="" align="center">
+                            <p ><b>Course Fee</b></p>
+                        </th>
+                        <th class="" align="right">
+                        <p  style="text-align:right !important"><b>Amount</b></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="50%" class="" ><span >`+data['only_course_name']+`</span></td>
+                        <td width="20%" align="right" class="purchase_item" ><span>৳ `+invoiceDetails['actual_fees']+`</span></td>
+                        <td class="align-right" width="20%" align="right" ><span >৳ `+invoiceDetails['actual_fees']+`</span></td>
+                    </tr> `; 
+
+                    if(invoiceDetails['discount']>0)
+                        invoiceHtml +=`<tr>
+                            <td width="50%" class="" ><span >Discount</span></td>
+                            <td width="20%" align="right" class="purchase_item" ><span>(৳ `+invoiceDetails['discount']+`)</span></td>
+                            <td class="align-right" width="20%" align="right" ><span >(৳ `+invoiceDetails['discount']+`)</span></td>
+                        </tr> `;
+7
+                    invoiceHtml +=` <tr>
+                        <td colspan="3"><hr></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right"><b>Total</b></td>
+                        <td class="align-right" width="20%" align="right" ><span >৳ `+invoiceDetails['total_payable']+`</span></td>
+                    </tr>`;
+                    if(!jQuery.isEmptyObject(invoiceDetails['payments'])){
+                        $.each(invoiceDetails['payments'], function(i,payment){ 
+                            if(payment['payment_status'] == 'Paid'){
+                                invoiceHtml += `<tr>
+                                    <td colspan="2" align="right"><p>Payment of `+payment['paid_date']+`</p></td>
+                                    <td class="align-right" width="20%" align="right" ><span >৳ `+payment['paid_amount']+`</span></td>
+                                </tr>`;
+                            }
+                        });
+                    }
+                invoiceHtml +=` <tr>
+                        <td colspan="3"><hr></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right"><b>Amount Due (BDT)</b></td>
+                        <td class="align-right" width="20%" align="right" ><b >৳ `+invoiceDetails['balance']+`</b></td>
+                    </tr>
+                `;                        
+                invoiceHtml +=` </table>
+                </td>
+                </tr>
+                <tr>
+                <td colspan="2"> 
+                    <br>
+                    <br> 
+                    <p style="text-align:left !important; font-size:12px">
+                    Notes/Terms:<br>
+                    1. Fees are not refundable.<br>
+                    2. Course fees are not .<br>
+                    3. Course registration is valid for 12 months (PGD), for short course 4 months 
+                    </p>
+                </td>
+                </tr>
+                <tr>
+                <td colspan="2"> 
+                    <br>
+                    <br> 
+                    <p style="text-align:center !important; font-size:12px">No signature required for electronic invoice </p>
+                </td>
+                </tr>
+            </table>
             </div>
             `;	
             

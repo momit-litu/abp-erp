@@ -1,5 +1,7 @@
 @component('mail::message')
-    <h2> Hello, {{ $details['user_info'] }} </h2>
+<img  class="f-fallback email-masthead_name" src="{{ asset('assets/images/admin-upload/')."/".$settings['logo']}}" style="min-width:100px;max-width:140px "  /> 
+
+<h2> Hello, {{ $details['user_info'] }} </h2>
     To reset your password, please click on the link below.
      @component('mail::button', ['url' =>  $details['reset_url']  ])
          Reset your password

@@ -101,6 +101,8 @@ Route::post('/course-batch-autosuggest',array('as'=>'Course Batch Autosuggest li
 Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
 Route::post('/expense-autosuggest',array('as'=>'Expense Autosuggest list', 'uses' =>'ExpenseController@expenseAutoComplete'));
 
+Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'uses' =>'PaymentController@emailInvoice'));
+
 
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
@@ -198,7 +200,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/payment',array('as'=>'Payment Entry' , 'action_id'=>'87', 'uses' =>'PaymentController@createOrEdit'));
 	Route::get('/payment/delete/{id}',array('as'=>'Payment Delete' , 'action_id'=>'89', 'uses' =>'PaymentController@destroy'));
 	
-	Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'action_id'=>'89', 'uses' =>'PaymentController@emailInvoice'));
+
 	Route::get('/email/payment-revised/{id}',array('as'=>'Revised Payment Email' , 'action_id'=>'91', 'uses' =>'PaymentController@emailRevisedPayment'));
 
 	//Payment Schedule

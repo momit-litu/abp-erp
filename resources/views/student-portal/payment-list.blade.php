@@ -50,6 +50,10 @@
                         @foreach ($batchStudents as $key=>$batch_student)
                         <div class="tab-pane  {{ ($key==0?'active':'') }} " id="tab-{{ $batch_student['id'] }}" role="tabpanel">
                             <div class="row">
+                                <div class="col-md-12 mb-3 card text-white bg-dark">&nbsp;<br>
+                                   <h5>{{ $batch_student['batch']['course']['code'].'-'.$batch_student['batch']['course']['title'] }}</h5><br>
+                                   <h6>Student Enrollment ID : {{$batch_student['student_enrollment_id']}}</h6>
+                                </div>
                                 <div class="col-md-3">
                                     <div class="card-shadow-primary profile-responsive card-border mb-3 card">
                                         <ul class="list-group list-group-flush">
@@ -57,7 +61,6 @@
                                                 <div class="widget-content p-0">
                                                     <div class="widget-content-wrapper">					
                                                         <div class="widget-content-left">
-                                                            <div class="widget-heading text-dark opacity-7"><h5>{{ $batch_student['batch']['course']['code'].'-'.$batch_student['batch']['course']['title'] }}</h5></div>
                                                             <div class="widget-heading text-dark opacity-7">Batch {{$batch_student['batch']['batch_name']}}</div>
                                                             <div class="widget-subheading opacity-10">Course Fee: 
 

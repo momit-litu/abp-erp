@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Batch;
 use App\Models\Level;
 use App\Models\Course;
+use App\Models\Setting;
 use App\Models\Student;
 use App\Models\BatchFee;
 use App\Models\BatchStudent;
@@ -15,8 +16,8 @@ use Illuminate\Http\Request;
 use App\Mail\customerInvoice;
 use App\Traits\HasPermission;
 use Illuminate\Http\Response;
-use App\Models\StudentPayment;
 
+use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
 use App\Traits\StudentNotification;
 use App\Models\NotificationTemplate;
@@ -160,15 +161,26 @@ class PaymentController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;
-        $paymentDetails = $this->studentPayment->getPaymentDetailByPaymentId($id);
+        $paymentDetails     = $this->studentPayment->getPaymentDetailByPaymentId($id);
         // Payment due sms = 1
-        $smsBody = NotificationTemplate::find(1);
-        $studentName = $paymentDetails['only_student_name'];
-        $payableAmount = $paymentDetails['payable_amount'];
-        $lastPaymentDate = $paymentDetails['last_payment_date'];
+        $smsBody            = NotificationTemplate::find(1);
+        $settings           = Setting::first();
+        $batchStudent       = BatchStudent::with('batch','payments','batch_fee')->find($paymentDetails['student_enrollment_id']);
 
-        $smsBodyText = str_replace(array('[student_name]', '[payment_amount]','[payment_date]'), array($studentName,$payableAmount , $lastPaymentDate), $smsBody->details);
-		return json_encode(array('payment'=>$paymentDetails, 'sms_body'=>$smsBodyText));
+        $invoiceDetails['actual_fees']   = $batchStudent->batch->fees;
+        $invoiceDetails['total_payable'] = $batchStudent->total_payable;
+        $invoiceDetails['discount']      = ($invoiceDetails['actual_fees']>$invoiceDetails['total_payable'])?($invoiceDetails['actual_fees']-$invoiceDetails['total_payable']):0;
+        $invoiceDetails['total_paid']    = $batchStudent->total_paid;
+        $invoiceDetails['balance']       = $batchStudent->balance;        
+        $invoiceDetails['payments']      = $batchStudent->payments;
+
+
+        $studentName        = $paymentDetails['only_student_name'];
+        $payableAmount      = $paymentDetails['payable_amount'];
+        $lastPaymentDate    = $paymentDetails['last_payment_date'];
+
+        $smsBodyText        = str_replace(array('[student_name]', '[payment_amount]','[payment_date]'), array($studentName,$payableAmount , $lastPaymentDate), $smsBody->details);
+		return json_encode(array('payment'=>$paymentDetails, 'sms_body'=>$smsBodyText,'settings'=>$settings, 'invoiceDetails'=>$invoiceDetails));
     }
 
     public function destroy($id)
@@ -284,7 +296,7 @@ class PaymentController extends Controller
 
     public function emailInvoice($id)
     {
-         $batchStudent = BatchStudent::with('student','batch','batch.course')->find(35);
+        // $batchStudent = BatchStudent::with('student','batch','batch.course')->find(35);
         // $this->courseEnrollmentNotificationForAdmin($batchStudent); 
         // $this->courseEnrollmentNotificationForStudent($batchStudent); 
         // $batchStudent = BatchStudent::with('student','batch','batch.course')->find(33);

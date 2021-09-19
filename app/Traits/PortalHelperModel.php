@@ -40,10 +40,8 @@ trait PortalHelperModel
 									}]);
 			}
 			$batchesQuery 	= ($type=='Featured')?$batchesQuery->where('featured','Yes'):$batchesQuery->where('running_status',$type)->where('status','Active');
-			
             $totalBatches   = $batchesQuery->count();
             $batches        = $batchesQuery->orderBy('created_at','desc')->limit($limit)->offset(($page - 1) * $limit)->get();
-		
 		/*	foreach($batches as $batch){
 				dd($batch);
 			}

@@ -1,6 +1,6 @@
 <div class="app-header header-shadow">
     <div class="app-header__logo">
-        <div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:140px" /> </div>
+        <div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:40px" /> </div>
         
         <div class="header__pane ml-auto">
             <div>
@@ -32,13 +32,13 @@
     </div>    
     <div class="app-header__content">
         <div class="app-header-left">
-            <div class="search-wrapper">
+            <!--<div class="search-wrapper">
                 <div class="input-holder">
                     <input type="text" class="search-input" placeholder="Type to search">
                     <button class="search-icon"><span></span></button>
                 </div>
                 <button class="close"></button>
-            </div>
+            </div>-->
 			<ul class="header-megamenu nav">
                 <li class="btn-group nav-item">
                     <a class="nav-link" data-toggle="dropdown" aria-expanded="false">
@@ -96,7 +96,7 @@
                             <div class="">
                                 <!--<h6 tabindex="-1" class="dropdown-header">Overall</h6>-->
                                 <a href="{{url('portal/payments/all')}}" tabindex="0" class="dropdown-item">Payments</a>
-                                <a href="{{url('portal/payments/upcoming')}}" tabindex="0" class="dropdown-item">Upcoming Payments</a>
+                                <!--<a href="{{url('portal/payments/upcoming')}}" tabindex="0" class="dropdown-item">Upcoming Payments</a>-->
 
                                 <a href="{{url('portal/revise-payments')}}" tabindex="0" class="dropdown-item">Revise Payment</a>                  
                                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
@@ -122,10 +122,10 @@
                 <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="p-0 mr-2 btn btn-link">
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
-                            <span class="icon-wrapper-bg bg-danger"></span>
-                            <i class="icon text-danger icon-anim-pulse ion-android-notifications"></i>
+                            <span class="icon-wrapper-bg bg-success" id="notification_span"></span>
+                            <i class="icon text-success icon-anim-pulse ion-android-notifications" id="notification_i"></i>
                             <!--<span class="badge badge-pill badge-danger">2</span>-->
-                            <span class="badge badge-dot badge-dot-sm badge-danger">Notifications</span>
+                            <span class="badge badge-dot badge-dot-sm badge-danger" style="display:none" id="notification_span_badge">Notifications</span>
                         </span>
                     </button>
                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
@@ -245,6 +245,9 @@
                                                         <div class="widget-content-left">
                                                             <div class="widget-heading">{{isset(\Auth::user()->first_name) ? \Auth::user()->first_name : ''}}
                                                             </div>
+                                                            <div class="widget-subheading">
+                                                                <b> {{ \Session::get('student_no') }}</b>
+                                                            </div>
                                                         </div>
                                                         <div class="widget-content-right mr-2">
                                                             @if(\Auth::check())
@@ -296,7 +299,7 @@
                                 {{isset(\Auth::user()->first_name) ? \Auth::user()->first_name : ''}}
                             </div>
                             <div class="widget-subheading">
-                                Student
+                               <b> {{ \Session::get('student_no') }}</b>
                             </div>
                         </div>
                        <!-- <div class="widget-content-right header-user-info ml-3">

@@ -117,7 +117,8 @@
 										
 										<br>
 										<button class='btn btn-info' onclick='edit_profile()'>Edit Profile</button>
-										<button class='btn btn-danger' onclick='change_password()'>Change Password</button>
+										<a role="tab" class="btn btn-danger" href="#change_pass" id="change_password" data-toggle="tab"  aria-selected="false">
+										Change Password</a>
 									</div>
 								</div>	
 							</div>
@@ -182,7 +183,7 @@
 								<label class="control-label col-md-2 col-sm-2 col-xs-6"></label>
 								<div class="col-md-4 col-sm-4 col-xs-12">				
 									<button type="submit" id="update_profile_info" class="btn btn-success">Update</button>                                       
-									<button type="button" id="cancle_admin_update" class="btn btn-danger hidden">Cancle</button>              
+									<button type="button" id="Cancel_admin_update" class="btn btn-danger hidden">Cancel</button>              
 								</div>
 							</div>
 						</form>	
@@ -193,14 +194,6 @@
 								<div class="row">
 									<div class="col-md-8">
 										<input type="hidden" name="change_pass_id" id="change_pass_id"  value="{{$user->id}}">
-										<div class="form-row">
-											<div class="col-md-6">
-												<div class="position-relative form-group">
-													<label for="company_name" class="">Current Password <span class="required">*</span></label>
-													<input type="password" id="current_password" name="current_password" class="form-control col-lg-12"/>
-												</div>
-											</div>
-										</div>
 										<div class="form-row">
 											<div class="col-md-6">
 												<div class="position-relative form-group">
@@ -219,7 +212,7 @@
 										</div>
 										<div class="col-md-4 col-sm-4 col-xs-12">
 											<button type="submit" id="update_password" class="btn btn-success">Update Password</button>                   
-											<button type="button" id="cancle_admin_update" class="btn btn-danger hidden">Cancle</button>              
+											<button type="button" id="Cancel_admin_update" class="btn btn-danger hidden">Cancel</button>              
 										</div>
 									</div>							
 								</div>

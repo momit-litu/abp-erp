@@ -73,7 +73,7 @@ class StudentController extends Controller
             $data['contact_no'] = $student->contact_no;
             //$data['address'] = $student->address;
             //dd( $student->id;die;
-            $image_path = asset('assets/images/student');
+            $image_path = asset('assets/images/user/student');
             $data['user_profile_image'] = ($student->user_profile_image != "" || $student->user_profile_image != null) ? '<img height="40" width="50" src="' . $image_path . '/' . $student->user_profile_image . '" alt="image" />' : '<img height="40" width="50" src="' . $image_path . '/no-user-image.png' . '" alt="image" />';
 
 
@@ -252,7 +252,7 @@ class StudentController extends Controller
                     $image_name = time();
                     $ext = $StudentImage->getClientOriginalExtension();
                     $image_full_name = $image_name . '.' . $ext;
-                    $upload_path = 'assets/images/student/';
+                    $upload_path = 'assets/images/user/student/';
                     $success = $StudentImage->move($upload_path, $image_full_name);
                     $profileImage = $image_full_name;
                 }
@@ -394,7 +394,7 @@ class StudentController extends Controller
                 $user->email = $request['email'];
                 $user->contact_no = $request['contact_no'];
                 $user->remarks = $request['remarks'];
-                $user->status = (isset($request['status'])) ? "Active" : 'Inactive';
+                $user->status = (isset($request['status'])) ? "1" : '0';
 
                 $StudentImage = $photo;
                 if (isset($StudentImage) && $StudentImage!="") {
@@ -402,7 +402,7 @@ class StudentController extends Controller
                     $image_name = time();
                     $ext = $StudentImage->getClientOriginalExtension();
                     $image_full_name = $image_name . '.' . $ext;
-                    $upload_path = 'assets/images/student/';
+                    $upload_path = 'assets/images/user/student/';
                     $success = $StudentImage->move($upload_path, $image_full_name);
                     $student->user_profile_image = $image_full_name;
                     $user->user_profile_image = $image_full_name;

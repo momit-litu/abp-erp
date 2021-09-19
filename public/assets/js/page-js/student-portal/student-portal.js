@@ -96,12 +96,12 @@ $(document).ready(function () {
 		else if($.trim($('#last_qualification').val()) == ""){
 			success_or_error_msg('#student_form_submit_error','danger',"Please enter last qualification","#last_qualification");
 		}
-		else if($.trim($('#passing_year').val()) == ""){
+		/*else if($.trim($('#passing_year').val()) == ""){
 			success_or_error_msg('#student_form_submit_error','danger',"Please enter  passing year","#passing_year");
 		}
 		else if($.trim($('#current_emplyment').val()) == ""){
 			success_or_error_msg('#student_form_submit_error','danger',"Please enter last current emplyment","#current_emplyment");
-		}
+		}*/
 		else{
 			$.ajax({
 				url: url+"/portal/student-info",
@@ -271,5 +271,4 @@ $(document).ready(function () {
 			alert('rocket')
 		}		
 	}
-
 });

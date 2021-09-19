@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="{{ asset('assets/css/buttons.dataTables.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" type="text/css" media="print"/>
 
-<!--<link rel="icon" href="{{ asset('assets/images/fevicon.png')}}" type="image/png" />-->
+<link rel="icon" href="{{ asset('assets/images/fevicon.png')}}" type="image/png" />
 @yield('style')
 </head>
 

@@ -110,12 +110,17 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="main-card mb-3 card">
                     <div class="card-body">
                         @if($batch->students->count()==1 && $batch->students[0]->pivot->status =='Inactive')
                             <div class="alert alert-danger ">
                                 <button class="btn btn-sm btn-danger disabled">Registration Pending</button><br>
                                 You registration to this course is still pending. Please make the payment to enroll.
+                            </div>
+                        @elseif($batch->students->count()>1)
+                            <div class="alert alert-warning ">
+                                <h6>Student Course Enrollment ID : <b>{{ $batch->students[0]->pivot->student_enrollment_id}}</b></h6>
                             </div>
                         @endif
                         <h5 class="card-title">Details</h5>

@@ -91,15 +91,12 @@ class StudentPortalController extends Controller
         if($type != 'Running'  && $type != 'Upcoming' &&  $type != 'Completed'){
             return redirect()->back();
         }
-        $page_title                 = $this->page_title;
-        $runningBatcheResponse      = $this->courseList(1,50, 'Running', 'my');
-        $data['runningBatches']     = $runningBatcheResponse['batches'];
-        $upcomingBatcheResponse     = $this->courseList(1,50, 'Upcoming', 'my');
-        $data['upcomingBatches']    = $upcomingBatcheResponse['batches'];
-        $completedBatcheResponse    = $this->courseList(1,50, 'Completed', 'my');
-        $data['completedBatches']   = $completedBatcheResponse['batches'];
+       // echo $type;die;
+        $page_title          = $this->page_title;
+        $batcheResponse      = $this->courseList(1,50, $type, 'my');
+        $data['batches']     = $batcheResponse['batches'];
+        $data['type']        = $type;
 
-      //  dd($data);
         return view('student-portal.my-course-list', array('page_title'=>$page_title, 'data'=>$data));
     }
     
@@ -290,7 +287,7 @@ class StudentPortalController extends Controller
                     $image_name = time();
                     $ext = $StudentImage->getClientOriginalExtension();
                     $image_full_name = $image_name . '.' . $ext;
-                    $upload_path = 'assets/images/student/';
+                    $upload_path = 'assets/images/user/student/';
                     $success = $StudentImage->move($upload_path, $image_full_name);
                     $student->user_profile_image = $image_full_name;
                     $user->user_profile_image = $image_full_name;

@@ -440,7 +440,7 @@
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
               <td class="email-masthead">
-                    <img  class="f-fallback email-masthead_name" src="{{ asset('assets/images/admin-upload/')."/".$settings['logo']}}" style="max-width:140px" /> 
+                    <img  class="f-fallback email-masthead_name" src="{{ asset('assets/images/admin-upload/')."/".$settings['logo']}}" style="min-width:100px;max-width:140px " /> 
               </td>
             </tr>
             <!-- Email Body -->
@@ -481,6 +481,7 @@
                       <p class="f-fallback sub align-center">
                         {{$settings['company_name']}}
                         <br>{{$settings['address']}}
+                        <br>{{$settings['admin_email']}}
                         <br>{{$settings['admin_mobile']}}
                       </p>
                     </td>

@@ -16,7 +16,6 @@ $(document).ready(function () {
 				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 			}
 		});
-
 		var formData = new FormData($('#my_profile_form')[0]);
 
 		if($.trim($('#first_name').val()) == ""){
@@ -55,8 +54,9 @@ $(document).ready(function () {
 						$("#my_profile_tab").trigger('click');
 						$("#edit_profile_menu_tab").addClass('hidden');
 						//profile_info();
+						location.reload(); 
 					}
-					$(window).scrollTop();
+					//$(window).scrollTop();
 				 }	
 			});
 		}	
@@ -85,12 +85,15 @@ $(document).ready(function () {
 
 		var formData = new FormData($('#change_password_form')[0]);
 
-		if($.trim($('#current_password').val()) == ""){
+		/*if($.trim($('#current_password').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Please Insert Current Password","#current_password");			
-		}else if($.trim($('#new_password').val()) == ""){
+		}else*/ if($.trim($('#new_password').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Please Insert New Password","#new_password");			
 		}else if($.trim($('#confirm_password').val()) == ""){
-			success_or_error_msg('#form_submit_error','danger',"Please Confirm Password","#confirm_password");			
+			success_or_error_msg('#form_submit_error','danger',"Please Confirm Password","#confirm_password");	
+		}
+		else if($.trim($('#new_password').val()) != $.trim($('#confirm_password').val())){
+			success_or_error_msg('#form_submit_error','danger',"Please insert same password","#confirm_password");	
 		}
 		else{
 			var new_password = $("#new_password").val();
@@ -123,7 +126,7 @@ $(document).ready(function () {
 							//profile_info();
 							$("#new_password").val("");
 							$("#confirm_password").val("");
-							$("#current_password").val("");
+							//$("#current_password").val("");
 							
 						}
 						$(window).scrollTop();

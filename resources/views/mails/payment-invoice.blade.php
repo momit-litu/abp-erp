@@ -6,10 +6,129 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="color-scheme" content="light dark" />
     <meta name="supported-color-schemes" content="light dark" />
-    <title></title>
-    <style type="text/css" rel="stylesheet" media="all">
-    /* Base ------------------------------ */
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.fa {
+  padding: 20px;
+  font-size: 30px;
+  width: 50px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+
+.fa-google {
+  background: #dd4b39;
+  color: white;
+}
+
+.fa-linkedin {
+  background: #007bb5;
+  color: white;
+}
+
+.fa-youtube {
+  background: #bb0000;
+  color: white;
+}
+
+.fa-instagram {
+  background: #125688;
+  color: white;
+}
+
+.fa-pinterest {
+  background: #cb2027;
+  color: white;
+}
+
+.fa-snapchat-ghost {
+  background: #fffc00;
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.fa-skype {
+  background: #00aff0;
+  color: white;
+}
+
+.fa-android {
+  background: #a4c639;
+  color: white;
+}
+
+.fa-dribbble {
+  background: #ea4c89;
+  color: white;
+}
+
+.fa-vimeo {
+  background: #45bbff;
+  color: white;
+}
+
+.fa-tumblr {
+  background: #2c4762;
+  color: white;
+}
+
+.fa-vine {
+  background: #00b489;
+  color: white;
+}
+
+.fa-foursquare {
+  background: #45bbff;
+  color: white;
+}
+
+.fa-stumbleupon {
+  background: #eb4924;
+  color: white;
+}
+
+.fa-flickr {
+  background: #f40083;
+  color: white;
+}
+
+.fa-yahoo {
+  background: #430297;
+  color: white;
+}
+
+.fa-soundcloud {
+  background: #ff5500;
+  color: white;
+}
+
+.fa-reddit {
+  background: #ff5700;
+  color: white;
+}
+
+.fa-rss {
+  background: #ff6600;
+  color: white;
+}
+
+    /* Base ------------------------------ */
     @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&display=swap");
     body {
       width: 100% !important;
@@ -387,6 +506,41 @@
     .danger{
         color:#FF6136;
     }
+
+
+ /* Style all font awesome icons */
+ .fa {
+  padding: 20px;
+  font-size: 30px;
+  width: 50px;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Add a hover effect if you want */
+.fa:hover {
+  opacity: 0.7;
+}
+
+/* Set a specific color for each brand */
+
+/* Facebook */
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+.fa-linkedin {
+  background: #007bb5;
+  color: white;
+}
+
+/* Twitter */
+.fa-youtube {
+  background: #bb0000;
+  color: white;
+} 
+
+
     /*Media Queries ------------------------------ */
     
     @media only screen and (max-width: 600px) {
@@ -440,7 +594,7 @@
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
               <td class="email-masthead">
-                    <img  class="f-fallback email-masthead_name" src="{{ asset('assets/images/admin-upload/')."/".$settings['logo']}}" style="max-width:140px" /> 
+                    <img  class="f-fallback email-masthead_name" src="{{ asset('assets/images/admin-upload/')."/".$settings['logo']}}" style="min-width:100px;max-width:140px "  /> 
               </td>
             </tr>
             <!-- Email Body -->
@@ -458,7 +612,7 @@
                         <table class="discount" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                             <tr>
                               <td>
-                                <img  class="f-fallback email-masthead_name" src="{{ asset('assets/images/admin-upload/')."/".$settings['logo']}}" style="max-width:140px" /> 
+                                <img  class="f-fallback email-masthead_name" src="{{ asset('assets/images/admin-upload/')."/".$settings['logo']}}" style="min-width:100px;max-width:140px " /> 
                                 </td>
                               <td align="right">
                                   <h1 class="align-right" style="text-transform:uppercase">Money Receipt</h1>
@@ -475,11 +629,11 @@
                             </tr>
                             <tr>
                               <td colspan="2">
-                                <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0">
+                                <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0" style="font-size:12px">
                                   <tr>
                                     <th class="purchase_heading" align="left">
                                       <p class="f-fallback">Bill to,<br>
-                                        {{$invoice['student_name']}}
+                                        {{$invoice['only_student_name']}}
                                       </p>
                                       <br>
                                       <p class="f-fallback">
@@ -489,21 +643,24 @@
                                     </th>
                                     <th class="purchase_heading"  colspan="2" align="right">
                                       <p class="f-fallback" style="text-align:right !important">
-                                        Invoice Number :{{$invoice['invoice_no']}}</p>
+                                        Invoice Number : {{$invoice['invoice_no']}}</p>
 									                    <p class="f-fallback" style="text-align:right !important">
                                         Invoice Date : {{Date('Y-m-d')}}</p>
                                       <p class="f-fallback" style="text-align:right !important">
                                         Payment Due :  {{Date('Y-m-d')}}</p>
 									                    <p class="f-fallback" style="text-align:right !important">
-                                        Amount Due (BDT) :  Tk{{$invoice['paid_amount']}}</p>
+                                        Amount Due (BDT) :  ৳ {{$invoice['paid_amount']}}</p>
                                     </th>
                                   </tr>
+                                  <tr>
+                                    <td colspan="3"><hr></td>
+                                </tr>
                                   <tr>
                                     <th class="purchase_heading" align="left">
                                       <p class="f-fallback"><b>Course</b></p>
                                     </th>
-                                    <th class="purchase_heading" align="center">
-                                        <p class="f-fallback"><b>Installment</b></p>
+                                    <th class="purchase_heading" align="right">
+                                        <p class="f-fallback"  style="text-align:right !important"><b>Course Fee</b></p>
                                       </th>
                                     <th class="purchase_heading" align="right">
                                       <p class="f-fallback" style="text-align:right !important"><b>Amount</b></p>
@@ -511,9 +668,38 @@
                                   </tr>
                                   <tr>
                                     <td width="50%" class="purchase_item" style="font-size:12px"><span class="f-fallback">{{$invoice['course_name']}}</span></td>
-                                    <td width="20%" align="center" class="purchase_item" style="font-size:12px"><span class="f-fallback">{{$invoice['installment_no']}}</span></td>
-                                    <td class="align-right" width="20%" class="purchase_item" style="font-size:12px"><span class="f-fallback">Tk {{$invoice['paid_amount']}}</span></td>
-                                  </tr>                                  
+                                    <td width="20%" align="right" class="purchase_item" style="font-size:12px"><span class="f-fallback">৳{{$invoiceDetails['actual_fees']}}</span></td>
+                                    <td class="align-right" width="20%" class="purchase_item" style="font-size:12px"><span class="f-fallback">৳ {{$invoiceDetails['actual_fees']}}</span></td>
+                                  </tr> 
+                                  @if($invoiceDetails['discount']>0)
+                                    <tr>
+                                      <td width="50%" class="" style="font-size:12px"><span class="f-fallback">Discount</span></td>
+                                      <td width="20%" style="font-size:12px" align="right" class="purchase_item" ><span class="f-fallback">(৳ {{$invoiceDetails['discount']}})</span></td>
+                                      <td class="align-right" style="font-size:12px" width="20%" align="right" ><span class="f-fallback" >(৳ {{$invoiceDetails['discount']}})</span></td>
+                                  </tr>
+                                 @endif
+                                 <tr>
+                                  <td colspan="3"><hr></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="right" style="font-size:12px"><b class="f-fallback">Total</b></td>
+                                    <td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">৳ {{$invoiceDetails['total_payable']}}</span></td>
+                                </tr>
+                                @foreach($invoiceDetails['payments'] as $payment)
+                                  @if($payment['payment_status'] == 'Paid')
+                                      <tr>
+                                          <td colspan="2" align="right" style="font-size:12px"><span class="f-fallback">Payment of {{$payment['paid_date']}}</span></td>
+                                          <td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">৳ {{$payment['paid_amount']}}</span></td>
+                                      </tr>;
+                                  @endif
+                                @endforeach
+                                <tr>
+                                    <td colspan="3"><hr></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="right" style="font-size:12px"><b class="f-fallback">Amount Due (BDT)</b></td>
+                                    <td class="align-right" width="20%" align="right" style="font-size:12px"><b class="f-fallback">৳ {{$invoiceDetails['balance']}}</b></td>
+                                </tr>
                                 </table>
                               </td>
                             </tr>
@@ -521,7 +707,7 @@
                               <td colspan="2"> 
                                 <br>
                                 <br> 
-                                <p style="text-align:left !important; font-size:12px">
+                                <p style="text-align:left !important; font-size:12px" class="f-fallback">
                                 Notes/Terms:<br>
                                   1. Fees are not refundable.<br>
                                   2. Course fees are not .<br>
@@ -557,8 +743,18 @@
                       <p class="f-fallback sub align-center">
                         {{$settings['company_name']}}
                         <br>{{$settings['address']}}
+                        <br>{{$settings['admin_email']}}
                         <br>{{$settings['admin_mobile']}}
                       </p>
+<!--
+                      <a href="#" class="fa fa-facebook"></a>
+                      <a href="#" class="fa fa-linkedin"></a>
+                      <a href="#" class="fa fa-youtube"></a>
+
+                      <a href="https://www.facebook.com/abp.org" class="fa fa-facebook"></a>
+                      <a href="https://www.linkedin.com/school/abpbd" class="fa fa-linkedin"></a>
+                      <a href="https://www.youtube.com/channel/UCIC3NAAzFQg8QlF2dOlTPbw/videos" class="fa fa-youtube"></a>
+-->           
                     </td>
                   </tr>
                 </table>

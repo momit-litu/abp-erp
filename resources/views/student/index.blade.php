@@ -163,7 +163,14 @@
                                                 <div class="position-relative form-group">
                                                     <label for="short_name" class="">Last Qualification </label>
                                                     <select id="last_qualification" name="last_qualification" class="form-control col-lg-12">
-                                                    <option value="Masters bachelor">Masters bachelor</option>
+                                                     <option value="Bachelor (Engineering & Technology)">Bachelor (Engineering & Technology)</option>
+                                                    <option value="Bachelor's">Bachelor's</option>
+                                                    <option value="Diploma">Diploma</option>
+                                                    <option value="Doctorate">Doctorate</option>
+                                                    <option value="Fazil">Fazil</option>
+                                                    <option value="Kamil">Kamil</option>
+                                                    <option value="Master of Philosopy">Master of Philosopy</option>
+                                                    <option value="Master's">Master's</option>
                                                     <option value="Others">Others</option>
                                                 </select>
                                                 </div>

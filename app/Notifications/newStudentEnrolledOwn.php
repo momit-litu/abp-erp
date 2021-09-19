@@ -47,12 +47,12 @@ class newStudentEnrolledOwn extends Notification
     }
 
     public function toDatabase($notifiable){
-		$messageType = "Courses";
-		$message	 = "Enrollment has been successfull in  ". $this->param->courseName;
+		$messageType = "Courses"; 
+		$message	 = "Enrollment has been successful in  ". $this->param->courseName;
 
         return [
 			'Type'		=>	$messageType,
-            'Id'	    =>	$this->param->studentId,
+            'Id'	    =>	$this->param->courseId,
 			'Message'	=>	$message
 		];
 	}

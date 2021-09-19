@@ -3,6 +3,7 @@ var fade_logo_name 	= $('#fade_logo_name').val();
 var fade_logo_url 	= url+"/assets/images/admin-upload/"+fade_logo_name;
 var logo_name 		= $('#logo_name').val();
 var logo 			= url+"/assets/images/admin-upload/"+logo_name;
+
 const profile_image_url 		= url+"/assets/images/user/student/";
 const payment_attachment_url 	= url+"/assets/images/payment/";
 
@@ -115,12 +116,21 @@ $(document).ready(function () {
     }
 
 	notificationSeen = (id) =>{
+		totalUnreadNotifications =(totalUnreadNotifications>0)?(totalUnreadNotifications-1):totalUnreadNotifications;
 		if($.trim($('#notificationCount').html()) != 0){
 			$.ajax({
 				url: url+"/notification/view/"+id,
 				type: 'GET',
 				async: true,
 			})
+		}
+		$('#notificationCount').html(totalUnreadNotifications);
+		if(totalUnreadNotifications == 0){
+			$('#notification_span').removeClass('bg-success');
+			$('#notification_span').addClass('bg-danger');
+			$('#notification_i').removeClass('text-success');
+			$('#notification_i').addClass('text-danger');
+			$('#notification_span_badge').css('display','block');	
 		}
 	}
 
@@ -132,9 +142,10 @@ $(document).ready(function () {
 	}
 
 	redirectCourseView = (batch_id) =>{
-		window.location.href = url+"/course/"+batch_id;
+		window.location.href = url+"/portal/course/"+batch_id;
 	}
 	
+	var totalUnreadNotifications = 0;
 	loadNotifications = (typepage) =>{
 		$.ajax({
 			url: url+'/notifications/'+typepage,
@@ -203,8 +214,17 @@ $(document).ready(function () {
 							`;
 						}	
 					}//)
+					
 					$('#notificationCount').html(totalUnreadNotifications);
 					$('#dropdown_notification_count').html(totalUnreadNotifications);
+
+					if(totalUnreadNotifications>0){
+						$('#notification_span').removeClass('bg-success');
+						$('#notification_span').addClass('bg-danger');
+						$('#notification_i').removeClass('text-success');
+						$('#notification_i').addClass('text-danger');
+						$('#notification_span_badge').css('display','block');	
+					}
 					if(typepage ==1){
 						if($('#student_notification_div').length >0)
 							$('#student_notification_div').html(studentNotificationHtml);

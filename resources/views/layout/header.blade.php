@@ -1,6 +1,6 @@
 <div class="app-header header-shadow">
     <div class="app-header__logo">
-        <div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:140px" /> </div>
+        <div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:40px" /> </div>
         
         <div class="header__pane ml-auto">
             <div>
@@ -85,10 +85,10 @@
                 <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="p-0 mr-2 btn btn-link">
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
-                            <span class="icon-wrapper-bg bg-danger"></span>
-                            <i class="icon text-danger icon-anim-pulse ion-android-notifications"></i>
+                            <span class="icon-wrapper-bg bg-success" id="notification_span"></span>
+                            <i class="icon text-success icon-anim-pulse ion-android-notifications" id="notification_i"></i>
                             <!--<span class="badge badge-pill badge-danger">2</span>-->
-                            <span class="badge badge-dot badge-dot-sm badge-danger">Notifications</span>
+                            <span class="badge badge-dot badge-dot-sm badge-danger" style="display:none" id="notification_span_badge">Notifications</span>
                         </span>
                     </button>
                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">

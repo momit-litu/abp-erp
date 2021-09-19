@@ -103,12 +103,6 @@
 							</a>
 						</li>
 						<li>
-							<a href="{{url('portal/payments/upcoming')}}">
-								<i class="metismenu-icon">
-								</i>Upcoming Payments
-							</a>
-						</li>
-						<li>
 							<a href="{{url('portal/revise-payments')}}">
 								<i class="metismenu-icon">
 								</i>Revise Payments

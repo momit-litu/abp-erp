@@ -92,8 +92,11 @@ class AuthController extends Controller
                 return redirect($url);
             }else {
                 \App\Models\User::LogInStatusUpdate(1);
-                if(Auth::user()->type == 'Student')
+                if(Auth::user()->type == 'Student'){
+                    $student = Student::find(Auth::user()->student_id);
+                    \Session::put('student_no', $student->student_no);
                     return redirect('portal/dashboard');
+                }                    
                 else
                     return redirect('dashboard');
             }
@@ -255,7 +258,7 @@ class AuthController extends Controller
 
     public function registrationComplete($id)
     {
-        $student = Student::find($id);
+        $student = Student::where('registration_completed','No')->where('id',$id)->first();
         if(!empty($student)){
             $student->registration_completed = 'Yes';
             $student->update();
@@ -269,7 +272,7 @@ class AuthController extends Controller
 
             return redirect('login')->with('message',"Registration completed. Now you can login");
         }
-        return redirect('error')->with('errormessage',"Invalid student request");
+        return redirect('error')->with('errormessage',"Invalid request");
     }
 
     

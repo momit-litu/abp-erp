@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('assets/css/print.css') }}" type="text/css" media="print"/>
 <link rel="stylesheet" href="{{ asset('assets/css/abp.css') }}"/>
-<!--<link rel="icon" href="{{ asset('assets/images/fevicon.png')}}" type="image/png" />-->
+<link rel="icon" href="{{ asset('assets/images/fevicon.png')}}" type="image/png" />
 @yield('style')
 </head>
 
@@ -56,6 +56,8 @@
 <button id="tostr-show"></button>
 <div class="app-drawer-overlay d-none animated fadeIn"></div>
 <input type="hidden" class="site_url" value="{{url('/')}}">
+<input type="hidden" id="logo_name" value="{{$site_settings['logo']}}">
+<input type="hidden" id="fade_logo_name" value="{{$site_settings['fade_logo']}}">
 
 <!--SCRIPTS INCLUDES-->
 

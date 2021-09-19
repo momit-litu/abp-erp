@@ -76,7 +76,7 @@
 						<div class="container portfolio">
 							<div class="bio-info">
 								<div class="row">
-									<div class="col-md-4 col-xs-6">
+									<div class="col-md-3 col-xs-6">
 										<div class="row">
 											<div class="col-md-12">
 												<div class="bio-image">														
@@ -85,7 +85,7 @@
 											</div>
 										</div>	
 									</div>
-									<div class="col-md-8  col-xs-6">
+									<div class="col-md-9  col-xs-6">
 										<h4>Personal Information</h4>
 										<table class="table table-condensed table-hover">
 											<tbody>
@@ -97,15 +97,17 @@
 													<button disabled class='btn btn-xs btn-danger'>In-Active</button></td>
 													@endif
 												</tr>
-												<tr><td class="text-left"><i class='fa fa-phone'></i>{{$user->contact_no}}</td></tr>
-												<tr><td class="text-left"><i class='fa fa-envelope'></i>{{$user->email}}</td></tr>
+												<tr><td>Registration Number : <b> {{ \Session::get('student_no') }}</b></td></tr>
+												
+												<tr><td class="text-left"><i class='fa fa-phone'></i>&nbsp;{{$user->contact_no}}</td></tr>
+												<tr><td class="text-left"><i class='fa fa-envelope'></i>&nbsp;{{$user->email}}</td></tr>
 											</tbody>
 										</table>
 										<br>
 										
 										<br>
 										<button class='btn btn-info' onclick='edit_profile()'>Edit Profile</button>
-										<button class='btn btn-danger' onclick='change_password()'>Change Password</button>
+										<a role="tab" class=" btn btn-danger" href="#change_pass" id="change_passwordd" data-toggle="tab"  aria-selected="false">Change Password</a>
 									</div>
 								</div>	
 							</div>
@@ -155,7 +157,7 @@
 								<label class="control-label col-md-2 col-sm-2 col-xs-6"></label>
 								<div class="col-md-4 col-sm-4 col-xs-12">				
 									<button type="submit" id="update_profile_info" class="btn btn-success">Update</button>                                       
-									<button type="button" id="cancle_admin_update" class="btn btn-danger hidden">Cancle</button>              
+									<button type="button" id="Cancel_admin_update" class="btn btn-danger hidden">Cancel</button>              
 								</div>
 							</div>
 						</form>	
@@ -166,14 +168,14 @@
 								<div class="row">
 									<div class="col-md-8">
 										<input type="hidden" name="change_pass_id" id="change_pass_id"  value="{{$user->id}}">
-										<div class="form-row">
+										<!--<div class="form-row">
 											<div class="col-md-6">
 												<div class="position-relative form-group">
 													<label for="company_name" class="">Current Password <span class="required">*</span></label>
 													<input type="password" id="current_password" name="current_password" class="form-control col-lg-12"/>
 												</div>
 											</div>
-										</div>
+										</div>-->
 										<div class="form-row">
 											<div class="col-md-6">
 												<div class="position-relative form-group">
@@ -192,7 +194,7 @@
 										</div>
 										<div class="col-md-4 col-sm-4 col-xs-12">
 											<button type="submit" id="update_password" class="btn btn-success">Update Password</button>                   
-											<button type="button" id="cancle_admin_update" class="btn btn-danger hidden">Cancle</button>              
+											<button type="button" id="Cancel_admin_update" class="btn btn-danger hidden">Cancel</button>              
 										</div>
 									</div>							
 								</div>

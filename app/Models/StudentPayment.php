@@ -26,14 +26,15 @@ class StudentPayment extends Model
         // dd($payment);
         $return_arr['id']                       =  $payment->id;
         $return_arr['student_id']               =  $payment->enrollment->student->id;
+        $return_arr['student_enrollment_id']    =  $payment->student_enrollment_id;        
         $return_arr['only_student_name']        =  $payment->enrollment->student->name;
         $return_arr['student_name']             =  $payment->enrollment->student->name.' ('.$payment->enrollment->student->email.')';
         $return_arr['student_email']            =  $payment->enrollment->student->email;
         $return_arr['contact_no']               =  $payment->enrollment->student->contact_no;
-        $return_arr['address']                  =  $payment->enrollment->student->address;
-        
+        $return_arr['address']                  =  $payment->enrollment->student->address;        
         $return_arr['course_id']                =  $payment->enrollment->batch->course->id;
         $return_arr['course_name']              =  $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
+        $return_arr['only_course_name']         =  $payment->enrollment->batch->course->title;
         $return_arr['installment_no_value']     =  $payment->id;
         $return_arr['installment_no']           =  $payment->installment_no;
         $return_arr['payable_amount']           =  $payment->payable_amount;
