@@ -103,7 +103,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="{{url('portal/revise-payments')}}">
+							<a href="{{url('portal/payments/all')}}">
 								<i class="metismenu-icon">
 								</i>Revise Payments
 							</a>

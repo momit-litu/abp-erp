@@ -50,7 +50,7 @@
         </div> 
         <div class="row">
             
-            <div class="col-md-3">
+           <!-- <div class="col-md-3">
                 <div class="main-card mb-3 card">
                     <div class="card-body"><h5 class="card-title"></h5>
                         <div class="thumbnail text-center photo_view_postion_b" >
@@ -60,8 +60,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-9">
+            </div>-->
+            <div class="col-md-12">
                 <div class="main-card mb-3 card">
                     <div class="no-gutters row">
                         <div class="col-md-4">

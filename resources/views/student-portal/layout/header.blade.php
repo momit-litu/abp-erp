@@ -98,7 +98,7 @@
                                 <a href="{{url('portal/payments/all')}}" tabindex="0" class="dropdown-item">Payments</a>
                                 <!--<a href="{{url('portal/payments/upcoming')}}" tabindex="0" class="dropdown-item">Upcoming Payments</a>-->
 
-                                <a href="{{url('portal/revise-payments')}}" tabindex="0" class="dropdown-item">Revise Payment</a>                  
+                                <a href="{{url('portal/payments/all')}}" tabindex="0" class="dropdown-item">Revise Payment</a>                  
                                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                                     <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
                                 </div>
