@@ -29,7 +29,7 @@ paymentInvoice = function paymentInvoice(id){
                     <td align="right">                                   
                             <p class="align-right" >`+settings['company_name']+`<br>
                             `+settings['address']+`<br>
-                            Mobile : +880`+settings['company_name']+`<br>
+                            Mobile : +880`+settings['admin_mobile']+`<br>
                             www.abpbd.org</p>
                     </td>
                 </tr>
@@ -136,8 +136,10 @@ paymentInvoice = function paymentInvoice(id){
             
             $('#myModalLabelLg').html("Invoice #"+data['invoice_no']);
             $('#modalBodyLg').html(invoiceHtml);
-            $('.print-button-lg').show();
-            $('.email-button-lg').show();
+            if(user_type == 'Admin'){
+                $('.print-button-lg').show();
+                $('.email-button-lg').show();
+            }            
             $('.email-button-lg').attr('onClick','emailInvoice('+id+')')
             $("#generic_modal_lg").modal();
 
@@ -201,11 +203,10 @@ studentView = function studentView(id){
                         <thead>
                             <tr> 									
                                 <th>Course Title</th>	
-                                <th>Batch</th>										
+                                <th>Batch</th>
+                                <th>Enrollment ID</th>										
                                 <th class="text-center">Start Date </th>
-                                <th class="text-center">End Date</th>
-                                <th class="text-center">Credit Hr.</th>
-                                <th class="text-center">Semister</th>												
+                                <th class="text-center">Semister</th>											
                                 <th class="text-center">Status</th>
                             </tr>
                         </thead>
@@ -216,10 +217,9 @@ studentView = function studentView(id){
                     course_list_html +=`
                             <tr> 									
                                 <td>`+course['course_name']+`</td>	
-                                <td>`+course['batch_name']+`</td>										
+                                <td>`+course['batch_name']+`</td>	
+                                <td>`+course['student_enrollment_id']+`</td>										
                                 <td class="text-center">`+course['start_date']+`</td>	
-                                <td class="text-center">`+course['end_date']+`</td>	
-                                <td class="text-center">`+course['total_credit_hour']+`</td>	
                                 <td class="text-center">`+course['semester_no']+`</td>										
                                 <td class="text-center">`+course['running_status']+`</td>	
                             </tr>

@@ -90,7 +90,7 @@ $(document).ready(function () {
 		var installment_no = (arg.installment_no.length>0)?arg.installment_no:'';
 		var installment_amount = (arg.installment_amount.length>0)?arg.installment_amount:'';
 
-		$("#"+id+">tbody").append("<tr><td class='text-center'><input type='hidden'  name='installment_id["+id+"][]' value='"+installment_id+"'/><input type='text' required  name='installment_no["+id+"][]' value='"+installment_no+"'  class='form-control col-lg-10 input-sm'/></td><td class='text-center'><input type='text' required  value='"+installment_amount+"'  name='installment_amount["+id+"][]'  class='form-control col-lg-10 input-sm'/></td><td class='text-center'><button type='button'  title='Remove Installment' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove_installment_row' onclick='$(this).parent().parent().remove()'><i class='fa fa-trash-alt'></i></button></td></tr>");
+		$("#"+id+">tbody").append("<tr><td class='text-center'><input type='hidden'  name='installment_id["+id+"][]' value='"+installment_id+"'/><input type='text' required  name='installment_no["+id+"][]' value='"+installment_no+"'  class='form-control col-lg-10 input-sm number-only'/></td><td class='text-center'><input type='text' required  value='"+installment_amount+"'  name='installment_amount["+id+"][]'  class='form-control col-lg-10 input-sm number-only'/></td><td class='text-center'><button type='button'  title='Remove Installment' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove_installment_row' onclick='$(this).parent().parent().remove()'><i class='fa fa-trash-alt'></i></button></td></tr>");
 	}
 
 	clearPlan = function clearPlan(id){
@@ -117,7 +117,7 @@ $(document).ready(function () {
 		var installment_duration = (arg.installment_duration.length>0)?arg.installment_duration:'';
 		var payable_amount = (arg.payable_amount.length>0)?arg.payable_amount:'';
 
-		return  `<tr class="table-active tr_`+id+`"><td><input type="hidden" name="plan_id[]" value="`+plan_id+`"><input type="text" name="plan_name[]" required class="form-control col-lg-12" value="`+plan_name+`"/></td><td class="text-center"><input type="text" required name="installment_duration[]" value="`+installment_duration+`" class="form-control col-lg-10"/></td><td class="text-center plnme"><input type="text" required name="total_installment[]" value="`+total_installment+`" class="form-control col-lg-10"/></td><td class="text-center"><input type="text" required name="payable_amount[]" value="`+payable_amount+`" class="form-control col-lg-10"/></td><td class="text-center"><div role="group" class="btn-group-sm btn-group btn-group-toggle" data-toggle="buttons"><button type="button"  title="Add Installment" data-placement="bottom" class="btn-shadow btn mr-3 btn-success btn-xs" onClick="callAddIns(`+id+`)"><i class="fa fa-plus"></i></button><button type="button"  title="Remove plan" data-placement="bottom" class="btn-shadow btn btn-danger btn-xs" onClick="clearPlan(`+id+`)"><i class="fa fa-trash"></i></button></td></tr>`+
+		return  `<tr class="table-active tr_`+id+`"><td><input type="hidden" name="plan_id[]" value="`+plan_id+`"><input type="text" name="plan_name[]" required class="form-control col-lg-12" value="`+plan_name+`"/></td><td class="text-center"><input type="text" required name="installment_duration[]" value="`+installment_duration+`" class="form-control col-lg-10 number-only"/></td><td class="text-center plnme"><input type="text" required name="total_installment[]" value="`+total_installment+`" class="form-control col-lg-10 number-only"/></td><td class="text-center"><input type="text" required name="payable_amount[]" value="`+payable_amount+`" class="form-control col-lg-10 number-only"/></td><td class="text-center"><div role="group" class="btn-group-sm btn-group btn-group-toggle" data-toggle="buttons"><button type="button"  title="Add Installment" data-placement="bottom" class="btn-shadow btn mr-3 btn-success btn-xs" onClick="callAddIns(`+id+`)"><i class="fa fa-plus"></i></button><button type="button"  title="Remove plan" data-placement="bottom" class="btn-shadow btn btn-danger btn-xs" onClick="clearPlan(`+id+`)"><i class="fa fa-trash"></i></button></td></tr>`+
 		`<tr class="tr_`+id+`"><td colspan='2' class='text-right'><b>Installment Details</b></td><td colspan='3'><table class='table table-bordered table-sm installment_table' style='width:100% !important' id='`+id+`'> <thead class='thead-light'><tr><th>Inst. No</th><th>Amount</th></tr></thead><tbody></tbody></table></td></tr>`;
 	}
 
@@ -192,49 +192,62 @@ $(document).ready(function () {
 		else if($.trim($('#start_date').val()) == ""){  
 			success_or_error_msg('#form_submit_error','danger',"Please enter start date","#start_date");
 		}
-		else if($.trim($('#student_limit').val()) == "" || !($.isNumeric($('#student_limit').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please enter total student imit","#student_limit");
+		else if($.trim($('#student_limit').val()) == "" || !($.isNumeric($('#student_limit').val())) || $('#student_limit').val()<0 ){
+			success_or_error_msg('#form_submit_error','danger',"Please enter total student limit properly","#student_limit");
 		}
-		else if($.trim($('#fees').val()) == "" || !($.isNumeric($('#fees').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please enter fees","#fees");
+		else if($.trim($('#fees').val()) == "" || !($.isNumeric($('#fees').val())) || $('#fees').val()<0){
+			success_or_error_msg('#form_submit_error','danger',"Please enter fees properly","#fees");
+		}
+		else if($.trim($('#discounted_fees').val()) != "" && $('#discounted_fees').val()<0){
+			success_or_error_msg('#form_submit_error','danger',"Please enter discounted fees properly","#discounted_fees");
 		}
 		else{
-			// validate the installment details
-			$.ajax({
-				url: url+"/batch",
-				type:'POST',
-				data:formData,
-				async:false,
-				cache:false,
-				contentType:false,
-				processData:false,
-				success: function(data){
-					var response = JSON.parse(data);
-					if(response['response_code'] == 0){
-						var errors	= response['errors'];						
-						resultHtml = '<ul>';
-						if(typeof(errors)=='string'){
-							resultHtml += '<li>'+ errors + '</li>';
+			var error = 0;
+			$('.number-only').each(function(){
+				if(!($.isNumeric($(this).val())) || $(this).val()<0){
+					success_or_error_msg('#form_submit_error','danger',"Please check the information properly, do not put text into number field",".number-only:eq(1)");
+					error = 1;
+				}
+			})
+
+			if(!error){
+				// validate the installment details
+				$.ajax({
+					url: url+"/batch",
+					type:'POST',
+					data:formData,
+					async:false,
+					cache:false,
+					contentType:false,
+					processData:false,
+					success: function(data){
+						var response = JSON.parse(data);
+						if(response['response_code'] == 0){
+							var errors	= response['errors'];						
+							resultHtml = '<ul>';
+							if(typeof(errors)=='string'){
+								resultHtml += '<li>'+ errors + '</li>';
+							}
+							else{
+								$.each(errors,function (k,v) {
+									resultHtml += '<li>'+ v + '</li>';
+								});
+							}
+							resultHtml += '</ul>';
+							toastr['error']( resultHtml, 'Failed!!!!');
 						}
 						else{
-							$.each(errors,function (k,v) {
-								resultHtml += '<li>'+ v + '</li>';
-							});
+							toastr['success']( 'Batch Saved Successfully', 'Success!!!');
+							$('.modal').modal('hide');					
+							batch_datatable.ajax.reload();
+							clear_form();
+							$('#unit_table tr:gt(0)').remove();
+							$("#save_batch").html('Save');
 						}
-						resultHtml += '</ul>';
-						toastr['error']( resultHtml, 'Failed!!!!');
+						$(window).scrollTop();
 					}
-					else{
-						toastr['success']( 'Batch Saved Successfully', 'Success!!!');
-						$('.modal').modal('hide');					
-						batch_datatable.ajax.reload();
-						clear_form();
-						$('#unit_table tr:gt(0)').remove();
-						$("#save_batch").html('Save');
-					}
-					$(window).scrollTop();
-				 }
-			});
+				});
+			}
 		}
 	});
 

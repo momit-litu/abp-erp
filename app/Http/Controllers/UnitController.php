@@ -106,8 +106,8 @@ class UnitController extends Controller
         if($id==""){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 		}			
-		$unit = Unit::with('hasCourse')->findOrFail($id);
-		$is_deletable = (count($unit->hasCourse)==0)?1:0; // 1:deletabe, 0:not-deletable
+		$unit = Unit::with('courses')->findOrFail($id);
+		$is_deletable = (count($unit->courses)==0)?1:0; // 1:deletabe, 0:not-deletable
 		if(empty($unit)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No unit found"));
 		}

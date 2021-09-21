@@ -69,7 +69,7 @@ class PaymentController extends Controller
         foreach($payments as $payment){
             $data['id'] 		    = $payment->id;            
 			$data['student_name']   =  "<a href='javascript:void(0)' onclick='studentView(".$payment->enrollment->student->id.")' />".$payment->enrollment->student->student_no.'-'.$payment->enrollment->student->name.' ('.$payment->enrollment->student->email.")</a>"; 
-            $data['course_name']    = "<a href='javascript:void(0)' onclick='batchView(".$payment->enrollment->batch->id.")' />".$payment->enrollment->batch->course->title."</a>";
+            $data['course_name']    = "<a href='javascript:void(0)' onclick='batchView(".$payment->enrollment->batch->id.")' />".$payment->enrollment->batch->course->title.' <br> ('.$payment->enrollment->batch->course->short_name.")</a>";
             $data['batch_name']      = $payment->enrollment->batch->batch_name; 
             $data['installment']      = $payment->installment_no; 
             $data['payment_month']  = ($payment->paid_date==null)?date('M y', strToTime($payment->last_payment_date)):date('M y', strToTime($payment->paid_date)); 
@@ -80,19 +80,19 @@ class PaymentController extends Controller
      
 			$data['actions'] =" <button title='View' onclick='paymentView(".$payment->id.")' id='view_" . $payment->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
             if($payment->payment_status=='Paid'){
-                $data['actions'] .=" <button title='View' onclick='paymentInvoice(".$payment->id.")' id='view_" . $payment->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='lnr-license'></i></button>&nbsp;";
+                $data['actions'] .=" <button title='Invoice' onclick='paymentInvoice(".$payment->id.")' id='view_" . $payment->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='lnr-license'></i></button>&nbsp;";
             }
 
             if($payment->payment_status=='Unpaid'){
-                $data['actions'] .=" <button title='View' onclick='paymentEdit(".$payment->id.")' id='edit_" . $payment->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='pe-7s-cash'></i></button>&nbsp;";
-                $data['actions'] .=" <button title='View' onclick='paymentSMS(".$payment->id.")' id='sms_" . $payment->id . "' class='btn btn-xs btn-success btn-hover-shine' ><i class='lnr-envelope'></i></button>&nbsp;";
+                $data['actions'] .=" <button title='Payment' onclick='paymentEdit(".$payment->id.")' id='edit_" . $payment->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='pe-7s-cash'></i></button>&nbsp;";
+                $data['actions'] .=" <button title='SMS' onclick='paymentSMS(".$payment->id.")' id='sms_" . $payment->id . "' class='btn btn-xs btn-success btn-hover-shine' ><i class='lnr-envelope'></i></button>&nbsp;";
                 
             }
             if($edit_permisiion>0 &&  $payment->payment_status=='Paid'){
-                $data['actions'] .="<button onclick='paymentEdit(".$payment->id.")' id=edit_" . $payment->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
+                $data['actions'] .="<button  title='Edit' onclick='paymentEdit(".$payment->id.")' id=edit_" . $payment->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
             if ($delete_permisiion>0 &&  $payment->payment_status=='Paid') {
-                $data['actions'] .=" <button onclick='paymentDelete(".$payment->id.")' id='delete_" . $payment->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
+                $data['actions'] .=" <button title='Delete' onclick='paymentDelete(".$payment->id.")' id='delete_" . $payment->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
             }
             $return_arr[] = $data;
         }

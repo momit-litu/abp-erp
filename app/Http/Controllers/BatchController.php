@@ -76,12 +76,12 @@ class BatchController extends Controller
                 $data['running_status'] 	=  "<button class='btn btn-xs btn-info' disabled>Upcoming</button>";
 
 			$data['actions'] =" <button title='View' onclick='batchView(".$batch->id.")' id='view_" . $batch->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
-            $data['actions'] .=" <button title='View' onclick='batchStudents(".$batch->id.")' id='view_" . $batch->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='lnr-users'></i></button>&nbsp;";
+            $data['actions'] .=" <button title='Students' onclick='batchStudents(".$batch->id.")' id='view_" . $batch->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='lnr-users'></i></button>&nbsp;";
 		   if($edit_permisiion>0){
-                $data['actions'] .="<button onclick='batchEdit(".$batch->id.")' id=edit_" . $batch->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
+                $data['actions'] .="<button title='Edit' onclick='batchEdit(".$batch->id.")' id=edit_" . $batch->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
             if ($delete_permisiion>0) {
-                $data['actions'] .=" <button onclick='batchDelete(".$batch->id.")' id='delete_" . $batch->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
+                $data['actions'] .=" <button title='Delete' onclick='batchDelete(".$batch->id.")' id='delete_" . $batch->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
             }
 
             $return_arr[] = $data;
@@ -268,21 +268,22 @@ class BatchController extends Controller
 		}
     }
     
-    
     public function destroy($id)
     {
         if($id==""){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 		}			
-		$Batch = Batch::with('students')->findOrFail($id);
-		$is_deletable = (count($Batch->centers)==0)?1:0; // 1:deletabe, 0:not-deletable
+		$Batch = Batch::with('students')->findOrFail($id);		
 		if(empty($Batch)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Batch found"));
 		}
+        $is_deletable = (count($Batch->students)==0)?1:0; // 1:deletabe, 0:not-deletable
 		try {			
 			DB::beginTransaction();
 			if($is_deletable){
-				BatchUnit::where('course_id', $Batch->id)->delete();
+				$batchFee = BatchFee::/*with('installments')->*/where('batch_id', $Batch->id)->first();
+                $batchFee->installments()->delete();
+                $batchFee->delete();
 				$Batch->delete();
 				$return['message'] = "Batch Deleted successfully";
 			}
@@ -305,6 +306,7 @@ class BatchController extends Controller
 		}
 		
     }
+
     private function createBatch($request){
 		try {
             $rule = [

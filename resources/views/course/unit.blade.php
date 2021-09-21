@@ -101,7 +101,7 @@
 												<label for="company_name" class="">Guided Learning Hours<span class="required">*</span></label>
 												<input type="text" id="glh" name="glh" required class="form-control col-lg-12"/>
 											</div>
-										</div>
+										</div> 
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label for="short_name" class="">Total Unit Time<span class="required">*</span> </label>

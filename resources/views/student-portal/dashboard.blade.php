@@ -24,9 +24,6 @@
                 </div>    
             </div>
         </div> 
-        <a class="btn btn-block btn-social btn-twitter">
-            <span class="fa fa-twitter"></span> Sign in with Twitter
-          </a>
         <div class='row'>
             <div class="col-md-8">
                 <div class="main-card mb-3 card">

@@ -623,7 +623,7 @@
                               <td align="right">                                   
                                     <p class="align-right" style="font-size:12px">{{$settings['company_name']}}<br>
                                       {{$settings['address']}}<br>
-                                      Mobile : +880{{$settings['company_name']}}<br>
+                                      Mobile : +880{{$settings['admin_mobile']}}<br>
                                       www.abpbd.org</p>
                               </td>
                             </tr>
@@ -690,7 +690,7 @@
                                       <tr>
                                           <td colspan="2" align="right" style="font-size:12px"><span class="f-fallback">Payment of {{$payment['paid_date']}}</span></td>
                                           <td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">৳ {{$payment['paid_amount']}}</span></td>
-                                      </tr>;
+                                      </tr>
                                   @endif
                                 @endforeach
                                 <tr>

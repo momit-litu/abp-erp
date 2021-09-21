@@ -155,7 +155,7 @@
 									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label for="company_name" class="">Registration Fee (£)<span class="required">*</span></label>
+												<label for="company_name" class="">Registration Fee<span class="required">*</span></label>
 												<input type="text" id="registration_fees" name="registration_fees"  class="form-control col-lg-12"/>
 											</div>
 										</div>	
@@ -218,8 +218,8 @@
 									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label  class="">Semester<span class="required">*</span></label>
-												<input type="text" id="semester_no" name="semester_no" class="form-control col-lg-12" />
+												<label  class="">Semester<span class="required">*</span></label>												
+												<input type="text" id="semester_no" name="semester_no" min="1" max="2" class="form-control col-lg-12">
 											</div>
 										</div> 
 										<div class="col-md-6">

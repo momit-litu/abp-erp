@@ -18,7 +18,7 @@ $(document).ready(function () {
 			{ mData: 'id'},
 			{ mData: 'student_name'},
 			{ mData: 'course_name' },
-			{ mData: 'batch_name' },
+			{ mData: 'batch_name' ,  className: "text-center"},
 			{ mData: 'installment', className: "text-center"},
 			{ mData: 'payment_month', className: "text-center"},
 			{ mData: 'paid_date', className: "text-center"},
@@ -33,7 +33,7 @@ $(document).ready(function () {
 		"initComplete": function () {
             this.api().columns().every( function (key) {
 				var column = this;		
-				if(column[0] == 2 || column[0] == 3 || column[0] == 5 ||  column[0] == 7  ){
+				if(/*column[0] == 2 ||*/ column[0] == 3 || column[0] == 5 ||  column[0] == 7  ){
 					var select = $('<select><option value=""></option></select>')
 						.appendTo( $(column.header()) )
 						.on( 'change', function () {
@@ -167,6 +167,9 @@ $(document).ready(function () {
 		}
 		else if($.trim($('#installment_no').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Please Select Installment","#installment_no");
+		}
+		else if( !($.isNumeric($('#paid_amount').val())) || $('#paid_amount').val()<0 ){
+			success_or_error_msg('#form_submit_error','danger',"Please enter amount properly","#paid_amount");
 		}
 		else if($.trim($('#paid_date').val()) == ""){  
 			success_or_error_msg('#form_submit_error','danger',"Please Enter Paid date","#paid_date");
@@ -541,8 +544,9 @@ $(document).ready(function () {
 												<div class="widget-content p-0">
 													<div class="widget-content-wrapper">					
 														<div class="widget-content-left">
-															<div class="widget-heading text-dark opacity-7"><h5>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h5></div>
+															<div class="widget-heading text-dark opacity-7"><h5>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h5></div>							
 															<div class="widget-heading text-dark opacity-7">Batch `+batch_student['batch']['batch_name']+batch_status+`</div>
+															<div class="widget-heading text-dark opacity-7">Inrollment ID : `+batch_student['batch']['batch_name']+`</div>
 															<div class="widget-subheading opacity-10">Course Fee: `+feeHtml+`</div>
 														</div>												
 													</div>

@@ -115,7 +115,7 @@
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label for="" class="">Amount<span class="required">*</span></label>
-												<input type="text" id="paid_amount" required name="paid_amount"  class="form-control col-lg-12"/>
+												<input type="text" id="paid_amount" readonly required name="paid_amount"  class="form-control col-lg-12"/>
 											</div>
 										</div>
 										<div class="col-md-6">

@@ -70,13 +70,13 @@ class CourseController extends Controller
 			
 			$data['actions'] =" <button title='View' onclick='courseView(".$course->id.")' id='view_" . $course->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
 		   if($edit_permisiion>0){
-                $data['actions'] .="<button onclick='courseEdit(".$course->id.")' id=edit_" . $course->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
+                $data['actions'] .="<button title='Edit' onclick='courseEdit(".$course->id.")' id=edit_" . $course->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
 			
-			$data['actions'] 	.=" <button title='Edit' onclick='courseBatch(".$course->id.")' id=batch" . $course->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-menu'></i></button>";
+			$data['actions'] 	.=" <button title='Batch' onclick='courseBatch(".$course->id.")' id=batch" . $course->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-menu'></i></button>";
 
             if ($delete_permisiion>0) {
-                $data['actions'] .=" <button onclick='courseDelete(".$course->id.")' id='delete_" . $course->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
+                $data['actions'] .=" <button title='Delete' onclick='courseDelete(".$course->id.")' id='delete_" . $course->id . "' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button>";
             }
 
             $return_arr[] = $data;
@@ -140,7 +140,7 @@ class CourseController extends Controller
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 		}			
 		$course = Course::with('batches')->findOrFail($id);
-		$is_deletable = (count($course->batch)==0)?1:0; // 1:deletabe, 0:not-deletable
+		$is_deletable = (count($course->batches)==0)?1:0; // 1:deletabe, 0:not-deletable
 		if(empty($course)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Course found"));
 		}
@@ -237,9 +237,7 @@ class CourseController extends Controller
 		}
 		return json_encode($json);	
 	}
-	
-
-	
+		
 	private function createCourse($request){
 		try {
             $rule = [

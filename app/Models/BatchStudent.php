@@ -35,6 +35,7 @@ class BatchStudent extends Model
         foreach($studentsCourses as $studentsCourse){        
             $data['batch_name'] = $studentsCourse->batch->batch_name; 
             $data['course_name']= $studentsCourse->batch->course->title;
+            $data['student_enrollment_id']= $studentsCourse->student_enrollment_id;       
             $data['start_date'] = $studentsCourse->batch->start_date; 
             $data['end_date']   = ($studentsCourse->batch->end_date ==null)?"":$studentsCourse->batch->end_date;
             $data['total_credit_hour']  =  $studentsCourse->batch->course->total_credit_hour;

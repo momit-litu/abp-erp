@@ -74,7 +74,7 @@ class StudentController extends Controller
             //$data['address'] = $student->address;
             //dd( $student->id;die;
             $image_path = asset('assets/images/user/student');
-            $data['user_profile_image'] = ($student->user_profile_image != "" || $student->user_profile_image != null) ? '<img height="40" width="50" src="' . $image_path . '/' . $student->user_profile_image . '" alt="image" />' : '<img height="40" width="50" src="' . $image_path . '/no-user-image.png' . '" alt="image" />';
+            $data['user_profile_image'] = ($student->user_profile_image != "" || $student->user_profile_image != null) ? '<img height="40" width="50" src="' . $image_path . '/' . $student->user_profile_image . '" alt="image" />' : '<img height="40" width="50" src="' . $image_path . '/user.png' . '" alt="image" />';
 
 
 			$data['actions']		=" <button title='View' onclick='studentView(".$student->id.")' id='view_" . $student->id . "' class='btn btn-xs btn-info btn-hover-shine admin-user-view' ><i class='lnr-eye'></i></button>";
@@ -83,7 +83,7 @@ class StudentController extends Controller
 				$data['actions'] 	.=" <button title='Edit' onclick='studentEdit(".$student->id.")' id=edit_" . $student->id . " class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
 			}
             if($payment_permisiion>0){
-				$data['actions'] 	.=" <button title='Edit' onclick='studentPayments(".$student->id.")' id=payment_" . $student->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-cash'></i></button>";
+				$data['actions'] 	.=" <button title='Payment' onclick='studentPayments(".$student->id.")' id=payment_" . $student->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-cash'></i></button>";
 			}
 			
 			if ($delete_permisiion > 0) {
@@ -159,7 +159,7 @@ class StudentController extends Controller
         $term = $_REQUEST['term'];
         if(isset($_REQUEST['registration_completed']))
         {
-            $data = Student::select('id', 'name', 'email')
+            $data = Student::select('id','student_no', 'name', 'email')
                 ->where([
                     ['status', '=', 'Active'],
                     ['registration_completed', '=', 'Yes'],
@@ -168,13 +168,18 @@ class StudentController extends Controller
                 ->orwhere([
                     ['status', '=', 'Active'],
                     ['registration_completed', '=', 'Yes'],
-                    ['email', 'like', '%' . $term . '%']
+                    ['email', 'like', '%' . $term . '%'],
+                ])
+                ->orwhere([
+                    ['status', '=', 'Active'],
+                    ['registration_completed', '=', 'Yes'],
+                    ['student_no', 'like', '%' . $term . '%']
                 ])
                 ->get();
         }
         else
         {
-            $data = Student::select('id', 'name', 'email')
+            $data = Student::select('id','student_no', 'name', 'email')
             ->where([
                 ['status', '=', 'Active'],
                 ['name', 'like', '%' . $term . '%']
@@ -183,13 +188,17 @@ class StudentController extends Controller
                 ['status', '=', 'Active'],
                 ['email', 'like', '%' . $term . '%']
             ])
+            ->where([
+                ['status', '=', 'Active'],
+                ['student_no', 'like', '%' . $term . '%']
+            ])
             ->get();
         }
 
         $data_count = $data->count();
         if ($data_count > 0) {
             foreach ($data as $row) {
-                $json[] = array('id' => $row["id"], 'label' => $row["name"] . " (" . $row["email"] . ")");
+                $json[] = array('id' => $row["id"], 'label' => $row["student_no"].' '.$row["name"] . " (" . $row["email"] . ")");
             }
         } else {
             $json[] = array('id' => "0", 'label' => "Not Found !!!");

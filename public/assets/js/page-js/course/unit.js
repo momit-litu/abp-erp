@@ -50,30 +50,28 @@ $(document).ready(function () {
 
 	//Entry And Update Function For Module
 	$("#save_unit").on('click',function(){
-		alert(111);
 		event.preventDefault();
 		$.ajaxSetup({
 			headers:{
 				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 			}
 		});
-
 		var formData = new FormData($('#unit_form')[0]);
 
 		if($.trim($('#unit_code').val()) == ""){
-			success_or_error_msg('#form_submit_error','danger',"Please Insert Unit code","#unit_code");
+			success_or_error_msg('#form_submit_error','danger',"Please insert unit code","#unit_code");
 		}
 		else if($.trim($('#name').val()) == ""){
-			success_or_error_msg('#form_submit_error','danger',"Please Select a unit name","#name");
+			success_or_error_msg('#form_submit_error','danger',"Please select a unit name","#name");
 		}
-		else if($.trim($('#glh').val()) == "" || !($.isNumeric($('#glh').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please Select a GLI","#glh");
+		else if($.trim($('#glh').val()) == "" || !($.isNumeric($('#glh').val())) || $('#glh').val()<0 ){
+			success_or_error_msg('#form_submit_error','danger',"Please enter guided learning hours properly","#glh");
 		}
-		else if($.trim($('#tut').val()) == "" || !($.isNumeric($('#tut').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please Select a total unit time","#tut");
+		else if($.trim($('#tut').val()) == "" || !($.isNumeric($('#tut').val())) || $('#tut').val()<0 ){
+			success_or_error_msg('#form_submit_error','danger',"Please enter total unit time properly","#tut");
 		}
-		else if($.trim($('#credit_hour').val()) == "" || !($.isNumeric($('#credit_hour').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please Select a credit hour","#credit_hour");
+		else if($.trim($('#credit_hour').val()) == "" || !($.isNumeric($('#credit_hour').val())) || $('#credit_hour').val()<0 ){
+			success_or_error_msg('#form_submit_error','danger',"Please enter credit hour properly","#credit_hour");
 		}
 		else{
 			$.ajax({

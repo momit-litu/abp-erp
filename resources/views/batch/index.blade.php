@@ -156,7 +156,7 @@
 										</div>
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label>Discount Fees (Applicable for all student)<span class="required">*</span></label>
+												<label>Discount Fees (Applicable for all student)</label>
 												<input type="text" id="discounted_fees" name="discounted_fees"  class="form-control col-lg-12"/>
 											</div>
 										</div>

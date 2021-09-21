@@ -150,17 +150,23 @@ $(document).ready(function () {
 		else if($.trim($('#title').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Please enter course name","#title");
 		}
-		else if($.trim($('#tqt').val()) == "" || !($.isNumeric($('#tqt').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please enter TQT","#tqt");
+		else if($.trim($('#tqt').val()) == "" || !($.isNumeric($('#tqt').val())) || $('#tqt').val()<0 ){
+			success_or_error_msg('#form_submit_error','danger',"Please enter TQT properly","#tqt");
 		}
-		else if($.trim($('#total_credit_hour').val()) == "" || !($.isNumeric($('#total_credit_hour').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please enter total credit hour","#total_credit_hour");
+		else if($.trim($('#total_credit_hour').val()) == "" || !($.isNumeric($('#total_credit_hour').val())) || $('#total_credit_hour').val()<0){
+			success_or_error_msg('#form_submit_error','danger',"Please enter total credit hour properly","#total_credit_hour");
 		}
 		else if(parseFloat($('#glh').val()) > parseFloat($('#tqt').val())){
 			success_or_error_msg('#form_submit_error','danger',"TQT cannot less than GLH","#tqt");
 		}
-		else if($.trim($('#registration_fees').val()) == "" || !($.isNumeric($('#registration_fees').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please enter registration fees","#registration_fees");
+		else if($.trim($('#registration_fees').val()) == "" || !($.isNumeric($('#registration_fees').val())) || $('#registration_fees').val()<0){
+			success_or_error_msg('#form_submit_error','danger',"Please enter registration fees properly","#registration_fees");
+		}
+		else if($.trim($('#unit_table>tbody').html()) == ""){
+			success_or_error_msg('#form_submit_error','danger',"Please select unit","#unit_name");
+		}	
+		else if($.trim($('#semester_no').val()) != "" &&  !($.isNumeric($('#semester_no').val()))){
+			success_or_error_msg('#form_submit_error','danger',"Please enter numeric value in semester no","#total_credit_hour");
 		}
 		else{
 			$.ajax({
@@ -225,7 +231,7 @@ $(document).ready(function () {
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Level :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['level']['name']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>TQT :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['tqt']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Total Credit Hour :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['total_credit_hour']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Registration Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>£"+data['registration_fees']+"</div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Registration Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>Tk. "+data['registration_fees']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+statusHtml+"</div></div>";
 
 				modalHtml +="<div class='row '>&nbsp;<br><div class='col-lg-12'><strong>Unit Details :</strong></div>"+"<div class='col-lg-12'>";
