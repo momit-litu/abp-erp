@@ -38,7 +38,8 @@
                                         <p>
                                             {{ strip_tags($batch->course->objective) }}
                                         </p>
-                                        <a href="{{ url('portal/course/'.$batch->id)}}" class="btn-icon btn btn-success btn-sm">View Profile</a>
+                                        
+                                        <a href="{{ url('portal/course/'.$batch->id)}}" class="btn-icon btn btn-success btn-sm">View Details</a>
                                     </div>
                                 </div>
                                 @endforeach
@@ -57,7 +58,7 @@
                                     <!-- <div class="icon-wrapper rounded-circle">
                                         <div class="icon-wrapper-bg bg-primary"></div>
                                         <i class="lnr-cog text-primary"></i></div> -->
-                                    <div class="widget-numbers">1220</div>
+                                    <div class="widget-numbers">1400+</div>
                                     <div class="widget-subheading">Total Students</div>
                                     <div class="widget-description text-success">
                                         <i class="fa fa-angle-up ">
@@ -71,7 +72,7 @@
                                     <!-- <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg bg-primary"></div>
                                             <i class="lnr-cog text-primary"></i></div> -->
-                                        <div class="widget-numbers">450</div>
+                                        <div class="widget-numbers">750+</div>
                                         <div class="widget-subheading">Certified</div>
                                         <div class="widget-description text-success">
                                             <span class="pl-1">98% Success rate</span>
@@ -83,11 +84,11 @@
                                     <!-- <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg bg-primary"></div>
                                             <i class="lnr-cog text-primary"></i></div> -->
-                                        <div class="widget-numbers">19</div>
-                                        <div class="widget-subheading">Teachers</div>
+                                        <div class="widget-numbers">45+</div>
+                                        <div class="widget-subheading">Faculty </div>
                                         <div class="widget-description text-success">
                                         
-                                            <span class="pl-1">All the top class teachers</span>
+                                            <span class="pl-1">All the populer courses</span>
                                         </div> 
                                     </div>
                             </div>
@@ -96,12 +97,12 @@
                                     <!-- <div class="icon-wrapper rounded-circle">
                                             <div class="icon-wrapper-bg bg-primary"></div>
                                             <i class="lnr-cog text-primary"></i></div> -->
-                                        <div class="widget-numbers">25</div>
+                                        <div class="widget-numbers">15+</div>
                                         <div class="widget-subheading">Courses</div>
                                         <div class="widget-description text-success">
                                             <i class="fa fa-angle-up ">
                                             </i>
-                                            <span class="pl-1">35 batches Ongoing</span>
+                                            <span class="pl-1">20 batches Ongoing</span>
                                         </div> 
                                     </div>
                             </div>
@@ -145,8 +146,8 @@
                                         <p class="mb-0">Total Unit : &nbsp;{{ count($batch->course->units) }}</p>
                                         <p >Semister No : {{ $batch->course->semester_no}}</p>
 										<p class="text-success mb-0">Start Date : {{ $batch->start_date}}</p>
-										<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
-										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p>
+										<!--<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
+										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p> -->
                                     </div>
                                     <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
                                         <div class="widget-content-wrapper ">
@@ -159,9 +160,12 @@
                                             </div>
                                         </div>
                                     </div>
+                               
                                     <div class="d-block text-center card-footer bg-light">
-                                        @if($batch->students->count()>0)
-                                            <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Registered already</button>
+                                        @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
+                                            <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
+                                        @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
+                                            <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
                                         @else
                                             <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
                                         @endif
@@ -211,8 +215,8 @@
                                         <p class="mb-0">Total Unit : &nbsp;{{ count($batch->course->units) }}</p>
                                         <p >Semister No : {{ $batch->course->semester_no}}</p>
 										<p class="text-success mb-0">Start Date : {{ $batch->start_date}}</p>
-										<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
-										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p>
+										<!--<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
+										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p>-->
                                     </div>
                                     <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
                                         <div class="widget-content-wrapper ">
@@ -226,8 +230,10 @@
                                         </div>
                                     </div>
                                     <div class="d-block text-center card-footer bg-light">
-                                        @if($batch->students->count()>0)
-                                            <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Registered already</button>
+                                        @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
+                                            <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
+                                        @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
+                                            <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
                                         @else
                                             <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
                                         @endif

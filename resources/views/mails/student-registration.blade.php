@@ -452,8 +452,7 @@
                     <td class="content-cell">
                       <div class="f-fallback">
                         <h1>Dear {{$student['name']}},</h1>
-                        <p>Your student registration to {{$settings['company_name']}} is in process.You have to confirm the registration.</p>
- 
+                        <p>Your student registration to Academy of {{$settings['company_name']}} is in process. Please confirm your registration.</p>
                         <table class="discount" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
                             <td align="center">

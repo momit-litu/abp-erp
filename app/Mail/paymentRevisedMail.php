@@ -31,7 +31,7 @@ class paymentRevisedMail extends Mailable
     {
        // return $this->view('view.name');
        $settings = Setting::first();
-        return $this->subject($settings['company_name'].' revised payment plan')
+        return $this->subject('Revised payment plan - '.$settings['company_name'])
             ->markdown('mails.revise-payment')
             ->with([
                 'studentEnrollment' => $this->studentEnrollment,

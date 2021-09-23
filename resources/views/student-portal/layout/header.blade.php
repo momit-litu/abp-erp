@@ -63,7 +63,7 @@
                                 <a href="{{url('portal/courses/Upcoming')}}"  tabindex="0" class="dropdown-item">Upcoming</a>
                                 <div tabindex="-1" class="dropdown-divider"></div>
                                 <h6 tabindex="-1" class="dropdown-header">My Course</h6>
-                                <a href="{{url('portal/courses/my/Running')}}" tabindex="0" class="dropdown-item">Registered</a>
+                                <a href="{{url('portal/courses/my/Registered')}}" tabindex="0" class="dropdown-item">Registered</a>
                                 <a href="{{url('portal/courses/my/Completed')}}" tabindex="0" class="dropdown-item">Completed</a>
                                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                                     <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
@@ -77,26 +77,25 @@
                 </li>
                     
                 <li class="btn-group nav-item">
-                    <a class="nav-link" data-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link"  href="{{url('portal/payments/all')}}">
                         <!--<span class="badge badge-pill badge-danger ml-0 mr-2">4</span>-->
                         Payments
-                        <i class="fa fa-angle-down ml-2 opacity-5"></i>
+                        <!--<i class="fa fa-angle-down ml-2 opacity-5"></i>-->
                     </a>
-                    <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
+                   <!--  <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
                         <div class="dropdown-menu-header">
                             <div class="dropdown-menu-header-inner bg-secondary">
                                 <div class="menu-header-image opacity-5" style="background-image: url('../assets/theme/assets/images/dropdown-header/abstract2.jpg');"></div>
                                 <div class="menu-header-content">
                                     <h5 class="menu-header-title">Payments</h5>
-                                    <!--<h6 class="menu-header-subtitle">Dropdown menus for everyone</h6>-->
+                                    
                                 </div>
                             </div>
                         </div>
                         <div class="">
                             <div class="">
-                                <!--<h6 tabindex="-1" class="dropdown-header">Overall</h6>-->
+
                                 <a href="{{url('portal/payments/all')}}" tabindex="0" class="dropdown-item">Payments</a>
-                                <!--<a href="{{url('portal/payments/upcoming')}}" tabindex="0" class="dropdown-item">Upcoming Payments</a>-->
 
                                 <a href="{{url('portal/payments/all')}}" tabindex="0" class="dropdown-item">Revise Payment</a>                  
                                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
@@ -113,7 +112,7 @@
                                 <a href="{{url('portal/payments/all')}}" tabindex="0" class="btn-wide btn-shadow btn btn-success btn-sm">Make Payments</a>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                 </li>
             </ul>
         </div>

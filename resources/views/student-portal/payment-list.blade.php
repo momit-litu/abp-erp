@@ -41,9 +41,7 @@
                             <a data-toggle="tab" href="#tab-{{ $batch_student['id'] }}" class="mr-1 ml-1 border-0 btn-transition {{ ($key==0?'active':'') }} btn btn-outline-primary course-tab" id="course-tab-{{ $batch_student['id'] }}">{{ $batch_student['batch']['course']['title'] }} </a>	   
                         @endforeach                                   
                     </div>
-                    <div class="mobile-app-menu-btn mb-3">
-                        <button type="button" class="hamburger hamburger--elastic"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button>
-                    </div>
+                   
                     <div class="tab-content">
                         <div class="divider"></div>
                         <br>
@@ -52,24 +50,27 @@
                             <div class="row">
                                 <div class="col-md-12 mb-3 card text-white bg-dark">&nbsp;<br>
                                    <h5>{{ $batch_student['batch']['course']['code'].'-'.$batch_student['batch']['course']['title'] }}</h5><br>
+                                   <h5 class="widget-heading text-white">Batch {{$batch_student['batch']['batch_name']}}</h5>
                                    <h6>Student Enrollment ID : {{$batch_student['student_enrollment_id']}}</h6>
+                                   
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="card-shadow-primary profile-responsive card-border mb-3 card">
                                         <ul class="list-group list-group-flush">
                                             <li class="bg-warm-flame list-group-item">
                                                 <div class="widget-content p-0">
                                                     <div class="widget-content-wrapper">					
                                                         <div class="widget-content-left">
-                                                            <div class="widget-heading text-dark opacity-7">Batch {{$batch_student['batch']['batch_name']}}</div>
-                                                            <div class="widget-subheading opacity-10">Course Fee: 
+                                                            <div class="widget-heading text-dark opacity-7"> Payment Details</div>
+                                                          
+                                                            <!--<div class="widget-subheading opacity-10">Course Fee: 
 
                                                             @if($batch_student['batch']['fees'] == $batch_student['batch']['discounted_fees'])
                                                                 <span><b class='text-dark'>{{ $batch_student['batch']['discounted_fees']}}+</b></span>
                                                             @else        
                                                                 <span class='pr-2'><b class='text-danger'><del>{{$batch_student['batch']['fees']}}+</del></b></span><span><b class='text-dark'>{{$batch_student['batch']['discounted_fees']}}</b></span>
                                                             @endif
-                                                            </div>
+                                                            </div>-->
                                                         </div>								
                                                     </div>
                                                 </div>
@@ -109,7 +110,7 @@
                                         </ul>
                                     </div>								
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <table class="mb-0 table-bordered table table-sm ">
                                         <thead>
                                         <tr>
@@ -150,7 +151,7 @@
                                     </table>
                                     
                                 </div>
-                                <div class="col-md-3">
+                                <!--<div class="col-md-3">
                                     <div class="main-card mb-3 card">
                                         <div class="card-body">
                                             <h5 class="card-title">Payment Revise Request</h5>
@@ -202,7 +203,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                </div>							
+                                </div>	-->						
                             </div>
                         </div>
                         @endforeach            

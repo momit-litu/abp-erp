@@ -150,13 +150,13 @@
 									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label>Registration Fee (Onetime payment)<span class="required">*</span></label>
+												<label>Registration Fee<span class="required">*</span></label>
 												<input type="text" id="fees" name="fees"  class="form-control col-lg-12"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label>Discount Fees (Applicable for all student)</label>
+												<label> Onetime payment (Discount Fees)</label>
 												<input type="text" id="discounted_fees" name="discounted_fees"  class="form-control col-lg-12"/>
 											</div>
 										</div>
@@ -171,7 +171,7 @@
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">Featured?</label>
-												<input type="checkbox" id="featured" name="featured" checked="checked" value="1" class="form-control col-lg-12"/>
+												<input type="checkbox" id="featured" name="featured" value="1" class="form-control col-lg-12"/>
 											</div>
 										</div>
 										

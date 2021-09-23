@@ -452,7 +452,7 @@
                     <td class="content-cell">
                       <div class="f-fallback">
                         <h1>Dear {{$student['name']}},</h1>
-                        <p><b>Congratulations</b>. Your registration has been successfull. Welcome to ABP family .</p>
+                        <p><b>Congratulations</b>. Your registration has been successful. Welcome to ABP family .</p>
                         <p>You can now login to  <a href="{{url('/portal/login')}}">ABP portal</a></p>
                         <!-- Discount -->
                         <table class="discount" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">

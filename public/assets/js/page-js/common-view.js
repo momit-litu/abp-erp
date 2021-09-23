@@ -43,6 +43,8 @@ paymentInvoice = function paymentInvoice(id){
                         <td class="" align="left">
                         <p >Bill to,<br>
                             `+data['student_name']+`
+                        <br>Registration No : 
+                        `+data['student_no']+`
                         <br>
                             `+data['student_email']+`,<br>
                             `+data['address']+`
@@ -71,7 +73,7 @@ paymentInvoice = function paymentInvoice(id){
                         </th>
                     </tr>
                     <tr>
-                        <td width="50%" class="" ><span >`+data['only_course_name']+`</span></td>
+                        <td width="50%" class="" ><span >`+data['only_course_name']+`</span><br> Batch :`+data['batch_name']+`<br>Enrollment ID: `+data['batch_student_enrollment_id']+`</td>
                         <td width="20%" align="right" class="purchase_item" ><span>৳ `+invoiceDetails['actual_fees']+`</span></td>
                         <td class="align-right" width="20%" align="right" ><span >৳ `+invoiceDetails['actual_fees']+`</span></td>
                     </tr> `; 
@@ -204,9 +206,9 @@ studentView = function studentView(id){
                             <tr> 									
                                 <th>Course Title</th>	
                                 <th>Batch</th>
-                                <th>Enrollment ID</th>										
+                                <th class='text-center'>Enrollment ID</th>										
                                 <th class="text-center">Start Date </th>
-                                <th class="text-center">Semister</th>											
+                                <th class="text-center">Semester</th>											
                                 <th class="text-center">Status</th>
                             </tr>
                         </thead>

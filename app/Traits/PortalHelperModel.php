@@ -28,24 +28,30 @@ trait PortalHelperModel
 			$studentId 		= Auth::user()->student_id;
 			
 			if($my!=""){
-				$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
+				$batchesQuery   = Batch::with('course','batch_fees', 'course.units','students')
 								->whereHas('students',	function ($query) use ($studentId) {
-									$query->where('batch_students.status','Active')->where('student_id',$studentId);
+									$query/*->where('batch_students.status','Active')*/->where('student_id',$studentId);
 								});
+				$batchesQuery 	= ($type=='Registered')?$batchesQuery->where('running_status','!=','Completed'):$batchesQuery->where('running_status','Completed');
+				
+				$batchesQuery->where('status','Active');
 			}
 			else{
 				$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
 									->with(['students' => 	function ($query) use ($studentId) {
-										$query->where('batch_students.status','Active')->where('student_id',$studentId);
+										$query/*->where('batch_students.status','Active')*/->where('student_id',$studentId);
 									}]);
+				$batchesQuery 	= ($type=='Featured')?$batchesQuery->where('featured','Yes'):$batchesQuery->where('running_status',$type)->where('status','Active');
 			}
-			$batchesQuery 	= ($type=='Featured')?$batchesQuery->where('featured','Yes'):$batchesQuery->where('running_status',$type)->where('status','Active');
+			
             $totalBatches   = $batchesQuery->count();
             $batches        = $batchesQuery->orderBy('created_at','desc')->limit($limit)->offset(($page - 1) * $limit)->get();
-		/*	foreach($batches as $batch){
-				dd($batch);
-			}
-		*/
+			
+			//dd($batches);
+			/*foreach($batches as $batch){
+				dd($batch->students[0]);
+			}*/
+		
 			$total_pages 	= ($totalBatches > 0 ? ceil($totalBatches / $limit) : 0);
             $paginationData = $this->paginationResponse($total_pages, $page, $totalBatches, $limit);
 			return array('batches'=>$batches, 'paging'=>$paginationData);

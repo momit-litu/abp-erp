@@ -42,7 +42,7 @@ class UsersForgetPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Password Recovery')
+        return $this->subject('Password Recovery - '.$settings['company_name'])
             ->markdown('mails.forget-password-mail')
             ->with([
                 'details' => $this->details,

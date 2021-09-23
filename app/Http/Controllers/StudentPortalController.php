@@ -88,7 +88,7 @@ class StudentPortalController extends Controller
 
     public function showMyCourseList($type)
     {
-        if($type != 'Running'  && $type != 'Upcoming' &&  $type != 'Completed'){
+        if($type != 'Running'  && $type != 'Upcoming' &&  $type != 'Completed' && $type != 'Registered'){
             return redirect()->back();
         }
        // echo $type;die;

@@ -139,6 +139,7 @@ class BatchController extends Controller
 
                 $batchFee  = BatchFee::with('batch','installments')->findOrFail($request['batch_fees_id']);
                // dd($batchFee);
+               
 				$batchStudent = BatchStudent::create([
                     'batch_id' 	    =>  $request['batch_id'],
                     'student_id'	=>  $request['student_id'],
@@ -253,6 +254,13 @@ class BatchController extends Controller
 		try {			
 			DB::beginTransaction();
 			$batchStudent->status = 'Active';
+            if($batchStudent->student_enrollment_id ==""){
+                $lastEnrollmentIdSQL       = BatchStudent::where('id', $batchStudent->id)
+                ->where('student_enrollment_id','!=','')->orderBy('created_at', 'desc')->first();
+                $lastEnrollmentId = (!empty($lastEnrollmentIdSQL))?$lastEnrollmentIdSQL->student_enrollment_id:0;
+                $student_enrollment_id =  $batchStudent->batch->course->short_name_id. $batchStudent->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
+                $batchStudent->student_enrollment_id = $student_enrollment_id ;
+            }
             $batchStudent->update();
 			DB::commit();
             $return['message'] = "Student status updated";

@@ -606,8 +606,8 @@
                     <td class="content-cell">
                       <div class="f-fallback">
                         <h1>Dear {{$invoice['only_student_name']}},</h1>
-                        <p><b>We have received the payment of Tk {{$invoice['paid_amount']}}</b>. against the {{$invoice['installment_no']}} of course {{$invoice['course_name']}} .</p>
-                        <p>Thank you. Here is your invoice details</p>
+                        <p><b>We have received a payment of  Tk {{$invoice['paid_amount']}}</b> for the course "{{$invoice['only_course_name']}}"  Batch :  {{$invoice['batch_name']}} .</p>
+                        <p>Thank you. Here are your invoice details</p>
                         <!-- Discount -->
                         <table class="discount" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                             <tr>
@@ -634,8 +634,8 @@
                                     <th class="purchase_heading" align="left">
                                       <p class="f-fallback">Bill to,<br>
                                         {{$invoice['only_student_name']}}
+                                        <br>Registration No : {{ $invoice['student_no']}}
                                       </p>
-                                      <br>
                                       <p class="f-fallback">
                                         {{$invoice['student_email']}},<br>
                                         {{$invoice['address']}}
@@ -667,7 +667,7 @@
                                     </th>
                                   </tr>
                                   <tr>
-                                    <td width="50%" class="purchase_item" style="font-size:12px"><span class="f-fallback">{{$invoice['course_name']}}</span></td>
+                                    <td width="50%" class="purchase_item" style="font-size:12px"><span class="f-fallback">{{$invoice['only_course_name']}}</span><br>Batch : {{$invoice['batch_name']}}<br>Enrollment ID : {{$invoice['batch_student_enrollment_id']}}</td>
                                     <td width="20%" align="right" class="purchase_item" style="font-size:12px"><span class="f-fallback">৳{{$invoiceDetails['actual_fees']}}</span></td>
                                     <td class="align-right" width="20%" class="purchase_item" style="font-size:12px"><span class="f-fallback">৳ {{$invoiceDetails['actual_fees']}}</span></td>
                                   </tr> 

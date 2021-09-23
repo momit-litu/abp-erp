@@ -63,12 +63,12 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p class="mb-0">Credit Hour : &nbsp;{{ $batch->course->total_credit_hour}}</p>
-                                        <p class="mb-0">Total Unit : &nbsp;{{ count($batch->course->units) }}</p>
+                                        <p class="mb-0"><span>Credit Hour</span> : &nbsp;{{ $batch->course->total_credit_hour}}</p>
+                                        <p class="mb-0">Total Unit  &nbsp; &nbsp;&nbsp;: &nbsp;{{ count($batch->course->units) }}</p>
                                         <p >Semister No : {{ $batch->course->semester_no}}</p>
 										<p class="text-success mb-0">Start Date : {{ $batch->start_date}}</p>
-										<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
-										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p>
+										<!--<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
+										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p>-->
                                     </div>
                                     <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
                                         <div class="widget-content-wrapper ">
@@ -82,12 +82,13 @@
                                         </div>
                                     </div>
                                     <div class="d-block text-center card-footer bg-light">
-                                        @if($batch->students->count()>0)
-                                            <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Registered already</button>
+                                        @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
+                                            <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
+                                        @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
+                                            <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
                                         @else
                                             <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
                                         @endif
-                                        
                                         <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-primary btn-sm">Details</a>
                                     </div>
                                 </div>

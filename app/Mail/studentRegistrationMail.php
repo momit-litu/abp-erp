@@ -33,7 +33,7 @@ class studentRegistrationMail extends Mailable
     {
         // return $this->view('view.name');
         $settings = Setting::first();
-        return $this->subject($settings['company_name'].' student registration confirmation')
+        return $this->subject('Student registration confirmation'.$settings['company_name'])
             ->markdown('mails.student-registration')
             ->with([
                 'student' => $this->student,

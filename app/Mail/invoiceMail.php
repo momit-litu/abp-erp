@@ -43,7 +43,7 @@ class InvoiceMail extends Mailable
         $invoiceDetails['balance']       = $batchStudent->balance;        
         $invoiceDetails['payments']      = $batchStudent->payments;
        // dd($invoiceDetails);
-        return $this->subject($settings['company_name'].' payment invoice')
+        return $this->subject('Payment invoice - '.$settings['company_name'])
             ->markdown('mails.payment-invoice')
             ->with([
                 'invoice' => $this->invoice,

@@ -23,9 +23,11 @@ class StudentPayment extends Model
     {
 
         $payment = StudentPayment::with('enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')->where('id',$id)->orderBy('created_at','desc')->first();
-        // dd($payment);
+        //dd($payment);
         $return_arr['id']                       =  $payment->id;
         $return_arr['student_id']               =  $payment->enrollment->student->id;
+        $return_arr['student_no']               =  $payment->enrollment->student->student_no;
+        $return_arr['batch_student_enrollment_id']    =   $payment->enrollment->student_enrollment_id;
         $return_arr['student_enrollment_id']    =  $payment->student_enrollment_id;        
         $return_arr['only_student_name']        =  $payment->enrollment->student->name;
         $return_arr['student_name']             =  $payment->enrollment->student->name.' ('.$payment->enrollment->student->email.')';
@@ -34,6 +36,7 @@ class StudentPayment extends Model
         $return_arr['address']                  =  $payment->enrollment->student->address;        
         $return_arr['course_id']                =  $payment->enrollment->batch->course->id;
         $return_arr['course_name']              =  $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
+        $return_arr['batch_name']               =  $payment->enrollment->batch->batch_name;
         $return_arr['only_course_name']         =  $payment->enrollment->batch->course->title;
         $return_arr['installment_no_value']     =  $payment->id;
         $return_arr['installment_no']           =  $payment->installment_no;
@@ -104,7 +107,7 @@ class StudentPayment extends Model
             if($request['installment_no']==""){
               return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
             }			
-            $studentPayment = $this->findOrFail($request['installment_no']);
+            $studentPayment = $this->with('enrollment','enrollment.student')->findOrFail($request['installment_no']);
             if(empty($studentPayment)){
               return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No payment information found"));
             }
@@ -135,8 +138,21 @@ class StudentPayment extends Model
                 $studentPayment->payment_refference_no  =  $request['payment_refference_no'];
                 $studentPayment->receive_status         =  $request['receive_status'];
                 $studentPayment->details                =  $request['details'];
-                $studentPayment->update();
-                $this->updateStudentFees($studentPayment->student_enrollment_id);                
+                if($studentPayment->update()){
+                  $this->updateStudentFees($studentPayment->student_enrollment_id);     
+                  if($studentPayment->enrollment->status == 'Inactive'){
+                    $enrollment             = BatchStudent::with('batch', 'batch.course')->find($studentPayment->enrollment->id);
+                    $enrollment->status     = "Active";
+                    $lastEnrollmentIdSQL       = BatchStudent::where('batch_id', $enrollment->batch_id)
+                                            ->where('student_enrollment_id','!=','')->orderBy('created_at', 'desc')->first();
+                    $lastEnrollmentId = (!empty($lastEnrollmentIdSQL))?$lastEnrollmentIdSQL->student_enrollment_id:0;
+                    $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
+
+                    $enrollment->student_enrollment_id = $student_enrollment_id ;
+                    $enrollment->save();
+                  }
+                }
+                                  
                 $photo = (isset($request['attachment']) && $request['attachment']!= "")?$request['attachment']:"";
                 if ($photo!="") {
                     $ext = $photo->getClientOriginalExtension();

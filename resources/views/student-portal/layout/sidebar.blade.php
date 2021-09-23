@@ -74,7 +74,7 @@
 							</a>
 							<ul>
 								<li>
-									<a href="{{url('portal/courses/my/Running')}}">
+									<a href="{{url('portal/courses/my/Registered')}}">
 										<i class="metismenu-icon">
 										</i>Registered
 									</a>
@@ -90,12 +90,12 @@
 					</ul>
 				</li>
 				<li>
-					<a href="#">
+					<a href="{{url('portal/payments/all')}}">
 						<i class="metismenu-icon pe-7s-cash"></i>
 						Payments
-						<i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+						<!--<i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>-->
 					</a>
-					<ul>
+					<!--<ul>
 						<li>
 							<a href="{{url('portal/payments/all')}}">
 								<i class="metismenu-icon">
@@ -108,7 +108,7 @@
 								</i>Revise Payments
 							</a>
 						</li>
-					</ul>
+					</ul> -->
 				</li>
 				<li>
 					<a href="#">

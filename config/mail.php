@@ -84,7 +84,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'admin@abpbd.com'),
-        'name' => env('MAIL_FROM_NAME', 'ABPBD'),
+        'name' => env('MAIL_FROM_NAME', '[ABP] Academy of Business Professionals'),
     ],
 
     /*

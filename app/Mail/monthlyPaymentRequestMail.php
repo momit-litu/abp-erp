@@ -33,7 +33,7 @@ class monthlyPaymentRequestMail extends Mailable
     {
         // return $this->view('view.name');
         $settings = Setting::first();
-        return $this->subject($settings['company_name'].' monthly payment request')
+        return $this->subject('Monthly payment request - '.$settings['company_name'])
             ->markdown('mails.monthly-payment-request')
             ->with([
                 'payment' => $this->payment,

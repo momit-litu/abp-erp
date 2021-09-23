@@ -452,7 +452,7 @@
                     <td class="content-cell">
                       <div class="f-fallback">
                         <h1>Dear {{$studentEnrollment['student']['name']}},</h1>
-                        <p><b>Congratulations</b>. Your enrollment has been successfull into the course  
+                        <p><b>Congratulations</b>. Your enrollment has been successful into the course  
                           {{$studentEnrollment['batch']['course']['title']}}, Batch:  {{$studentEnrollment['batch']['batch_name']}}</b>.</p>
                         <p>Here are the details :</p>
                         <!-- Discount -->

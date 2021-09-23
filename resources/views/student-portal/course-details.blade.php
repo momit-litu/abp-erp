@@ -38,7 +38,7 @@
                        {{ $batch->running_status }}
                     </button>
                     @if($batch->students->count()>0)
-                        <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Registered already</button>
+                        <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
                     @else
                         <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-success disabled" data-original-title="Example Tooltip">
                             {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Batch Full' }}
@@ -62,7 +62,7 @@
                 </div>
             </div>-->
             <div class="col-md-12">
-                <div class="main-card mb-3 card">
+                <!--iv class="main-card mb-3 card">
                     <div class="no-gutters row">
                         <div class="col-md-4">
                             <div class="widget-content">
@@ -110,7 +110,7 @@
                         </div>
                     </div>
                 </div>
-                
+            -->
                 <div class="main-card mb-3 card">
                     <div class="card-body">
                         @if($batch->students->count()==1 && $batch->students[0]->pivot->status =='Inactive')
@@ -118,7 +118,7 @@
                                 <button class="btn btn-sm btn-danger disabled">Registration Pending</button><br>
                                 You registration to this course is still pending. Please make the payment to enroll.
                             </div>
-                        @elseif($batch->students->count()>1)
+                        @elseif($batch->students->count()>0 && $batch->students[0]->pivot->status =='Active')
                             <div class="alert alert-warning ">
                                 <h6>Student Course Enrollment ID : <b>{{ $batch->students[0]->pivot->student_enrollment_id}}</b></h6>
                             </div>

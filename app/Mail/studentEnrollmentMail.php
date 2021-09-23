@@ -33,7 +33,7 @@ class studentEnrollmentMail extends Mailable
       
        $settings = Setting::first();
        //dd($settings);
-        return $this->subject($settings['company_name'].' course enrollment confirmation')
+        return $this->subject('Course enrollment confirmation - '.$settings['company_name'])
             ->markdown('mails.student-enrollment')
             ->with([
                 'studentEnrollment' => $this->studentEnrollment,
