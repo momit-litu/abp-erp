@@ -69,12 +69,16 @@
 										<p class="text-success mb-0">Start Date : {{ $batch->start_date}}</p>
 										<!--<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
 										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p>-->
+
+                                        <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Batch Full' }}</p>
+
+
                                     </div>
                                     <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
                                         <div class="widget-content-wrapper ">
                                             <div class="widget-content-left">
                                                 <div class="widget-heading">Course Fee</div>
-                                                <div class="widget-subheading text-danger"><del>{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:$batch->fees }}</del></div>
+                                                <div class="widget-subheading text-danger"><del>{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}</del></div>
                                             </div>
                                             <div class="widget-content-right">
                                                 <div class="widget-numbers text-warning"><span> {{ $batch->discounted_fees }}</span></div>
@@ -86,7 +90,7 @@
                                             <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
                                         @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
                                             <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
-                                        @else
+                                        @elseif($batch->total_enrolled_student<$batch->student_limit)
                                             <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
                                         @endif
                                         <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-primary btn-sm">Details</a>

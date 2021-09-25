@@ -40,7 +40,7 @@
                     @if($batch->students->count()>0)
                         <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
                     @else
-                        <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-success disabled" data-original-title="Example Tooltip">
+                        <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn  {{ ($batch->total_enrolled_student<$batch->student_limit)?'btn-success':'btn-danger' }} disabled" data-original-title="Example Tooltip">
                             {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Batch Full' }}
                         </button>
                     @endif
@@ -214,7 +214,7 @@
                                     </li>
                                     <li class="list-group-item">
                                         <br>
-                                    @if($batch->students->count()==0)
+                                    @if($batch->students->count()==0 && $batch->total_enrolled_student<$batch->student_limit)
                                         <button type="button" id="start_registration" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg col-md-12">
                                             Register to this course
                                         </button>
