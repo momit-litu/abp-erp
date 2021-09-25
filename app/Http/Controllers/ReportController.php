@@ -378,39 +378,32 @@ class ReportController extends Controller
 
 	public function expenseReportList(Request $request)
     {
-		$expencesSQL  = Expense::where('status','Active');
+        
+        $expencesSQL = "SELECT expense_head_id, eh.expense_head_name, ec.category_name, ec.id, ec.parent_id,amount,details,payment_status, expense_date
+                FROM expenses e
+                LEFT JOIN expense_heads eh ON e.expense_head_id=eh.id
+                LEFT JOIN expnese_categories ec ON eh.expense_category_id=ec.id
+                where e.status='Active'";
+
 
         if($request->from_date != "")
-            $expencesSQL->where('expense_date','>=',$request->from_date);
+            $expencesSQL .= " And expense_date >= '".$request->from_date."'";
         if($request->to_date != "")
-            $expencesSQL->where('expense_date','<=',$request->to_date);
-  
-        
-        if($request->expense_head_id != ""){
-            $expense_head_id = $request->expense_head_id;
-            $expencesSQL->whereHas('expenseHead', function ($query) use ($expense_head_id){
-                $query->where('id', $expense_head_id);
-            });
-        }
-        else
-            $expencesSQL->with('expenseHead');
+            $expencesSQL .= " And expense_date <= '".$request->to_date."'";     
 
-        if($request->expense_category_id != ""){
-            $expense_category_id = $request->expense_category_id;
-            $expencesSQL->whereHas('expenseHead.expensecategory', function ($query) use ($expense_category_id){
-                $query->where('id', $expense_category_id);
-                $query->whereOr('parent_id', $expense_category_id);
-            });
-        }
-        else
-            $expencesSQL->with('expenseHead.expensecategory');
-        $expences = $expencesSQL->get();
+        if($request->expense_head_id != "")
+            $expencesSQL .= " And eh.id= ".$request->expense_head_id;
+        else if($request->expense_category_id != "")
+            $expencesSQL .= " And (ec.id=".$request->expense_category_id." OR ec.parent_id=".$request->expense_category_id.")";
+
+        //echo $expencesSQL;die;
+        $expences = DB::select($expencesSQL);
         //dd($expences);
         $return_arr = array();
         foreach($expences as $expence){
-            $data['category'] 	= $expence->expenseHead->expensecategory->category_name;
-			$data['head'] 	    = $expence->expenseHead->expense_head_name;
-            $data['date'] 	    = $expence->payment_date;
+            $data['category'] 	= $expence->category_name;
+			$data['head'] 	    = $expence->expense_head_name;
+            $data['date'] 	    = $expence->expense_date;
             $data['details'] 	= $expence->details;
             $data['payment_status']= $expence->payment_status;            
             $data['amount'] 	= $expence->amount;
