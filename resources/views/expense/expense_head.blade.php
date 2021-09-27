@@ -82,13 +82,13 @@
                                         <div class="form-group">
                                             <label class="col-md-12  col-xs-6">Expense Head Name<span class="required">*</span></label>
                                             <div class="col-md-12  col-xs-6">
-                                                <input type="text" id="expense_head_name" name="expense_head_name" class="form-control col-lg-12" />
+                                                <input type="text" id="expense_head_name" name="expense_head_name" required class="form-control col-lg-12" />
                                             </div>
                                         </div>
                                         <div class="form-group ">
-											<label class="col-md-12  col-xs-6"> Category</label>
+											<label class="col-md-12  col-xs-6"> Category<span class="required">*</span></label>
 											<div class="col-md-12  col-xs-6">
-												<select class="form-control col-lg-12"  name="expense_category_id" id="expense_category_id">
+												<select class="form-control col-lg-12"  required name="expense_category_id" id="expense_category_id">
 													<option value=""  selected>Select Expense Category Name</option>
 													@foreach($parentExpneseHead as $parentHead)
 														<option value="{{$parentHead->id}}">

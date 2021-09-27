@@ -54,6 +54,7 @@
 							<th>Student Limit</th>
 							<th>Enrolled Student</th>												
 							<th class="hidden-xs">Status</th>
+							<th class="hidden-xs">Active Status</th>
 							<th class="text-center" width="80">Actions</th>
 						</tr>
 					</thead>
@@ -94,16 +95,17 @@
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
-												<label  >Course Name<span class="required">*</span></label>
-												<!--<select id="level_id" name="level_id" class="form-control col-lg-12">
-													<option value="">Select Course</option>
-													@foreach($courses as $course )
-													<option value="{{$course->id}}">{{$course->code.'-'.$course->title}}</option>
-													@endforeach
-												</select> -->
-												
+												<label  >Course Name<span class="required">*</span></label>	
 												<input type="text" id="course_name" required name="course_name" class="form-control col-lg-12" />
 												<input type="hidden" id="course_id" required name="course_id"  />
+											</div>
+										</div>
+									</div>	
+									<div class="form-row">
+										<div class="col-md-12">
+											<div class="position-relative form-group">
+												<label  >Class Time</label>
+												<input type="text" id="class_schedule" name="class_schedule" class="form-control col-lg-12 " required />
 											</div>
 										</div>
 									</div>	

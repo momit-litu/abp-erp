@@ -39,7 +39,15 @@
 			<div class="card-body report-form">
 				<form id="batch_form" name="batch_form" enctype="multipart/form-data" class="form form-horizontal form-label-left ba">
 					@csrf
-					<div class="form-row">							 
+					<div class="form-row">	
+						
+						<div class="col-md-4">
+							<div class="position-relative form-group">
+								<label class="control-label" >Course</label>								
+								<input type="text" id="course_name" required name="course_name" class="form-control col-lg-12" />
+								<input type="hidden" id="course_id" required name="course_id"  />
+							</div>
+						</div>							
 						<div class="col-md-2">
 							<div class="position-relative form-group">
 								<label class="control-label" >From</label>
@@ -84,13 +92,14 @@
 					<table class="table table-bordered table-hover batch_table" id="batch_table" style="width:100% !important"> 
 						<thead>
 							<tr>
-								<th class="text-center">Batch Name</th>										
-								<th>Course Name</th>		
+								<th class="text-center">Batch</th>										
+								<th>Course</th>		
 								<th class="text-center">Start Date</th>
 								<th class="text-center">End Date</th>								
 								<th class="text-center">Student Limit</th>
-								<th class="text-center">Enrolled Students</th>	
-								<th class="text-center">Fee</th>
+								<th class="text-center">Enrolled Students</th>
+								<th class="text-center">Pending Registration</th>
+								<th class="text-center">Fee( Onetime)</th>
 								<th class="text-center">Status</th>
 							</tr>		
 						</thead>

@@ -37,11 +37,12 @@ $(document).ready(function () {
 			{ mData: 'student_limit', className: "text-center"},
 			{ mData: 'total_enrolled_student', className: "text-center"},
 			{ mData: 'running_status', className: "text-center"},
+			{ mData: 'status', className: "text-center"},
 			{ mData: 'actions' , className: "text-center"},
 		],
 		"columnDefs": [
             { "targets": [ 0 ],  "visible": false },
-			{ "width": "110px", "targets":[ 8 ]},
+			{ "width": "110px", "targets":[ 9 ]},
         ],
 	});
 	
@@ -171,6 +172,11 @@ $(document).ready(function () {
 			$(this).next().val(id);
 		},
 	});
+	$("#course_name").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
+	});
+
 
 	//Entry And Update Function For Module
 	$("#save_batch").on('click',function(){
@@ -187,7 +193,7 @@ $(document).ready(function () {
 			success_or_error_msg('#form_submit_error','danger',"Please Insert Batch","#batch_name");
 		}
 		else if($.trim($('#course_name').val()) == "" || $.trim($('#course_id').val()) == ""){
-			success_or_error_msg('#form_submit_error','danger',"Please enter Course name","#course_name");
+			success_or_error_msg('#form_submit_error','danger',"Please enter course name","#course_name");
 		}
 		else if($.trim($('#start_date').val()) == ""){  
 			success_or_error_msg('#form_submit_error','danger',"Please enter start date","#start_date");
@@ -279,10 +285,14 @@ $(document).ready(function () {
 
 				var end_date 	= (data['end_date'] ==null)?"":data['end_date'];
 				var details 	= (data['details'] ==null)?"":data['details'];
+				var class_schedule 	= (data['class_schedule'] ==null)?"":data['class_schedule'];
 				var modalHtml  ="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Batch Code :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['batch_name']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Course Title :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['course']['title']+"</div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Class Time :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+class_schedule+"</div></div>";
+
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Start Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['start_date']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>End Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+end_date+"</div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>End Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+end_date+"</div></div>";					
+					
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Student limit :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['student_limit']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Total Enrolled Student :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['total_enrolled_student']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+details+"</div></div>";
@@ -648,6 +658,7 @@ $(document).ready(function () {
 				$("#course_name").val(data['course']['title']);
 				$("#start_date").val(data['start_date']);
 				$("#end_date").val(data['end_date']);
+				$("#class_schedule").val(data['class_schedule']);				
 				$("#fees").val(data['fees']);
 				$("#discounted_fees").val(data['discounted_fees']);
 				$("#student_limit").val(data['student_limit']);

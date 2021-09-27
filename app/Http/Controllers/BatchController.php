@@ -7,6 +7,7 @@ use Auth;
 use App\Models\Batch;
 use App\Models\Level;
 use App\Models\Course;
+use App\Models\Setting;
 use App\Models\Student;
 use App\Models\BatchFee;
 use App\Models\BatchStudent;
@@ -15,8 +16,8 @@ use App\Traits\HasPermission;
 use Illuminate\Http\Response;
 use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
-use Illuminate\Support\Facades\File;
 use App\Traits\StudentNotification;
+use Illuminate\Support\Facades\File;
 
 
 class BatchController extends Controller
@@ -74,7 +75,8 @@ class BatchController extends Controller
                 $data['running_status'] 	= "<button class='btn btn-xs btn-success' disabled>Running</button>";
             else if($batch->running_status == 'Upcoming')    
                 $data['running_status'] 	=  "<button class='btn btn-xs btn-info' disabled>Upcoming</button>";
-
+            
+            $data['status']   = ($batch->status=='Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
 			$data['actions'] =" <button title='View' onclick='batchView(".$batch->id.")' id='view_" . $batch->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
             $data['actions'] .=" <button title='Students' onclick='batchStudents(".$batch->id.")' id='view_" . $batch->id . "' class='btn btn-xs btn-warning btn-hover-shine' ><i class='lnr-users'></i></button>&nbsp;";
 		   if($edit_permisiion>0){
@@ -160,13 +162,15 @@ class BatchController extends Controller
 
                     $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
                     $batchFee->batch->update();
+                    $settings = Setting::first();
+
                     foreach($batchFee->installments as $key => $installment){
                         if($key == 0) 
-                            $last_payment_date= date('Y-m-d');
+                            $last_payment_date= $batchFee->batch->start_date;
                         else if($key==1)                            
-                            $last_payment_date  = date('Y-m-d', strtotime($batchFee->batch->start_date. ' + '.$batchFee->installment_duration.' month'));
+                            $last_payment_date  = date('Y-m', strtotime($batchFee->batch->start_date. ' + '.$batchFee->installment_duration.' month'))."-".$settings->bill_date;
                         else
-                            $last_payment_date  = date('Y-m-d', strtotime($last_payment_date. ' + '.$batchFee->installment_duration.' month'));
+                            $last_payment_date  = date('Y-m', strtotime($last_payment_date. ' + '.$batchFee->installment_duration.' month'))."-".$settings->bill_date;
 
                         $studentPayment = StudentPayment::create([
                             'student_enrollment_id' =>  $batchStudent->id,
@@ -341,6 +345,7 @@ class BatchController extends Controller
                     'fees' 			=>  $request['fees'],
                     'discounted_fees'=>($request['discounted_fees'])?$request['discounted_fees']:$request['fees'],
                     'student_limit' =>  $request['student_limit'],
+                    'class_schedule'=>  $request['class_schedule'],                    
                     'details' 		=>  $request['details'],
                     'running_status'=>  $request['running_status'],
                     'status'        => (isset($request['status']))?'Active':'Inactive',
@@ -437,6 +442,7 @@ class BatchController extends Controller
                 $Batch->course_id 		= $request['course_id'];
                 $Batch->start_date 		= $request['start_date'];
                 $Batch->end_date 		= $request['end_date'];
+                $Batch->class_schedule 	= $request['class_schedule'];
                 $Batch->discounted_fees = ($request['discounted_fees'])?$request['discounted_fees']:$request['fees'];
                 $Batch->fees 			= $request['fees'];
                 $Batch->student_limit 	= $request['student_limit'];

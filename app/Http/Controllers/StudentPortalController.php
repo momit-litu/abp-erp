@@ -170,15 +170,17 @@ class StudentPortalController extends Controller
                 if($batchStudent){
                     $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
                     $batchFee->batch->update();
-                    
+                    $settings = Setting::first();
+
                     foreach($batchFee->installments as $key => $installment){
                         if($key == 0) 
                             $last_payment_date= date('Y-m-d');
-                        else if($key==1)                            
-                            $last_payment_date  = date('Y-m-d', strtotime($batchFee->batch->start_date. ' + '.$batchFee->installment_duration.' month'));
+                        else if($key==1){
+                            $last_payment_date  = date('Y-m', strtotime($batchFee->batch->start_date. ' + '.$batchFee->installment_duration.' month'))."-".$settings->bill_date;
+                        }                       
+                           
                         else
-                            $last_payment_date  = date('Y-m-d', strtotime($last_payment_date. ' + '.$batchFee->installment_duration.' month'));
-
+                            $last_payment_date  = date('Y-m', strtotime($last_payment_date. ' + '.$batchFee->installment_duration.' month'))."-".$settings->bill_date;
                         $studentPayment = StudentPayment::create([
                             'student_enrollment_id' =>  $batchStudent->id,
                             'installment_no'        =>  $installment->installment_no,
@@ -414,6 +416,7 @@ class StudentPortalController extends Controller
                 $payment->paid_amount    =  $payment->paid_amount + $amount;
                 $payment->payment_status =  $payment_status;
                 $payment->paid_date      =  date('Y-m-d');
+                $payment->paid_by        =  'Self';
                 $payment->invoice_no     = $studentPayment->getNextInvoiceNo();
 
                 if($payment->update()){

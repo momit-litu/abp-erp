@@ -3,6 +3,8 @@ var fade_logo_name 	= $('#fade_logo_name').val();
 var fade_logo_url 	= url+"/assets/images/admin-upload/"+fade_logo_name;
 var logo_name 		= $('#logo_name').val();
 var logo 			= url+"/assets/images/admin-upload/"+logo_name;
+
+var user_name 		= $('#user_name').val();
 var user_id 		= $('#user_id').val();
 var user_type 		= $('#user_type').val();
 

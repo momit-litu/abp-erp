@@ -166,7 +166,7 @@ $(document).ready(function () {
 			success_or_error_msg('#form_submit_error','danger',"Please select unit","#unit_name");
 		}	
 		else if($.trim($('#semester_no').val()) != "" &&  !($.isNumeric($('#semester_no').val()))){
-			success_or_error_msg('#form_submit_error','danger',"Please enter numeric value in semester no","#total_credit_hour");
+			success_or_error_msg('#form_submit_error','danger',"Please enter numeric value in semister no","#total_credit_hour");
 		}
 		else{
 			$.ajax({
@@ -291,7 +291,7 @@ $(document).ready(function () {
 				experience_required = (data['experience_required'] != null)?data['experience_required']:"";
 
 				editors.objective.setData(objective);
-				editors.accredited_by.setData(semester_details);
+				editors.accredited_by.setData(accredited_by);
 				editors.semester_details.setData(semester_details);
 				editors.assessment.setData(assessment);
 				editors.grading_system.setData(grading_system);

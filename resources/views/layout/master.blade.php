@@ -59,6 +59,7 @@
 <input type="hidden" id="logo_name" value="{{$site_settings['logo']}}">
 <input type="hidden" id="fade_logo_name" value="{{$site_settings['fade_logo']}}">
 <input type="hidden" id="user_id" value="{{ Auth::user()->id }}">
+<input type="hidden" id="user_name" value="{{ Auth::user()->first_name.' '.Auth::user()->last_name }}">
 <input type="hidden" id="user_type" value="{{ Auth::user()->type }}">
 
 <!--SCRIPTS INCLUDES-->

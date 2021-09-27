@@ -113,7 +113,7 @@
 					<table class="table table-bordered table-hover student_table" id="student_table" style="width:100% !important"> 
 						<thead>
 							<tr>
-								<th class="text-center">Student No.</th>								
+								<th class="text-center">Registration No.</th>								
 								<th>Name</th>		
 								<th class="text-center">Email</th>
 								<th class="text-center">Contact No.</th>								

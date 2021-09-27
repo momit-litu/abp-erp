@@ -50,7 +50,7 @@
                         <tr>
                             <th>ID</th>
                             <th></th>
-                            <th>Student No.</th>
+                            <th>Registration No.</th>
                             <th>Full Name</th>
                             <th>Email</th>
                             <th>Contact No. </th>
@@ -92,7 +92,7 @@
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <div class="position-relative form-group">
-                                                    <label for="first_name" class="">Student Number</label>
+                                                    <label for="first_name" class="">Registration Number</label>
                                                     <input type="text" id="student_no" placeholder="Auto Generated No" disabled name="student_no"  class="form-control col-lg-4"/>
                                                 </div>
                                             </div>

@@ -44,11 +44,11 @@
 							<div class="form-row">							
 								<div class="col-md-12">
 									<div class="position-relative form-group">
-										<label for="" class="">Message Template<span class="required">*</span></label>
+										<label for="" class="">Message Template</label>
 										<select name="sms_template" id="sms_template" class="form-control col-lg-12">
-											<option>Select a SMS template</option>
+											<option value="">Select a SMS template</option>
 											@foreach ($smsTemplates as $template)
-											<option id="{{$template->id}}">{{$template->title}}</option>
+											<option value="{{$template->id}}" id="{{$template->id}}">{{$template->title}}</option>
 											@endforeach
 										</select>
 										@foreach ($smsTemplates as $template)
@@ -60,7 +60,7 @@
 							<div class="form-row">							
 								<div class="col-md-12">
 									<div class="position-relative form-group">
-										<label for="" class="">Message Body<span class="required">*</span></label>
+										<label for="" class="">Message Body</label>
 										<textarea  rows="4" id="message_body" required name="message_body"  class="form-control col-lg-12"></textarea>
 									</div>
 								</div>
@@ -68,7 +68,7 @@
 							<div class="form-row">							
 								<div class="col-md-6">
 									<div class="position-relative form-group">
-										<label for="" class="">Payment type<span class="required">*</span></label>
+										<label for="" class="">Payment type</label>
 										<select name="payment_type" id="payment_type" class="form-control col-lg-12">
 											<option value="">Select payment type</option>
 											<option value="all">All</option>

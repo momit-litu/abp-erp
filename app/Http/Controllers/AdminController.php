@@ -575,12 +575,12 @@ class AdminController extends Controller
 					'contact_no'	=> $request->contact_no,
 					'email'			=> $request->email,
 				];
-					
-				$studentData = [
-					'name'			=> $request->first_name,
-					'contact_no'	=> $request->contact_no,
-					'email'			=> $request->email
-				];
+				if($user->type=='Student')
+					$studentData = [
+						'name'			=> $request->first_name,
+						'contact_no'	=> $request->contact_no,
+						'email'			=> $request->email
+					];
 				
 
 				//if admin user Image provided
@@ -593,15 +593,19 @@ class AdminController extends Controller
 					$success					= $admin_image->move($upload_path,$image_full_name);
 					$data['user_profile_image'] = $image_full_name;
 				
-					$student = Student::find($user->student_id);
-					$student->user_profile_image = $image_full_name;
-					$student->save();
+					if($user->type=='Student'){					
+						$student = Student::find($user->student_id);
+						$student->user_profile_image = $image_full_name;
+						$student->save();
+					}
 				}
 				$old_image 	= $user->user_profile_image;
 				$user->update($data);
 
-				$student	=Student::where('id',$user->student_id)->first();
-				$student->update($studentData);
+				if($user->type=='Student'){ 
+					$student	=Student::where('id',$user->student_id)->first();
+					$student->update($studentData);
+				}
 				
 				if (isset($admin_image) && $old_image!="") {
 					$delete_img = $upload_path.$old_image;

@@ -97,18 +97,27 @@ class ReportController extends Controller
             $batchSQL->where('start_date','<=',$request->to_date);
         if($request->running_status != "All")  
             $batchSQL->where('running_status','=',$request->running_status);
-        
+        if($request->course_id != "")
+            $batchSQL->where('course_id','=',$request->course_id);
         $batches = $batchSQL->get();
-
+        
         $return_arr = array();
         foreach($batches as $batch){
+            $total_pending_student =  $batch->students->filter(function ($item) {   
+                 if($item->getOriginal()['pivot_status'] =='Inactive'){
+                    return 1;
+                 }
+                    
+            })->count();
+            //echo $total_pending_student; die;
 			$data['batch_name'] = $batch->batch_name; 
             $data['course_name']= $batch->course->title;
             $data['start_date'] = $batch->start_date; 
 			$data['end_date']   = $batch->end_date;
 			$data['student_limit'] 		    = $batch->student_limit;
 			$data['total_enrolled_student'] = $batch->total_enrolled_student;
-            $data['batch_fee']      = $batch->discounted_fees; 
+            $data['total_pending_student'] = $total_pending_student;            
+            $data['batch_fee']      = $batch->fees. ' ('.$batch->discounted_fees.')'; 
             $data['running_status'] = $batch->running_status; 
             $return_arr[] = $data;
         }
@@ -248,7 +257,7 @@ class ReportController extends Controller
 
 	public function paymentCollectionReportList(Request $request)
     {
-		$paymentSQL  =  StudentPayment::with('enrollment','enrollment.batch.course');
+		$paymentSQL  =  StudentPayment::with('paidBy','enrollment','enrollment.batch.course');
 
         if($request->from_date != "")
             $paymentSQL->where('last_payment_date','>=',$request->from_date);
@@ -285,7 +294,8 @@ class ReportController extends Controller
             $data['installment']    = $payment->installment_no; 
             $data['payment_month']  = date('M y', strToTime($payment->last_payment_date)); 
             $data['paid_date']      = $payment->paid_date; 
-            $data['paid_type']      = $payment->paid_type; 
+            $data['paid_type']      = $payment->paid_type;
+            $data['paid_by']        = ($payment->paid_by == 'Admin')?"Admin(".$payment->paidBy->first_name.")":"Student"; 
             $data['reference_no']   = $payment->payment_refference_no; 
             $data['invoice_no']     = $payment->invoice_no; 
 			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";  
@@ -299,7 +309,7 @@ class ReportController extends Controller
     {
         $data['page_title']     = $this->page_title;
         $data['module_name']    = "Reports";
-        $data['sub_module']     = "Expense Vs Income";
+        $data['sub_module']     = "Payment Schedule Vs Collection";
 
         $admin_user_id          = Auth::user()->id;
         $view_action_id         = 102;
@@ -350,7 +360,8 @@ class ReportController extends Controller
             $data['installment']    = $payment->installment_no; 
             $data['payment_month']  = date('M y', strToTime($payment->last_payment_date)); 
             $data['paid_date']      = $payment->paid_date; 
-            $data['paid_type']      = $payment->paid_type; 
+            $data['paid_type']      = $payment->paid_type;
+            $data['paid_by']        = ($payment->paid_by == 'Admin')?"Admin(".$payment->paidBy->first_name.")":"Student"; 
             $data['invoice_no']     = $payment->invoice_no; 
 			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";           
 			$data['payable_amount'] = $payment->payable_amount;

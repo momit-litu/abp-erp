@@ -4,25 +4,29 @@ namespace App\Models;
 
 use App\Models\BatchStudent;
 use Illuminate\Support\Facades\DB;
+use App\Traits\StudentNotification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\StudentNotification;
 
 class StudentPayment extends Model
 {
     use StudentNotification; 
     protected $fillable= [
-        'id', 'student_enrollment_id', 'installment_no','payable_amount','paid_amount', 'payment_status',  'paid_type', 'last_payment_date',  'paid_date', 'payment_refference_no', 'receive_status','details',  'attachment', 'invoice_no'
+        'id', 'student_enrollment_id', 'installment_no','payable_amount','paid_amount', 'payment_status',  'paid_type', 'last_payment_date',  'paid_date', 'payment_refference_no', 'receive_status','details',  'attachment', 'invoice_no', 'payment_received_by','paid_by'
     ];
 
     public function enrollment(){
         return $this->hasOne('App\Models\BatchStudent','id','student_enrollment_id');
     }
+    public function paidBy(){
+      return $this->hasOne('App\Models\User','id','payment_received_by');
+  }
 
     public function getPaymentDetailByPaymentId($id)
     {
 
-        $payment = StudentPayment::with('enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')->where('id',$id)->orderBy('created_at','desc')->first();
+        $payment = StudentPayment::with('paidBy','enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')->where('id',$id)->orderBy('created_at','desc')->first();
         //dd($payment);
         $return_arr['id']                       =  $payment->id;
         $return_arr['student_id']               =  $payment->enrollment->student->id;
@@ -46,6 +50,8 @@ class StudentPayment extends Model
         $return_arr['receive_status']           =  $payment->receive_status; 
         $return_arr['paid_amount']              =  $payment->paid_amount;
         $return_arr['paid_date']                =  ($payment->paid_date == null)?"":$payment->paid_date;
+        $return_arr['paid_by']                  =  $payment->paid_by;
+        $return_arr['paid_by_name']             =  $payment->paidBy->first_name.' '.$payment->paidBy->last_name;
         $return_arr['details']                  =  ($payment->details == null)?"":$payment->details;
         $return_arr['payment_refference_no']    =  ($payment->payment_refference_no == null)?"":$payment->payment_refference_no; 
         $return_arr['invoice_no']               =  ($payment->invoice_no == null)?"":$payment->invoice_no; 
@@ -137,7 +143,10 @@ class StudentPayment extends Model
                 $studentPayment->paid_date      =  $request['paid_date'];
                 $studentPayment->payment_refference_no  =  $request['payment_refference_no'];
                 $studentPayment->receive_status         =  $request['receive_status'];
+                $studentPayment->paid_by                =  'Admin';
+                $studentPayment->payment_received_by    =  \Auth::user()->id;
                 $studentPayment->details                =  $request['details'];
+
                 if($studentPayment->update()){
                   $this->updateStudentFees($studentPayment->student_enrollment_id);     
                   if($studentPayment->enrollment->status == 'Inactive'){

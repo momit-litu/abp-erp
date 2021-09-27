@@ -90,6 +90,37 @@ $(document).ready(function () {
 	});
 
 	
+	$("#course_name").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/course-autosuggest/Admin',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		appendTo : $('#entry-form'),
+		minLength: 2,
+		select: function(event, ui) {
+			var id = ui.item.id;
+			$(this).next().val(id);
+		},
+	});
+	$("#course_name").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
+	});
+
+
+	
 
 	$("#show_course_status_report").on('click',function(){
 		event.preventDefault();
@@ -123,12 +154,12 @@ $(document).ready(function () {
 					customize: function ( win ) {
 						$(win.document.body).find('h1').css('text-align', 'center');
 						$(win.document.body).find('h1').next('div').css('text-align', 'center');
-						$(win.document.body)
+						/*$(win.document.body)
 							.css( 'font-size', '10pt' )
 							.prepend(
 								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
 							);
-	 
+						 */
 						$(win.document.body).find( 'table' )
 							.addClass( 'compact' )
 							.css( {
@@ -173,13 +204,16 @@ $(document).ready(function () {
 	$("#show_batch_status_report").on('click',function(){
 		event.preventDefault();
 		var report_heading = 'Batch Status  ';
+		if($.trim($('#course_name').val()) != ""){
+			report_heading += " of "+$('#course_name').val();
+		}
 		if($.trim($('#from_date').val()) != ""){
 			report_heading += " from "+$('#from_date').val();
 		}
 		if($.trim($('#to_date').val()) != ""){
 			report_heading += " To "+$('#to_date').val();
 		}
-		if($.trim($('#running_status').val()) != ""){
+		if($.trim($('#running_status').val()) != "" && $.trim($('#running_status').val()) != "All" ){
 			report_heading += " Status: "+$('#running_status').val();
 		}
 
@@ -233,6 +267,7 @@ $(document).ready(function () {
 				"url" : url+"/batch-report",
 				"type": "POST",
 				"data" : {
+					"course_id": $("#course_id").val(),
 					"from_date": $("#from_date").val(),
 					"to_date":$("#to_date").val(),
 					"running_status":$('#running_status').val(),
@@ -245,6 +280,7 @@ $(document).ready(function () {
 				{ mData: 'end_date' , className: "text-center"},		
 				{ mData: 'student_limit' , className: "text-center"},		
 				{ mData: 'total_enrolled_student' , className: "text-center"},		
+				{ mData: 'total_pending_student' , className: "text-center"},		
 				{ mData: 'batch_fee' , className: "text-center" },		
 				{ mData: 'running_status' , className: "text-center"},			
 			]
@@ -540,7 +576,8 @@ $(document).ready(function () {
 				{ mData: 'installment' , className: "text-center"},		
 				{ mData: 'payment_month' , className: "text-center"},		
 				{ mData: 'paid_date' , className: "text-center"},		
-				{ mData: 'paid_type' , className: "text-center"},		
+				{ mData: 'paid_type' , className: "text-center"},	
+				{ mData: 'paid_by' , className: "text-center"},	
 				{ mData: 'reference_no' , className: "text-center"},		
 				{ mData: 'invoice_no' , className: "text-center"},			
 				{ mData: 'payment_status' , className: "text-center"},		
@@ -650,7 +687,8 @@ $(document).ready(function () {
 				{ mData: 'installment' , className: "text-center"},		
 				{ mData: 'payment_month' , className: "text-center"},		
 				{ mData: 'paid_date' , className: "text-center"},		
-				{ mData: 'paid_type' , className: "text-center"},			
+				{ mData: 'paid_type' , className: "text-center"},	
+				{ mData: 'paid_by' , className: "text-center"},			
 				{ mData: 'invoice_no' , className: "text-center"},			
 				{ mData: 'payment_status' , className: "text-center"},		
 				{ mData: 'payable_amount' , className: "text-right" },			

@@ -50,10 +50,10 @@ $(document).ready(function () {
         var formData = new FormData($('#expense_category_form')[0]);
 
         if($.trim($('#expense_category_name').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Insert Expense Category","#expense_category_name");
+            success_or_error_msg('#form_submit_error','danger',"Please Insert Expense Category","#expense_category_name");
         }
         else if($.trim($('#parent_id').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Select a Parent Id","#parent_id");
+            success_or_error_msg('#form_submit_error','danger',"Please Select a Parent Id","#parent_id");
         }
         else{
             $.ajax({
@@ -137,10 +137,10 @@ $(document).ready(function () {
                     success: function(data){
                         var response = JSON.parse(data);
                         if(response['response_code'] == 0){
-                            success_or_error_msg('#master_message_div',"danger",response['errors']);
+                            success_or_error_msg('#form_submit_error',"danger",response['errors']);
                         }
                         else{
-                            success_or_error_msg('#master_message_div',"success",response['message']);
+                            success_or_error_msg('#form_submit_error',"success",response['message']);
                             expense_category_datatable.ajax.reload();
                         }
                     }
@@ -195,10 +195,10 @@ $(document).ready(function () {
         var formData = new FormData($('#expense_head_form')[0]);
 
         if($.trim($('#expense_head_name').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Insert Expense Head","#expense_head_name");
+            success_or_error_msg('#form_submit_error','danger',"Please insert expense head","#expense_head_name");
         }
         else if($.trim($('#expense_category_id').val()) == ""){
-            success_or_error_msg('#master_message_div','danger',"Please Select a Expense Category Id","#expense_category_id");
+            success_or_error_msg('#form_submit_error','danger',"Please select a expense category","#expense_category_id");
         }
         else{
             $.ajax({
@@ -280,10 +280,10 @@ $(document).ready(function () {
                     success: function(data){
                         var response = JSON.parse(data);
                         if(response['response_code'] == 0){
-                            success_or_error_msg('#master_message_div',"danger",response['errors']);
+                            success_or_error_msg('#form_submit_error',"danger",response['errors']);
                         }
                         else{
-                            success_or_error_msg('#master_message_div',"success",response['message']);
+                            success_or_error_msg('#form_submit_error',"success",response['message']);
                             expense_head_datatable.ajax.reload();
                         }
                     }
@@ -508,7 +508,7 @@ $(document).ready(function () {
     }
 
 
-$("#expense_name").autocomplete({
+    $("#expense_name").autocomplete({
 		search: function() {
 		},
 		source: function(request, response) {

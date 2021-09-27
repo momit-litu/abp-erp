@@ -103,6 +103,7 @@
 								<th class="text-center">Installment</th>	
 								<th class="text-center">Payment Month</th>	
 								<th class="text-center">Paid Date</th>
+								<th class="text-center">Payment type</th>
 								<th class="text-center">Paid By</th>
 								<th class="text-center">Reference No.</th>
 								<th class="text-center">Invoice No.</th>	
@@ -114,6 +115,7 @@
 						</tbody>
 						<tfoot>
 							<tr>
+								<th></th>
 								<th></th>
 								<th></th>
 								<th></th>

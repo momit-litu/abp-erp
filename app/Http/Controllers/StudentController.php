@@ -184,11 +184,11 @@ class StudentController extends Controller
                 ['status', '=', 'Active'],
                 ['name', 'like', '%' . $term . '%']
             ])
-            ->orwhere([
+            ->orWhere([
                 ['status', '=', 'Active'],
                 ['email', 'like', '%' . $term . '%']
             ])
-            ->where([
+            ->orWhere([
                 ['status', '=', 'Active'],
                 ['student_no', 'like', '%' . $term . '%']
             ])

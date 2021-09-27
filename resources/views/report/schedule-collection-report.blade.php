@@ -92,6 +92,7 @@
 								<th class="text-center">Installment</th>	
 								<th class="text-center">Payment Month</th>	
 								<th class="text-center">Paid Date</th>
+								<th class="text-center">Payment Type</th>
 								<th class="text-center">Paid By</th>								
 								<th class="text-center">Invoice No.</th>	
 								<th class="text-center">Payment Status</th>

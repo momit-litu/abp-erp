@@ -54,7 +54,7 @@
                             <th>Details</th>
                             <th>Payment Status</th>
                             <th class="hidden-xs">Status</th>
-                            <th>Actions</th>
+                            <th style="width:150px !important">Actions</th>
                         </tr>
                         </thead>
                         <tbody>

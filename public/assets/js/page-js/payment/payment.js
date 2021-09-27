@@ -260,6 +260,13 @@ $(document).ready(function () {
 				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Payment Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['last_payment_date']+"</div></div>";	
 				if(data['payment_status']=="Paid"){				
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Paid Date :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['paid_date']+"</div></div>";
+					
+					if(data['paid_by']=="Admin"){	
+						modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Paid By :</strong></div>"+"<div class='col-lg-9 col-md-8'>Admin ("+data['paid_by_name']+")</div></div>";
+					}
+					else{
+						modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Paid By :</strong></div>"+"<div class='col-lg-9 col-md-8'>Student</div></div>";
+					}
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['details']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Attachment :</strong></div>"+"<div class='col-lg-9 col-md-8'><a target='_blank' href='"+payment_attachment_url+"/"+data['attachment']+"'>"+data['attachment']+"</a></div></div>";
 				}
