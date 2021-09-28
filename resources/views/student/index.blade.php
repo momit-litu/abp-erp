@@ -130,7 +130,7 @@
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label>Date of Birth <span class="required">*</span></label>
-                                                    <input type="date" id="date_of_birth" name="date_of_birth" required class="form-control col-lg-12" max="<?= date('Y-m-d'); ?>" />
+                                                    <input type="date" id="date_of_birth" name="date_of_birth"  class="form-control col-lg-12" max="<?= date('Y-m-d'); ?>" />
                                                 </div>
                                             </div>                                           
                                         </div>
@@ -145,7 +145,7 @@
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label>Postal  Address<span class="required">*</span></label>
-                                                    <input type="text" id="address" name="address" required class="form-control col-lg-12"/>
+                                                    <input type="text" id="address" name="address"  class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
                                         </div>

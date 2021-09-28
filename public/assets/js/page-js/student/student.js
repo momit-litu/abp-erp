@@ -51,9 +51,9 @@ $(document).ready(function () {
 		else if($.trim($('#contact_no').val()) == "" || !($.isNumeric($('#contact_no').val()))){
 			success_or_error_msg('#form_submit_error','danger',"Please enter contact no","#contact_no");
 		}
-		else if($.trim($('#date_of_birth').val()) == ""){
+		/*else if($.trim($('#date_of_birth').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Please enter date of birth","#date_of_birth");
-		}
+		}*/
 		else{
 			$.ajax({
 

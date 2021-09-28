@@ -540,7 +540,7 @@ $(document).ready(function () {
 							batch_status = " <button class='btn btn-xs btn-info' disabled>Upcoming</button>";
 						
 						feeHtml = (batch_student['batch']['fees'] == batch_student['batch']['discounted_fees'])?`<span><b class="text-dark">`+batch_student['batch']['discounted_fees']+`</b></span>`:`<span class="pr-2"><b class="text-danger"><del>`+batch_student['batch']['fees']+`</del></b></span><span><b class="text-dark">`+batch_student['batch']['discounted_fees']+`</b></span>`;
-						
+	
 						tab_content += `
 						<div class="tab-pane `+active+`" id="tab-`+batch_student['id']+`" role="tabpanel">
 							<div class="row">
@@ -553,7 +553,7 @@ $(document).ready(function () {
 														<div class="widget-content-left">
 															<div class="widget-heading text-dark opacity-7"><h5>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h5></div>							
 															<div class="widget-heading text-dark opacity-7">Batch `+batch_student['batch']['batch_name']+batch_status+`</div>
-															<div class="widget-heading text-dark opacity-7">Inrollment ID : `+batch_student['batch']['batch_name']+`</div>
+															<div class="widget-heading text-dark opacity-7">Enrollment ID : `+batch_student['student_enrollment_id']+`</div>
 															<div class="widget-subheading opacity-10">Course Fee: `+feeHtml+`</div>
 														</div>												
 													</div>

@@ -51,7 +51,7 @@ class StudentPayment extends Model
         $return_arr['paid_amount']              =  $payment->paid_amount;
         $return_arr['paid_date']                =  ($payment->paid_date == null)?"":$payment->paid_date;
         $return_arr['paid_by']                  =  $payment->paid_by;
-        $return_arr['paid_by_name']             =  $payment->paidBy->first_name.' '.$payment->paidBy->last_name;
+        $return_arr['paid_by_name']             =  ($payment->paidBy!= null)? "Admin (".$payment->paidBy->first_name.' '.$payment->paidBy->last_name.")":"Student";
         $return_arr['details']                  =  ($payment->details == null)?"":$payment->details;
         $return_arr['payment_refference_no']    =  ($payment->payment_refference_no == null)?"":$payment->payment_refference_no; 
         $return_arr['invoice_no']               =  ($payment->invoice_no == null)?"":$payment->invoice_no; 

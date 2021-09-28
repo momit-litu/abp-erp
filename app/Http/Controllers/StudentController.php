@@ -232,8 +232,8 @@ class StudentController extends Controller
         try {
             $rule = [
                 'name' => 'required|string',
-                'date_of_birth' => 'required',
-                'address' => 'required',
+               // 'date_of_birth' => 'required',
+               // 'address' => 'required',
                 'contact_no' 		=> 'Required|max:11|unique:students,contact_no',
                 'email' 			=> 'Required|email|unique:students,email',
                 'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',
@@ -275,7 +275,7 @@ class StudentController extends Controller
                     'emergency_contact' => $request['emergency_contact'],
                     'address' => $request['address'],
                     'nid_no' => $request['nid'],
-                    'date_of_birth' => $request['date_of_birth'],
+                    'date_of_birth' => ($request['date_of_birth'])?$request['date_of_birth']:null,
                     'study_mode' => $request['study_mode'],
                     'remarks' => $request['remarks'],
                     'current_emplyment' => $request['current_emplyment'],

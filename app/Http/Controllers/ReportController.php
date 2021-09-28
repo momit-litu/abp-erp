@@ -361,7 +361,7 @@ class ReportController extends Controller
             $data['payment_month']  = date('M y', strToTime($payment->last_payment_date)); 
             $data['paid_date']      = $payment->paid_date; 
             $data['paid_type']      = $payment->paid_type;
-            $data['paid_by']        = ($payment->paid_by == 'Admin')?"Admin(".$payment->paidBy->first_name.")":"Student"; 
+            $data['paid_by']        = ($payment->paid_by == 'Admin')?"Admin (".$payment->paidBy->first_name.")":"Student"; 
             $data['invoice_no']     = $payment->invoice_no; 
 			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";           
 			$data['payable_amount'] = $payment->payable_amount;
