@@ -648,8 +648,7 @@
                                         Invoice Date : {{Date('Y-m-d')}}</p>
                                       <p class="f-fallback" style="text-align:right !important">
                                         Payment Due :  {{Date('Y-m-d')}}</p>
-									                    <p class="f-fallback" style="text-align:right !important">
-                                        Amount Due (BDT) :  ৳ {{$invoice['paid_amount']}}</p>
+									                    
                                     </th>
                                   </tr>
                                   <tr>

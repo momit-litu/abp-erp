@@ -170,6 +170,16 @@
                                             </div>
                                         </div>
                                     </li>
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">Class Time</div>
+                                                    <div class="widget-subheading">{{ $batch->class_schedule}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
                                     @if($batch->end_date!='')
                                     <li class="list-group-item">
                                         <div class="widget-content p-0">

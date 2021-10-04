@@ -48,7 +48,7 @@
 										<select name="sms_template" id="sms_template" class="form-control col-lg-12">
 											<option value="">Select a SMS template</option>
 											@foreach ($smsTemplates as $template)
-											<option value="{{$template->id}}" id="{{$template->id}}">{{$template->title}}</option>
+											<option value="{{$template->category}}" id="{{$template->id}}">{{$template->title}}</option>
 											@endforeach
 										</select>
 										@foreach ($smsTemplates as $template)
@@ -66,17 +66,17 @@
 								</div>
 							</div>		
 							<div class="form-row">							
-								<div class="col-md-6">
+								<!--<div class="col-md-6">
 									<div class="position-relative form-group">
 										<label for="" class="">Payment type</label>
 										<select name="payment_type" id="payment_type" class="form-control col-lg-12">
 											<option value="">Select payment type</option>
-											<option value="all">All</option>
-											<option value="due">Due</option>
-											<option value="paid">Paid</option>
+											<option value="All">All</option>
+											<option value="Due">Due</option>
+											<option value="Paid">Paid</option>
 										</select>
 									</div>
-								</div>
+								</div>-->
 								<div class="col-md-6">
 									<div class="position-relative form-group">
 										<label for="" class="">All Student?</label>
@@ -85,7 +85,7 @@
 											<option value="all">All students</option>
 											<option value="active">All active students</option>
 											<option value="inactive">All in-active students</option>
-											<option value="completed">All completed students</option>
+											<option value="Pending">All Pending Registration students</option>
 											<option value="enrolled">All current enrolled students</option>
 											<option value="nonenrolled">All current non-enrolled students</option>											
 										</select>
@@ -105,7 +105,7 @@
 								<div class="col-md-12">
 									<div class="position-relative form-group">
 										<label for="" class="">Selective Students? (Multiselect)</label>
-										<input type="text" id="sms_student_name" required name="sms_student_name" class=" mr-2 form-control col-md-12" />
+										<input type="text" id="sms_student_name" required  multiselect name="sms_student_name" class=" mr-2 form-control col-md-12" />
 										
 									</div>
 								</div>

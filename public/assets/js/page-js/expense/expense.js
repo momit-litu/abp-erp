@@ -297,7 +297,6 @@ $(document).ready(function () {
         });
     }
 
-
     
     expenseAdd = function expenseAdd(){
         $("#form-title").html('<i class="fa fa-plus"></i> Add  New Expense Detail');
@@ -332,7 +331,7 @@ $(document).ready(function () {
         "initComplete": function () {
             this.api().columns().every(function (key) {
                 var column = this;
-                if (column[0] == 1 || column[0] == 2 || column[0] == 5) {
+                if (column[0] == 1 || column[0] == 2 || column[0] == 5|| column[0] == 6) {
                     var select = $('<select><option value=""></option></select>')
                         .appendTo($(column.header()))
                         .on('change', function () {

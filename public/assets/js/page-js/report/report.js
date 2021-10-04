@@ -822,7 +822,6 @@ $(document).ready(function () {
 		$('#report-data').css('display','block');
 	});
 
-
 	$("#show_expense_income_report").on('click',function(){
 		event.preventDefault();
 		var report_heading = 'Expense Vs Income  ';
@@ -917,6 +916,115 @@ $(document).ready(function () {
 				$( api.column( 2 ).footer() ).html(incomeTotal);
 				$( api.column( 3 ).footer() ).html(expenseTotal);
 				$( api.column( 4 ).footer() ).html(balanceTotal);
+			}
+		});
+			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_financial_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Schedule Vs Collection ';
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+		if($.trim($('#student_name').val()) != ""){
+			report_heading += " Student: "+$('#student_name').val();
+		}
+		if($.trim($('#batch_name').val()) != ""){
+			report_heading += " Course: "+$('#batch_name').val();
+		}
+
+		financial_datatable = $('#financial_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/financial-report",
+				"type": "POST",
+				"data" : {
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+					"student_id":$('#student_id').val(),
+					"batch_id":$('#batch_id').val(),
+				}
+			},
+			"aoColumns": [			
+				{ mData: 'student_id',},			
+				{ mData: 'course_name'},		
+				{ mData: 'payable_amount' , className: "text-right"},		
+				{ mData: 'paid_amount' , className: "text-right"},		
+				{ mData: 'due_amount' , className: "text-right"},		
+				{ mData: 'payment_type' , className: "text-center"},					
+			],     
+			"footerCallback": function ( row, data, start, end, display ) {
+				var api = this.api(), data;
+	 
+				// Remove the formatting to get integer data for summation
+				var intVal = function ( i ) {
+					return typeof i === 'string' ?
+						i.replace(/[\$,]/g, '')*1 :
+						typeof i === 'number' ?
+							i : 0;
+				};	 
+				// Total over thi s page
+				data = api.column(2, { page: 'current'} ).data();
+				payableTotal = data.length ?data.reduce( function (a, b) {	return intVal(a) + intVal(b);} ) :0;
+
+				data = api.column( 3, { page: 'current'} ).data();
+				paidTotal = data.length ?data.reduce( function (a, b) {	return intVal(a) + intVal(b);} ) :0;
+
+				data = api.column( 4, { page: 'current'} ).data();
+				dueTotal = data.length ?data.reduce( function (a, b) {	return intVal(a) + intVal(b);} ) :0;
+				// Update footer
+				$( api.column( 2).footer() ).html(payableTotal);
+				$( api.column( 3 ).footer() ).html(paidTotal);
+				$( api.column( 4 ).footer() ).html(dueTotal);
 			}
 		});
 			

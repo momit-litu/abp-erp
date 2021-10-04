@@ -37,7 +37,7 @@ class StudentPayment extends Model
         $return_arr['student_name']             =  $payment->enrollment->student->name.' ('.$payment->enrollment->student->email.')';
         $return_arr['student_email']            =  $payment->enrollment->student->email;
         $return_arr['contact_no']               =  $payment->enrollment->student->contact_no;
-        $return_arr['address']                  =  $payment->enrollment->student->address;        
+        $return_arr['address']                  =  (is_null($payment->enrollment->student->address))?'':$payment->enrollment->student->address;        
         $return_arr['course_id']                =  $payment->enrollment->batch->course->id;
         $return_arr['course_name']              =  $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
         $return_arr['batch_name']               =  $payment->enrollment->batch->batch_name;
@@ -171,7 +171,6 @@ class StudentPayment extends Model
                     $studentPayment->attachment = $photoFullName;
                     $studentPayment->update();
                 }
-
                 DB::commit();
                 $payment = $this->with('enrollment','enrollment.student')->find($studentPayment->id);
                 $this->studentPaymentPaidNotification($payment);

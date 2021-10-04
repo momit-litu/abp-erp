@@ -42,6 +42,7 @@
         </div>
         <div class="app-header-right">
             <div class="header-dots">
+                <!--
                 <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="p-0 mr-2 btn btn-link">
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
@@ -82,6 +83,7 @@
                         </div>
                     </div>
                 </div>
+            -->
                 <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="p-0 mr-2 btn btn-link">
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">

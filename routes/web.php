@@ -16,22 +16,6 @@ use App\Mail\TestMail;
 
 
 
-// SSLCOMMERZ Start
-/*Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
-Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
-
-Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
-Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
-
-Route::post('/success', [SslCommerzPaymentController::class, 'success']);
-Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
-Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
-
-Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);*/
-//SSLCOMMERZ END
-
-
-
 Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
@@ -106,7 +90,6 @@ Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , '
 
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
-	
 	Route::get('/theme',array('as'=>'Theme' , 			'uses' =>'AdminController@welcome'));
 	Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'AdminController@index'));
 	Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
@@ -278,6 +261,9 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('payment-collection-report',array('as'=>'Payment Collection Report' , 'action_id'=>'101', 'uses' =>'ReportController@paymentCollectionReport'));
 	Route::post('payment-collection-report',array('as'=>'Payment Collection Report' , 'action_id'=>'101', 'uses' =>'ReportController@paymentCollectionReportList'));
 
+	Route::get('financial-report',array('as'=>'Financial Report' , 'action_id'=>'105', 'uses' =>'ReportController@financialReport'));
+	Route::post('financial-report',array('as'=>'Financial Report' , 'action_id'=>'105', 'uses' =>'ReportController@financialReportList'));
+
 	Route::get('schedule-collection-report',array('as'=>'Schedule Collection Report' , 'action_id'=>'102', 'uses' =>'ReportController@scheduleCollectionReport'));
 	Route::post('schedule-collection-report',array('as'=>'Schedule Collection Report' , 'action_id'=>'102', 'uses' =>'ReportController@scheduleCollectionReportList'));
 
@@ -291,3 +277,4 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
 
 
+?>

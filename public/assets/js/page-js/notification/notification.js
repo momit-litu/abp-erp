@@ -46,10 +46,7 @@ $(document).ready(function () {
 			$('#selected_receipants').append(selected_receipant_div);
 	}
 
-	$("#sms_student_name").on('click',function(){
-		$(this).val("");
-	});
-	
+
 	$("#sms_student_name").autocomplete({ 
 		search: function() {		
 		},
@@ -73,8 +70,13 @@ $(document).ready(function () {
 			var id = ui.item.id;
 			var name = ui.item.label;			
 			addReceipants(id, name);
+			$(this).val("");
 		},
 	});
+	$("#sms_student_name").on('click',function(){
+		$(this).val("");
+	});
+	
 
 	$("#sms_batch_name").autocomplete({ 
 		search: function() {		
@@ -98,6 +100,10 @@ $(document).ready(function () {
 			var id = ui.item.id;
 			$(this).next().val(id);
 		},
+	});
+	$("#sms_batch_name").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
 	});
 
 
@@ -124,22 +130,12 @@ $(document).ready(function () {
 				processData:false,
 				success: function(data){
 					var response = JSON.parse(data);
-					if(response['response_code'] == 0){
-						var errors	= response['errors'];						
-						resultHtml = '<ul>';
-						if(typeof(errors)=='string'){
-							resultHtml += '<li>'+ errors + '</li>';
-						}
-						else{
-							$.each(errors,function (k,v) {
-								resultHtml += '<li>'+ v + '</li>';
-							});
-						}
-						resultHtml += '</ul>';
-						toastr['error']( resultHtml, 'Failed!!!!');
+					if(response['response_code'] == 0){				
+						toastr['error']( response['message'], 'Failed!!!!');
 					}
 					else{
-						toastr['success']( 'SMS Sent Successfully', 'Success!!!');
+						toastr['success'](response['message'], 'Success!!!');
+						$('#selected_receipants').html("");
 						clear_form();
 					}
 					$(window).scrollTop();
@@ -149,12 +145,9 @@ $(document).ready(function () {
 	});
 
 	//Clear form
-	$("#clear_button").on('click',function(){
-		clear_form();
+	$("#clear_button").on('click',function(){		
 		$('#selected_receipants').html("");
+		clear_form();
 	});
-	
-
-
 });
 

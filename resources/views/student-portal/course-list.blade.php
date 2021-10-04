@@ -63,12 +63,13 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p class="mb-0"><span>Credit Hour</span> : &nbsp;{{ $batch->course->total_credit_hour}}</p>
-                                        <p class="mb-0">Total Unit  &nbsp; &nbsp;&nbsp;: &nbsp;{{ count($batch->course->units) }}</p>
-                                        <p >Semister No : {{ $batch->course->semester_no}}</p>
-										<p class="text-success mb-0">Start Date : {{ $batch->start_date}}</p>
+                                        <p class="mb-0"><b>Credit Hour</b> : &nbsp;{{ $batch->course->total_credit_hour}}</p>
+                                        <p class="mb-0"><b>Total Unit</b> &nbsp; &nbsp;: &nbsp;{{ count($batch->course->units) }}</p>
+                                        <p ><b>Semister No</b> : {{ $batch->course->semester_no}}</p>
+										<p class="text-dark mb-0"><b>Start Date</b> : {{ $batch->start_date}}</p>
+                                        <p class="text-dark mb-0"><b>Time</b> : {{ $batch->class_schedule}}</p>
 										<!--<p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
-										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p>-->
+										<p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p> -->
 
                                         <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Batch Full' }}</p>
 

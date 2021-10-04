@@ -12,7 +12,6 @@ paymentInvoice = function paymentInvoice(id){
             var settings = response['settings'];
             var invoiceDetails = response['invoiceDetails'];
             var modalHtml = "";
-            
             var invoiceHtml =
             `<div class="modal-body printable" id="modalBody">
                 <table class="discount" width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -54,8 +53,8 @@ paymentInvoice = function paymentInvoice(id){
                         <p  style="text-align:right !important">
                             Invoice Number :  `+data['invoice_no']+`<br>                                
                             Invoice Date :  `+data['paid_date']+`<br>
-                            Payment Due  :   `+data['last_payment_date']+`<br>
-                            <b>Amount Due (BDT):   ৳ `+data['paid_amount']+`</b>
+                           Payment Due  :   `+data['last_payment_date']+`<br>
+                           <!--  <b>Amount Due (BDT):   ৳ `+data['paid_amount']+`</b> -->
                         </td>
                     </tr>
                     <tr>

@@ -19,4 +19,8 @@ class Student extends Model
 	public function batches(){
 		return $this->belongsToMany('App\Models\Batch','batch_students')->withPivot('id','total_payable', 'total_paid', 'status');
 	}
+	public function batchStudent(){
+        return $this->hasMany('App\Models\BatchStudent','student_id','id');
+    }
+	
 }

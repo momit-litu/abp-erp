@@ -303,7 +303,9 @@ class ReportController extends Controller
             $return_arr[] = $data;
         }
         return json_encode(array('data'=>$return_arr));	 
-	}  
+	} 
+    
+    
 
     public function scheduleCollectionReport()
     {
@@ -485,6 +487,69 @@ class ReportController extends Controller
         }
         return json_encode(array('data'=>$return_arr));	 
 	}
+
+    public function financialReport()
+    {
+        $data['page_title']     = $this->page_title;
+        $data['module_name']    = "Reports";
+        $data['sub_module']     = "Financial Report";
+
+        $admin_user_id          = Auth::user()->id;
+        $view_action_id         = 105;
+        $view_permisiion        = $this->PermissionHasOrNot($admin_user_id, $view_action_id);
+        $data['actions']['view_permisiion'] = $view_permisiion;
+
+        return view('report.financial-report', $data);
+    }
+
+	public function financialReportList(Request $request)
+    {
+		$paymentSQL  =  StudentPayment::with('enrollment','enrollment.batch.course','enrollment.batch_fee');
+
+        if($request->from_date != "")
+            $paymentSQL->where('last_payment_date','>=',$request->from_date);
+        if($request->to_date != "")
+            $paymentSQL->where('last_payment_date','<=',$request->to_date);
+        /*if($request->payment_status != "All")  
+            $paymentSQL->where('payment_status','=',$request->payment_status);
+       */
+        if($request->student_id != "")  {
+            $student_id = $request->student_id;
+            $paymentSQL->whereHas('enrollment.student', function($query) use ($student_id){
+                $query->where('id',$student_id);
+            });
+        }
+        else
+            $paymentSQL->with('enrollment.student');
+
+
+        if($request->batch_id != "") {
+            $batch_id = $request->batch_id;
+            $paymentSQL->whereHas('enrollment.batch', function($query) use ($batch_id){
+                $query->where('id',$batch_id);
+            });
+        }
+        else
+            $paymentSQL->with('enrollment.batch');
+            
+        $payments = $paymentSQL->orderBy('created_at','desc')->get();
+        
+        
+        //dd($payments);
+        $return_arr = array();
+        foreach($payments as $payment){ 
+            $data['student_id']   =  $payment->enrollment->student->student_no; 
+            $data['course_name']    = $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
+            $data['payable_amount'] = $payment->payable_amount;
+            $data['paid_amount']    = $payment->paid_amount;
+            $data['due_amount']     = ($payment->payable_amount - $payment->paid_amount);
+			$data['payment_type']   = $payment->enrollment->batch_fee->payment_type;           
+			
+
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));	
+	}  
 
 
 }

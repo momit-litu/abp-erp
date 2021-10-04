@@ -57,7 +57,6 @@ class NotificationController extends Controller
         
 		return view('notification.bulk-sms',$data);
     }
-
     
     public function sendSMS(Request $request)
     {
@@ -74,37 +73,198 @@ class NotificationController extends Controller
             }
             else{
 				DB::beginTransaction();
-                /*
-                "payment_type" => null
-                "all_student_type" => null
-                "sms_batch_name" => null
-                "sms_batch_id" => null
-                "sms_student_name" => "Litu (litu@gmail1.com)"
-                "student_ids" => array:2 [
-                    0 => "21"
-                    1 => "32"
-                ]
-                */
-                // when selected students
-                $mobileNos = "";
-                if(isset($request->student_ids))
-                    $mobileNos =implode(',',  $request->student_ids);
+                $mobileNos          = array();
+                $allStudents        = array();
+                $selectedStudents   = array();
 
-        
-                echo $mobileNos;
-                dd($request->all());
-                //$paymentDetails = $this->studentPayment->getPaymentDetailByPaymentId($request->payment_id);
-               
-                $mobileNo = $paymentDetails['contact_no'];
-                $smsParam = array(
-                    'commaSeperatedReceiverNumbers'=>$mobileNo,
-                    'smsText'=>$request->message_body,
-                );
-                $response = json_decode($this->SMSService->sendSMS($smsParam), true);
-                If($response['isError']) throw new Exception($response['message']);
+                // SMS for due payment only
+                if($request->sms_template =='Unpaid'){
+                    $all_student_type = ($request->all_student_type != null)?$request->all_student_type:"";
+                    $lastDate = Date('Y-m-d');
+                    $studentStatusCondition = "";
+                    $studentCondition = "";
+
+                    if($all_student_type == 'active')
+                        $studentStatusCondition = " AND s.status = 'Active' " ;                   
+                    else if($all_student_type == 'inactive')
+                        $studentStatusCondition = " AND s.status = 'Inactive' " ; 
+
+                    if($request->sms_batch_id != null){
+                       $studentCondition =  " AND bs.batch_id=".$request->sms_batch_id ; 
+                    }
+                    else if(isset($request->student_ids)){
+                        $studentIds = implode(',',  $request->student_ids);
+                        $studentCondition =   " AND s.id IN($studentIds)" ; 
+                    }
+                    $paymentStudentSql = "
+                                        SELECT 
+                                        sp.payable_amount, sp.last_payment_date, s.contact_no, s.name
+                                        from student_payments sp
+                                        LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
+                                        LEFT JOIN students s on s.id = bs.student_id
+                                        WHERE sp.payment_status='Unpaid' and sp.last_payment_date<'$lastDate'
+                                        $studentStatusCondition
+                                        $studentCondition
+                                    ";
+                    $studentPayments = DB::select($paymentStudentSql);
+                    $responseText   = "";
+                    foreach($studentPayments as $details){                  
+                        $mobileNo = $details->contact_no;
+                        $replacableArray = ["[student_name]","[payment_amount]","[payment_date]"];
+                        $replaceByArray = [$details->name, $details->payable_amount, $details->last_payment_date];
+                        $smsBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
+                        $smsParam = array(
+                            'commaSeperatedReceiverNumbers'=>$mobileNo,
+                            'smsText'=>$smsBody,
+                        );
+                       
+                        $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
+                        if($response['isError'])
+                         $responseText .= $mobileNo." - Not Sent , ";
+                    }
+                    $message = "SMS sent successfully. ".$responseText;
+                }
+                else if($request->sms_template =='upcoming-due'){ 
+                    $all_student_type = ($request->all_student_type != null)?$request->all_student_type:"";
+                    $monthYear   = Date('Y-m');
+                   // $toDate     = Date('Y-m').'-8';
+                    $studentStatusCondition = "";
+                    $studentCondition       = "";
+
+                    if($all_student_type == 'active')
+                        $studentStatusCondition = " AND s.status = 'Active' " ;                   
+                    else if($all_student_type == 'inactive')
+                        $studentStatusCondition = " AND s.status = 'Inactive' " ; 
+
+                    if($request->sms_batch_id != null){
+                       $studentCondition =  " AND bs.batch_id=".$request->sms_batch_id ; 
+                    }
+                    else if(isset($request->student_ids)){
+                        $studentIds = implode(',',  $request->student_ids);
+                        $studentCondition =   " AND s.id IN($studentIds)" ; 
+                    }
+                    $paymentStudentSql = "
+                                        SELECT 
+                                        sp.payable_amount, sp.last_payment_date, s.contact_no, s.name
+                                        from student_payments sp
+                                        LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
+                                        LEFT JOIN students s on s.id = bs.student_id
+                                        WHERE sp.payment_status='Unpaid' and DATE_FORMAT(sp.last_payment_date,'%Y-%m') ='$monthYear'
+                                        $studentStatusCondition
+                                        $studentCondition
+                                    ";
+                    $studentPayments = DB::select($paymentStudentSql);
+                    $responseText   = "";
+                    if(count($studentPayments)>0){
+                        foreach($studentPayments as $details){                  
+                            $mobileNo = $details->contact_no;
+                            $replacableArray = ["[student_name]","[month]"];
+                            $replaceByArray = [$details->name, date('F')];
+                            $smsBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
+                            $smsParam = array(
+                                'commaSeperatedReceiverNumbers'=>$mobileNo,
+                                'smsText'=>$smsBody,
+                            );
+                            // echo $mobileNo.'---';
+                            $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
+                            if($response['isError'])
+                                $responseText .= $mobileNo." - Not Sent , ";
+                        }
+                        $message = "SMS sent successfully. ".$responseText;
+                    }
+                    else 
+                        $message = "No record found.";
+                }
+                else if($request->sms_template =='student'){
+                    $studentSql = " SELECT s.contact_no, s.id AS student_id, NAME AS student_name, student_no
+                                    FROM students s ";
+                    $studentCondition = " WHERE contact_no IS NOT null ";
+                    if($request->all_student_type == 'active')
+                        $studentCondition .= " AND status ='Active' ";
+                    else if($request->all_student_type == 'inactive')
+                        $studentCondition .= " AND status ='Inactive' ";
+
+                    if($request->all_student_type == 'Pending')
+                        $studentCondition .= " AND registration_completed ='No' ";
+                    else 
+                        $studentCondition .= " AND registration_completed ='Yes' ";
+                    
+                    if($request->all_student_type == 'enrolled')
+                        $studentCondition .= " AND type ='Enrolled' ";   
+                    else if($request->all_student_type == 'nonenrolled')
+                        $studentCondition .= " AND type ='Non-enrolled' ";  
+
+                    if($request->sms_batch_id != null){
+                            $studentSql .=  " LEFT JOIN batch_students AS bs ON bs.student_id=s.id  "; 
+                            $studentCondition .= " AND bs.batch_id=".$request->sms_batch_id;  
+                         }
+                    else if(isset($request->student_ids)){
+                        $studentIds =   implode(",",$request->student_ids);
+                        $studentCondition .= " AND id in($studentIds)";  
+                    } 
+                    $studentSql .=$studentCondition;
+                    $students   = DB::select($studentSql);
+                    $responseText   = "";
+                    foreach($students as $details){                  
+                        $mobileNo = $details->contact_no;
+                        $smsBody    = str_replace('[student_name]',$details->student_name,$request->message_body);
+                        $smsParam = array(
+                            'commaSeperatedReceiverNumbers'=>$mobileNo,
+                            'smsText'=>$smsBody,
+                        );
+                    
+                        $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
+                        if($response['isError'])
+                         $responseText .= $mobileNo." - Not Sent , ";
+                    }
+                    $message = "SMS sent successfully. ".$responseText;
+                }
+                // SMS for non template SMS or generic template body to any student or bulk students
+                else{ 
+                    $studentSql = " SELECT s.contact_no, s.id AS student_id, NAME AS stuudent_name, student_no
+                                    FROM students s ";
+                    $studentCondition = " WHERE contact_no IS NOT null ";
+                    if($request->all_student_type == 'active')
+                        $studentCondition .= " AND status ='Active' ";
+                    else if($request->all_student_type == 'inactive')
+                        $studentCondition .= " AND status ='Inactive' ";
+
+                    if($request->all_student_type == 'Pending')
+                        $studentCondition .= " AND registration_completed ='No' ";
+                    else 
+                        $studentCondition .= " AND registration_completed ='Yes' ";
+                    
+                    if($request->all_student_type == 'enrolled')
+                        $studentCondition .= " AND type ='Enrolled' ";   
+                    else if($request->all_student_type == 'nonenrolled')
+                        $studentCondition .= " AND type ='Non-enrolled' ";  
+
+                    if($request->sms_batch_id != null){
+                            $studentSql .=  " LEFT JOIN batch_students AS bs ON bs.student_id=s.id  "; 
+                            $studentCondition .= " AND bs.batch_id=".$request->sms_batch_id;  
+                         }
+                    else if(isset($request->student_ids)){
+                        $studentIds =   implode(",",$request->student_ids);
+                        $studentCondition .= " AND id in($studentIds)";  
+                    } 
+                    $studentSql .=$studentCondition;
+                    $students   = DB::select($studentSql);
+                    $studentsContacts =  array_column($students, 'contact_no');
+                    $mobileNos  = implode(',',  $studentsContacts);
+                   // $smsBody    = str_replace('[student_name]')
+                    $smsParam   = array(
+                        'commaSeperatedReceiverNumbers'=>$mobileNos,
+                        'smsText'=>$request->message_body,
+                    );
+
+                    $response = json_decode($this->SMSService->sendSMS($smsParam), true);
+                    if($response['isError']) throw new Exception($response['message']);
+                    $message = "SMS sent successfully.";
+                }
+
 				DB::commit();
 				$return['response_code'] = 1;
-				$return['message'] = "SMS sent successfully";
+				$return['message'] = $message;
 				return json_encode($return);
             }
         } 
