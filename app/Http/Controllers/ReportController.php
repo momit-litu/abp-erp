@@ -284,6 +284,8 @@ class ReportController extends Controller
         }
         else
             $paymentSQL->with('enrollment.batch');
+
+          
             
         $payments = $paymentSQL->where('payment_status','!=','Unpaid')->orderBy('created_at','desc')->get();
         
@@ -298,7 +300,7 @@ class ReportController extends Controller
             $data['paid_by']        = ($payment->paid_by == 'Admin')?"Admin(".$payment->paidBy->first_name.")":"Student"; 
             $data['reference_no']   = $payment->payment_refference_no; 
             $data['invoice_no']     = $payment->invoice_no; 
-			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";  
+			//$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";  
 			$data['paid_amount'] = $payment->paid_amount;
             $return_arr[] = $data;
         }
@@ -326,9 +328,9 @@ class ReportController extends Controller
 		$paymentSQL  =  StudentPayment::with('enrollment','enrollment.batch.course');
 
         if($request->from_date != "")
-            $paymentSQL->where('last_payment_date','>=',$request->from_date);
+            $paymentSQL->where('paid_date','>=',$request->from_date);
         if($request->to_date != "")
-            $paymentSQL->where('last_payment_date','<=',$request->to_date);
+            $paymentSQL->where('paid_date','<=',$request->to_date);
         /*if($request->payment_status != "All")  
             $paymentSQL->where('payment_status','=',$request->payment_status);
        */
@@ -538,7 +540,7 @@ class ReportController extends Controller
         //dd($payments);
         $return_arr = array();
         foreach($payments as $payment){ 
-            $data['student_id']   =  $payment->enrollment->student->student_no; 
+            $data['student_id']     =  $payment->enrollment->student->student_no; 
             $data['course_name']    = $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
             $data['payable_amount'] = $payment->payable_amount;
             $data['paid_amount']    = $payment->paid_amount;

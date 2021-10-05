@@ -52,21 +52,21 @@
 								<input type="date" id="to_date" name="to_date" class="form-control col-lg-12" />
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-4">
 							<div class="position-relative form-group">
 								<label class="control-label" >Course & Batch</label>
 								<input type="text" id="batch_name" name="batch_name" class="form-control col-lg-12" />
 								<input type="hidden" id="batch_id" name="batch_id"/>
 							</div>
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-3">
 							<div class="position-relative form-group">
 								<label class="control-label" >Student</label>
 								<input type="text" id="student_name" name="student_name" class="form-control col-lg-12" />
 								<input type="hidden" id="student_id" name="student_id"/>
 							</div>
 						</div>
-						<div class="col-md-2"> 
+						<!--<div class="col-md-2"> 
 							<div class="position-relative form-group">
 								<label class="control-label" >Payment Status</label>
 								<select class="form-control col-lg-12" id="payment_status"  name="payment_status" autocomplete="off"> 
@@ -76,7 +76,7 @@
 									<option value="Partial" >Partial</option>
 								</select>
 							</div>
-						</div>
+						</div>-->
 						<div class="col-md-1">
 							<div class="position-relative form-group">
 								<label class="control-label" >&nbsp;</label>
@@ -106,8 +106,8 @@
 								<th class="text-center">Payment type</th>
 								<th class="text-center">Paid By</th>
 								<th class="text-center">Reference No.</th>
-								<th class="text-center">Invoice No.</th>	
-								<th class="text-center">Payment Status</th>
+								<th class="text-center">Invoice</th>	
+								<!--<th class="text-center">Payment Status</th>-->
 								<th class="text-right">Paid Amount</th>									
 							</tr>
 						</thead>
@@ -123,7 +123,7 @@
 								<th></th>
 								<th></th>
 								<th></th>
-								<th></th>
+								<!--<th></th>-->
 								<th>Total</th>										
 								<th class="text-right"></th>									
 							</tr>

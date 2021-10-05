@@ -579,8 +579,7 @@ $(document).ready(function () {
 				{ mData: 'paid_type' , className: "text-center"},	
 				{ mData: 'paid_by' , className: "text-center"},	
 				{ mData: 'reference_no' , className: "text-center"},		
-				{ mData: 'invoice_no' , className: "text-center"},			
-				{ mData: 'payment_status' , className: "text-center"},		
+				{ mData: 'invoice_no' , className: "text-center"},				
 				{ mData: 'paid_amount' , className: "text-right" },					
 			],
 			"footerCallback": function ( row, data, start, end, display ) {

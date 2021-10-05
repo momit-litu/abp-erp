@@ -78,11 +78,14 @@
                                     <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
                                         <div class="widget-content-wrapper ">
                                             <div class="widget-content-left">
-                                                <div class="widget-heading">Course Fee</div>
-                                                <div class="widget-subheading text-danger"><del>{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}</del></div>
+                                                <div class="widget-heading">Course Fee </div>
+                                                <div class="widget-subheading text-danger">{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}
+                                                <br><span>Installment</span>
+                                                </div>
                                             </div>
                                             <div class="widget-content-right">
-                                                <div class="widget-numbers text-warning"><span> {{ $batch->discounted_fees }}</span></div>
+                                                <div class="widget-numbers text-warning"><span style="font-size: smaller;"> {{ $batch->discounted_fees }}</span></div>
+                                                <div class="widget-heading">Onetime:</div>
                                             </div>
                                         </div>
                                     </div>
