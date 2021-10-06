@@ -407,13 +407,14 @@ class StudentPortalController extends Controller
             $amount     = $request->input('amount');
 
             DB::beginTransaction();
-            $payment = StudentPayment::with('enrollment','enrollment.student')->where('payment_refference_no',$tran_id)->first();
+            $payment = StudentPayment::with('enrollment','enrollment.student')->where('payment_refference_no',$tran_id)->where('payment_status','!=','Paid')->first();
             $studentPayment = new StudentPayment;
 
             if (!empty($payment)) {
-                $payment_status =  (intval($payment->paid_amount+$amount) == intval($payment->payable_amount))?"Paid":"Partal";
+                //$payment_status =  (intval($payment->paid_amount+$amount) == intval($payment->payable_amount))?"Paid":"Partal";
+                $payment_status          =  "Paid";
                 $payment->paid_type      =  'SSL';
-                $payment->paid_amount    =  $payment->paid_amount + $amount;
+                $payment->paid_amount    =  $amount;//$payment->paid_amount + $amount;
                 $payment->payment_status =  $payment_status;
                 $payment->paid_date      =  date('Y-m-d');
                 $payment->paid_by        =  'Self';
