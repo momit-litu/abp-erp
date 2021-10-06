@@ -237,6 +237,33 @@ class CourseController extends Controller
 		}
 		return json_encode($json);	
 	}
+
+	public function batchAutoComplete($courseId = null){
+		$term = $_REQUEST['term'];
+
+		$batchQuery = Batch::where([
+								['status', '=', 'Active'],
+								['batch_name','like','%'.$term.'%']
+					]);
+
+		if($courseId != null){
+			$batchQuery->where([
+				['course_id', '=', $courseId],
+			]);
+		}
+		$data 		= $batchQuery->get();
+		$data_count = $data->count();
+		
+		if($data_count>0){
+			foreach ($data as $row) {
+				$json[] = array('id' => $row["id"],'label' => $row['batch_name'],);
+			}
+		}
+		else {
+			$json[] = array('id' => "0",'label' => "Not Found !!!");
+		}
+		return json_encode($json);	
+	}
 		
 	private function createCourse($request){
 		try {

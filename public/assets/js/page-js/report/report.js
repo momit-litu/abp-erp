@@ -120,6 +120,33 @@ $(document).ready(function () {
 	});
 
 
+	$("#batch_name_only").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/batch-autosuggest/'+$('#course_id').val(),
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		minLength: 2,
+		select: function(event, ui) {
+			var id = ui.item.id;
+			$(this).next().val(id);
+		},
+	});
+	$("#batch_name_only").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
+	});
 	
 
 	$("#show_course_status_report").on('click',function(){
@@ -933,8 +960,11 @@ $(document).ready(function () {
 		if($.trim($('#student_name').val()) != ""){
 			report_heading += " Student: "+$('#student_name').val();
 		}
-		if($.trim($('#batch_name').val()) != ""){
-			report_heading += " Course: "+$('#batch_name').val();
+		if($.trim($('#course_name').val()) != ""){
+			report_heading += " Course: "+$('#course_name').val();
+		}
+		if($.trim($('#batch_name_only').val()) != ""){
+			report_heading += " ,"+$('#batch_name_only').val();
 		}
 
 		financial_datatable = $('#financial_table').DataTable({
@@ -990,6 +1020,7 @@ $(document).ready(function () {
 					"from_date": $("#from_date").val(),
 					"to_date":$("#to_date").val(),
 					"student_id":$('#student_id').val(),
+					"course_id":$('#course_id').val(),
 					"batch_id":$('#batch_id').val(),
 				}
 			},

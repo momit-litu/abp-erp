@@ -82,7 +82,9 @@ Route::post('/units-autosuggest',array('as'=>'Unit Autosuggest list', 'uses' =>'
 Route::post('/course-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@courseAutoComplete'));
 Route::get('/student-course-batch-autosuggest/{id}',array('as'=>'Student Course Batch Autosuggest list', 'uses' =>'PaymentController@courseBatchList'));
 Route::post('/course-batch-autosuggest',array('as'=>'Course Batch Autosuggest list', 'uses' =>'CourseController@courseBatchAutoComplete'));
+Route::post('/batch-autosuggest/{course_id}',array('as'=>'Batch Autosuggest list', 'uses' =>'CourseController@batchAutoComplete'));
 Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
+
 Route::post('/expense-autosuggest',array('as'=>'Expense Autosuggest list', 'uses' =>'ExpenseController@expenseAutoComplete'));
 
 Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'uses' =>'PaymentController@emailInvoice'));

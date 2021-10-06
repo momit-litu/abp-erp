@@ -447,8 +447,8 @@ class ReportController extends Controller
         $expenseCondition  = "";
         $paymentCondition = " where  payment_status != 'Unpaid' ";
         if($request->from_date != "" && $request->to_date != ""){            
-            $expenseCondition =" where  expense_date between '".$request->from_date."' and '".$request->to_date."'";
-            $paymentCondition ="  and paid_date between '".$request->from_date."' and '".$request->to_date."'";
+            $expenseCondition .=" where  expense_date between '".$request->from_date."' and '".$request->to_date."'";
+            $paymentCondition .="  and paid_date between '".$request->from_date."' and '".$request->to_date."'";
         }
         
 
@@ -506,48 +506,47 @@ class ReportController extends Controller
 
 	public function financialReportList(Request $request)
     {
-		$paymentSQL  =  StudentPayment::with('enrollment','enrollment.batch.course','enrollment.batch_fee');
-
-        if($request->from_date != "")
-            $paymentSQL->where('last_payment_date','>=',$request->from_date);
-        if($request->to_date != "")
-            $paymentSQL->where('last_payment_date','<=',$request->to_date);
-        /*if($request->payment_status != "All")  
-            $paymentSQL->where('payment_status','=',$request->payment_status);
-       */
+		
+        
+        $paymentCondition = " where  sp.id != '' ";
+        if($request->from_date != "" && $request->to_date != ""){            
+            $paymentCondition .="  and last_payment_date between '".$request->from_date."' and '".$request->to_date."'";
+        }
         if($request->student_id != "")  {
-            $student_id = $request->student_id;
-            $paymentSQL->whereHas('enrollment.student', function($query) use ($student_id){
-                $query->where('id',$student_id);
-            });
+            $paymentCondition .= " AND  bs.student_id = ".$request->student_id ;
         }
-        else
-            $paymentSQL->with('enrollment.student');
-
-
+        if($request->course_id != "") {
+            $paymentCondition .= " AND  b.course_id = ".$request->course_id ;
+        }
         if($request->batch_id != "") {
-            $batch_id = $request->batch_id;
-            $paymentSQL->whereHas('enrollment.batch', function($query) use ($batch_id){
-                $query->where('id',$batch_id);
-            });
+            $paymentCondition .= " AND  bs.batch_id = ".$request->batch_id ;
         }
-        else
-            $paymentSQL->with('enrollment.batch');
-            
-        $payments = $paymentSQL->orderBy('created_at','desc')->get();
+
         
+
+        $payments = DB::select("
+             SELECT SUM(sp.payable_amount) AS payable_amount, SUM(sp.paid_amount) AS paid_amount, payment_type,  s.student_no,  b.id,  b.batch_name, c.title
+            FROM student_payments sp
+            LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
+            LEFT JOIN students s ON s.id = bs.student_id
+            LEFT JOIN  batches b ON b.id = bs.batch_id
+            LEFT JOIN batch_fees bf ON bf.id=bs.batch_fees_id
+            LEFT JOIN courses c ON c.id=b.course_id
+            $paymentCondition  
+            GROUP BY sp.student_enrollment_id
+        ");
         
+       
         //dd($payments);
         $return_arr = array();
-        foreach($payments as $payment){ 
-            $data['student_id']     =  $payment->enrollment->student->student_no; 
-            $data['course_name']    = $payment->enrollment->batch->course->title.' '.$payment->enrollment->batch->batch_name;
+        foreach($payments as $payment){  
+            $data['student_id']     = $payment->student_no; 
+            $data['course_name']    = $payment->title.' '.$payment->batch_name;
             $data['payable_amount'] = $payment->payable_amount;
             $data['paid_amount']    = $payment->paid_amount;
             $data['due_amount']     = ($payment->payable_amount - $payment->paid_amount);
-			$data['payment_type']   = $payment->enrollment->batch_fee->payment_type;           
+			$data['payment_type']   = $payment->payment_type;           
 			
-
             $return_arr[] = $data;
         }
         return json_encode(array('data'=>$return_arr));	

@@ -52,14 +52,21 @@
 								<input type="date" id="to_date" name="to_date" class="form-control col-lg-12" />
 							</div>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<div class="position-relative form-group">
-								<label class="control-label" >Course & Batch</label>
-								<input type="text" id="batch_name" name="batch_name" class="form-control col-lg-12" />
+								<label class="control-label" >Course</label>
+								<input type="text" id="course_name" name="course_name" class="form-control col-lg-12" />
+								<input type="hidden" id="course_id" name="course_id"/>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="position-relative form-group">
+								<label class="control-label" >Batch</label>
+								<input type="text" id="batch_name_only" name="batch_name_only" class="form-control col-lg-12" />
 								<input type="hidden" id="batch_id" name="batch_id"/>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<div class="position-relative form-group">
 								<label class="control-label" >Student</label>
 								<input type="text" id="student_name" name="student_name" class="form-control col-lg-12" />

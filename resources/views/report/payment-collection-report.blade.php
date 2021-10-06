@@ -66,17 +66,7 @@
 								<input type="hidden" id="student_id" name="student_id"/>
 							</div>
 						</div>
-						<!--<div class="col-md-2"> 
-							<div class="position-relative form-group">
-								<label class="control-label" >Payment Status</label>
-								<select class="form-control col-lg-12" id="payment_status"  name="payment_status" autocomplete="off"> 
-									<option value="All"  selected>All</option>
-									<option value="Paid">Paid</option>
-									<option value="Unpaid" >Unpaid</option>
-									<option value="Partial" >Partial</option>
-								</select>
-							</div>
-						</div>-->
+
 						<div class="col-md-1">
 							<div class="position-relative form-group">
 								<label class="control-label" >&nbsp;</label>
