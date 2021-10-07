@@ -425,9 +425,11 @@ class StudentPortalController extends Controller
                     if($payment->enrollment->status == 'Inactive'){
                         $enrollment             = BatchStudent::with('batch', 'batch.course')->find($payment->enrollment->id);
                         $enrollment->status     = "Active";
-                        $lastEnrollmentIdSQL       = BatchStudent::where('batch_id', $enrollment->batch_id)
-                                                ->where('student_enrollment_id','!=','')->orderBy('created_at', 'desc')->first();
-                        $lastEnrollmentId = (!empty($lastEnrollmentIdSQL))?$lastEnrollmentIdSQL->student_enrollment_id:0;
+      
+                        $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$enrollment->batch_id);
+
+                        $lastEnrollmentId = (!is_null($lastEnrollmentIdSQL[0]->max_enrollmen_id))?$lastEnrollmentIdSQL[0]->max_enrollmen_id:0;
+
                         $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
 
                         $enrollment->student_enrollment_id = $student_enrollment_id ;

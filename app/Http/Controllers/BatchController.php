@@ -140,8 +140,7 @@ class BatchController extends Controller
                 }
 
                 $batchFee  = BatchFee::with('batch','installments')->findOrFail($request['batch_fees_id']);
-               // dd($batchFee);
-               
+                
 				$batchStudent = BatchStudent::create([
                     'batch_id' 	    =>  $request['batch_id'],
                     'student_id'	=>  $request['student_id'],
@@ -152,9 +151,10 @@ class BatchController extends Controller
                 if($batchStudent){
                     $enrollment             = BatchStudent::with('batch', 'batch.course')->find($batchStudent->id);
 
-                    $lastEnrollmentIdSQL       = BatchStudent::where('batch_id', $enrollment->batch_id)
-                                                    ->where('student_enrollment_id','!=','')->orderBy('created_at', 'desc')->first();
-                    $lastEnrollmentId = (!empty($lastEnrollmentIdSQL))?$lastEnrollmentIdSQL->student_enrollment_id:0;
+                    $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$request['batch_id']);
+
+                    $lastEnrollmentId = (!is_null($lastEnrollmentIdSQL[0]->max_enrollmen_id))?$lastEnrollmentIdSQL[0]->max_enrollmen_id:0;
+
                     $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
 
                     $enrollment->student_enrollment_id = $student_enrollment_id ;
@@ -209,30 +209,19 @@ class BatchController extends Controller
         $batchStudent = BatchStudent::with(['payments'=>function($p){
             $p->where('paid_amount','>',0);
         }])->where([['batch_id',$request['batch_id']], ['student_id',$request['student_id']]])->first();
-        $is_deletable = (count($batchStudent->payments)==0)?1:0; // 1:deletabe, 0:not-deletable
+       
         
         if(empty($batchStudent)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No record found"));
 		}
 		try {			
 			DB::beginTransaction();
-			if($is_deletable){
-				StudentPayment::where('student_enrollment_id', $batchStudent->id)->delete();
-				$batchStudent->delete();
-                $batch = Batch::findOrFail($request['batch_id']);
-                $batch->total_enrolled_student = (($batch->total_enrolled_student)-1);
-                $batch->update();
-                $return['total_enrolled_student'] =$batch->total_enrolled_student;
-				$return['message'] = "Student removed successfully";
-                $return['response_code'] = 1;		
-			}
-			else{
 				$batchStudent->status = 'Inactive';
 				$batchStudent->update();
                 $return['status'] = 'Inactive';
 				$return['message'] = "Deletation is not possible, but deactivated the student";
                 $return['response_code'] = 2;
-			}
+			
 			DB::commit();
 				
 			return json_encode($return);
@@ -258,9 +247,10 @@ class BatchController extends Controller
 		try {			
 			DB::beginTransaction();
 			$batchStudent->status = 'Active';
-            if($batchStudent->student_enrollment_id ==""){
-                $lastEnrollmentIdSQL       = BatchStudent::where('id', $batchStudent->id)
+            if($batchStudent->student_enrollment_id == ""){
+                $lastEnrollmentIdSQL = BatchStudent::where('batch_id', $request['batch_id'])
                 ->where('student_enrollment_id','!=','')->orderBy('created_at', 'desc')->first();
+
                 $lastEnrollmentId = (!empty($lastEnrollmentIdSQL))?$lastEnrollmentIdSQL->student_enrollment_id:0;
                 $student_enrollment_id =  $batchStudent->batch->course->short_name_id. $batchStudent->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
                 $batchStudent->student_enrollment_id = $student_enrollment_id ;
