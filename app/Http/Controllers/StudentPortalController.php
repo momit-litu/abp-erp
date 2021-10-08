@@ -434,6 +434,12 @@ class StudentPortalController extends Controller
 
                         $enrollment->student_enrollment_id = $student_enrollment_id ;
                         $enrollment->save();
+
+                        $student = Student::find($enrollment->student_id);
+                        if($student->type =='Non-enrolled'){
+                            $student->type ='Enrolled';
+                            $student->save();
+                        }
                     }
                 }                   
                 else

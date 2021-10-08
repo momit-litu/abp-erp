@@ -34,10 +34,10 @@
 					</div>
 				</div>
 				<div class="page-title-actions">
-                    @if($actions['add_permisiion']>1)
+                    @if($actions['add_permisiion']>0)
 					<button type="button" onclick='expenseCategoryAdd()' title="Add a new action" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary">
 						<i class="fa fa-plus"></i>
-						Add New Exoense Category
+						Add New Expense Category
 					</button>
                         @endif
 				</div>

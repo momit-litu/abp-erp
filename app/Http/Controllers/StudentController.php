@@ -275,6 +275,7 @@ class StudentController extends Controller
                     'emergency_contact' => $request['emergency_contact'],
                     'address' => $request['address'],
                     'nid_no' => $request['nid'],
+                    'type' => 'Enrolled',
                     'date_of_birth' => ($request['date_of_birth'])?$request['date_of_birth']:null,
                     'study_mode' => $request['study_mode'],
                     'remarks' => $request['remarks'],

@@ -37,6 +37,7 @@ class ExpenseController extends Controller
         $admin_user_id = Auth::user()->id;
         $add_action_id = 67;
         $add_permisiion = $this->PermissionHasOrNot($admin_user_id, $add_action_id);
+       
         $data['actions']['add_permisiion'] = $add_permisiion;
         return view('expense.expense_category', $data);
     }

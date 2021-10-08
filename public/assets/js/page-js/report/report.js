@@ -950,7 +950,7 @@ $(document).ready(function () {
 
 	$("#show_financial_report").on('click',function(){
 		event.preventDefault();
-		var report_heading = 'Schedule Vs Collection ';
+		var report_heading = 'Financial Report';
 		if($.trim($('#from_date').val()) != ""){
 			report_heading += " from "+$('#from_date').val();
 		}

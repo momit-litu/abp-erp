@@ -52,9 +52,9 @@ $(document).ready(function () {
         if($.trim($('#expense_category_name').val()) == ""){
             success_or_error_msg('#form_submit_error','danger',"Please Insert Expense Category","#expense_category_name");
         }
-        else if($.trim($('#parent_id').val()) == ""){
+        /*else if($.trim($('#parent_id').val()) == ""){
             success_or_error_msg('#form_submit_error','danger',"Please Select a Parent Id","#parent_id");
-        }
+        }*/
         else{
             $.ajax({
                 url: url+"/expense/expense-category",
@@ -331,7 +331,7 @@ $(document).ready(function () {
         "initComplete": function () {
             this.api().columns().every(function (key) {
                 var column = this;
-                if (column[0] == 1 || column[0] == 2 || column[0] == 5|| column[0] == 6) {
+                if (column[0] == 1 || column[0] == 2 /*|| column[0] == 5*/|| column[0] == 6) {
                     var select = $('<select><option value=""></option></select>')
                         .appendTo($(column.header()))
                         .on('change', function () {
