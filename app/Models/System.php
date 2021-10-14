@@ -155,7 +155,6 @@ class System extends Model
     public static function ForgotPasswordEmail($users_id,$reset_url){
         $now = date('Y-m-d H:i:s');
         try{
-
             $user_info=\App\Models\User::where('id',$users_id)->first();
 
             if(isset($user_info)){
@@ -166,16 +165,17 @@ class System extends Model
             }else{
                 return \Redirect::back()->with('message',"Invalid User ID!");
             }
+
             $details = [
                 'user_info' => $user_info->first_name,
                 'reset_url' => $reset_url,
             ];
 
             $user_email = $users_email;
-            $user_name = $user_info->first_name;
-
+            $user_name = $user_info->first_name.' '.$user_info->last_name;
+            
             Mail::to($user_email, $user_name)->send( new UsersForgetPasswordMail($details));
-
+          //  echo $user_email.' - '.$user_name;die;
 //            Mail::send('forgot.forget-password-mail', $data, function($message) use ($user_email,$user_name) {
 //                $message->to($user_email,$user_name)->subject('Password Recovery');
 //
@@ -188,7 +188,7 @@ class System extends Model
 
         }catch (\Exception $e){
             $message = "Message : ".$e->getMessage().", File : ".$e->getFile().", Line : ".$e->getLine();
-            System::ErrorLogWrite($message);
+           // System::ErrorLogWrite($message);
             Session::flash('errormessage', $e->getMessage());
             return false;
         }

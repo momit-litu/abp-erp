@@ -2,10 +2,11 @@
 
 namespace App\Mail;
 
+use App\Models\Setting;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class UsersForgetPasswordMail extends Mailable
 {
@@ -42,10 +43,12 @@ class UsersForgetPasswordMail extends Mailable
      */
     public function build()
     {
+        $settings = Setting::first();
         return $this->subject('Password Recovery - '.$settings['company_name'])
             ->markdown('mails.forget-password-mail')
             ->with([
                 'details' => $this->details,
+                'settings' => $settings,
             ]);
     }
 }
