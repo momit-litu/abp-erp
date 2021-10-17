@@ -569,7 +569,7 @@ $(document).ready(function () {
 									row.parent().prev('td').html("<button class='btn btn-xs btn-danger' disabled>Inactive</button>");
 									
 									toastr['success']( response['message'], 'Success!!!');
-									$('#total_enrolled_student').html(response['total_enrolled_student']);
+									//$('#total_enrolled_student').html(response['total_enrolled_student']);
 								}
 								else{
 									row.closest('tr').remove();

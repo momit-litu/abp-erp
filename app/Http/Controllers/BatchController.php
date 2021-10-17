@@ -224,14 +224,27 @@ class BatchController extends Controller
 		}
 		try {			
 			DB::beginTransaction();
-				$batchStudent->status = 'Inactive';
-				$batchStudent->update();
-                $return['status'] = 'Inactive';
-				$return['message'] = "Deletation is not possible, but deactivated the student";
-                $return['response_code'] = 2;
-			
+                if(count($batchStudent->payments)==0){
+                    StudentPayment::where('student_enrollment_id',$batchStudent->id)->delete();
+                    $batchStudent->delete();                   
+                    $return['message'] = "Deletaed successfully";
+                    $return['response_code'] = 1;
+                    $batch                              = Batch::find($request['batch_id']);
+                    $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
+                    $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+                    $batch->update();
+                    $return['total_enrolled_student']   = $currentTotalEnrolledStudent;
+
+                }
+                else{
+                    $batchStudent->status = 'Inactive';
+                    $batchStudent->update();
+                    $return['status'] = 'Inactive';
+                    $return['message'] = "Deletation is not possible, but deactivated the student";
+                    $return['response_code'] = 2;
+                }
+
 			DB::commit();
-				
 			return json_encode($return);
         } 
 		catch (\Exception $e){
@@ -264,6 +277,7 @@ class BatchController extends Controller
                 $batchStudent->student_enrollment_id = $student_enrollment_id ;
             }
             $batchStudent->update();
+
 			DB::commit();
             $return['message'] = "Student status updated";
 			$return['response_code'] = 1;
