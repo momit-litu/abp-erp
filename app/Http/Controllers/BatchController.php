@@ -54,12 +54,18 @@ class BatchController extends Controller
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
 
-	    $batches = Batch::with('course')->with('batch_fees')
+	    $batches = Batch::with('course','students')->with('batch_fees')
 							->orderBy('created_at','desc')
 							->get();
-		//dd($batches);	
         $return_arr = array();
         foreach($batches as $batch){
+            $total_pending_student =  $batch->students->filter(function ($item) {   
+                if($item->getOriginal()['pivot_status'] =='Inactive'){
+                   return 1;
+                }
+                   
+            })->count();
+           // echo $total_pending_student; die;
             $data['id'] 		= $batch->id;            
 			$data['batch_name'] = $batch->batch_name; 
             $data['course_name']= "<a href='javascript:void(0)' onclick='showCourse(".$batch->course_id.")' />".$batch->course->title."</a>";
@@ -67,6 +73,8 @@ class BatchController extends Controller
 			$data['end_date']   = $batch->end_date;
 			$data['student_limit'] 		    = $batch->student_limit;
 			$data['total_enrolled_student'] = $batch->total_enrolled_student;
+            $data['total_pending_student']  = $total_pending_student;
+            
 
             $data['running_status'] 	= "";
             if($batch->running_status == 'Completed')

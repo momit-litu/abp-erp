@@ -36,6 +36,7 @@ $(document).ready(function () {
 			{ mData: 'end_date', className: "text-center"},			
 			{ mData: 'student_limit', className: "text-center"},
 			{ mData: 'total_enrolled_student', className: "text-center"},
+			{ mData: 'total_pending_student', className: "text-center"},
 			{ mData: 'running_status', className: "text-center"},
 			{ mData: 'status', className: "text-center"},
 			{ mData: 'actions' , className: "text-center"},

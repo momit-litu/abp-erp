@@ -52,7 +52,8 @@
 							<th>Start Date </th>
 							<th>End Date</th>
 							<th>Student Limit</th>
-							<th>Enrolled Student</th>												
+							<th>Enrolled Student</th>
+							<th>Pending Enrolment</th>												
 							<th class="hidden-xs">Status</th>
 							<th class="hidden-xs">Active Status</th>
 							<th class="text-center" width="80">Actions</th>
