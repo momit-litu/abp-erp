@@ -709,7 +709,7 @@
                                 <p style="text-align:left !important; font-size:12px" class="f-fallback">
                                 Notes/Terms:<br>
                                   1. Fees are not refundable.<br>
-                                  2. Course fees are not .<br>
+                                  2. Course fees are not transferable.<br>
                                   3. Course registration is valid for 12 months (PGD), for short course 4 months 
                                 </p>
                               </td>

@@ -324,9 +324,9 @@ class StudentController extends Controller
                             ]);
                         }
                     }
-                }
-                $this->registrationConfirmEmail($student->id);
+                }               
                 DB::commit();
+                $this->registrationConfirmEmail($student->id);
                 $return['response_code'] = 1;
                 $return['message'] = "Student saved successfully";
                 return json_encode($return);

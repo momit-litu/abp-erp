@@ -1,8 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
-
 use DB;
 use Auth;
 use App\Models\Batch;
@@ -14,7 +11,6 @@ use App\Traits\HasPermission;
 use Illuminate\Http\Response;
 use App\Models\StudentPayment;
 use App\Models\ExpneseCategory;
-
 
 class ReportController extends Controller
 {
@@ -72,7 +68,6 @@ class ReportController extends Controller
         return json_encode(array('data'=>$return_arr));	 
 	}
  
-	
     public function batchReport()
     {
         $data['page_title']     = $this->page_title;
@@ -124,7 +119,6 @@ class ReportController extends Controller
         return json_encode(array('data'=>$return_arr));	 
 	}
  
-
     public function studentReport()
     {
         $data['page_title']     = $this->page_title;
@@ -142,7 +136,6 @@ class ReportController extends Controller
 	public function studentReportList(Request $request)
     {
 		$studentSQL  = Student::with('batches');
-        
         if($request->from_date != "")
             $studentSQL->where('created_at','>=',$request->from_date);
         if($request->to_date != "")
@@ -171,13 +164,11 @@ class ReportController extends Controller
             $data['type']               = $student->type;
             $data['register_type']      = $student->register_type;
             $data['status']             = $student->status;
-
             $return_arr[] = $data;
         }
         return json_encode(array('data'=>$return_arr));	 
 	}
  
-
     public function paymentScheduleReport()
     {
         $data['page_title']     = $this->page_title;
@@ -212,7 +203,6 @@ class ReportController extends Controller
         else
             $paymentSQL->with('enrollment.student');
 
-
         if($request->batch_id != "") {
             $batch_id = $request->batch_id;
             $paymentSQL->whereHas('enrollment.batch', function($query) use ($batch_id){
@@ -221,11 +211,8 @@ class ReportController extends Controller
         }
         else
             $paymentSQL->with('enrollment.batch');
-            
-     
 
         $payments = $paymentSQL->orderBy('created_at','desc')->get();
-        
         $return_arr = array();
         foreach($payments as $payment){
             $data['student_name']   =  $payment->enrollment->student->name." ".$payment->enrollment->student->student_no; 
@@ -239,7 +226,6 @@ class ReportController extends Controller
         }
         return json_encode(array('data'=>$return_arr));	 
 	}  
-
 
     public function paymentCollectionReport()
     {
@@ -275,7 +261,6 @@ class ReportController extends Controller
         else
             $paymentSQL->with('enrollment.student');
 
-
         if($request->batch_id != "") {
             $batch_id = $request->batch_id;
             $paymentSQL->whereHas('enrollment.batch', function($query) use ($batch_id){
@@ -284,11 +269,8 @@ class ReportController extends Controller
         }
         else
             $paymentSQL->with('enrollment.batch');
-
-          
-            
+  
         $payments = $paymentSQL->where('payment_status','!=','Unpaid')->orderBy('created_at','desc')->get();
-        
         $return_arr = array();
         foreach($payments as $payment){
             $data['student_name']   =  $payment->enrollment->student->name." ".$payment->enrollment->student->student_no; 
@@ -307,8 +289,6 @@ class ReportController extends Controller
         return json_encode(array('data'=>$return_arr));	 
 	} 
     
-    
-
     public function scheduleCollectionReport()
     {
         $data['page_title']     = $this->page_title;
@@ -426,8 +406,7 @@ class ReportController extends Controller
         }
         return json_encode(array('data'=>$return_arr));	 
 	}
-
-       
+    
 	public function expenseIncome()
     {
         $data['page_title']     = $this->page_title;
@@ -506,8 +485,6 @@ class ReportController extends Controller
 
 	public function financialReportList(Request $request)
     {
-		
-        
         $paymentCondition = " where  sp.id != '' ";
         if($request->from_date != "" && $request->to_date != ""){            
             $paymentCondition .="  and last_payment_date between '".$request->from_date."' and '".$request->to_date."'";
@@ -551,6 +528,4 @@ class ReportController extends Controller
         }
         return json_encode(array('data'=>$return_arr));	
 	}  
-
-
 }

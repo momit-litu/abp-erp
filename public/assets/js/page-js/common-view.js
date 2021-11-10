@@ -119,7 +119,7 @@ paymentInvoice = function paymentInvoice(id){
                     <p style="text-align:left !important; font-size:12px">
                     Notes/Terms:<br>
                     1. Fees are not refundable.<br>
-                    2. Course fees are not .<br>
+                    2. Course fees are not transferable.<br>
                     3. Course registration is valid for 12 months (PGD), for short course 4 months 
                     </p>
                 </td>
@@ -251,11 +251,11 @@ studentView = function studentView(id){
             }
             else{
                 $("#type_div").html('<span class="badge badge-warning">Non-Enrolled</span>');
-            } //alert(profile_image_url);
+            } //alert(student_document_url);
             var attachment_html = "";
             if(data['documents'].length >0){
                 $.each(data['documents'], function(i,document){ 
-                    attachment_html += "<a clas='formData' target='_blank'  href='"+profile_image_url+"/documents/"+document['document_name']+"' >"+document['document_name']+"</a><br>";
+                    attachment_html += "<a clas='formData' target='_blank'  href='"+student_document_url+"documents/"+document['document_name']+"' >"+document['document_name']+"</a><br>";
                 });
             }
             $('#attachment_div').html(attachment_html);

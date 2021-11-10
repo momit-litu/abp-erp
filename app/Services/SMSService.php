@@ -19,8 +19,4 @@ class SMSService
 	function sendSMS($param){
 		return $this->performRequest('GET', "https://powersms.banglaphone.net.bd/httpapi/sendsms?userId=".$this->user_id."&password=".$this->user_password."&commaSeperatedReceiverNumbers=".$param['commaSeperatedReceiverNumbers']."&smsText=".$param['smsText']."");
 	}
-
-
-	//https://powersms.banglaphone.net.bd/httpapi/sendsms?userId=tarik&password=t123456&commaSeperatedReceiverNumbers=01980340482&smsText=MOMT%20hello
-
 }

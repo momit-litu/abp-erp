@@ -9,6 +9,7 @@ var user_id 		= $('#user_id').val();
 var user_type 		= $('#user_type').val();
 
 const profile_image_url 		= url+"/assets/images/user/student/";
+const student_document_url 		= url+"/assets/images/student/";
 const payment_attachment_url 	= url+"/assets/images/payment/";
 
 $.ajaxSetup({
