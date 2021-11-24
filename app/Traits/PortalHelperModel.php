@@ -25,8 +25,7 @@ trait PortalHelperModel
 	public function courseList($page=1, $limit=20, $type, $my=""){ 
         // $type = 'Featured', //  'Completed','Running','Upcoming'
         try{
-			$studentId 		= Auth::user()->student_id;
-			
+			$studentId 		= (Auth::check())?Auth::user()->student_id:"";
 			if($my!=""){
 				$batchesQuery   = Batch::with('course','batch_fees', 'course.units','students')
 								->whereHas('students',	function ($query) use ($studentId) {
@@ -37,10 +36,17 @@ trait PortalHelperModel
 				$batchesQuery->where('status','Active');
 			}
 			else{
-				$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
+				if($studentId!="")
+					$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
 									->with(['students' => 	function ($query) use ($studentId) {
-										$query/*->where('batch_students.status','Active')*/->where('student_id',$studentId);
+										$query->where('student_id',$studentId);
 									}]);
+				else
+					$batchesQuery   = Batch::with('course','batch_fees', 'course.units','students');
+									/*->with(['students' => 	function ($query) use ($studentId) {
+										$query->where('student_id',$studentId);
+									}]);*/
+									
 				$batchesQuery 	= ($type=='Featured')?$batchesQuery->where('featured','Yes'):$batchesQuery->where('running_status',$type)->where('status','Active');
 			}
 			
@@ -67,12 +73,16 @@ trait PortalHelperModel
 	
 	public function courseDetailsByBatchId($batchId){ 
         try{
-			$studentId 		= Auth::user()->student_id;
-			$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units')
-									->with(['students' => 	function ($query) use ($studentId) {
-										$query->where('student_id',$studentId); //->where('batch_students.status','Active');
-									}])
-									->find($batchId);
+			if (Auth::check()){
+				$studentId 		= Auth::user()->student_id;
+				$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units')
+										->with(['students' => 	function ($query) use ($studentId) {
+											$query->where('student_id',$studentId); //->where('batch_students.status','Active');
+										}])
+										->find($batchId);
+			}
+			else
+				$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units','students')->find($batchId);
 									 
 			//$payments = "";
 			if($batch->students->count()  >0){

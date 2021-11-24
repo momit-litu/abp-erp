@@ -38,8 +38,10 @@
                        {{ $batch->running_status }}
                     </button>
                     @if($batch->students->count()>0)
-                        <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
-                    @else
+						@if(Auth::check())
+							<button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
+						@endif
+					@else
                         <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn  {{ ($batch->total_enrolled_student<$batch->student_limit)?'btn-success':'btn-danger' }} disabled" data-original-title="Example Tooltip">
                             {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Batch Full' }}
                         </button>
@@ -113,6 +115,7 @@
             -->
                 <div class="main-card mb-3 card">
                     <div class="card-body">
+					@if(Auth::check())
                         @if($batch->students->count()==1 && $batch->students[0]->pivot->status =='Inactive')
                             <div class="alert alert-danger ">
                                 <button class="btn btn-sm btn-danger disabled">Registration Pending</button><br>
@@ -123,6 +126,7 @@
                                 <h6>Student Course Enrollment ID : <b>{{ $batch->students[0]->pivot->student_enrollment_id}}</b></h6>
                             </div>
                         @endif
+					 @endif	
                         <h5 class="card-title">Details</h5>
                         <p>
                             {{ strip_tags($batch->course->objective) }}
@@ -192,7 +196,7 @@
                                         </div>
                                     </li>
                                     @endif
-                                    <li class="list-group-item">
+                                   <!-- <li class="list-group-item">
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">
                                                 <div class="widget-content-left">
@@ -201,7 +205,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> -->
                                     <li class="list-group-item">
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">
@@ -224,7 +228,12 @@
                                     </li>
                                     <li class="list-group-item">
                                         <br>
-                                    @if($batch->students->count()==0 && $batch->total_enrolled_student<$batch->student_limit)
+
+                                    @if(!Auth::check() && $batch->total_enrolled_student<$batch->student_limit)
+										<button type="button" id="start_registration" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg col-md-12">
+                                            Register to this course
+                                       </button>
+								    @elseif($batch->students->count()==0 && $batch->total_enrolled_student<$batch->student_limit)
                                         <button type="button" id="start_registration" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg col-md-12">
                                             Register to this course
                                         </button>
@@ -234,8 +243,8 @@
                                 </ul>
                             </div>
                             <div class="col-md-1"></div>
-                            <div class="col-md-5">
-                                @if($batch->payments != "")
+                            <div class="col-md-5"> 
+                                @if(Auth::check() && $batch->payments != "")
                                     <h5 class="card-title">Payment Details</h5>
                                     <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
                                         <div class="widget-chart-content text-white">

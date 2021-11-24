@@ -15,9 +15,14 @@ use App\Mail\TestMail;
 */
 
 
+Route::get('/',array('as'=>'index', 'uses' =>'StudentPortalController@index'));
+Route::get('/index',array('as'=>'index', 'uses' =>'StudentPortalController@index'));
+/*Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
+Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
+*/
 
-Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
-Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+
+//Route::get('/login',array('as'=>'index', 'uses' =>'AuthController@authLogin'));
 Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::get('auth/login',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@authPostLogin'));
@@ -25,37 +30,6 @@ Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@au
 Route::get('/payment/{id}',array('as'=>'Payment Details' , 'uses' =>'PaymentController@show'));
 Route::post('/sslcommerz/success',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentSuccess'));
 Route::post('/sslcommerz/fail',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentFail'));
-
-
-Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], function () {
-	Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
-	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
-	Route::get('terms',array('as'=>'Terms Condition', 'uses' =>'StudentPortalController@terms'));
-	//Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
-
-	Route::group(['middleware' => ['auth','prevent-back-history']], function () {		
-		Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'StudentPortalController@index'));
-		Route::get('/dashboard',array('as'=>'Dashboard' , 	'uses' =>'StudentPortalController@index'));
-		Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
-		Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
-		Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
-		Route::get('/courses/my/{type}',array('as'=>'My Course List' , 	'uses' =>'StudentPortalController@showMyCourseList'));
-
-		//Payment
-		Route::post('/sslcommerz/pay-via-ajax',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@payViaAjax'));
-	
-
-		Route::get('/payments/{type}',array('as'=>'Payment List' , 	'uses' =>'StudentPortalController@showPaymentList'));
-
-		Route::post('/payment/revise',array('as'=>'Revise Payment' , 	'uses' =>'StudentPortalController@savePaymentRevise'));
-		Route::get('/checkout/{id}',array('as'=>'Payment Checkout', 'uses' =>'StudentPortalController@checkoutShow'));
-		
-		Route::get('/student-info',array('as'=>'Student Details' , 'uses' =>'StudentPortalController@studentShow'));
-		Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
-		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));	
-		
-	});
-});
 
 
 #Login
@@ -275,6 +249,44 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('expense-income',array('as'=>'Expense Vs Income Report' , 'action_id'=>'104', 'uses' =>'ReportController@expenseIncome'));
 	Route::post('expense-income',array('as'=>'Expense Vs Income Report' , 'action_id'=>'104', 'uses' =>'ReportController@expenseIncomeList'));
 
+});
+
+
+
+Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], function () {
+	
+	Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
+	Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
+	
+	
+	Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+	Route::get('terms',array('as'=>'Terms Condition', 'uses' =>'StudentPortalController@terms'));
+	//Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
+
+	Route::group(['middleware' => ['auth','prevent-back-history']], function () {		
+	
+		Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'StudentPortalController@index'));
+		Route::get('/dashboard',array('as'=>'Dashboard' , 	'uses' =>'StudentPortalController@index'));
+		Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
+		//Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
+		//Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
+		Route::get('/courses/my/{type}',array('as'=>'My Course List' , 	'uses' =>'StudentPortalController@showMyCourseList'));
+
+		//Payment
+		Route::post('/sslcommerz/pay-via-ajax',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@payViaAjax'));
+	
+
+		Route::get('/payments/{type}',array('as'=>'Payment List' , 	'uses' =>'StudentPortalController@showPaymentList'));
+
+		Route::post('/payment/revise',array('as'=>'Revise Payment' , 	'uses' =>'StudentPortalController@savePaymentRevise'));
+		Route::get('/checkout/{id}',array('as'=>'Payment Checkout', 'uses' =>'StudentPortalController@checkoutShow'));
+		
+		Route::get('/student-info',array('as'=>'Student Details' , 'uses' =>'StudentPortalController@studentShow'));
+		Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
+		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));	
+		
+	});
 });
 
 

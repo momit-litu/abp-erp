@@ -25,56 +25,62 @@
 $(document).ready(function () {
 	
 	$("#start_registration").on('click',function(){
+		
 		$('.step-content').css('display','none');
 		$('#student-info').css('display','block');
 		$('.nav-item').removeClass('active');
 		$('#student-info-nav-item').addClass('active');
 		$('#save_student').css('display','block');
 		$('#enroll_student').css('display','none');
+		if(user_id != ""){
+			$.ajax({
+				url: url+'/portal/student-info/',
+				cache: false,
+				success: function(response){
+					var response = JSON.parse(response);
+					var data = response['student'];
+					$('#registration-modal').modal('show');
+					$("#id").val(data['id']);
+					$("#name").val(data['name']);
+					$("#student_no").val(data['student_no']);
+					$("#student_email").val(data['email']);
+					$("#contact_no").val(data['contact_no']);
+					$("#emergency_contact").val(data['emergency_contact']);
+					$("#student_address_field").val(data['address']);
+					$("#nid").val(data['nid_no']);
+					$("#date_of_birth").val(data['date_of_birth']);
+					$("#study_mode").val(data['study_mode']);
+					$("#type").val(data['type']);
+					$("#current_emplyment").val(data['current_emplyment']);
+					$("#last_qualification").val(data['last_qualification']);
+					$("#how_know").val(data['how_know']);
+					$("#passing_year").val(data['passing_year']);
+					$("#remarks").val(data['remarks']);
+					(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
+					$('#student_form').iCheck({
+							checkboxClass: 'icheckbox_flat-green',
+							radioClass: 'iradio_flat-green'
+					});	
+					var photo = (data["user_profile_image"]!=null && data["user_profile_image"]!="")?data["user_profile_image"]:'user.png';
+					$("#user_image").attr("src", profile_image_url+photo);
 
-		$.ajax({
-			url: url+'/portal/student-info/',
-			cache: false,
-			success: function(response){
-				var response = JSON.parse(response);
-				var data = response['student'];
-                $('#registration-modal').modal('show');
-				$("#id").val(data['id']);
-				$("#name").val(data['name']);
-				$("#student_no").val(data['student_no']);
-				$("#student_email").val(data['email']);
-				$("#contact_no").val(data['contact_no']);
-				$("#emergency_contact").val(data['emergency_contact']);
-				$("#student_address_field").val(data['address']);
-				$("#nid").val(data['nid_no']);
-				$("#date_of_birth").val(data['date_of_birth']);
-				$("#study_mode").val(data['study_mode']);
-				$("#type").val(data['type']);
-				$("#current_emplyment").val(data['current_emplyment']);
-				$("#last_qualification").val(data['last_qualification']);
-				$("#how_know").val(data['how_know']);
-				$("#passing_year").val(data['passing_year']);
-				$("#remarks").val(data['remarks']);
-				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
-				$('#student_form').iCheck({
-						checkboxClass: 'icheckbox_flat-green',
-						radioClass: 'iradio_flat-green'
-				});	
-				var photo = (data["user_profile_image"]!=null && data["user_profile_image"]!="")?data["user_profile_image"]:'user.png';
-				$("#user_image").attr("src", profile_image_url+photo);
-
-				var attachment_html = "";
-				if(data['documents'].length >0){
-					$.each(data['documents'], function(i,document){ 
-						attachment_html +="<tr><td><input type='text' class='d-none' name='std_docs[]' value='"+document['id']+"' /> <a clas='formData' target='_blank'  href='"+profile_image_url+"/documents/"+document['document_name']+"' >"+document['document_name']+"</a></td><td width='50'><button class='border-0 btn-transition btn btn-outline-danger remove-doc'><i class='fa fa-trash-alt'></i></button></td></tr>";
-					});
+					var attachment_html = "";
+					if(data['documents'].length >0){
+						$.each(data['documents'], function(i,document){ 
+							attachment_html +="<tr><td><input type='text' class='d-none' name='std_docs[]' value='"+document['id']+"' /> <a clas='formData' target='_blank'  href='"+profile_image_url+"/documents/"+document['document_name']+"' >"+document['document_name']+"</a></td><td width='50'><button class='border-0 btn-transition btn btn-outline-danger remove-doc'><i class='fa fa-trash-alt'></i></button></td></tr>";
+						});
+					}
+					$('#attachment_table').append(attachment_html);
+					$('.remove-doc').on('click',function(){
+						$(this).closest('tr').remove();
+					})
 				}
-				$('#attachment_table').append(attachment_html);
-				$('.remove-doc').on('click',function(){
-					$(this).closest('tr').remove();
-				})
-			}
-		});
+			});
+		}
+		else{
+			$('#registration-modal').modal('show');
+		}
+		
 	});
 
 	//Entry And Update Function For Module

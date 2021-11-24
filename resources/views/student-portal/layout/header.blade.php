@@ -1,7 +1,7 @@
 <div class="app-header header-shadow">
-    <div class="app-header__logo">
+	@if(Auth::check())
+	<div class="app-header__logo">
         <div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:40px" /> </div>
-        
         <div class="header__pane ml-auto">
             <div>
                 <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
@@ -10,7 +10,7 @@
                     </span>
                 </button>
             </div>
-        </div>
+        </div>		
     </div>
     <div class="app-header__mobile-menu">
         <div>
@@ -21,7 +21,8 @@
             </button>
         </div>
     </div>
-    <div class="app-header__menu">
+	<div class="app-header__menu">
+		<span><h6><strong>Academy of Business Professionals (ABP) </strong></h6></span>
         <span>
             <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
                 <span class="btn-icon-wrapper">
@@ -29,16 +30,20 @@
                 </span>
             </button>
         </span>
-    </div>    
+    </div>  
+	@else
+		<div class="app-header__mobile-menu" style="width:100%">
+		<div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:40px" /> </div> &nbsp;
+		<h6><strong>Academy of Business Professionals</strong></h6>
+		<div class="mb-2 mr-2" style="position: absolute;right: 0; top:15px"><a class="mb-2 mr-2 btn  btn-sm  btn-success" href="{{url('portal/login')}}">Login</a></div>
+    </div> 	
+	@endif
+    
+ 	
+
     <div class="app-header__content">
         <div class="app-header-left">
-            <!--<div class="search-wrapper">
-                <div class="input-holder">
-                    <input type="text" class="search-input" placeholder="Type to search">
-                    <button class="search-icon"><span></span></button>
-                </div>
-                <button class="close"></button>
-            </div>-->
+			@if(Auth::check())		
 			<ul class="header-megamenu nav">
                 <li class="btn-group nav-item">
                     <a class="nav-link" data-toggle="dropdown" aria-expanded="false">
@@ -115,9 +120,15 @@
                     </div> -->
                 </li>
             </ul>
+			@else
+				<div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:40px" /> </div> &nbsp;
+				<h5>Academy of Business Professionals (ABP)</h5>
+			@endif
         </div>
+		
         <div class="app-header-right">
-            <div class="header-dots">
+            @if(Auth::check())		
+			<div class="header-dots">
                 <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="p-0 mr-2 btn btn-link">
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
@@ -309,7 +320,9 @@
                     </div>
                 </div>
             </div>
-   
+			@else
+				<a class="mb-2 mr-2 btn  btn-sm  btn-success" href="{{url('portal/login')}}">Login</a>
+			@endif
         </div>
     </div>
 </div> 

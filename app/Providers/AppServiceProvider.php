@@ -38,10 +38,14 @@ class AppServiceProvider extends ServiceProvider
 		});
 
 		view()->composer('student-portal.layout.master', function($view){
-			$user 		= Auth::user();
-			$studentName	=$user->first_name;
+			$studentName = "";
+			if (Auth::check()){
+				$user 		= Auth::user();
+				$studentName	=$user->first_name;
+			}
 			$view->with('studentName', $studentName);
 		});
+
 		view()->composer('student-portal.layout.master', function($view){
 			$site_settings = Setting::first();
 			$view->with('site_settings',$site_settings);

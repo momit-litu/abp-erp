@@ -10,7 +10,7 @@
                         </i>
                     </div>
                     <div>ABP Courses
-                        <div class="page-title-subheading">This is an example dashboard created using build-in elements and components.
+                        <div class="page-title-subheading">ABP offers different batch for different course. 
                         </div>
                     </div>
                 </div>
@@ -169,13 +169,16 @@
                                     </div>
                                
                                     <div class="d-block text-center card-footer bg-light">
-                                        @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
-                                            <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
-                                        @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
-                                            <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
-                                        @elseif($batch->total_enrolled_student<$batch->student_limit)
-                                            <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
-                                        @endif
+                                       @if(Auth::check())
+										   @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
+												<button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
+											@elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
+												<a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
+											@elseif($batch->total_enrolled_student<$batch->student_limit)
+												<a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
+											@endif
+										@endif
+										
                                         <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-primary btn-sm">Details</a>
                                     </div>
                                 </div>
@@ -246,13 +249,15 @@
                                         </div>
                                     </div>
                                     <div class="d-block text-center card-footer bg-light">
-                                        @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
-                                            <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
-                                        @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
-                                            <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
-                                        @elseif($batch->total_enrolled_student<$batch->student_limit)
-                                            <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
-                                        @endif
+                                       @if(Auth::check())
+										   @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
+												<button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
+											@elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
+												<a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
+											@elseif($batch->total_enrolled_student<$batch->student_limit)
+												<a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
+											@endif
+										@endif
                                         <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-primary btn-sm">Details</a>
                                     </div>
                                 </div>

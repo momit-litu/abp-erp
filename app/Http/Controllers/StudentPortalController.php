@@ -45,9 +45,13 @@ class StudentPortalController extends Controller
     {
         $page_title             = $this->page_title;
 		$data['module_name']    = "Dashboard";
-		$studentId 		        = Auth::user()->student_id;
-        $student	  	        = Student::find($studentId);
-        $data['student']        = $student;
+		if (Auth::check()){
+			$studentId 		        = Auth::user()->student_id;
+			$student	  	        = Student::find($studentId);
+			$data['student']        = $student;
+		}
+		else 
+			$data['student']        = "";
 
     
         //get featured course list
@@ -69,7 +73,7 @@ class StudentPortalController extends Controller
         // total teachers will come from settings
 
         //dd($data);
-        return view('student-portal.dashboard', array('page_title'=>$page_title, 'data'=>$data,'student'=>$student));
+        return view('student-portal.dashboard', array('page_title'=>$page_title, 'data'=>$data/*,'student'=>$student*/));
     }
     
 	public function showCourseList($type)
@@ -104,9 +108,12 @@ class StudentPortalController extends Controller
     {
         $page_title = $this->page_title;
 		$data['module_name']= "Dashboard";
-		$studentId 		= Auth::user()->student_id;
-        $student	  	= Student::find($studentId);
-        
+		if (Auth::check()){
+			$studentId 		= Auth::user()->student_id;
+			$student	  	= Student::find($studentId);
+		}
+		else
+			$student = "";
         
         $data['student']=$student;
         $batchDetails   = $this->courseDetailsByBatchId($id);

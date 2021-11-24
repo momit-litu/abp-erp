@@ -27,10 +27,12 @@
 
 <body>
 
-<div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
+<div class="app-container app-theme-white body-tabs-shadow {{ (Auth::check())?'fixed-header fixed-sidebar':''}}">
     @include('student-portal.layout.header')
 	<div class="app-main">
+	@if(Auth::check())
         @include('student-portal.layout.sidebar')
+	@endif
         <div style="display:none">
             <div id="session_message"> {{(Session::has('message'))?Session::get('message'):""}}</div>
             <div id="session_message_code"> {{(Session::has('message'))?Session::get('response_code'):""}}</div>
@@ -58,9 +60,11 @@
 <input type="hidden" class="site_url" value="{{url('/')}}">
 <input type="hidden" id="logo_name" value="{{$site_settings['logo']}}">
 <input type="hidden" id="fade_logo_name" value="{{$site_settings['fade_logo']}}">
-<input type="hidden" id="user_id" value="{{ Auth::user()->id }}">
-<input type="hidden" id="user_type" value="{{ Auth::user()->type }}">
 
+@if(Auth::check())
+	<input type="hidden" id="user_id" value="{{ Auth::user()->id }}">
+	<input type="hidden" id="user_type" value="{{ Auth::user()->type }}">
+@endif
 <!--SCRIPTS INCLUDES-->
 
 <!--CORE-->
