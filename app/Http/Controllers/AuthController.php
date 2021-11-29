@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Traits\StudentNotification;
+use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
@@ -36,8 +37,9 @@ class AuthController extends Controller
      * @return HTML view Response.
      */
     public function authLogin()
-    {
+    {		
        // echo "momit";die;
+	    \Session::put('redirect_to_2nd_prev_page', url()->previous());
         if (\Auth::check()) {
             \App\Models\User::LogInStatusUpdate("login");
             return redirect('dashboard');
@@ -95,12 +97,17 @@ class AuthController extends Controller
                 if(Auth::user()->type == 'Student'){
                     $student = Student::find(Auth::user()->student_id);
                     \Session::put('student_no', $student->student_no);
-                    return redirect('portal/dashboard');
+				   if (\Session::has('redirect_to_2nd_prev_page') ) {
+						$redirect_to_2nd_prev_page = \Session::get('redirect_to_2nd_prev_page');
+						\Session::forget('redirect_to_2nd_prev_page');
+						return redirect($redirect_to_2nd_prev_page);
+					}
+					else				   
+						return redirect()->back();
                 }                    
                 else
                     return redirect('dashboard');
             }
-
         } else {
             return redirect('auth/login')
                 ->with('errormessage',"Incorrect combinations.Please try again.");
@@ -118,7 +125,6 @@ class AuthController extends Controller
      */
     public function authLogout($email)
     {
-
         if (\Auth::check()) {
             $user_info = \App\Models\User::where('email',\Auth::user()->email)->first();
            // print_r($user_info); die();
@@ -126,12 +132,12 @@ class AuthController extends Controller
 				\App\Models\User::LogInStatusUpdate(0);
                 \Auth::logout();
                 \Session::flush();
-                return \Redirect::to('auth/login');
+                return \Redirect::to('index');
             } else {
-                return \Redirect::to('auth/login');
+                return \Redirect::to('index');
             }
         } else {
-            return \Redirect::to('auth/login')->with('errormessage',"Error logout");
+            return \Redirect::to('index')->with('errormessage',"Error logout");
         }
     }
 
@@ -154,6 +160,8 @@ class AuthController extends Controller
             return view('auth.forget-password',$data);
         }
     }
+	
+	
     public function authForgotPasswordConfirm(Request $request)
     {
         $v = \Validator::make($request->all(), [
@@ -181,9 +189,41 @@ class AuthController extends Controller
 
         return redirect('auth/forget/password')->with('message',"Please check your mail !.");
     }
+	
+ 
+	public function otpIndex()
+    {
+        if (\Auth::check()) {
+            return redirect('auth/login')->with('errormessage', 'Whoops, looks like something went wrong!.');
+        } else {
+            $data['page_title'] = $this->page_title;
+            return view('auth.otp-index',$data);
+        }
+    }
+	
 
+	public function otpSend(Request $request)
+    {
+        $v = \Validator::make($request->all(), [
+            'contact_no' => 'required|email',
+        ]);
+        if ($v->fails()) {
+            return redirect()->back()->withErrors($v)->withInput();
+        }
+        $contact_no = $request->input('mobile_no');
+        $user= \App\Models\User::where('contact_no','=',$contact_no)->first();
+        if (!isset($user->id)) {
+            return redirect('auth/forget/password-otp')->with('errormessage',"Sorry mobile number does not match!");
+        }
 
-    
+        #send otp
+        $otp = rand(100000, 999999);
+        \App\Models\User::where('id',$user->id)->update(['otp'=>$otp]);
+        return redirect('auth/forget/password-otp/'.$user->id.'/verify')->with('message',"Please check your mobile!.");
+    }
+ 
+ 
+ 
     public function registration()
     {
         if (\Auth::check()) {
@@ -222,7 +262,7 @@ class AuthController extends Controller
                     'email'         => $request['email'],
                     'contact_no'    => $request['contact'],
                     'register_type' =>'Self',
-                    'registration_completed'=>'No'
+                    'registration_completed'=>'Yes'
                 ]);
                 if($student){
                     $student->student_no = str_pad(($student->id+8000),6,'0',STR_PAD_LEFT);
@@ -235,7 +275,7 @@ class AuthController extends Controller
                         'password' 		=> bcrypt($request['password']),
                         'type'			=> 'Student',
                         'student_id'	=> $student->id,
-                        'status'        =>0
+                        'status'        =>1
                     ]);
 
                     $user_group = UserGroup::select('id')->where('type',2)->first();
@@ -246,8 +286,12 @@ class AuthController extends Controller
                     $group_member_data->save();
                 }                
                 DB::commit();
-                $this->registrationEmail($student->id);
-                return redirect('login')->with('message',"Registration on process. Please Check your email to confirm registration");
+			 //  removed the registration validation as ABP asked to do that
+             //  $this->registrationEmail($student->id);
+				$this->registrationCompletedNotification($student);
+				$this->registrationConfirmEmail($student->id);
+				
+                return redirect('portal/login')->with('message',"Registration completed. Now you can login. We also sent an email with login details");
               }
               catch (\Exception $e){
 				DB::rollback();
@@ -256,7 +300,8 @@ class AuthController extends Controller
         }
     }
 
-    public function registrationComplete($id)
+ //  removed the registration validation as ABP asked to do that
+   /* public function registrationComplete($id)
     {
         $student = Student::where('registration_completed','No')->where('id',$id)->first();
         if(!empty($student)){
@@ -274,7 +319,7 @@ class AuthController extends Controller
         }
         return redirect('error')->with('errormessage',"Invalid request");
     }
-
+*/
     
     public function errorRequest()
     {

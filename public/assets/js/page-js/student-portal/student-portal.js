@@ -24,8 +24,7 @@
 
 $(document).ready(function () {
 	
-	$("#start_registration").on('click',function(){
-		
+	$("#start_registration").on('click',function(){		
 		$('.step-content').css('display','none');
 		$('#student-info').css('display','block');
 		$('.nav-item').removeClass('active');
@@ -52,6 +51,7 @@ $(document).ready(function () {
 					$("#study_mode").val(data['study_mode']);
 					$("#type").val(data['type']);
 					$("#current_emplyment").val(data['current_emplyment']);
+					$("#current_designation").val(data['current_designation']);					
 					$("#last_qualification").val(data['last_qualification']);
 					$("#how_know").val(data['how_know']);
 					$("#passing_year").val(data['passing_year']);
@@ -115,6 +115,9 @@ $(document).ready(function () {
 		else if($.trim($('#last_qualification').val()) == ""){
 			success_or_error_msg('#student_form_submit_error','danger',"Please enter last qualification","#last_qualification");
 		}
+		else if(user_id == "" && $.trim($('#password').val()) != $.trim($('#confirm_password').val())){
+			success_or_error_msg('#student_form_submit_error','danger',"Please provide the same password","#password");
+		}	
 		/*else if($.trim($('#passing_year').val()) == ""){
 			success_or_error_msg('#student_form_submit_error','danger',"Please enter  passing year","#passing_year");
 		}
@@ -150,7 +153,7 @@ $(document).ready(function () {
 						toastr['error'](resultHtml,  'Failed!!!!');
 					}
 					else{
-						toastr['success']('Student information updated successfully',  'Success!!!');
+						toastr['success']('Student information saved successfully',  'Success!!!');
 						$('.step-content').css('display','none');
 						$('#course-info').css('display','block');
 						$('.nav-item').removeClass('active');

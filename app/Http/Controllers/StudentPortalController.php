@@ -134,16 +134,19 @@ class StudentPortalController extends Controller
    
     public function studentEdit(Request $request)
     {
-
-        $studentId 		= Auth::user()->student_id; 
+        //$studentId 		= Auth::user()->student_id; 
+		
         if (!is_null($request->input('id')) && $request->input('id') != "") {
             $response_data = $this->editStudent($request->all(), $request->input('id'), $request->file('user_profile_image') , $request->file('documents') );
         } // new entry
-         else {
+		else{
+			$response_data = $this->saveStudent($request->all(), $request->input('id'), $request->file('user_profile_image') , $request->file('documents') );
+		}
+       /* else {
             $return['response_code'] = 0;
             $return['errors'] = "Please check the information properly or refresh the page and try again";
             $response_data = json_encode($return);
-        }
+        }*/
         return $response_data;
     }
 
@@ -160,7 +163,7 @@ class StudentPortalController extends Controller
                 $studentEnrollmentCheck = BatchStudent::where('batch_id',$request['register_batch_id'] )->where('student_id', $studentId)->first();
                 if($studentEnrollmentCheck){
                     $return['response_code'] = "0";
-                    $return['errors'] = 'Student already enrolled in thos batch';
+                    $return['errors'] = 'Student already enrolled in this batch';
                      return json_encode($return);
                 }
 
@@ -223,6 +226,149 @@ class StudentPortalController extends Controller
 
     }
 
+    private function saveStudent($request, $id, $photo, $documents)
+    {
+        //dd($request);
+        try {
+            $rule = [
+                'name' => 'required|string',
+                'date_of_birth' => 'required',
+                'student_address_field' => 'required',
+                'contact_no' => 'Required|max:11|unique:users,contact_no',
+                //'student_email' => 'Required|email|unique:users',
+                'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:2000',
+                'documents.*' => 'max:2000',
+				'password'  => 'required|min:4|',
+				'confirm_password'  => 'required|same:password',
+            ];			
+			
+            $validation = \Validator::make($request, $rule);
+
+            if ($validation->fails()) {
+                $return['response_code'] = "0";
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            } else {
+                DB::beginTransaction();
+
+                $emailVerification = Student::where([['email', $request['student_email']]])->first();
+                if (isset($emailVerification->id)) {
+                    $return['response_code'] = "0";
+                    $return['errors'][] = $request['student_email'] . " is already exists";
+                    return json_encode($return);
+                }
+  				// save the student
+                $student = Student::create([
+                    'name'          => $request['name'],                   
+                    'email'         => $request['student_email'],
+                    'contact_no'    => $request['contact_no'],
+					'emergency_contact' => $request['emergency_contact'],
+					'address'       => $request['student_address_field'],
+					'nid_no'        => $request['nid'],
+					'date_of_birth' => $request['date_of_birth'],
+					'study_mode'        => $request['study_mode'],
+					'current_emplyment' => $request['current_emplyment'],
+					'current_designation' => $request['current_designation'],
+					'last_qualification'  => $request['last_qualification'],
+					'how_know'  	=> $request['how_know'],
+					'passing_year'  => $request['passing_year'],
+                    'register_type' =>'Self',
+                    'registration_completed'=>'Yes'
+                ]);
+                if($student){
+                    // create a student type user
+                    $user = User::create([
+                        'first_name'	=> $request['name'],
+                        'contact_no'	=> $request['contact_no'],
+                        'email'			=> $request['student_email'],
+                        'password' 		=> bcrypt($request['password']),
+                        'type'			=> 'Student',
+                        'student_id'	=> $student->id,
+                        'status'        =>1
+                    ]);
+                    $user_group = UserGroup::select('id')->where('type',2)->first();
+                    $group_member_data 				= new UserGroupMember();
+                    $group_member_data->group_id	= $user_group['id'];
+                    $group_member_data->user_id		= $user->id;
+                    $group_member_data->status		= 1;
+                    $group_member_data->save();
+                }  
+
+               
+                $StudentImage = $photo;
+                if (isset($StudentImage) && $StudentImage!="") {
+                    $old_image = $student->user_profile_image;
+                    $image_name = time();
+                    $ext = $StudentImage->getClientOriginalExtension();
+                    $image_full_name = $image_name . '.' . $ext;
+                    $upload_path = 'assets/images/user/student/';
+                    $success = $StudentImage->move($upload_path, $image_full_name);
+                    $student->user_profile_image = $image_full_name;
+                    $user->user_profile_image = $image_full_name;
+                }
+                $student->update();
+                $user->update();
+
+                if (isset($documents) && !empty($documents)) {
+                    foreach($documents as $document) {
+                        $ext = $document->getClientOriginalExtension();
+                        $documentFullName = $document->getClientOriginalName().time(). '.' . $ext;
+                        $upload_path = 'assets/images/student/documents/';
+                        $success = $document->move($upload_path, $documentFullName);
+
+                        $studentDocument = StudentDocument::create([
+                            'student_id'	=> $student->id,
+                            'document_name'	=> $documentFullName,
+                            'type'	        => $ext,
+                        ]);
+                    }
+                }
+                DB::commit();
+				
+				// auto login
+				$remember_me = true;
+				$credentials = [
+					'email'	 	=> $request['student_email'],
+					'password'	=> $request['password'],
+					'status'	=> "1"
+				];
+
+				if (\Auth::attempt($credentials,$remember_me)) {
+					\Session::put('email', \Auth::user()->email);
+					\Session::put('last_login', Auth::user()->last_login);
+
+					if (\Session::has('pre_login_url') ) {
+						$url = \Session::get('pre_login_url');
+						\Session::forget('pre_login_url');
+					}else {
+						\App\Models\User::LogInStatusUpdate(1);
+						if(Auth::user()->type == 'Student'){
+							$student = Student::find(Auth::user()->student_id);
+							\Session::put('student_no', $student->student_no);
+						}                    
+					}
+				}
+				
+				$this->registrationCompletedNotification($student);
+				$this->registrationConfirmEmail($student->id);
+			
+			
+			
+			
+			
+                $return['response_code'] = 1;
+				$return['student_id'] = $student->id;
+                $return['message'] = "Student registration successful";
+                return json_encode($return);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $return['response_code'] = 0;
+            $return['errors'] = "Failed to insert !" . $e->getMessage();
+            return json_encode($return);
+        }
+    }
+   
     private function editStudent($request, $id, $photo, $documents)
     {
         //dd($request);
@@ -245,8 +391,8 @@ class StudentPortalController extends Controller
                 'student_address_field' => 'required',
                 'contact_no' => 'Required|max:13',
                 'student_email' => 'Required|email',
-                'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',
-                'documents.*' => 'max:5000',
+                'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:2000',
+                'documents.*' => 'max:2000',
             ];
             $validation = \Validator::make($request, $rule);
             //dd($request);
@@ -267,15 +413,17 @@ class StudentPortalController extends Controller
                 }
 
                 
-                $student->name = $request['name'];
-                $student->email = $request['student_email'];
-                $student->contact_no = $request['contact_no'];
+                $student->name 		= $request['name'];
+                $student->email 	= $request['student_email'];
+                $student->contact_no= $request['contact_no'];
                 $student->emergency_contact = $request['emergency_contact'];
-                $student->address = $request['student_address_field'];
-                $student->nid_no = $request['nid'];
+                $student->address 	= $request['student_address_field'];
+                $student->nid_no 	= $request['nid'];
                 $student->date_of_birth = $request['date_of_birth'];
-                $student->study_mode = $request['study_mode'];
-                $student->current_emplyment = $request['current_emplyment'];
+                $student->study_mode= $request['study_mode'];
+                $student->current_emplyment 	= $request['current_emplyment'];
+				$student->current_designation 	= $request['current_designation'];
+				
                 $student->last_qualification = $request['last_qualification'];
                 $student->how_know = $request['how_know'];
                 $student->passing_year = $request['passing_year'];
@@ -284,20 +432,20 @@ class StudentPortalController extends Controller
                
                 $student->update();
 
-                $user->first_name = $request['name'];
-                $user->email = $request['student_email'];
-                $user->contact_no = $request['contact_no'];
-                $user->remarks = $request['remarks'];
+                $user->first_name 	= $request['name'];
+                $user->email 		= $request['student_email'];
+                $user->contact_no	= $request['contact_no'];
+                $user->remarks 		= $request['remarks'];
                // $user->status = (isset($request['status'])) ? "Active" : 'Inactive';
 
                 $StudentImage = $photo;
                 if (isset($StudentImage) && $StudentImage!="") {
-                    $old_image = $student->user_profile_image;
+                    $old_image 	= $student->user_profile_image;
                     $image_name = time();
-                    $ext = $StudentImage->getClientOriginalExtension();
+                    $ext 		= $StudentImage->getClientOriginalExtension();
                     $image_full_name = $image_name . '.' . $ext;
-                    $upload_path = 'assets/images/user/student/';
-                    $success = $StudentImage->move($upload_path, $image_full_name);
+                    $upload_path= 'assets/images/user/student/';
+                    $success 	= $StudentImage->move($upload_path, $image_full_name);
                     $student->user_profile_image = $image_full_name;
                     $user->user_profile_image = $image_full_name;
                     if(!is_null($old_image) && $user->user_profile_image != $old_image){
@@ -309,10 +457,10 @@ class StudentPortalController extends Controller
 
                 if (isset($documents) && !empty($documents)) {
                     foreach($documents as $document) {
-                        $ext = $document->getClientOriginalExtension();
-                        $documentFullName = $document->getClientOriginalName().time(). '.' . $ext;
-                        $upload_path = 'assets/images/student/documents/';
-                        $success = $document->move($upload_path, $documentFullName);
+                        $ext 				= $document->getClientOriginalExtension();
+                        $documentFullName 	= $document->getClientOriginalName().time(). '.' . $ext;
+                        $upload_path 		= 'assets/images/student/documents/';
+                        $success 			= $document->move($upload_path, $documentFullName);
 
                         $studentDocument = StudentDocument::create([
                             'student_id'	=> $student->id,

@@ -203,10 +203,15 @@
   <div class="modal-dialog modal-lg" role="document"> <!-- modal-lg-->
     <div class="modal-content">
       <div class="modal-header">
-                <h5 class="modal-title">Registration Form</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">Student Registration </h5>
+				@if(!Auth::check())
+					<h5 class="modal-title">&nbsp; &nbsp; OR &nbsp; &nbsp; </h5>
+					<a class="mb-2 mr-2 btn   btn-success" href="{{url('portal/login')}}">Login</a>	
+				@endif
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                 </button>
+				 
             </div>
       
       <div class="modal-body " > 
@@ -334,15 +339,7 @@
                                                 <input  type="date"  id="passing_year" name="passing_year"  class="form-control col-lg-12"/>
                                             </div>
                                         </div> 
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group">
-                                                <label>Current Employment</label>
-                                                <input type="text" id="current_emplyment" name="current_emplyment" class="form-control col-lg-12"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col-md-6">
+										<div class="col-md-6">
                                             <div class="position-relative form-group">
                                                 <label for="short_name" class="">How do you know ABP?</label>
                                                 <select id="how_know" name="how_know" class="form-control col-lg-12">
@@ -354,6 +351,20 @@
                                                 <option value='Other'>Other</option>
                                             </select>
                                             </div>
+                                        </div>                                        
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Current Employment Company</label>
+                                                <input type="text" id="current_emplyment" name="current_emplyment" class="form-control col-lg-12"/>
+                                            </div>
+                                        </div>
+										<div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Current Designation</label>
+                                                <input type="text" id="current_designation" name="current_designation" class="form-control col-lg-12"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -364,6 +375,24 @@
                                             </div>
                                         </div>
                                     </div>
+									
+									@if(!Auth::check())
+									<div class="form-row">
+										 <div class="col-md-6">
+											<div class="position-relative form-group">
+												<label for="examplePassword">Password<span class="text-danger">*</span></label>
+												<input  recuired name="password" id="password" placeholder="Password here..." type="password" class="form-control @error('password') is-invalid @enderror" >
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="position-relative form-group">
+												<label for="examplePassword" >Confirm Password<span class="text-danger">*</span></label>
+												<input  recuired name="confirm_password" id="confirm_password" placeholder="Confirm Password ..." type="password" class="form-control @error('confirm_password') is-invalid @enderror">
+											</div>
+										</div>
+                                    </div>	
+									@endif
+									
                                     <div class="form-row">
                                         <div class="col-md-6">
                                             <label>	<strong>Certificate, Transcript and NID</strong></label><br>

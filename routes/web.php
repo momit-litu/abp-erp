@@ -46,6 +46,13 @@ Route::post('auth/forget/password',array('as'=>'Forgot Password' , 'uses' =>'Aut
 Route::get('auth/forget/password/{user_id}/verify',array('as'=>'Forgot Password Verify' , 'uses' =>'AuthController@authSystemForgotPasswordVerification'));
 Route::post('auth/forget/password/{user_id}/verify',array('as'=>'New Password Submit' , 'uses' =>'AuthController@authSystemNewPasswordPost'));
 
+#OTP login
+Route::get('auth/forget/password-otp',array('as'=>'OTP login' , 'uses' =>'AuthController@otpIndex'));
+Route::post('auth/forget/password-otp',array('as'=>'OTP login' , 'uses' =>'AuthController@otpSend'));
+Route::get('auth/forget/password-otp/{user_id}/verify',array('as'=>'OTP login Verify' , 'uses' =>'AuthController@authSystemForgotPasswordVerification'));
+Route::post('auth/forget/password-otp/{user_id}/verify',array('as'=>'OTP Submit' , 'uses' =>'AuthController@authSystemNewPasswordPost'));
+
+
 
 
 Route::post('ckeditor/upload', 'CKEditorController@upload')->name('ckeditor.image-upload');
@@ -254,10 +261,9 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
 
 Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], function () {
-	
 	Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
 	Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
-	
+	Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
 	
 	Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
@@ -283,7 +289,6 @@ Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], f
 		Route::get('/checkout/{id}',array('as'=>'Payment Checkout', 'uses' =>'StudentPortalController@checkoutShow'));
 		
 		Route::get('/student-info',array('as'=>'Student Details' , 'uses' =>'StudentPortalController@studentShow'));
-		Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
 		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));	
 		
 	});

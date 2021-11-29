@@ -184,7 +184,7 @@ studentView = function studentView(id){
             $("#student_address").html(data['address']);
 
             $("#nid_div").html((data['nid_no']!=null)?data['nid_no']:"");
-            $("#current_emplyment_div").html((data['current_emplyment']!=null)?data['current_emplyment']:"");
+            $("#current_emplyment_div").html((data['current_emplyment']!=null)?data['current_emplyment']:"")+" "+(data['current_emplyment']!=null)?data['current_designation']:"";
             $("#last_qualification_div").html(data['last_qualification']);
             $("#passing_year_div").html(data['passing_year']);
 
