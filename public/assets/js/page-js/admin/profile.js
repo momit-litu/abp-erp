@@ -62,6 +62,70 @@ $(document).ready(function () {
 		}	
 	});
 
+	$("#update_student_profile_info").on('click',function(){
+		event.preventDefault();
+		var formData = new FormData($('#student_form')[0]);
+
+		if($.trim($('#name').val()) == ""){
+            success_or_error_msg('#student_form_submit_error','danger',"Please enter Full name","#name");
+		}
+		else if($.trim($('#student_email').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter email","#student_email");
+		}
+		else if($.trim($('#contact_no').val()) == "" || !($.isNumeric($('#contact_no').val()))){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter contact no","#contact_no");
+		}
+		else if($.trim($('#emergency_contact').val()) == "" || !($.isNumeric($('#emergency_contact').val()))){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter emergency contact no","#emergency_contact");
+		}
+		else if($.trim($('#emergency_contact').val()) == "" || !($.isNumeric($('#emergency_contact').val()))){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter emergency contact no","#emergency_contact");
+		}
+		else if($.trim($('#date_of_birth').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter date of birth","#date_of_birth");
+		}
+		else if($.trim($('#nid').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter NID No","#nid");
+		}
+		else{
+			$.ajax({
+				url: url+"/portal/student-info",
+                type:'POST',
+                data:formData,
+                async:false,
+                cache:false,
+                contentType:false,
+                processData:false,
+				success: function(data){
+				    console.log(data)
+					var response = JSON.parse(data);
+					if(response['response_code'] == 0){
+						var errors	= response['errors'];
+						
+						if(typeof(errors)=='string'){
+							resultHtml = errors;
+						}
+						else{
+							resultHtml = '<ul>';
+							$.each(errors,function (k,v) {
+								resultHtml += '<li>'+ v + '</li>';
+							});
+							resultHtml += '</ul>';
+						}
+						
+						toastr['error'](resultHtml,  'Failed!!!!');
+					}
+					else{
+						toastr['success']('Student information saved successfully',  'Success!!!');
+					}
+				 }
+			});
+		}
+	});
+
+
+
+
 	change_password = function change_password(){
 		$.ajax({
 			url: url+'/profile/my-profile-info',

@@ -16,12 +16,14 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Traits\StudentNotification;
 use Illuminate\Support\Facades\URL;
+use App\Services\SMSService;
 
 class AuthController extends Controller
 {
     use StudentNotification; 
-
-    public function __construct(Request $request){
+	public $SMSService;
+    public function __construct(Request $request, SMSService $SMSService){
+		$this->SMSService = $SMSService;
         $this->page_title 	= $request->route()->getName();
         $description 		= \Request::route()->getAction();
         $this->page_desc 	= isset($description['desc']) ? $description['desc'] : $this->page_title;
@@ -37,8 +39,8 @@ class AuthController extends Controller
      * @return HTML view Response.
      */
     public function authLogin()
-    {		
-       // echo "momit";die;
+    {	
+		//session()->flush();	
 	    \Session::put('redirect_to_2nd_prev_page', url()->previous());
         if (\Auth::check()) {
             \App\Models\User::LogInStatusUpdate("login");
@@ -204,12 +206,14 @@ class AuthController extends Controller
 
 	public function otpSend(Request $request)
     {
+
         $v = \Validator::make($request->all(), [
-            'contact_no' => 'required|email',
+            'mobile_no' => 'required|numeric',
         ]);
         if ($v->fails()) {
             return redirect()->back()->withErrors($v)->withInput();
         }
+				
         $contact_no = $request->input('mobile_no');
         $user= \App\Models\User::where('contact_no','=',$contact_no)->first();
         if (!isset($user->id)) {
@@ -218,11 +222,78 @@ class AuthController extends Controller
 
         #send otp
         $otp = rand(100000, 999999);
-        \App\Models\User::where('id',$user->id)->update(['otp'=>$otp]);
-        return redirect('auth/forget/password-otp/'.$user->id.'/verify')->with('message',"Please check your mobile!.");
+        $otpUser = \App\Models\User::where('id',$user->id)->update(['otp'=>$otp]);
+		if($otpUser){
+			$smsController = new NotificationController($request,$this->SMSService );
+			$sentOTP = $smsController->sendOtp($contact_no, $otp,);
+			if(!$sentOTP){
+				 return redirect('auth/forget/password-otp')->with('errormessage',"OTP not sent! Try again");
+			}
+			session(['user_id' 		=> $user->id]);
+			session(['mobile_no' 	=> $contact_no]);
+			return redirect('auth/forget/password-otp/verify');
+		}
+		else{
+			 return redirect('auth/forget/password-otp')->with('errormessage',"OTP not sent! Try again");
+		}
+
     }
  
+ 	public function otpVerification(Request $request)
+    {
+		$data['user_id'] = $request->session()->get('user_id');
+		$data['mobile_no'] = $request->session()->get('mobile_no');
+		
+		$request->session()->now('message', 'OTP sent. Check your mobile');
+		//Session::flash('message', 'OTP sent. Check your mobile'); 
+		return view('auth.otp-verify',$data);
+    }
+	
  
+ 
+	public function otpVerificationPost(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'otp' 		=> 'required',
+			'user_id' 	=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+		
+		$user = User::where('id',$request->user_id)->where('otp',$request->otp)->first();
+        if(!empty($user)){
+			$remember_me = true;
+			$credentials = [
+				'email'	 => $user->email,
+				'otp'	 => $user->otp,
+				'status'	=> "1"
+			];
+            //if (\Auth::attempt($credentials,$remember_me)) {
+			if(Auth::loginUsingId($user->id)){
+				
+				$user->otp = "";
+				$user->save();
+				$request->session()->forget(['user_id', 'mobile_no']); 
+				
+				\Session::put('email', \Auth::user()->email);
+				\Session::put('last_login', Auth::user()->last_login);
+
+				\App\Models\User::LogInStatusUpdate(1);
+				if(Auth::user()->type == 'Student'){
+					$student = Student::find(Auth::user()->student_id);
+					\Session::put('student_no', $student->student_no);
+				}                    
+				return redirect('/dashboard');
+			}
+		}
+		else
+		{
+			session()->forget('message');
+			return redirect('auth/forget/password-otp/verify')->with('errormessage',"Sorry OTP does not match!");
+		}
+	}
  
     public function registration()
     {
@@ -237,7 +308,6 @@ class AuthController extends Controller
 
     public function registrationSave(Request $request)
     {
-
         $v = \Validator::make($request->all(), [
             'name'      => 'Required',
             'email'     => 'Required|email|unique:users',

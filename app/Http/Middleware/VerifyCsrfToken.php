@@ -18,5 +18,6 @@ class VerifyCsrfToken extends Middleware
     '/portal/portal/*',
     '/portal/bkash/*',
     '/portal/rocket/*',
+
 ];
 }

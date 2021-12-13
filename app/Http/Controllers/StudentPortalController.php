@@ -28,11 +28,13 @@ use App\Notifications\newPaymentByStudent;
 use App\Traits\StudentNotification;
 
 
+
 class StudentPortalController extends Controller
 {
     use HasPermission;
     use PortalHelperModel;
     use StudentNotification;
+	
     public function __construct(Request $request)
     {
         $this->studentPayment   = new StudentPayment();
@@ -352,10 +354,6 @@ class StudentPortalController extends Controller
 				$this->registrationCompletedNotification($student);
 				$this->registrationConfirmEmail($student->id);
 			
-			
-			
-			
-			
                 $return['response_code'] = 1;
 				$return['student_id'] = $student->id;
                 $return['message'] = "Student registration successful";
@@ -412,7 +410,6 @@ class StudentPortalController extends Controller
                     return json_encode($return);
                 }
 
-                
                 $student->name 		= $request['name'];
                 $student->email 	= $request['student_email'];
                 $student->contact_no= $request['contact_no'];
@@ -420,12 +417,12 @@ class StudentPortalController extends Controller
                 $student->address 	= $request['student_address_field'];
                 $student->nid_no 	= $request['nid'];
                 $student->date_of_birth = $request['date_of_birth'];
-                $student->study_mode= $request['study_mode'];
+                if(isset($request['study_mode'])) $student->study_mode= $request['study_mode'];
                 $student->current_emplyment 	= $request['current_emplyment'];
 				$student->current_designation 	= $request['current_designation'];
 				
                 $student->last_qualification = $request['last_qualification'];
-                $student->how_know = $request['how_know'];
+                if(isset($request['how_know'])) $student->how_know = $request['how_know'];
                 $student->passing_year = $request['passing_year'];
                 $student->registration_completed = "Yes";
 

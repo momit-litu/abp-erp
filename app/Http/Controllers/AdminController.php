@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 //use \App\Models\StudentCourse;
 use App\Models\UserGroupMember;
+use App\Models\BatchStudent;
 
 use App\Models\UserGroupPermission;
 use Illuminate\Support\Facades\Hash;
@@ -528,6 +529,11 @@ class AdminController extends Controller
     	$data['user']		= $user;
 		if(Auth::user()->type=='Student' && $user->student_id){
 			//$studentCourses = Student::with('courses')->findOrFail($user->student_id);
+			$student = Student::with('documents')->findOrFail($user->student_id);
+			$batchStudent = new BatchStudent();
+			$courses = $batchStudent->getBatchesByStudentId($student->id);
+			$data['student']		= $student;
+			$data['courses']		= $courses;
 			return view('student-portal.profile_index',$data);
 		}
 

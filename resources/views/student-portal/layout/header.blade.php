@@ -35,7 +35,7 @@
 		<div class="app-header__mobile-menu" style="width:100%">
 		<div class="logo-src"><img src="{{ asset('assets/images/admin-upload/')."/".$site_settings['logo']}}" style="max-width:40px" /> </div> &nbsp;
 		<h6><strong>Academy of Business Professionals</strong></h6>
-		<div class="mb-2 mr-2" style="position: absolute;right: 0; top:15px"><a class="mb-2 mr-2 btn  btn-sm  btn-success" href="{{url('portal/login')}}">Login</a></div>
+		<div class="mb-2 mr-2" style="position: absolute;right: 0; top:15px"><a class="mb-2 mr-2 btn  btn-sm  btn-success" href="{{url('login')}}">Login</a></div>
     </div> 	
 	@endif
     
@@ -321,7 +321,7 @@
                 </div>
             </div>
 			@else
-				<a class="mb-2 mr-2 btn  btn-sm  btn-success" href="{{url('portal/login')}}">Login</a>
+				<a class="mb-2 mr-2 btn  btn-sm  btn-success" href="{{url('login')}}">Login</a>
 			@endif
         </div>
     </div>

@@ -460,7 +460,7 @@
                             <td align="center">
                               <h1 class="f-fallback discount_heading">Credentials</h1>
                               <p class="f-fallback discount_body">Username : {{$student['email']}}</p>
-                              <p class="f-fallback discount_body">Password : {{ ($student['register_type'] == 'Admin')?'1234':'YOur Given Password'}}</p>
+                              <p class="f-fallback discount_body">Password : {{ ($student['register_type'] == 'Admin')?'123456':'Your Given Password'}}</p>
                               <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                 <tr>
                                   <td align="center">

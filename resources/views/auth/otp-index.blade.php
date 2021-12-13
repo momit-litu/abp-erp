@@ -30,7 +30,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="col-md-12">
-                                    <div class="position-relative form-group"><label for="exampleEmail" class="">Mobile Number</label><input name="mobile_no" id="mobile_no" placeholder="Mobile no. here..." type="text" class="form-control"></div>
+                                    <div class="position-relative form-group"><label for="exampleEmail" class="">Mobile Number</label><input name="mobile_no" id="mobile_no" placeholder="Mobile no. here..." type="text" class="form-control @error('mobile_no') is-invalid @enderror" value="{{ old('mobile_no') }}"></div>
                                 </div>
                             </div>
                             <div class="mt-4 d-flex align-items-center"><h6 class="mb-0"><a href="{{url('/auth/login')}}" class="text-primary">Sign in existing account</a></h6>

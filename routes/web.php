@@ -49,8 +49,8 @@ Route::post('auth/forget/password/{user_id}/verify',array('as'=>'New Password Su
 #OTP login
 Route::get('auth/forget/password-otp',array('as'=>'OTP login' , 'uses' =>'AuthController@otpIndex'));
 Route::post('auth/forget/password-otp',array('as'=>'OTP login' , 'uses' =>'AuthController@otpSend'));
-Route::get('auth/forget/password-otp/{user_id}/verify',array('as'=>'OTP login Verify' , 'uses' =>'AuthController@authSystemForgotPasswordVerification'));
-Route::post('auth/forget/password-otp/{user_id}/verify',array('as'=>'OTP Submit' , 'uses' =>'AuthController@authSystemNewPasswordPost'));
+Route::get('auth/forget/password-otp/verify',array('as'=>'OTP login Verify' , 'uses' =>'AuthController@otpVerification'));
+Route::post('auth/forget/password-otp/verify',array('as'=>'OTP Submit' , 'uses' =>'AuthController@otpVerificationPost'));
 
 
 
@@ -258,15 +258,15 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
 });
 
-
+	//Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 
 Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], function () {
 	Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
 	Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 	Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
 	
-	Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
-	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
+
 	Route::get('terms',array('as'=>'Terms Condition', 'uses' =>'StudentPortalController@terms'));
 	//Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 

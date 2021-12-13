@@ -27,10 +27,13 @@ trait PortalHelperModel
         try{
 			$studentId 		= (Auth::check())?Auth::user()->student_id:"";
 			if($my!=""){
-				$batchesQuery   = Batch::with('course','batch_fees', 'course.units','students')
+				$batchesQuery   = Batch::with('course','batch_fees', 'course.units')
 								->whereHas('students',	function ($query) use ($studentId) {
 									$query/*->where('batch_students.status','Active')*/->where('student_id',$studentId);
-								});
+								})
+								->with(['students'=> function($q) use ($studentId){
+                                      $q->where('student_id',$studentId);
+                                }]);
 				$batchesQuery 	= ($type=='Registered')?$batchesQuery->where('running_status','!=','Completed'):$batchesQuery->where('running_status','Completed');
 				
 				$batchesQuery->where('status','Active');
@@ -91,11 +94,8 @@ trait PortalHelperModel
 			}
 			//dd($batch);
 			return $batch;
-
-
         }catch(\Exception $e){
 			return 0;
         }
-    }
-	
+    }	
 }

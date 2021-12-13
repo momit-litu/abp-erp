@@ -30,6 +30,7 @@ class NotificationController extends Controller
     use StudentNotification; 
     public $SMSService;
     public $studentPayment;
+	
 	public function __construct(Request $request, SMSService $SMSService)
     {
         $this->SMSService = $SMSService;
@@ -346,5 +347,18 @@ class NotificationController extends Controller
 			return json_encode($return);
 		}
     }
+
+	public function sendOtp($mobileNo, $otp){
+		$otpNotificationTemplate = NotificationTemplate::where('type','sms')->where('category','otp')->first();
+
+		$details  = $otpNotificationTemplate->details." ".$otp;
+		$smsParam = array(
+			'commaSeperatedReceiverNumbers'=>$mobileNo,
+			'smsText'=>$details,
+		);
+		$response = json_decode($this->SMSService->sendSMS($smsParam), true);
+		If($response['isError']) return false;
+		return true;
+	}
 
 }

@@ -203,17 +203,15 @@
   <div class="modal-dialog modal-lg" role="document"> <!-- modal-lg-->
     <div class="modal-content">
       <div class="modal-header">
-                <h5 class="modal-title">Student Registration </h5>
-				@if(!Auth::check())
-					<h5 class="modal-title">&nbsp; &nbsp; OR &nbsp; &nbsp; </h5>
-					<a class="mb-2 mr-2 btn   btn-success" href="{{url('portal/login')}}">Login</a>	
-				@endif
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                 </button>
-				 
-            </div>
-      
+		<h5 class="modal-title">Student Registration </h5>
+		@if(!Auth::check())
+			<h5 class="modal-title">&nbsp; &nbsp; OR &nbsp; &nbsp; </h5>
+			<a class="mb-2 mr-2 btn   btn-success" href="{{url('login')}}">Login</a>	
+		@endif
+		 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		 </button>
+	  </div>
       <div class="modal-body " > 
         <div class="main-card mb-3 card">
               <div class="card-body">
@@ -236,7 +234,6 @@
                               </a>
                           </li>
                       </ul>
-
                       <div class="form-wizard-content sw-container tab-content" style="min-height: 353.583px;">
                           <div id="student-info" class="tab-pane step-content" style="display: block;">
                             <form id="student_form" autocomplete="off" name="student_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
@@ -319,7 +316,8 @@
                                             <div class="position-relative form-group">
                                                 <label for="short_name" class="">Last Qualification  <span class="required">*</span></label>
                                                 <select id="last_qualification" name="last_qualification" class="form-control col-lg-12">
-                                                    <option value="Bachelor (Engineering & Technology)">Bachelor (Engineering & Technology)</option>
+                                                    <option value="">Selecet last qualification</option>
+													<option value="Bachelor (Engineering & Technology)">Bachelor (Engineering & Technology)</option>
                                                     <option value="Bachelor's">Bachelor's</option>
                                                     <option value="Diploma">Diploma</option>
                                                     <option value="Doctorate">Doctorate</option>
