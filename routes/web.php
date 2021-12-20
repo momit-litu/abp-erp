@@ -77,7 +77,8 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'AdminController@index'));
 	Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
 	Route::get('/dashboard',array('as'=>'Dashboard' , 	'uses' =>'AdminController@index'));
-
+	Route::get('/dashboard-content/{period}',array('as'=>'Dashboard' , 	'uses' =>'ReportController@dashboardContent'));
+	
 	//my Profile
 	Route::get('/profile',array('as'=>'My Profile', 		'uses' =>'AdminController@profileIndex'));
 	Route::get('/profile/my-profile-info',array('as'=>'Get My Profile Info', 	'uses' =>'AdminController@profileInfo'));

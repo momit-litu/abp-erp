@@ -180,6 +180,17 @@ class StudentPortalController extends Controller
                     'status'        => 'Inactive',
                 ]);
                 if($batchStudent){
+                    $enrollment             = BatchStudent::with('batch', 'batch.course')->find($batchStudent->id);
+
+                    $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$request['batch_id']);
+
+                    $lastEnrollmentId = (!is_null($lastEnrollmentIdSQL[0]->max_enrollmen_id))?$lastEnrollmentIdSQL[0]->max_enrollmen_id:0;
+
+                    $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
+
+                    $enrollment->student_enrollment_id = $student_enrollment_id ;
+                    $enrollment->save();
+
                     $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
                     $batchFee->batch->update();
                     $settings = Setting::first();
@@ -278,6 +289,8 @@ class StudentPortalController extends Controller
                     'registration_completed'=>'Yes'
                 ]);
                 if($student){
+                    $student->student_no = str_pad(($student->id+8000),6,'0',STR_PAD_LEFT);
+                    $student->save();
                     // create a student type user
                     $user = User::create([
                         'first_name'	=> $request['name'],

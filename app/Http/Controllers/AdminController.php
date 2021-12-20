@@ -48,10 +48,16 @@ class AdminController extends Controller
 			return  redirect('portal');
 		}
 		else{
-			return view('admin.dashbord', array('page_title'=>$page_title, 'data'=>$data,/*'dashboardComponents'=>$dashboardComponents*/));
-		}
-
-        
+			$dashboardComponents['dashboardRegistrationInfo'] = $this->PermissionHasOrNot($admin_user_id,106 );//Dashboard Registration info
+			$dashboardComponents['dashboardPaymentScheduleInfo'] = $this->PermissionHasOrNot($admin_user_id,107 );//Dashboard Payment and schedule info 
+			$dashboardComponents['dashboardStudentRegistrationBarchart'] = $this->PermissionHasOrNot($admin_user_id,108 );//Dashboard Student registration barchart 
+			$dashboardComponents['DashboardFinancialstatus'] = $this->PermissionHasOrNot($admin_user_id,109 );//Dashboard Financial status
+			$dashboardComponents['dashboardRegisteredStudents'] = $this->PermissionHasOrNot($admin_user_id,110 );//Dashboard Registered students  
+			$dashboardComponents['dashboardEnrolledStudents'] = $this->PermissionHasOrNot($admin_user_id,111 );//Dashboard Enrolled students  
+			$dashboardComponents['dashboardPayments'] = $this->PermissionHasOrNot($admin_user_id,112 );//Dashboard Payments  
+			$dashboardComponents['dashboardUpcomingBatches'] = $this->PermissionHasOrNot($admin_user_id,113 );//Dashboard Upcoming Batches 
+			return view('admin.dashbord', array('page_title'=>$page_title, 'data'=>$data,'dashboardComponents'=>$dashboardComponents));
+		}   
     }
 
 	public function welcome(){

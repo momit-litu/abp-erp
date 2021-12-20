@@ -6,6 +6,7 @@ use App\Models\Batch;
 use App\Models\Course;
 use App\Models\Expense;
 use App\Models\Student;
+use App\Models\BatchStudent;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 use Illuminate\Http\Response;
@@ -527,5 +528,159 @@ class ReportController extends Controller
             $return_arr[] = $data;
         }
         return json_encode(array('data'=>$return_arr));	
-	}  
+	} 
+
+
+	public function dashboardContent($period)
+    {
+        $admin_user_id  = Auth::user()->id;
+		$return_arr     = array();
+        $registrationInfoPermission    = $this->PermissionHasOrNot($admin_user_id,106 );//Dashboard Registration info
+		$paymentScheduleInfoPermission = $this->PermissionHasOrNot($admin_user_id,107 );//Dashboard Payment and schedule info 
+		$studentRegistrationBarchartPermission = $this->PermissionHasOrNot($admin_user_id,108 );//Dashboard Student registration barchart 
+		$financialstatusPermission     = $this->PermissionHasOrNot($admin_user_id,109 );//Dashboard Financial status
+		$registeredStudentsPermission  = $this->PermissionHasOrNot($admin_user_id,110 );//Dashboard Registered students  
+		$enrolledStudentsPermission    = $this->PermissionHasOrNot($admin_user_id,111 );//Dashboard Enrolled students  
+		$paymentsPermission            = $this->PermissionHasOrNot($admin_user_id,112 );//Dashboard Payments  
+		$upcomingBatchesPermission     = $this->PermissionHasOrNot($admin_user_id,113 );//Dashboard Upcoming Batches 		
+		
+        if($registrationInfoPermission){        
+           $registrationInfo['selfRegistered']   = Student::where("register_type","Self")->count();
+           $registrationInfo['adminRegistered']   = Student::where("register_type","Admin")->count();
+
+           $registrationInfo['selfEnrolled']      = BatchStudent::where("status","Active")->count();
+           $registrationInfo['adminEnrolled']     = 0;
+           $registrationInfo['selfPending']       = BatchStudent::where("status","Inactive")->count();
+           $registrationInfo['adminPending']      = 0;
+           $registrationInfo['dropout']           = 10;
+           $return_arr['registrationInfo']        = $registrationInfo;
+        }
+
+         if($paymentScheduleInfoPermission){
+            $totalScheludes = StudentPayment::where('payable_amount','>','0')->count();
+            $totalReceives = StudentPayment::where('payment_status','Paid')->count();
+            
+            $paymentScheduleInfo['schedulePaymentsNo']= $totalScheludes;
+            $paymentScheduleInfo['receivedPaymetsNo'] = $totalReceives;
+            $paymentScheduleInfo['duePaymentsNo']     = $totalScheludes-$totalReceives;
+            $return_arr['paymentScheduleInfo']        = $paymentScheduleInfo;
+         }
+
+         if($financialstatusPermission){
+            $totalScheludes   = StudentPayment::where('payable_amount','>','0')->sum('payable_amount');
+            $totalCollections = StudentPayment::where('payment_status','Paid')->sum('paid_amount');
+
+            $totalExpences    = Expense::where('status','Active')->sum('amount');
+            $totalPayments    = Expense::where('payment_status','Paid')->sum('amount');
+
+            $financialstatus['scheduleAmount']      = number_format($totalScheludes);
+            $financialstatus['collections']         = number_format($totalCollections);
+            $financialstatus['collectionsRatio']    = round(($totalCollections*100)/$totalScheludes)/100;
+            $financialstatus['expenses']            = number_format($totalExpences);
+            $financialstatus['totalPayment']        = number_format($totalPayments);
+            $financialstatus['expensesPaymentRatio']= round(($totalPayments*100)/$totalExpences)/100;
+            $return_arr['financialStatusInfo']      = $financialstatus;
+         }
+
+         if($studentRegistrationBarchartPermission){
+            $sql = "            
+                SELECT ifnull(total_registered,0) total_registered,  ifnull(total_enrolled,0) total_enrolled, registered.month_year AS month_year
+                FROM
+                (
+                SELECT COUNT(s.id) as total_registered,  DATE_FORMAT(created_at, '%b,%y') AS month_year FROM students s 
+                GROUP BY DATE_FORMAT(created_at, '%y%m')) registered
+                LEFT  JOIN
+                (
+                SELECT COUNT(bs.id) AS total_enrolled,  DATE_FORMAT(created_at, '%b,%y') AS month_year
+                FROM batch_students bs
+                GROUP BY DATE_FORMAT(created_at, '%y%m')) enrolled 
+                ON registered.month_year = enrolled.month_year
+
+                UNION 
+
+                SELECT ifnull(total_registered,0) total_registered,  ifnull(total_enrolled,0) total_enrolled, registered.month_year AS month_year
+                FROM
+                (
+                SELECT COUNT(s.id) as total_registered,  DATE_FORMAT(created_at, '%b,%y') AS month_year FROM students s 
+                GROUP BY DATE_FORMAT(created_at, '%y%m')) registered
+                right  JOIN
+                (
+                SELECT COUNT(bs.id) AS total_enrolled,  DATE_FORMAT(created_at, '%b,%y') AS month_year
+                FROM batch_students bs
+                GROUP BY DATE_FORMAT(created_at, '%y%m')) enrolled 
+                ON registered.month_year = enrolled.month_year
+            ";
+            $monthWiseDatas = \DB::select($sql)/*->toArray()*/;
+
+            foreach($monthWiseDatas as $monthWiseData){
+                $studentRegistrationBarchartdata[$monthWiseData->month_year]  = $monthWiseData->total_registered."*".$monthWiseData->total_enrolled;
+            }
+            $return_arr['studentRegistrationBarchartData']        = $studentRegistrationBarchartdata;
+         }
+
+         if($registeredStudentsPermission){
+            $students = Student::where('status','Active')->orderBy('id','desc')->limit(5)->get();
+            $registeredStudentsData = $students->map(function($student){
+                $registeredStudentData = array();
+                $registeredStudentData['id']            =   $student->id;
+                $registeredStudentData['student_no']    =   $student->student_no;
+                $registeredStudentData['name']          =   $student->name;                
+                $registeredStudentData['email']         =   $student->email;
+                $registeredStudentData['contact_no']    =   $student->contact_no;              
+                $registeredStudentData['register_type'] =   $student->register_type;
+                return $registeredStudentData;
+
+            });
+            $return_arr['registeredStudents']     = $registeredStudentsData;
+         }
+
+         if($enrolledStudentsPermission){
+            $batchStudents = BatchStudent::with('student','batch','batch.course')->where('status','Active')->orderBy('id','desc')->limit(5)->get();
+            $enrolledStudentsData = $batchStudents->map(function($bStudent){
+                $enrolledStudentData = array();
+                
+                $enrolledStudentData['student_enrollment_id']    =   $bStudent->student_enrollment_id;
+                $enrolledStudentData['batch_id']       =   $bStudent->batch->id;
+                $enrolledStudentData['course']          =   $bStudent->batch->course->short_name." (".  $bStudent->batch->batch_name.")";
+                $enrolledStudentData['status']          =   ($bStudent->status!='Active')?"Pending":"Enrolled";
+                $bStudent->batch->batch_name.")";                
+                $enrolledStudentData['student_id']      =   $bStudent->student->id;
+                $enrolledStudentData['student_name']    =   $bStudent->student->student_no.' - '.$bStudent->student->name;
+                return $enrolledStudentData;
+            });
+            $return_arr['enrolledStudents']      = $enrolledStudentsData;
+         }
+
+         if($paymentsPermission){
+            $studentPayments = StudentPayment::with('enrollment.student','enrollment.batch','enrollment.batch.course')->where('payment_status','Paid')->orderBy('id','desc')->limit(5)->get();
+
+            $paymentsData = $studentPayments->map(function($sPayment){
+                $paymentData = array();                
+                $paymentData['student_name']   = $sPayment->enrollment->student->student_no.' - '.$sPayment->enrollment->student->name;
+                $paymentData['batch_id']       = $sPayment->enrollment->batch->id;
+                $paymentData['course']         = $sPayment->enrollment->batch->course->short_name." (".$sPayment->enrollment->batch->batch_name.")";
+                $paymentData['paid_type']      = $sPayment->paid_type;                
+                $paymentData['paid_amount']    = $sPayment->paid_amount;
+                return $paymentData;
+            });
+            $return_arr['payments']      = $paymentsData;
+         }
+
+         if($upcomingBatchesPermission){
+            $batches = Batch::with('course')->where('status','Active')->where('running_status','Upcoming')->orderBy('id','desc')->limit(5)->get();
+
+            $upcomingBatchesData = $batches->map(function($batch){
+                $upcomingBatchData = array();       
+                $paymentData['batch_id']            = $batch->id;         
+                $upcomingBatchData['course']        = $batch->course->short_name." (".$batch->batch_name.")";
+                $upcomingBatchData['batch_name']    = $batch->batch_name;                
+                $upcomingBatchData['start_date']    = $batch->start_date;
+                $upcomingBatchData['fee']           = $batch->discounted_fees;
+                return $upcomingBatchData;
+            });
+            $return_arr['upcomingBatches']      = $upcomingBatchesData;
+         }
+
+        return json_encode(array('data'=>$return_arr));	 
+	}	
 }

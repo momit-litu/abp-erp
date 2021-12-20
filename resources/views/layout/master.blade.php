@@ -75,10 +75,10 @@
 
 <!--Apex Charts-->
 <script  src="{{ asset('assets/theme/assets/js/vendors/charts/apex-charts.js') }}"></script>
-
+<!--
 <script src="{{ asset('assets/theme/assets/js/scripts-init/charts/apex-charts.js') }}"></script>
 <script src="{{ asset('assets/theme/assets/js/scripts-init/charts/apex-series.js') }}"></script>
-
+-->
 <!--Sparklines-->
 <script src="{{ asset('assets/theme/assets/js/vendors/charts/charts-sparklines.js') }}"></script>
 <script src="{{ asset('assets/theme/assets/js/scripts-init/charts/charts-sparklines.js') }}"></script>
@@ -148,7 +148,7 @@
 
 <!--Circle Progress -->
 <script src="{{ asset('assets/theme/assets/js/vendors/circle-progress.js') }}"></script>
-<script src="{{ asset('assets/theme/assets/js/scripts-init/circle-progress.js') }}"></script>
+<!--<script src="{{ asset('assets/theme/assets/js/scripts-init/circle-progress.js') }}"></script> -->
 
 <!--CountUp -->
 <script src="{{ asset('assets/theme/assets/js/vendors/count-up.js') }}"></script>

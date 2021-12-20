@@ -26,12 +26,11 @@
 					</div>
 					<div class="page-title-actions">
 						<div class="d-inline-block pr-3">
-							<select id="custom-inp-top" type="select" class="custom-select">
-								<option>Select period...</option>
-								<option>Today</option>
-								<option>Last Week</option>
-								<option>Last Month</option>
-								<option>Last Year</option>
+							<select type="select" class="custom-select" id="select_report_period">
+								<option value="today">Today</option>
+								<option value="last_week">Last Week</option>
+								<option value="last_month">Last Month</option>
+								<option value="last_year">Last Year</option>
 							</select>
 						</div>
 						<button type="button" data-toggle="tooltip" data-placement="left" class="btn btn-dark" title="Show a Toastr Notification!">
@@ -47,154 +46,16 @@
 				</span>
 				Attention!!! This dashboard example was created using only the available elements and components, no additional SCSS was written!
 			</div>-->
+			@if($dashboardComponents['dashboardRegistrationInfo'])
+			<div class="row" id="registered_div"></div>
+			@endif
 			
-			<div class="row">
-				<div class="col-sm-6 col-md-3">
-					<div class="card-shadow-primary mb-3 widget-chart widget-chart2 text-left card card-btm-border card-shadow-primary border-primary">
-						<div class="widget-chat-wrapper-outer">
-							<div class="widget-chart-content"><h6 class="widget-subheading">Registered </h6>
-								<div class="widget-chart-flex">
-									<div class="widget-numbers mb-0 w-100">
-										<div class="widget-chart-flex">
-											<div class="fsize-4">				
-												55
-											</div>
-											<div class="ml-auto">
-												<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">
-													<small  class="text-default pl-2 text-small">Admin: <b>41</b></small >
-												</div>
-												<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">						
-													<small  class="text-default pl-2">Self:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>11</b></small >
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="card-shadow-primary mb-3 widget-chart widget-chart2 text-left card-btm-border card-shadow-primary border-warning card ">
-						<div class="widget-chat-wrapper-outer">
-							<div class="widget-chart-content"><h6 class="widget-subheading">Enrolled </h6>
-								<div class="widget-chart-flex">
-									<div class="widget-numbers mb-0 w-100">
-										<div class="widget-chart-flex">
-											<div class="fsize-4">				
-												55
-											</div>
-											<div class="ml-auto">
-												<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">
-													<small  class="text-default pl-2 text-small">Admin: <b>41</b></small >
-												</div>
-												<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">						
-													<small  class="text-default pl-2">Self:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>11</b></small >
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="card-shadow-primary mb-3 widget-chart widget-chart2 text-left card-btm-border card-shadow-primary border-success card ">
-						<div class="widget-chat-wrapper-outer">
-							<div class="widget-chart-content"><h6 class="widget-subheading">Pending Enrolled </h6>
-								<div class="widget-chart-flex">
-									<div class="widget-numbers mb-0 w-100">
-										<div class="widget-chart-flex">
-											<div class="fsize-4">				
-												55
-											</div>
-											<div class="ml-auto">
-												<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">
-													<small  class="text-default pl-2 text-small">Admin: <b>41</b></small >
-												</div>
-												<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">						
-													<small  class="text-default pl-2">Self:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>11</b></small >
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="card-shadow-primary mb-3 widget-chart widget-chart2 text-left card-btm-border card-shadow-primary border-danger card ">
-						<div class="widget-chat-wrapper-outer">
-							<div class="widget-chart-content"><h6 class="widget-subheading">Dropout </h6>
-								<div class="widget-chart-flex">
-									<div class="widget-numbers mb-0 w-100">
-										<div class="widget-chart-flex">
-											<div class="fsize-4">				
-												55
-											</div>
-											<div class="ml-auto">
-												<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">
-													&nbsp;
-												</div>
-												<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">						
-													&nbsp;
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		
-			<div class="main-card mb-3 card bg-default">
-				<div class="no-gutters row">
-					<div class="col-md-4 col-xl-4">
-						<div class="widget-content">
-							<div class="widget-content-wrapper">
-								<div class="widget-content-right ml-0 mr-3">
-									<div class="widget-numbers text-success">35</div>
-								</div>
-								<div class="widget-content-left">
-									<div class="widget-heading">No. of Scheduled Payments</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4 col-xl-4">
-						<div class="widget-content">
-							<div class="widget-content-wrapper">
-								<div class="widget-content-right ml-0 mr-3">
-									<div class="widget-numbers text-warning">15</div>
-								</div>
-								<div class="widget-content-left">
-									<div class="widget-heading">No of Received Payments</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4 col-xl-4">
-						<div class="widget-content">
-							<div class="widget-content-wrapper">
-								<div class="widget-content-right ml-0 mr-3">
-									<div class="widget-numbers text-danger">20</div>
-								</div>
-								<div class="widget-content-left">
-									<div class="widget-heading">No. of Due Payments</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		
-
-			<div class="row">			
+			@if($dashboardComponents['dashboardPaymentScheduleInfo'])
+			<div  id="payment_schedule_div"></div>
+			@endif
+	
+			<div class="row">	
+				@if($dashboardComponents['dashboardStudentRegistrationBarchart'])		
 				<div class="col-sm-12 col-md-7 col-lg-8">
 					<div class="mb-3 card">
 						<div class="card-header-tab card-header">
@@ -204,10 +65,13 @@
 							</div>-->
 						</div>
 						<div class="pt-0 card-body">
-							<div id="chart-combined"></div>
+							<div id="dashboard-chart"></div>
 						</div>
 					</div>
 				</div>
+				@endif
+
+				@if($dashboardComponents['DashboardFinancialstatus'])		
 				<div class="col-lg-12 col-xl-4">
 					<div class="mb-3 card">
 						<div class="rm-border pb-0 responsive-center card-header">
@@ -217,50 +81,24 @@
 							<div class="col-lg-6 col-xl-12">
 								<div class="no-shadow rm-border bg-transparent widget-chart text-left card">
 									<div class="progress-circle-wrapper">
-										<div class="circle-progress circle-progress-gradient-lg">
+										<div class="circle-progress" id="collection_percentage">
 											<small></small>
 										</div>
 									</div>
-									<div class="widget-chart-content">
-										<div class="widget-subheading">Collections</div>
-										<div class="widget-numbers text-success"><span>1,50,000</span></div>
-										<div class="widget-description text-focus">
-											Increased by
-											<span class="text-warning pl-1">
-											<i class="fa fa-angle-up"></i>
-											<span class="pl-1">7.35%</span>
-										</span>
-										</div>
-									</div>
+									<div class="widget-chart-content" id="collection_div"></div>
 								</div>
 							</div>
 							<div class="col-lg-6 col-xl-12">
 								<div class="card no-shadow rm-border bg-transparent widget-chart text-left mt-2">
 									<div class="progress-circle-wrapper">
-										<div class="circle-progress circle-progress-gradient-alt-lg">
+										<div class="circle-progress" id="paid_percentage">
 											<small></small>
 										</div>
 									</div>
-									<div class="widget-chart-content">
-										<div class="widget-subheading">Expenses</div>
-										<div class="widget-numbers text-danger"><span>1,94,000</span></div>
-										<div class="widget-description opacity-8 text-focus">
-											Down by
-											<span class="text-success pl-1 pr-1">
-											<i class="fa fa-angle-down"></i>
-											<span class="pl-1">21.8%</span>
-										</span>
-										</div>
-									</div>
+									<div class="widget-chart-content" id="expense_div"></div>
 								</div>
 							</div>
 						</div>
-						<!--<div class="text-center mx-auto mt-3">
-							<div role="group" class="btn-group-sm btn-group nav">
-								<a class="btn-shadow pl-3 pr-3 active btn btn-primary" data-toggle="tab" href="#sales-tab-1">Income</a>
-								<a class="btn-shadow pr-3 pl-3  btn btn-primary" data-toggle="tab" href="#sales-tab-2">Expenses</a>
-							</div>
-						</div>-->
 						&nbsp;	&nbsp;&nbsp;&nbsp;
 						<div class="card-body">
 							<div class="text-center mt-3">
@@ -275,7 +113,8 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</div>
 				</div>	
-			</div>
+				@endif
+
 		<!--	
 			<div class="row">
 				<div class="col-sm-12 col-lg-4">
@@ -453,8 +292,8 @@
 			</div>
 		</div>
 		-->
-			<div class="row">			
-				<div class="col-sm-12 col-md-6 col-lg-6">
+				@if($dashboardComponents['dashboardRegisteredStudents'])
+				<div class="col-sm-12 col-md-6 col-lg-6" >
 					<div class="main-card mb-3 card">
 						<div class="card-header">
 							<div class="card-header-title font-size-lg text-capitalize font-weight-normal"><strong>Registered Students</strong>
@@ -464,67 +303,24 @@
 							</div>
 						</div>
 						<div class="table-responsive">
-							<table class="align-middle text-truncate mb-0 table table-borderless table-hover">
+							<table class="align-middle text-truncate mb-0 table table-borderless table-hover" id="reg_student_table">
 								<thead>
 								<tr>
 									<th class="text-center">Reg. No.</th>
-									<th class="text-center">Name</th>
-									<th class="text-center">Email</th>
-									<th class="text-center">Contact</th>
+									<th class="text-left">Name</th>
+									<th class="text-left">Email</th>
+									<th class="text-left">Contact</th>
 									<th class="text-center">Reg. By</th>
 								</tr>
 								</thead>
 								<tbody>
-									<tr>									
-										<td class="text-center">00500008</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-success">Self</div>
-										</td>
-									</tr>
-									<tr>									
-										<td class="text-center">00500009</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-danger">Admin</div>
-										</td>
-									</tr>
-									<tr>									
-										<td class="text-center">00500008</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-success">Self</div>
-										</td>
-									</tr>
-									<tr>									
-										<td class="text-center">00500008</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-success">Self</div>
-										</td>
-									</tr>	
-									<tr>									
-										<td class="text-center">00500008</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-success">Self</div>
-										</td>
-									</tr>									
 								</tbody>
 							</table>
 						</div>
 					</div>
 				</div>
+				@endif
+				@if($dashboardComponents['dashboardEnrolledStudents'])
 				<div class="col-sm-12 col-md-6 col-lg-6">
 					<div class="main-card mb-3 card">
 						<div class="card-header">
@@ -535,70 +331,23 @@
 							</div>
 						</div>
 						<div class="table-responsive">
-							<table class="align-middle text-truncate mb-0 table table-borderless table-hover">
+							<table class="align-middle text-truncate mb-0 table table-borderless table-hover" id="enrolled_student_table">
 								<thead>
 								<tr>
-									<th class="text-center">Reg. No.</th>
 									<th class="text-center">Name</th>
-									<th class="text-center">Email</th>
-									<th class="text-center">Contact</th>
-									<th class="text-center">Reg. By</th>
+									<th class="text-center">Enrollment No</th>
+									<th class="text-center">Course</th>
+									<th class="text-center">Status</th>
 								</tr>
 								</thead>
-								<tbody>
-									<tr>									
-										<td class="text-center">00500008</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-success">Self</div>
-										</td>
-									</tr>
-									<tr>									
-										<td class="text-center">00500009</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-danger">Admin</div>
-										</td>
-									</tr>
-									<tr>									
-										<td class="text-center">00500008</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-success">Self</div>
-										</td>
-									</tr>
-									<tr>									
-										<td class="text-center">00500008</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-success">Self</div>
-										</td>
-									</tr>	
-									<tr>									
-										<td class="text-center">00500008</td>
-										<td class="text-center"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">muntakim@gmail.com</td>
-										<td class="text-center">01980340482	</td>
-										<td class="text-center">
-											<div class="badge badge-pill badge-success">Self</div>
-										</td>
-									</tr>									
+								<tbody>																		
 								</tbody>
 							</table>
 						</div>
 					</div>
 				</div>
-			</div>
-
-			<div class="row">			
+				@endif
+				@if($dashboardComponents['dashboardPayments'])	
 				<div class="col-sm-12 col-md-6 col-lg-6">
 					<div class="main-card mb-3 card">
 						<div class="card-header">
@@ -609,7 +358,7 @@
 							</div>
 						</div>
 						<div class="table-responsive">
-							<table class="align-middle text-truncate mb-0 table table-borderless table-hover">
+							<table class="align-middle text-truncate mb-0 table table-borderless table-hover" id="paymet_table">
 								<thead>
 								<tr>
 									<th class="text-left">Student</th>
@@ -618,54 +367,14 @@
 									<th class="text-right">Amount</th>
 								</tr>
 								</thead>
-								<tbody>
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan (00500007)</a></td>
-										<td class="text-left"><a href="javascript:void(0)">Post Graduate on Finance 01</a></td>								
-										<td class="text-center">
-											<div class="badge badge-pill badge-info">SSL</div>
-										</td>
-										<td class="text-right">5,000</td>
-									</tr>
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan (00500007)</a></td>
-										<td class="text-left"><a href="javascript:void(0)">Post Graduate on Finance 01</a></td>								
-										<td class="text-center">
-											<div class="badge badge-pill badge-info">SSL</div>
-										</td>
-										<td class="text-right">5,000</td>
-									</tr>
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan (00500007)</a></td>
-										<td class="text-left"><a href="javascript:void(0)">Post Graduate on Finance 01</a></td>								
-										<td class="text-center">
-											<div class="badge badge-pill badge-info">SSL</div>
-										</td>
-										<td class="text-right">5,000</td>
-									</tr>
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan (00500007)</a></td>
-										<td class="text-left"><a href="javascript:void(0)">Post Graduate on Finance 01</a></td>								
-										<td class="text-center">
-											<div class="badge badge-pill badge-info">SSL</div>
-										</td>
-										<td class="text-right">5,000</td>
-									</tr>
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan (00500007)</a></td>
-										<td class="text-left"><a href="javascript:void(0)">Post Graduate on Finance 01</a></td>								
-										<td class="text-center">
-											<div class="badge badge-pill badge-info">SSL</div>
-										</td>
-										<td class="text-right">5,000</td>
-									</tr>
-
-																	
+								<tbody>															
 								</tbody>
 							</table>
 						</div>
 					</div>
 				</div>
+				@endif
+				@if($dashboardComponents['dashboardUpcomingBatches'])
 				<div class="col-sm-12 col-md-6 col-lg-6">
 					<div class="main-card mb-3 card">
 						<div class="card-header">
@@ -676,7 +385,7 @@
 							</div>
 						</div>
 						<div class="table-responsive">
-							<table class="align-middle text-truncate mb-0 table table-borderless table-hover">
+							<table class="align-middle text-truncate mb-0 table table-borderless table-hover" id="upcoming_batch_table">
 								<thead>
 								<tr>
 									<th class="text-left">Course</th>
@@ -685,42 +394,13 @@
 									<th class="text-right">Fee(Onetime)</th>
 								</tr>
 								</thead>
-								<tbody>									
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">15</td>
-										<td class="text-center">2022-01-01	</td>
-										<td class="text-right">660000 (60000)	</td>
-									</tr>	
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">15</td>
-										<td class="text-center">2022-01-01	</td>
-										<td class="text-right">660000 (60000)	</td>
-									</tr>	
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">15</td>
-										<td class="text-center">2022-01-01	</td>
-										<td class="text-right">660000 (60000)	</td>
-									</tr>	
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">15</td>
-										<td class="text-center">2022-01-01	</td>
-										<td class="text-right">660000 (60000)	</td>
-									</tr>	
-									<tr>									
-										<td class="text-left"><a href="javascript:void(0)">Muntakim hasan</a></td>
-										<td class="text-center">15</td>
-										<td class="text-center">2022-01-01	</td>
-										<td class="text-right">660000 (60000)	</td>
-									</tr>									
+								<tbody>														
 								</tbody>
 							</table>
 						</div>
 					</div>
 				</div>
+				@endif
 			</div>
 		</div>   
 	</div>
@@ -728,5 +408,15 @@
 @endsection
 @section('JScript')
     <script type="text/javascript" src="{{ asset('assets/js/page-js/admin/dashboard.js')}}"></script>
+
+<script>
+    jQuery(document).ready(function() {
+        Index.init();
+        $("#select_report_period").on('change',function(){
+            Index.init();
+        });
+    });
+</script>
 @endsection
+
 
