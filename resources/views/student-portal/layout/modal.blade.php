@@ -241,15 +241,15 @@
                             <input type="hidden" name="id" id="id">
                             <div class="row">                                
                                 <div class="col-md-12"> 
-                                   <!-- <h6>Please provide the information carefully</h6>  -->    
-                                   <div class="form-row">
-                                    <div class="col-md-12">
-                                        <div class="position-relative form-group">
-                                            <label for="first_name" class="">Student Number</label>
-                                            <input type="text" id="student_no" disabled name="student_no"  class="form-control col-lg-4"/>
+                                    <!-- <h6>Please provide the information carefully</h6>  -->    
+                                    <div class="form-row student_no_div d-none">
+                                        <div class="col-md-12">
+                                            <div class="position-relative form-group">
+                                                <label for="first_name" class="">Student Number</label>
+                                                <input type="text" id="student_no" disabled name="student_no"  class="form-control col-lg-4"/>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>                                
+                                    </div>                                
                                     <div class="form-row">
                                         <div class="col-md-12">
                                             <div class="position-relative form-group">

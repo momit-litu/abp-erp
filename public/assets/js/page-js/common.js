@@ -260,8 +260,9 @@ $(document).ready(function () {
 		})
 		set_notification_time_out_fn();
 	}
-
-	loadNotifications(page);
+	if(user_id != ""){
+		loadNotifications(page);
+	}
 
 	loadMoreNotofication = () =>{
 		page++;

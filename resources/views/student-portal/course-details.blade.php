@@ -34,6 +34,17 @@
                     </div>
                 </div>
                 <div class="page-title-actions">
+
+                    @if(!Auth::check() && $batch->total_enrolled_student<$batch->student_limit)
+                    <button type="button" id="start_registration_sm" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg ">
+                        Register
+                   </button>
+                    @elseif($batch->students->count()==0 && $batch->total_enrolled_student<$batch->student_limit)
+                        <button type="button" id="start_registration" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg">
+                            Register
+                        </button>
+                    @endif
+
                     <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-info disabled">
                        {{ $batch->running_status }}
                     </button>
@@ -45,8 +56,7 @@
                         <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn  {{ ($batch->total_enrolled_student<$batch->student_limit)?'btn-success':'btn-danger' }} disabled" data-original-title="Example Tooltip">
                             {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Batch Full' }}
                         </button>
-                    @endif
-                    
+                    @endif                  
                 </div>    
             </div>
         </div> 

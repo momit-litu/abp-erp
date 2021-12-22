@@ -18,3 +18,4 @@ yarn-error.log
 composer.lock
 /storage/worker.log
 /storage/monitor_token
+/storage/framework/sessions/

@@ -10,7 +10,7 @@
                     <div class="app-logo"><img src="{{ asset('assets/images/logo-inverse.png')}}" /> </div>
                     <h4>
                         <div>OTP Login</div>
-                        <span>Use the form below to login with OTP</span></h4>
+                        <span>Please put your registered mobile number to login with OTP</span></h4>
                     <div>
                         <form class="form-otp" action="{{url('auth/forget/password-otp')}}" method="post">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">

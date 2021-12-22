@@ -24,7 +24,7 @@
 
 $(document).ready(function () {
 	
-	$("#start_registration").on('click',function(){		
+	$("#start_registration, #start_registration_sm").on('click',function(){		
 		$('.step-content').css('display','none');
 		$('#student-info').css('display','block');
 		$('.nav-item').removeClass('active');
@@ -42,6 +42,8 @@ $(document).ready(function () {
 					$("#id").val(data['id']);
 					$("#name").val(data['name']);
 					$("#student_no").val(data['student_no']);
+					$('.student_no_div').removeClass('d-none');
+					
 					$("#student_email").val(data['email']);
 					$("#contact_no").val(data['contact_no']);
 					$("#emergency_contact").val(data['emergency_contact']);
