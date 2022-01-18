@@ -354,7 +354,7 @@
                                     <div class="form-row">
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
-                                                <label>Current Employment Company</label>
+                                                <label>Current Employment Company</label>                                               
                                                 <input type="text" id="current_emplyment" name="current_emplyment" class="form-control col-lg-12"/>
                                             </div>
                                         </div>

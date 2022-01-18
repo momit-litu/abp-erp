@@ -23,7 +23,51 @@
 
 
 $(document).ready(function () {
+		
+	$("#current_emplyment").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/employement-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		appendTo : $('#student_form'),
+		minLength: 2,
+	});
+
+	$("#current_designation").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/designation-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		appendTo : $('#student_form'),
+		minLength: 2,
+	});
 	
+
+
 	$("#start_registration, #start_registration_sm").on('click',function(){		
 		$('.step-content').css('display','none');
 		$('#student-info').css('display','block');

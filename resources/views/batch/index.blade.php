@@ -165,20 +165,32 @@
 										</div>
 									</div>
 									<div class="form-row">									
-										<div class="col-md-6">
+										<div class="col-md-3">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">Active?</label>
 												<input type="checkbox" id="status" name="status" checked="checked" value="1" class="form-control col-lg-12"/>
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-3">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">Featured?</label>
 												<input type="checkbox" id="featured" name="featured" value="1" class="form-control col-lg-12"/>
 											</div>
 										</div>
-										
+										<div class="col-md-3">
+											<div class="position-relative form-group">
+												<label for="company_name" class="">Draft?</label>
+												<input type="checkbox" id="draft" name="draft" value="1" class="form-control col-lg-12"/>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="position-relative form-group">
+												<label for="company_name" class="">Show Seat Limit?</label>
+												<input type="checkbox" id="show_seat_limit" name="show_seat_limit" value="1" class="form-control col-lg-12"/>
+											</div> 
+										</div>
 									</div>
+									<br>
 									<hr>  
 									<div class="form-row bg-gray ">
 										<div class="col-md-4"><b>Installment plan Details</b></div><br>

@@ -361,8 +361,9 @@ class BatchController extends Controller
                     'details' 		=>  $request['details'],
                     'running_status'=>  $request['running_status'],
                     'status'        => (isset($request['status']))?'Active':'Inactive',
-                    'featured'      => (isset($request['featured']))?'Yes':'No'
-                    
+                    'featured'      => (isset($request['featured']))?'Yes':'No',
+                    'draft'         => (isset($request['draft']))?'Yes':'No',
+                    'show_seat_limit'=> (isset($request['show_seat_limit']))?'Yes':'No'  
                 ]);
                 if($batch){               
                     // for the onetime payment plan
@@ -462,6 +463,9 @@ class BatchController extends Controller
                 $Batch->running_status 	= $request['running_status'];
                 $Batch->status 			= (isset($request['status']))?$request['status']:'Inactive';
                 $Batch->featured 		= (isset($request['featured']))?$request['featured']:'No';
+                $Batch->show_seat_limit = (isset($request['show_seat_limit']))?$request['show_seat_limit']:'No';
+                $Batch->draft 		    = (isset($request['draft']))?$request['draft']:'No';
+                
                 $Batch->update();
 
                  // for the onetime payment plan

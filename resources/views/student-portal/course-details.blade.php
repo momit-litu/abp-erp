@@ -174,6 +174,19 @@
                                             </div>
                                         </div>
                                     </li>
+                                    @if($batch->show_seat_limit=='Yes' )
+                                        <li class="list-group-item">
+                                            <div class="widget-content p-0">
+                                                <div class="widget-content-wrapper">
+                                                    <div class="widget-content-left">
+                                                        <div class="widget-heading">Total Seat :  {{ $batch->student_limit}}</div>
+                                                        <div class="widget-subheading"> Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @endIf   
+                                    
                                     <li class="list-group-item">
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">

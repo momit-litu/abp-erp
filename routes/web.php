@@ -26,6 +26,7 @@ Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPorta
 Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::get('auth/login',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::post('auth/post/login',array('as'=>'Sign in', 'uses' =>'AuthController@authPostLogin'));
+Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 
 Route::get('/payment/{id}',array('as'=>'Payment Details' , 'uses' =>'PaymentController@show'));
 Route::post('/sslcommerz/success',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentSuccess'));
@@ -70,6 +71,9 @@ Route::post('/expense-autosuggest',array('as'=>'Expense Autosuggest list', 'uses
 
 Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'uses' =>'PaymentController@emailInvoice'));
 
+
+Route::post('/employement-autosuggest',array('as'=>'Employement Autosuggest list', 'uses' =>'StudentPortalController@employementAutoComplete'));
+Route::post('/designation-autosuggest',array('as'=>'Designation Autosuggest list', 'uses' =>'StudentPortalController@designationAutoComplete'));
 
 // need only authentication
 Route::group(['middleware' => ['auth']], function () {
@@ -259,8 +263,6 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
 });
 
-	//Route::get('/',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
-	Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 
 Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], function () {
 	Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));

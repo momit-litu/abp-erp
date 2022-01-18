@@ -44837,3 +44837,7 @@ span.multiselect-native-select select {
 .after-img {
     max-width: 100%;
 }
+
+.dashboard-buttin-heading{
+    font-size: 1.4rem !important;
+}

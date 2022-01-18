@@ -545,7 +545,7 @@ class ReportController extends Controller
 		$upcomingBatchesPermission     = $this->PermissionHasOrNot($admin_user_id,113 );//Dashboard Upcoming Batches 		
 		
         if($registrationInfoPermission){        
-           $registrationInfo['selfRegistered']   = Student::where("register_type","Self")->count();
+           $registrationInfo['selfRegistered']    = Student::where("register_type","Self")->count();
            $registrationInfo['adminRegistered']   = Student::where("register_type","Admin")->count();
 
            $registrationInfo['selfEnrolled']      = BatchStudent::where("status","Active")->count();
@@ -575,10 +575,10 @@ class ReportController extends Controller
 
             $financialstatus['scheduleAmount']      = number_format($totalScheludes);
             $financialstatus['collections']         = number_format($totalCollections);
-            $financialstatus['collectionsRatio']    = round(($totalCollections*100)/$totalScheludes)/100;
+            $financialstatus['collectionsRatio']    = ($totalScheludes>0)?round(($totalCollections*100)/$totalScheludes)/100:0;
             $financialstatus['expenses']            = number_format($totalExpences);
             $financialstatus['totalPayment']        = number_format($totalPayments);
-            $financialstatus['expensesPaymentRatio']= round(($totalPayments*100)/$totalExpences)/100;
+            $financialstatus['expensesPaymentRatio']= ($totalExpences>0)?round(($totalPayments*100)/$totalExpences)/100:0;
             $return_arr['financialStatusInfo']      = $financialstatus;
          }
 

@@ -225,7 +225,7 @@ class AuthController extends Controller
         $otpUser = \App\Models\User::where('id',$user->id)->update(['otp'=>$otp]);
 		if($otpUser){
 			$smsController = new NotificationController($request,$this->SMSService );
-			$sentOTP = $smsController->sendOtp($contact_no, $otp,);
+			$sentOTP = $smsController->sendOtp($contact_no, $otp);
 			if(!$sentOTP){
 				 return redirect('auth/forget/password-otp')->with('errormessage',"OTP not sent! Try again");
 			}

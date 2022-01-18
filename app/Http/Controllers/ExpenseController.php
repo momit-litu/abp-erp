@@ -616,7 +616,7 @@ class ExpenseController extends Controller
         }
     }
 	
-	    public function expenseAutoComplete(Request $request){
+	public function expenseAutoComplete(Request $request){
 		$term = $_REQUEST['term'];
 		$user = Auth::user();
 		$data = ExpenseHead::with('expensecategory', 'expensecategory.parent')

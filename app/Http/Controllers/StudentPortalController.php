@@ -47,6 +47,7 @@ class StudentPortalController extends Controller
     {
         $page_title             = $this->page_title;
 		$data['module_name']    = "Dashboard";
+
 		if (Auth::check()){
 			$studentId 		        = Auth::user()->student_id;
 			$student	  	        = Student::find($studentId);
@@ -183,7 +184,7 @@ class StudentPortalController extends Controller
                     'status'        => 'Inactive',
                 ]);
                 if($batchStudent){
-                    $enrollment             = BatchStudent::with('batch', 'batch.course')->find($batchStudent->id);
+                   /* $enrollment             = BatchStudent::with('batch', 'batch.course')->find($batchStudent->id);
 
                     $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$request['batch_id']);
 
@@ -192,7 +193,7 @@ class StudentPortalController extends Controller
                     $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
 
                     $enrollment->student_enrollment_id = $student_enrollment_id ;
-                    $enrollment->save();
+                    $enrollment->save();*/
 
                     $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
                     $batchFee->batch->update();
@@ -642,12 +643,44 @@ class StudentPortalController extends Controller
         else
             return redirect('portal/dashboard')->with('message',"Your payment process is failed")->with('response_code',0);
     }
-
-    
+   
     public function terms()
     {
         $page_title  = $this->page_title;
         return view('student-portal.terms', array('page_title'=>$page_title));
     }
+
+    public function employementAutoComplete(Request $request){
+		$term = $_REQUEST['term'];
+        $data = Student::where([
+                    ['status', '=', 'Active'],
+                    ['current_emplyment','like','%'.$term.'%']
+                ])->groupBy('current_emplyment')->get();
+
+		$data_count = $data->count();
+
+		if($data_count>0){
+			foreach ($data as $row) {
+				$json[] = array('id' => $row["current_emplyment"],'label' => $row["current_emplyment"]);
+			}
+		}
+		return json_encode($json);
+	}
+
+    public function designationAutoComplete(Request $request){
+		$term = $_REQUEST['term'];
+        $data = Student::where([
+                    ['status', '=', 'Active'],
+                    ['current_designation','like','%'.$term.'%']
+                ])->groupBy('current_designation')->get();
+		$data_count = $data->count();
+
+		if($data_count>0){
+			foreach ($data as $row) {
+				$json[] = array('id' => $row["current_designation"],'label' => $row["current_designation"]);
+			}
+		}		
+		return json_encode($json);
+	}
 
 }

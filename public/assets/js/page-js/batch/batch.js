@@ -272,11 +272,13 @@ $(document).ready(function () {
 			url: url+'/batch/'+id,
 			cache: false,
 			success: function(response){
-				var response = JSON.parse(response);
-				var data = response['batch'];
-				var statusHtml = (data['status']=="Active")?'<span class="badge badge-success">Active</span>':'<span class="badge badge-danger">In-active</span>';
-				var featuredHtml = (data['featured']=="Yes")?'<span class="badge badge-info">Featured</span>':'';
-				
+				var response 	= JSON.parse(response);
+				var data 		= response['batch'];
+				var statusHtml 	= (data['status']=="Active")?'<span class="badge badge-success">Active</span>':'<span class="badge badge-danger">In-active</span>';
+				var featuredHtml= (data['featured']=="Yes")?'<span class="badge badge-info">Featured</span>':'';
+				var seatLimitHtml= (data['show_seat_limit']=="Yes")?'<span class="badge badge-primary">Show Seat Limit</span>':'';
+				var draftHtml 	= (data['draft']=="Yes")?'<span class="badge badge-warning">Draft</span>':'';
+
 				if(data['running_status']=="Completed")
 					 runningStatusHtml = '<span class="badge badge-primary">Completed</span>'
 				else if(data['running_status']=="Running")
@@ -299,7 +301,7 @@ $(document).ready(function () {
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+details+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Registration Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>TK. "+data['fees']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Discount Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>TK. "+data['discounted_fees']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+runningStatusHtml+statusHtml+featuredHtml+"</div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+runningStatusHtml+statusHtml+featuredHtml+seatLimitHtml+draftHtml+"</div></div>";
 
 				modalHtml +="<div class='row '>&nbsp;<br><div class='col-lg-12'><strong>Payment Details:</strong></div>"+"<div class='col-lg-12'>";
 				modalHtml +="<table class='table table-bordered' style='width:100% !important'> <thead><tr><th>Plan Name</th><th class='text-center'>Total Inst. No</th><th class='text-center'>Duration (Month)</th><th class='text-right'>		Total Payable</th></tr></thead><tbody>";
@@ -422,7 +424,7 @@ $(document).ready(function () {
 								</div>
 							</div>				
 							`;
-				modalHtml +="<table id='student_table' class='table table-bordered table-sm' style='width:100% !important'> <thead><tr><th></th><th>Student No.</th><th>Full Name</th><th class='text-left'>Email</th><th class='text-center'>Contact No.</th><th class='text-center'>Status</th><th></th></tr></thead><tbody>";
+				modalHtml +="<table id='student_table' class='table table-bordered table-sm' style='width:100% !important'> <thead><tr><th></th><th>Student No.</th><th>Enrollment ID</th><th>Full Name</th><th class='text-left'>Email</th><th class='text-center'>Contact No.</th><th class='text-center'>Status</th><th></th></tr></thead><tbody>";
 
 				if(!jQuery.isEmptyObject(data['students'])){
 					$.each(data['students'], function(i,student){ 
@@ -433,9 +435,10 @@ $(document).ready(function () {
 						else {
 							student_status = "<button class='btn btn-xs btn-danger' disabled>"+student['pivot']['status']+"</button>";
 							std_button = "<button type='button'  title='Add Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-success btn-xs add-student' ><i class='fa fa-check'></i></button>";
+							std_button += "<button type='button'  title='Remove Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove-student' ><i class='fa fa-trash-alt'></i></button>";
 						}
 
-						modalHtml 	+= "<tr><td>"+(i+1)+"</td><td>"+student['student_no']+"</td>"+"<td>"+student['name']+"</td>"+"<td class='text-left'>"+student['email']+"</td>"+"<td class='text-left'>"+student['contact_no']+"</td>"+"<td class='text-left'>"+student_status+"<td>"+std_button+"<input type='hidden' id='student_"+student['id']+"' value="+student['id']+" /></td></tr>";
+						modalHtml 	+= "<tr><td>"+(i+1)+"</td><td>"+student['student_no']+"</td>"+"<td>"+student['pivot']['student_enrollment_id']+"</td>"+"<td>"+student['name']+"</td>"+"<td class='text-left'>"+student['email']+"</td>"+"<td class='text-left'>"+student['contact_no']+"</td>"+"<td class='text-left'>"+student_status+"<td>"+std_button+"<input type='hidden' id='student_"+student['id']+"' value="+student['id']+" /></td></tr>";
 					})
 				}
 				modalHtml += "</tbody></table>";
@@ -561,11 +564,7 @@ $(document).ready(function () {
 									toastr['error']( resultHtml, 'Failed!!!!');
 								}
 								else if(response['response_code'] ==2){
-									row.removeClass('btn-outline-danger');
-									row.removeClass('remove-student');
-									row.addClass('btn-outline-success');
-									row.removeClass('add-student');
-									row.html("<i class='fa fa-check'></i>");
+									row.before("<button type='button'  title='Add Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-success btn-xs add-student' ><i class='fa fa-check'></i></button>");
 									row.parent().prev('td').html("<button class='btn btn-xs btn-danger' disabled>Inactive</button>");
 									
 									toastr['success']( response['message'], 'Success!!!');
@@ -583,7 +582,7 @@ $(document).ready(function () {
 				})
 
 				$('.add-student').on('click',function(){
-					var id = $(this).next('input').val();
+					var id = $(this).next().next('input').val();
 					var add_std_biutton =  $(this);
 					event.preventDefault();
 					$.ajaxSetup({
@@ -617,13 +616,15 @@ $(document).ready(function () {
 									toastr['error']( resultHtml, 'Failed!!!!');
 								}
 								else{
-									add_std_biutton.removeClass('btn-outline-success');
+									
+									/*add_std_biutton.removeClass('btn-outline-success');
 									add_std_biutton.removeClass('add-student');
 									add_std_biutton.addClass('btn-outline-danger');
 									add_std_biutton.removeClass('remove-student');
-									add_std_biutton.html("<i class='fa fa-trash-alt'></i>");
+									add_std_biutton.html("<i class='fa fa-trash-alt'></i>");*/
 									add_std_biutton.parent().prev('td').html("<button class='btn btn-xs btn-success' disabled>Active</button>");
 									toastr['success']( 'Student Added Successfully', 'Success!!!');
+									add_std_biutton.remove();
 								}
 								$(window).scrollTop();
 							 }
@@ -669,6 +670,8 @@ $(document).ready(function () {
 				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
 				
 				(data['featured']=='No')?$("#featured").iCheck('uncheck'):$("#featured").iCheck('check');
+				(data['show_seat_limit']=='No')?$("#show_seat_limit").iCheck('uncheck'):$("#show_seat_limit").iCheck('check');
+				(data['draft']=='No')?$("#draft").iCheck('uncheck'):$("#draft").iCheck('check');
 				
 				if(!jQuery.isEmptyObject(data['batch_fees'])){
 					$.each(data['batch_fees'], function(i,dta){

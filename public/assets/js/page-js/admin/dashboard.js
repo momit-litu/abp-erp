@@ -230,8 +230,8 @@ var Index = function () {
 				$.each(data, function(month,students){  
 					lebels_arr.push(month);
 					let students_arr = students.split('*');
-					registered_arr.push(students_arr[0]);
-					enrolled_arr.push(students_arr[1]);
+					registered_arr.push(parseFloat(students_arr[0]));
+					enrolled_arr.push(parseFloat(students_arr[1]));
 				});
 			}
 			
