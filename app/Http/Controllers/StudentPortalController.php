@@ -137,11 +137,6 @@ class StudentPortalController extends Controller
    
     public function studentEdit(Request $request)
     {
-        //$studentId 		= Auth::user()->student_id; 
-        $this->registrationConfirmEmail(54);
-        die;
-        //dd($request);
-
         if (!is_null($request->input('id')) && $request->input('id') != "") {
             $response_data = $this->editStudent($request->all(), $request->input('id'), $request->file('user_profile_image') , $request->file('documents') );
         } // new entry
@@ -245,6 +240,7 @@ class StudentPortalController extends Controller
 
     private function saveStudent($request, $id, $photo, $documents)
     {
+        
         try {
             $rule = [
                 'name' => 'required|string',

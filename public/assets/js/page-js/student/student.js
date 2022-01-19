@@ -2,6 +2,48 @@
 $(document).ready(function () {
 	// for get site url
 
+	$("#current_emplyment").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/employement-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		appendTo : $('#student_form'),
+		minLength: 2,
+	});
+
+	$("#current_designation").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/designation-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		appendTo : $('#student_form'),
+		minLength: 2,
+	});
+	
 
 	//for show students list
 	student_datatable = $('#students_table').DataTable({

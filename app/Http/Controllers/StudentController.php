@@ -280,6 +280,7 @@ class StudentController extends Controller
                     'study_mode' => $request['study_mode'],
                     'remarks' => $request['remarks'],
                     'current_emplyment' => $request['current_emplyment'],
+					'current_designation' => $request['current_designation'],
                     'last_qualification' => $request['last_qualification'],
                     'how_know' => $request['how_know'],
                     'registration_completed' => "Yes",
@@ -384,19 +385,20 @@ class StudentController extends Controller
                     return json_encode($return);
                 }
 
-                $student->name = $request['name'];
-                $student->email = $request['email'];
-                $student->contact_no = $request['contact_no'];
-                $student->emergency_contact = $request['emergency_contact'];
-                $student->address = $request['address'];
-                $student->nid_no = $request['nid'];
+                $student->name          = $request['name'];
+                $student->email         = $request['email'];
+                $student->contact_no    = $request['contact_no'];
+                $student->emergency_contact     = $request['emergency_contact'];
+                $student->address       = $request['address'];
+                $student->nid_no        = $request['nid'];
                 $student->date_of_birth = $request['date_of_birth'];
-                $student->study_mode = $request['study_mode'];
-                $student->current_emplyment = $request['current_emplyment'];
-                $student->last_qualification = $request['last_qualification'];
-                $student->how_know = $request['how_know'];
-                $student->passing_year = $request['passing_year'];
-                $student->status = (isset($request['status'])) ? "Active" : 'Inactive';
+                $student->study_mode    = $request['study_mode'];
+                $student->current_emplyment     = $request['current_emplyment'];
+                $student->current_designation   = $request['current_designation'];                
+                $student->last_qualification    = $request['last_qualification'];
+                $student->how_know      = $request['how_know'];
+                $student->passing_year  = $request['passing_year'];
+                $student->status        = (isset($request['status'])) ? "Active" : 'Inactive';
                 $student->registration_completed = "Yes";
                 $student->update();
 
@@ -408,14 +410,14 @@ class StudentController extends Controller
 
                 $StudentImage = $photo;
                 if (isset($StudentImage) && $StudentImage!="") {
-                    $old_image = $student->user_profile_image;
-                    $image_name = time();
-                    $ext = $StudentImage->getClientOriginalExtension();
-                    $image_full_name = $image_name . '.' . $ext;
-                    $upload_path = 'assets/images/user/student/';
-                    $success = $StudentImage->move($upload_path, $image_full_name);
-                    $student->user_profile_image = $image_full_name;
-                    $user->user_profile_image = $image_full_name;
+                    $old_image      = $student->user_profile_image;
+                    $image_name     = time();
+                    $ext            = $StudentImage->getClientOriginalExtension();
+                    $image_full_name= $image_name . '.' . $ext;
+                    $upload_path    = 'assets/images/user/student/';
+                    $success        = $StudentImage->move($upload_path, $image_full_name);
+                    $student->user_profile_image    = $image_full_name;
+                    $user->user_profile_image       = $image_full_name;
                     if(!is_null($old_image) && $user->user_profile_image != $old_image){
                         File::delete($upload_path.$old_image);
                     }
