@@ -49,7 +49,7 @@ trait PortalHelperModel
 									/*->with(['students' => 	function ($query) use ($studentId) {
 										$query->where('student_id',$studentId);
 									}]);*/
-									
+					$batchesQuery->where('draft','No');					
 				$batchesQuery 	= ($type=='Featured')?$batchesQuery->where('featured','Yes'):$batchesQuery->where('running_status',$type)->where('status','Active');
 			}
 			

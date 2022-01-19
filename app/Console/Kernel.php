@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Models\Batch;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -25,6 +27,15 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            Log::debug('Today:'.date('Y-m-d'));
+            $todaysBatches = Batch::where('start_date',date('Y-m-d'));
+            foreach($todaysBatches as $batch){
+                $batch->running_status = 'Running';
+                $batch->save();
+                Log::debug('batch status changed :'.$batch->id);
+            }
+        })->daily()->at('13:00');
     }
 
     /**

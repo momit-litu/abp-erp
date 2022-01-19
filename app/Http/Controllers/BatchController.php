@@ -49,15 +49,18 @@ class BatchController extends Controller
 
 	public function showList(){
 		$admin_user_id 		= Auth::user()->id;
-		$edit_action_id 	= 83; // Batch edit
-		$delete_action_id 	= 84; // Batch delete
-		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
-		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
+		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,83);
+		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,84);
+        $draft_permisiion 	= $this->PermissionHasOrNot($admin_user_id,114);
 
-	    $batches = Batch::with('course','students')->with('batch_fees')
-							->orderBy('created_at','desc')
-							->get();
-        $return_arr = array();
+	    $batchesQuery   = Batch::with('course','students')->with('batch_fees');
+
+        if(!$draft_permisiion)
+        $batchesQuery->where('draft','No');
+        
+        $batches        = $batchesQuery->orderBy('created_at','desc')->get();
+        $return_arr     = array();
+
         foreach($batches as $batch){
             $total_pending_student =  $batch->students->filter(function ($item) {   
                 if($item->getOriginal()['pivot_status'] =='Inactive'){
@@ -332,6 +335,7 @@ class BatchController extends Controller
     }
 
     private function createBatch($request){
+        $admin_user_id 		= Auth::user()->id;
 		try {
             $rule = [
                 'batch_name' 	=> 'required|string',
@@ -363,7 +367,8 @@ class BatchController extends Controller
                     'status'        => (isset($request['status']))?'Active':'Inactive',
                     'featured'      => (isset($request['featured']))?'Yes':'No',
                     'draft'         => (isset($request['draft']))?'Yes':'No',
-                    'show_seat_limit'=> (isset($request['show_seat_limit']))?'Yes':'No'  
+                    'show_seat_limit'=> (isset($request['show_seat_limit']))?'Yes':'No' ,
+                    'created_by'    => $admin_user_id;
                 ]);
                 if($batch){               
                     // for the onetime payment plan
