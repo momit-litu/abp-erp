@@ -294,6 +294,38 @@ class BatchController extends Controller
 			return json_encode($return);
 		}
     }
+
+    public function dropoutStudent(Request $request)
+    {
+        if($request['batch_id']=="" || $request['student_id']==""){
+			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
+		}
+        $batchStudent = BatchStudent::where([['batch_id',$request['batch_id']], ['student_id',$request['student_id']]])->first();
+               
+        if(empty($batchStudent)){
+			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No record found"));
+		}
+		try {			
+			DB::beginTransaction();
+			$batchStudent->dropout  = ($batchStudent->dropout == 'Yes')?'No':'Yes';
+            $batchStudent->update();
+            $message  =  ($batchStudent->dropout == 'Yes')?'Student dropout successfull':'Student dropout Cancelled';
+            $responseCode  =  ($batchStudent->dropout == 'Yes')?1:2;
+
+			DB::commit();
+            $return['message'] = $message;
+			$return['response_code'] = $responseCode;
+			return json_encode($return);
+
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] 	= 0;
+			$return['errors'] = "Failed to dropout !".$e->getMessage();
+			return json_encode($return);
+		}
+    }
+    
     
     public function destroy($id)
     {
@@ -368,7 +400,7 @@ class BatchController extends Controller
                     'featured'      => (isset($request['featured']))?'Yes':'No',
                     'draft'         => (isset($request['draft']))?'Yes':'No',
                     'show_seat_limit'=> (isset($request['show_seat_limit']))?'Yes':'No' ,
-                    'created_by'    => $admin_user_id;
+                    'created_by'    => $admin_user_id
                 ]);
                 if($batch){               
                     // for the onetime payment plan

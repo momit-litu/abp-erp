@@ -659,8 +659,9 @@ class StudentPortalController extends Controller
 			foreach ($data as $row) {
 				$json[] = array('id' => $row["current_emplyment"],'label' => $row["current_emplyment"]);
 			}
+            return json_encode($json);
 		}
-		return json_encode($json);
+		
 	}
 
     public function designationAutoComplete(Request $request){
@@ -675,8 +676,9 @@ class StudentPortalController extends Controller
 			foreach ($data as $row) {
 				$json[] = array('id' => $row["current_designation"],'label' => $row["current_designation"]);
 			}
+            return json_encode($json);
 		}		
-		return json_encode($json);
+		
 	}
 
 }

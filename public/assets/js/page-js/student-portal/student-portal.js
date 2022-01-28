@@ -75,7 +75,7 @@ $(document).ready(function () {
 		$('#student-info-nav-item').addClass('active');
 		$('#save_student').css('display','block');
 		$('#enroll_student').css('display','none');
-		if(user_id != ""){
+		if(user_id != "" && $.trim(user_id) != "undefined"){
 			$.ajax({
 				url: url+'/portal/student-info/',
 				cache: false,

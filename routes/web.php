@@ -200,6 +200,8 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/batch-student',array('as'=>'Batch Student Entry' , 'action_id'=>'85', 'uses' =>'BatchController@enrollStudent'));
 	Route::post('/batch-student/delete',array('as'=>'Batch Student Delete' , 'action_id'=>'85', 'uses' =>'BatchController@removeStudent'));
 	Route::post('/batch-student/update',array('as'=>'Batch Student update' , 'action_id'=>'85', 'uses' =>'BatchController@reAddStudent'));
+	Route::post('/batch-student/dropout',array('as'=>'Batch Student dropout' , 'action_id'=>'85', 'uses' =>'BatchController@dropoutStudent'));
+
 	
 
 
@@ -268,8 +270,6 @@ Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], f
 	Route::get('/course/{id}',array('as'=>'Course Details' , 	'uses' =>'StudentPortalController@courseDetails'));
 	Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 	Route::post('/student-info',array('as'=>'Student Update','uses' =>'StudentPortalController@studentEdit'));
-	
-
 	Route::get('terms',array('as'=>'Terms Condition', 'uses' =>'StudentPortalController@terms'));
 	//Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 

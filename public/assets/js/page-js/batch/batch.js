@@ -43,7 +43,7 @@ $(document).ready(function () {
 		],
 		"columnDefs": [
             { "targets": [ 0 ],  "visible": false },
-			{ "width": "110px", "targets":[ 9 ]},
+			{ "width": "110px", "targets":[ 10 ]},
         ],
 	});
 	
@@ -424,7 +424,7 @@ $(document).ready(function () {
 								</div>
 							</div>				
 							`;
-				modalHtml +="<table id='student_table' class='table table-bordered table-sm' style='width:100% !important'> <thead><tr><th></th><th>Student No.</th><th>Enrollment ID</th><th>Full Name</th><th class='text-left'>Email</th><th class='text-center'>Contact No.</th><th class='text-center'>Status</th><th></th></tr></thead><tbody>";
+				modalHtml +="<table id='student_table' class='table table-bordered table-sm' style='width:100% !important'> <thead><tr><th></th><th>Student No.</th><th>Enrollment ID</th><th>Full Name</th><!--<th class='text-left'>Email</th>--><th class='text-center'>Contact No.</th><th class='text-center'>W.Email</th><th class='text-center'>Status</th><th></th></tr></thead><tbody>";
 
 				if(!jQuery.isEmptyObject(data['students'])){
 					$.each(data['students'], function(i,student){ 
@@ -437,16 +437,17 @@ $(document).ready(function () {
 							std_button = "<button type='button'  title='Add Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-success btn-xs add-student' ><i class='fa fa-check'></i></button>";
 							std_button += "<button type='button'  title='Remove Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove-student' ><i class='fa fa-trash-alt'></i></button>";
 						}
+						student_status += (student['pivot']['dropout'] == 'Yes')?"<button class='btn btn-xs btn-warning' disabled>Dropout</button>":"";
 
-						modalHtml 	+= "<tr><td>"+(i+1)+"</td><td>"+student['student_no']+"</td>"+"<td>"+student['pivot']['student_enrollment_id']+"</td>"+"<td>"+student['name']+"</td>"+"<td class='text-left'>"+student['email']+"</td>"+"<td class='text-left'>"+student['contact_no']+"</td>"+"<td class='text-left'>"+student_status+"<td>"+std_button+"<input type='hidden' id='student_"+student['id']+"' value="+student['id']+" /></td></tr>";
-					})
+
+						modalHtml 	+= "<tr><td>"+(i+1)+"</td><td>"+student['student_no']+"</td>"+"<td>"+student['pivot']['student_enrollment_id']+"</td>"+"<td>"+student['name']+"</td>"+"<!--<td class='text-left'>"+student['email']+"</td>-->"+"<td class='text-left'>"+student['contact_no']+"</td>"+"<td class='text-center'>"+student['pivot']['welcome_email']+"</td>"+"<td class='text-center'>"+student_status+"<td style='width:65px !important; text-align:right'>"+std_button+"<input type='hidden' id='student_"+student['id']+"' value="+student['id']+" /><button type='button'  title='Dropout Student' data-placement='bottom' class='border-0 btn-transition btn btn-warning btn-xs dropout-student' ><i class='pe-7s-attention'></i></button></td></tr>";
+					}) 
 				}
 				modalHtml += "</tbody></table>";
 				$('#myModalLabelLg').html('Student details of batch  #'+data['batch_name']+" ("+data['course']['title']+")");
 				$('#modalBodyLg').html(modalHtml);
 				$("#generic_modal_lg").modal();	
 				
-
 				$("#student_name").autocomplete({ 
 					search: function() {		
 					},
@@ -632,6 +633,57 @@ $(document).ready(function () {
 					}
 				})
 
+				$('.dropout-student').on('click',function(){
+					var id = $(this).prev('input').val();
+					var row = $(this);
+					event.preventDefault();
+					$.ajaxSetup({
+						headers:{
+							'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+						}
+					});					
+					if( $.trim($('#batch_id').val()) == "" || id == ""){
+						return false;
+					}					
+					else{
+						$.ajax({
+							url: url+"/batch-student/dropout",
+							type:'POST',
+							data:{batch_id:$('#batch_id').val(), student_id:id},
+							async:false,
+							success: function(data){
+								var response = JSON.parse(data);								
+								if(response['response_code'] == 0){
+									var errors	= response['errors'];						
+									resultHtml = '<ul>';
+									if(typeof(errors)=='string'){
+										resultHtml += '<li>'+ errors + '</li>';
+									}
+									else{
+										$.each(errors,function (k,v) {
+											resultHtml += '<li>'+ v + '</li>';
+										});
+									}
+									resultHtml += '</ul>';
+									toastr['error']( resultHtml, 'Failed!!!!');
+								}
+								else if(response['response_code'] ==1){
+									row.parent().prev('td').append("<button class='btn btn-xs btn-warning' disabled>Dropout</button>");
+									
+									toastr['success']( response['message'], 'Success!!!');
+									//$('#total_enrolled_student').html(response['total_enrolled_student']);
+								}
+								else{
+									row.parent().prev('td').find(".btn-warning").remove();
+									
+									toastr['success']( response['message'], 'Success!!!');
+									$('#total_enrolled_student').html(response['total_enrolled_student']);
+								}
+								$(window).scrollTop();
+							 }
+						});
+					}
+				})
 				
 			}
 		});

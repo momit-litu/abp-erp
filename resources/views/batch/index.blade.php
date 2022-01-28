@@ -55,8 +55,8 @@
 							<th>Enrolled Student</th>
 							<th>Pending Enrolment</th>												
 							<th class="hidden-xs">Status</th>
-							<th class="hidden-xs">Active Status</th>
-							<th class="text-center" width="80">Actions</th>
+							<th class="hidden-xs">Active?</th>
+							<th class="text-center" width="100">Actions</th>
 						</tr>
 					</thead>
 					<tbody>

@@ -81,7 +81,7 @@ var Index = function () {
 								<div class="widget-numbers mb-0 w-100">
 									<div class="widget-chart-flex">
 										<div class="fsize-4">				
-											`+(data['selfRegistered']+data['selfRegistered'])+`
+											`+(parseFloat(data['selfRegistered'])+parseFloat(data['selfRegistered']))+`
 										</div>
 										<div class="ml-auto">
 											<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">
@@ -246,11 +246,11 @@ var Index = function () {
 				series: [{
 					name: 'Registered Students',
 					type: 'column',
-					data: registered_arr //[80, 12, 30, 40, 80, 22, 70, 10, 21, 01, 40, 45]
+					data: registered_arr //[402, 12, 30, 40, 80, 22, 70, 10, 21, 01, 40, 45]
 				}, {
 					name: 'Enrolled Students',
 					type: 'line',
-					data: enrolled_arr //[75, 12, 25, 40, 80, 13, 60, 10, 21, 01, 30, 45]
+					data: enrolled_arr //[409, 12, 25, 40, 80, 13, 60, 10, 21, 01, 30, 45]
 				}],
 				stroke: {
 					width: [0, 4]
