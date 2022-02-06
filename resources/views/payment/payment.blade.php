@@ -43,7 +43,51 @@
 		</div>
 		<div class="main-card mb-3 card">
 			<div class="card-body">
-				<table class="table table-bordered table-hover payments_table" id="payments_table" style="width:100% !important">
+				<form id="collection_status_form" name="payment_collection_status_form" enctype="multipart/form-data" class="form form-horizontal form-label-left ba">
+					@csrf
+					<div class="form-row">							 
+						<div class="col-md-2">
+							<div class="position-relative form-group">
+								<label class="control-label" >From</label>
+								<input type="date" id="search_from_date" name="search_from_date" class="form-control col-lg-12" />
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="position-relative form-group">
+								<label class="control-label" >To</label>
+								<input type="date" id="search_to_date" name="search_to_date" class="form-control col-lg-12" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="position-relative form-group">
+								<label class="control-label" >Course & Batch</label>
+								<input type="text" id="search_batch_name" name="search_batch_name" class="form-control col-lg-12" />
+								<input type="hidden" id="search_batch_id" name="search_batch_id"/>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="position-relative form-group">
+								<label class="control-label" >Student</label>
+								<input type="text" id="search_student_name" name="search_student_name" class="form-control col-lg-12" />
+								<input type="hidden" id="search_student_id" name="search_student_id"/>
+							</div>
+						</div>
+
+						<div class="col-md-1">
+							<div class="position-relative form-group">
+								<label class="control-label" >&nbsp;</label>
+								<div class="col-md-8">
+									<button type="submit" id="show_batch_datatable" class="btn btn-info btn-lg">Search</button>      
+								</div>           
+							</div>								
+						</div>
+					</div>
+				</form>	
+			</div>
+		</div>
+		<div class="main-card mb-3 card">
+			<div class="card-body">
+				<table class="table table-bordered table-hover payments_table" id="payments_table" style="width:100% !important; display:none" >
 					<thead>
 						<tr> 
 							<th>ID</th>
@@ -141,21 +185,33 @@
 											</select>
 											</div>
 										</div>
-									</div>								
+									</div>	
+									<div class="form-row">							 
+										<div class="col-md-6">
+											<div class="position-relative form-group">
+												<label class="">Payment Type </label>
+												<select id="paid_type" name="paid_type" class="form-control col-lg-12">
+													<option value="Cash">Cash</option>
+													<option value="SSL">SSL</option>
+													<option value="Bkash">Bkash</option>
+													<option value="Rocket">SSRocketL</option>
+													<option value="EFT">EFT</option>
+													<option value="Others">Others</option>	
+											</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<label>Attachment</label>
+											<input type="file" class="form-control col-lg-12" name="attachment"  data-show-upload="true" data-show-caption="true" id="attachment" value="" >
+											<div id="attachment_div"></div>
+										</div>
+									</div>						
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
 												<label  class="">Details</label>
 												<input type="text" id="details" name="details" class="form-control col-lg-12" />
 											</div>
-										</div>
-									</div>
-									<div class="form-row">
-										<div class="col-md-6">
-											<label>	<strong>Attachment</strong></label>
-											<hr>
-											<input type="file" class="form-control col-lg-12" name="attachment"  data-show-upload="true" data-show-caption="true" id="attachment" value="" >
-											<div id="attachment_div"></div>
 										</div>
 									</div>
 									<hr>  						

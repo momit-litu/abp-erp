@@ -143,6 +143,8 @@ class StudentPayment extends Model
                 $studentPayment->paid_date      =  $request['paid_date'];
                 $studentPayment->payment_refference_no  =  $request['payment_refference_no'];
                 $studentPayment->receive_status         =  $request['receive_status'];
+                $studentPayment->paid_type              =  $request['paid_type'];
+                
                 $studentPayment->paid_by                =  'Admin';
                 $studentPayment->payment_received_by    =  \Auth::user()->id;
                 $studentPayment->details                =  $request['details'];

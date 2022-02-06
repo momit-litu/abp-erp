@@ -206,6 +206,41 @@ class StudentController extends Controller
         return json_encode($json);
     }
 
+    public function studentBatchAutoComplete($batchId = null)
+    {
+        $term = $_REQUEST['term']; 
+        $sql = Student::select('id','student_no', 'name', 'email')
+        ->where([
+            ['status', '=', 'Active'],
+            ['student_no', 'like', '%' . $term . '%']
+        ])
+        ->orWhere([
+            ['status', '=', 'Active'],
+            ['email', 'like', '%' . $term . '%']
+        ])
+        ->orWhere([
+            ['status', '=', 'Active'],
+            ['name', 'like', '%' . $term . '%']
+        ]);
+
+        $sql->whereHas('batches', function($query) use ($batchId){
+            $query->where('batch_id',$batchId);
+        });
+        $data = $sql->get();
+
+        $data_count = $data->count();
+        if ($data_count > 0) {
+            foreach ($data as $row) {
+                $json[] = array('id' => $row["id"], 'label' => $row["student_no"].' '.$row["name"] . " (" . $row["email"] . ")");
+            }
+        } else {
+            $json[] = array('id' => "0", 'label' => "Not Found !!!");
+        }
+        return json_encode($json);
+    }
+    
+
+
     public function createOrEdit(Request $request)
     {
         $admin_user_id = Auth::user()->id;

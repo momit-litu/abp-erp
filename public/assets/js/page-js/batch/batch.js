@@ -47,12 +47,6 @@ $(document).ready(function () {
         ],
 	});
 	
-	//autosuggest
-	$.ajaxSetup({
-		headers:{
-			'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-		}
-	});
 	
 	showCourse = function showCourse(id){
 		$.ajax({
@@ -690,8 +684,6 @@ $(document).ready(function () {
 	}
 	
 	
-	
-
 	//Edit function for Module
 	batchEdit = function batchEdit(id){
 		var edit_id = id;

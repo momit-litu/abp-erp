@@ -78,8 +78,7 @@
 							</div>								
 						</div>
 					</div>
-				</form>		
-
+				</form>	
 			</div>
 		</div>
 		<div class="main-card mb-3 card" >

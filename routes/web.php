@@ -65,6 +65,7 @@ Route::post('/course-autosuggest/{showType}',array('as'=>'Course Autosuggest lis
 Route::get('/student-course-batch-autosuggest/{id}',array('as'=>'Student Course Batch Autosuggest list', 'uses' =>'PaymentController@courseBatchList'));
 Route::post('/course-batch-autosuggest',array('as'=>'Course Batch Autosuggest list', 'uses' =>'CourseController@courseBatchAutoComplete'));
 Route::post('/batch-autosuggest/{course_id}',array('as'=>'Batch Autosuggest list', 'uses' =>'CourseController@batchAutoComplete'));
+Route::post('/student-autosuggest/{batch_id}',array('as'=>'Student Batch Autosuggest list', 'uses' =>'StudentController@studentBatchAutoComplete'));
 Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
 
 Route::post('/expense-autosuggest',array('as'=>'Expense Autosuggest list', 'uses' =>'ExpenseController@expenseAutoComplete'));
@@ -166,7 +167,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
 	//Payments
 	Route::get('/payment',array('as'=>'Payment', 'action_id'=>'86', 'uses' =>'PaymentController@index'));
-	Route::get('/payments',array('as'=>'Payment List' ,'action_id'=>'86', 'uses' =>'PaymentController@showList'));
+	Route::post('/payments',array('as'=>'Payment List' ,'action_id'=>'86', 'uses' =>'PaymentController@showList'));
 	//Route::get('/payment/{id}',array('as'=>'Payment Details' ,'action_id'=>'86', 'uses' =>'PaymentController@show'));
 	Route::post('/payment',array('as'=>'Payment Entry' , 'action_id'=>'87', 'uses' =>'PaymentController@createOrEdit'));
 	Route::get('/payment/delete/{id}',array('as'=>'Payment Delete' , 'action_id'=>'89', 'uses' =>'PaymentController@destroy'));

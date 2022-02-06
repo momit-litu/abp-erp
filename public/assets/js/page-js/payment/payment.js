@@ -8,50 +8,64 @@ $(document).ready(function () {
 		$('#entry-form').modal('show');
 	}
 
-	payment_datatable = $('#payments_table').DataTable({
-		destroy: true,
-		"order": [[ 0, 'desc' ]],
-		"processing": true,
-		"serverSide": false,
-		"ajax": url+"/payments",
-		"aoColumns": [
-			{ mData: 'id'},
-			{ mData: 'student_name'},
-			{ mData: 'course_name' },
-			{ mData: 'batch_name' ,  className: "text-center"},
-			{ mData: 'installment', className: "text-center"},
-			{ mData: 'payment_month', className: "text-center"},
-			{ mData: 'paid_date', className: "text-center"},
-			{ mData: 'payment_status', className: "text-center"},			
-			{ mData: 'paid_amount', className: "text-right"},
-			{ mData: 'actions', className: "text-left"},
-		],
-		"columnDefs": [
-            { "targets": [ 0 ],  "visible": false },
-			{ "width": "120px", "targets":[ 8 ]},
-        ],
-		"initComplete": function () {
-            this.api().columns().every( function (key) {
-				var column = this;		
-				if(/*column[0] == 2 ||*/ column[0] == 3 || column[0] == 5 ||  column[0] == 7  ){
-					var select = $('<select><option value=""></option></select>')
-						.appendTo( $(column.header()) )
-						.on( 'change', function () {
-							var val = $.fn.dataTable.util.escapeRegex(
-								$(this).val()
-							);
-							column
-								.search( val ? '^'+val+'$' : '', true, false )
-								.draw();
-						} );
-					column.data().unique().sort().each( function ( d, j ) {
-						select.append( '<option value="'+d+'">'+d+'</option>' )
-					} );
+
+	$("#show_batch_datatable").on('click',function(){
+		event.preventDefault();
+		payment_datatable = $('#payments_table').DataTable({
+			destroy: true,
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/payments",
+				"type": "POST",
+				"data" : {
+					"search_from_date": $("#search_from_date").val(),
+					"search_to_date":$("#search_to_date").val(),
+					"search_student_id":$('#search_student_id').val(),
+					"search_batch_id":$('#search_batch_id').val(),
 				}
-            } );
-        }
+			},
+			"aoColumns": [
+				{ mData: 'id'},
+				{ mData: 'student_name'},
+				{ mData: 'course_name' },
+				{ mData: 'batch_name' ,  className: "text-center"},
+				{ mData: 'installment', className: "text-center"},
+				{ mData: 'payment_month', className: "text-center"},
+				{ mData: 'paid_date', className: "text-center"},
+				{ mData: 'payment_status', className: "text-center"},			
+				{ mData: 'paid_amount', className: "text-right"},
+				{ mData: 'actions', className: "text-left"},
+			],
+			"columnDefs": [
+				{ "targets": [ 0 ],  "visible": false },
+				{ "width": "120px", "targets":[ 8 ]},
+			],
+			"initComplete": function () {
+				this.api().columns().every( function (key) {
+					var column = this;		
+					if(/*column[0] == 2 ||*/ column[0] == 3 || column[0] == 5 ||  column[0] == 7  ){
+						var select = $('<select><option value=""></option></select>')
+							.appendTo( $(column.header()) )
+							.on( 'change', function () {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
+								column
+									.search( val ? '^'+val+'$' : '', true, false )
+									.draw();
+							} );
+						column.data().unique().sort().each( function ( d, j ) {
+							select.append( '<option value="'+d+'">'+d+'</option>' )
+						} );
+					}
+				} );
+			}
+		});
+		$('#payments_table').css('display','block');
 	});
-	
+
 
 	$("#course_name").on('change',function(){
 		id = $(this).val();
@@ -75,6 +89,63 @@ $(document).ready(function () {
 		});
 	});
 
+
+	$("#search_batch_name").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/course-batch-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		minLength: 2,
+		select: function(event, ui) {
+			var id = ui.item.id;
+			$(this).next().val(id);
+		},
+	});
+	$("#search_batch_name").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
+	});
+
+	$("#search_student_name").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/student-autosuggest/'+$('#search_batch_id').val(),
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		minLength: 2,
+		select: function(event, ui) {
+			var id = ui.item.id;
+			$(this).next().val(id);
+		},
+	});
+	$("#search_student_name").on('click',function(){ 
+		$(this).val("");
+		$(this).next().val("");
+	});
+
 	getPaymentBatchCourseDetails = function getPaymentBatchCourseDetails(id){	
 		$.ajax({
 			url: url+'/student-course-batch-autosuggest/'+id,
@@ -96,7 +167,6 @@ $(document).ready(function () {
 			}
 		});
 	}
-
 	
 	$("#student_name").autocomplete({ 
 		search: function() {		
@@ -236,7 +306,7 @@ $(document).ready(function () {
 				if(data['payment_status']=="Paid")
 				{
 					var paymentStatusHtml = '<span class="badge badge-success">Paid</span> ';
-					var paidstatusHtml = (data['paid_type']=="Cash")?'<span class="badge badge-info">Cash</span> ':'<span class="badge badge-info">SSL</span> ';
+					var paidstatusHtml = '<span class="badge badge-info">'+data['paid_type']+'</span> ';
 					var statusHtml = (data['receive_status']=="Received")?'<span class="badge badge-success">Received</span> ':'<span class="badge badge-danger">Not Received</span> ';
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Invoice No :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['invoice_no']+"</div></div>";
 				}
@@ -308,6 +378,7 @@ $(document).ready(function () {
 				$("#paid_amount").val(fee);
 				$("#paid_date").val(date);
 				$("#receive_status").val(data['receive_status']);
+				$("#paid_type").val(data['paid_type']);				
 				$("#payment_refference_no").val(data['payment_refference_no']);
 				$('#attachment_div').html("<a target='_blank' href='"+payment_attachment_url+"/"+data['attachment']+"'>"+data['attachment']+"</a>");
 				$("#edit_id").val(data['id']);
