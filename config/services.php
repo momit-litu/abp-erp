@@ -30,8 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 	'smsService'=>[
-		'sms_user_id'=>env('SMS_USER_ID'),
-		'sms_user_password'=>env('SMS_USER_PASSWORD'),
+		//'sms_user_id'=>env('SMS_USER_ID'),
+		//'sms_user_password'=>env('SMS_USER_PASSWORD'),
+        'api_token'=>env('API_TOKEN'),
+        'sid'=>env('SID'),
+        'domain'=>env('DOMAIN'),
 	],	
 
 ];
