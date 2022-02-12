@@ -48,13 +48,9 @@ class SMSService
 			'accept:application/json'
 		));
 		$response = curl_exec($ch);
-		curl_close($ch);
-		dd($response);
 		return $response;
 
 		//return $this->performRequest('POST', $url, $params);
-
-
 		//return $this->performRequest('GET', "https://powersms.banglaphone.net.bd/httpapi/sendsms?userId=".$this->user_id."&password=".$this->user_password."&commaSeperatedReceiverNumbers=".$param['commaSeperatedReceiverNumbers']."&smsText=".$param['smsText']."");
 	}
 }

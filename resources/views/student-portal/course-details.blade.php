@@ -427,10 +427,30 @@
 </div>
 
 
+
+
+<button class="btn btn-success" id="bKash_button" onclick="BkashPayment()">
+    Pay with bKash
+</button>
+
+@include('student-portal.bkash-script')
+
+
 @endsection
 
 
 @section('JScript')
+
+
+<script id="myScript"
+        src="https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js"></script>
+
+{{--    This Commented Script for Live Production --}}
+{{--    <script id="myScript"--}}
+{{--            src="https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js"></script>--}}
+
+
+
     <script type="text/javascript" src="{{ asset('assets/js/page-js/student-portal/student-portal.js')}}"></script>
 @endsection
 
