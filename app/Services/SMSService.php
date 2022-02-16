@@ -6,17 +6,51 @@ use App\Traits\CallExternalAPI;
 class SMSService
 {
 	use CallExternalAPI ;
-	public $baseUri;
-	public $user_id;
-	public $user_password;
+	public $api_token;
+	public $sid;
+	public $domain;
 
 	public function __construct(){
-		$this->baseUri = "https://powersms.banglaphone.net.bd/"; 
-		$this->user_id = config('services.smsService.sms_user_id');
-		$this->user_password = config('services.smsService.sms_user_password');
+		$this->api_token 	= config('services.smsService.api_token');
+		$this->sid 			= config('services.smsService.sid');
+		$this->domain 		= config('services.smsService.domain');
 	}
 
 	function sendSMS($param){
-		return $this->performRequest('GET', "https://powersms.banglaphone.net.bd/httpapi/sendsms?userId=".$this->user_id."&password=".$this->user_password."&commaSeperatedReceiverNumbers=".$param['commaSeperatedReceiverNumbers']."&smsText=".$param['smsText']."");
+		$params = [
+			"api_token" => $this->api_token,
+			"sid" => $this->sid,
+			"msisdn" => $param['commaSeperatedReceiverNumbers'],
+			"sms" => $param['smsText']			
+		];
+
+		if(isset($param['bulk'])){
+			$params["batch_csms_id"] = rand();
+			$url = trim($this->domain, '/')."/api/v3/send-sms/bulk";
+		}
+		else{
+			$params["csms_id"] = rand();
+			$url = trim($this->domain, '/')."/api/v3/send-sms";
+		}
+
+		$params = json_encode($params);
+		//dd($params);
+		$ch = curl_init(); // Initialize cURL
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen($params),
+			'accept:application/json'
+		));
+		$response = curl_exec($ch);
+		return $response;
+
+		//return $this->performRequest('POST', $url, $params);
+		//return $this->performRequest('GET', "https://powersms.banglaphone.net.bd/httpapi/sendsms?userId=".$this->user_id."&password=".$this->user_password."&commaSeperatedReceiverNumbers=".$param['commaSeperatedReceiverNumbers']."&smsText=".$param['smsText']."");
 	}
 }

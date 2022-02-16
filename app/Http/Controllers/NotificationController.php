@@ -120,8 +120,8 @@ class NotificationController extends Controller
                         );
                        
                         $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                        if($response['isError'])
-                         $responseText .= $mobileNo." - Not Sent , ";
+                        if($response['status']=="FAILED")
+                            $responseText .= $mobileNo." - Not Sent , ";
                     }
                     $message = "SMS sent successfully. ".$responseText;
                 }
@@ -168,7 +168,7 @@ class NotificationController extends Controller
                             );
                             // echo $mobileNo.'---';
                             $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                            if($response['isError'])
+                            if($response['status']=="FAILED")
                                 $responseText .= $mobileNo." - Not Sent , ";
                         }
                         $message = "SMS sent successfully. ".$responseText;
@@ -215,7 +215,7 @@ class NotificationController extends Controller
                         );
                     
                         $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                        if($response['isError'])
+                        if($response['status']=="FAILED")
                          $responseText .= $mobileNo." - Not Sent , ";
                     }
                     $message = "SMS sent successfully. ".$responseText;
@@ -259,7 +259,7 @@ class NotificationController extends Controller
                     );
 
                     $response = json_decode($this->SMSService->sendSMS($smsParam), true);
-                    if($response['isError']) throw new Exception($response['message']);
+                    if($response['status']=="FAILED") throw new Exception($response['message']);
                     $message = "SMS sent successfully.";
                 }
 
@@ -301,7 +301,7 @@ class NotificationController extends Controller
                     'smsText'=>$request->details,
                 );
                 $response = json_decode($this->SMSService->sendSMS($smsParam), true);
-                If($response['isError']) throw new Exception($response['message']);
+                If($response['status']=="FAILED") throw new Exception($response['message']);
 				DB::commit();
 				$return['response_code']    = 1;
 				$return['message']          = "SMS sent successfully";
@@ -357,7 +357,7 @@ class NotificationController extends Controller
 			'smsText'=>$details,
 		);
 		$response = json_decode($this->SMSService->sendSMS($smsParam), true);
-		If($response['isError']) return false;
+		If($response['status']=="FAILED") return false;
 		return true;
 	}
 
