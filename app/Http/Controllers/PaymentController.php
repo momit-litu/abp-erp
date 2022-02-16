@@ -24,6 +24,7 @@ use App\Models\NotificationTemplate;
 use App\Models\StudentRevisePayment;
 use Illuminate\Support\Facades\File;
 use App\Notifications\newPaymentByStudent;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentController extends Controller
 {
@@ -309,6 +310,27 @@ class PaymentController extends Controller
         $this->invoiceEmail($id);          
 		return true;
     }
+
+
+    public function downloadInvoice($id)
+    {
+        $payment 	  = $this->studentPayment->getPaymentDetailByPaymentId($id);
+        $settings 	  = Setting::first();
+        $batchStudent = BatchStudent::with('batch','payments','batch_fee')->find($payment['student_enrollment_id']);
+       
+        $invoiceDetails['actual_fees']   = $batchStudent->batch->fees;
+        $invoiceDetails['total_payable'] = $batchStudent->total_payable;
+        $invoiceDetails['discount']      = ($invoiceDetails['actual_fees']>$invoiceDetails['total_payable'])?($invoiceDetails['actual_fees']-$invoiceDetails['total_payable']):0;
+        $invoiceDetails['total_paid']    = $batchStudent->total_paid;
+        $invoiceDetails['balance']       = $batchStudent->balance;        
+        $invoiceDetails['payments']      = $batchStudent->payments;
+		$invoice = $payment;
+		
+		
+        $pdf = PDF::loadView('payment.invoice', compact('invoice', 'settings','invoiceDetails'));
+        return $pdf->download('invoice.pdf');
+    }
+    
 
     public function emailRevisedPayment($id)
     {

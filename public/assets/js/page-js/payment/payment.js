@@ -113,6 +113,7 @@ $(document).ready(function () {
 			$(this).next().val(id);
 		},
 	});
+	
 	$("#search_batch_name").on('click',function(){ 
 		$(this).val("");
 		$(this).next().val("");
@@ -141,6 +142,7 @@ $(document).ready(function () {
 			$(this).next().val(id);
 		},
 	});
+	
 	$("#search_student_name").on('click',function(){ 
 		$(this).val("");
 		$(this).next().val("");
@@ -341,6 +343,7 @@ $(document).ready(function () {
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Attachment :</strong></div>"+"<div class='col-lg-9 col-md-8'><a target='_blank' href='"+payment_attachment_url+"/"+data['attachment']+"'>"+data['attachment']+"</a></div></div>";
 				}
 				
+				$('.download-button-lg').hide();
 				$('.email-button-lg').hide();
 				$('.print-button-lg').hide();
 				$('#myModalLabelLg').html('Installment Details');
@@ -500,6 +503,8 @@ $(document).ready(function () {
 				});
 			}
 		});
+		
+		$('.download-button-lg').hide();
 		$('.email-button-lg').hide();
 		$('.print-button-lg').hide();
 	}
