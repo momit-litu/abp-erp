@@ -14,6 +14,16 @@ use App\Mail\TestMail;
 |
 */
 
+	
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+	Artisan::call('route:clear');
+	Artisan::call('config:clear');
+	Artisan::call('view:clear');
+
+    return "Cache is cleared";
+});
+
 
 Route::get('/',array('as'=>'index', 'uses' =>'StudentPortalController@index'));
 Route::get('/index',array('as'=>'index', 'uses' =>'StudentPortalController@index'));
