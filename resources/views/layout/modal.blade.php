@@ -131,6 +131,7 @@
         </div>
       </div>
       <div class="modal-footer hidden-print">
+        <button class="btn btn-info  download-button-lg"  ><i class="fa fa-download"></i></i></span> Download</button>
         <button class="btn btn-info  email-button-lg" style="display:none"  ><i class="fa fa-envelope"></i></i></span> Email</button>
 
         <button class="btn btn-primary  print-button-lg" style="display:none"  onclick="printWindow()"><i class="pe-7s-print"></i> Print</button>

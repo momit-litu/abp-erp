@@ -81,6 +81,8 @@ Route::get('/student-installment/{id}',array('as'=>'Student Installment List', '
 Route::post('/expense-autosuggest',array('as'=>'Expense Autosuggest list', 'uses' =>'ExpenseController@expenseAutoComplete'));
 
 Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'uses' =>'PaymentController@emailInvoice'));
+Route::get('/download-invoice/{id}',array('as'=>'Payment Invoice Download' , 'uses' =>'PaymentController@downloadInvoice'));
+
 
 
 Route::post('/employement-autosuggest',array('as'=>'Employement Autosuggest list', 'uses' =>'StudentPortalController@employementAutoComplete'));

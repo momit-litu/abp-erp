@@ -33,8 +33,8 @@ class InvoiceMail extends Mailable
     public function build()
     {
        // return $this->view('view.name');
-        $settings = Setting::first();
-        $batchStudent       = BatchStudent::with('batch','payments','batch_fee')->find($this->invoice['student_enrollment_id']);
+        $settings 	  = Setting::first();
+        $batchStudent = BatchStudent::with('batch','payments','batch_fee')->find($this->invoice['student_enrollment_id']);
        
         $invoiceDetails['actual_fees']   = $batchStudent->batch->fees;
         $invoiceDetails['total_payable'] = $batchStudent->total_payable;
