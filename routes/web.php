@@ -85,7 +85,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
 	Route::get('/dashboard',array('as'=>'Dashboard' , 	'uses' =>'AdminController@index'));
 	Route::get('/dashboard-content/{period}',array('as'=>'Dashboard' , 	'uses' =>'ReportController@dashboardContent'));
-	
+
 	//my Profile
 	Route::get('/profile',array('as'=>'My Profile', 		'uses' =>'AdminController@profileIndex'));
 	Route::get('/profile/my-profile-info',array('as'=>'Get My Profile Info', 	'uses' =>'AdminController@profileInfo'));
@@ -173,9 +173,13 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	//Route::get('/payment/{id}',array('as'=>'Payment Details' ,'action_id'=>'86', 'uses' =>'PaymentController@show'));
 	Route::post('/payment',array('as'=>'Payment Entry' , 'action_id'=>'87', 'uses' =>'PaymentController@createOrEdit'));
 	Route::get('/payment/delete/{id}',array('as'=>'Payment Delete' , 'action_id'=>'89', 'uses' =>'PaymentController@destroy'));
-	
 
-	Route::get('/email/payment-revised/{id}',array('as'=>'Revised Payment Email' , 'action_id'=>'91', 'uses' =>'PaymentController@emailRevisedPayment'));
+    // Razib Create Route Book and batch
+    //Payments
+    Route::get('/books',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@index'));
+
+
+    Route::get('/email/payment-revised/{id}',array('as'=>'Revised Payment Email' , 'action_id'=>'91', 'uses' =>'PaymentController@emailRevisedPayment'));
 
 	//Payment Schedule
 	Route::get('/payment-schedule',array('as'=>'Payment Schedule', 'action_id'=>'90', 'uses' =>'PaymentController@scheduleIndex'));
@@ -192,7 +196,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
 
 	//Notifications
-	//SMS	
+	//SMS
 	Route::post('/sms/due-payment',array('as'=>'Send SMS' , 'action_id'=>'94', 'uses' =>'NotificationController@sendPaymentDueSMS'));
 	Route::get('/sms/send',array('as'=>'Send SMS' , 'action_id'=>'96', 'uses' =>'NotificationController@sendSMSIndex'));
 	Route::post('/sms/send',array('as'=>'Send SMS' , 'action_id'=>'96', 'uses' =>'NotificationController@sendSMS'));
@@ -205,7 +209,7 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/batch-student/update',array('as'=>'Batch Student update' , 'action_id'=>'85', 'uses' =>'BatchController@reAddStudent'));
 	Route::post('/batch-student/dropout',array('as'=>'Batch Student dropout' , 'action_id'=>'85', 'uses' =>'BatchController@dropoutStudent'));
 
-	
+
 
 
 	//students
@@ -240,11 +244,11 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
 	// Reports
 	Route::get('course-report',array('as'=>'Course Report' , 'action_id'=>'97', 'uses' =>'ReportController@courseReport'));
-	Route::post('course-report',array('as'=>'Course Report' , 'action_id'=>'97', 'uses' =>'ReportController@courseReportList')); 
+	Route::post('course-report',array('as'=>'Course Report' , 'action_id'=>'97', 'uses' =>'ReportController@courseReportList'));
 
 	Route::get('batch-report',array('as'=>'Batch Report' , 'action_id'=>'98', 'uses' =>'ReportController@batchReport'));
 	Route::post('batch-report',array('as'=>'Batch Report' , 'action_id'=>'98', 'uses' =>'ReportController@batchReportList'));
-	
+
 	Route::get('student-report',array('as'=>'Student Report' , 'action_id'=>'99', 'uses' =>'ReportController@studentReport'));
 	Route::post('student-report',array('as'=>'Student Report' , 'action_id'=>'99', 'uses' =>'ReportController@studentReportList'));
 
@@ -276,8 +280,8 @@ Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], f
 	Route::get('terms',array('as'=>'Terms Condition', 'uses' =>'StudentPortalController@terms'));
 	//Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 
-	Route::group(['middleware' => ['auth','prevent-back-history']], function () {		
-	
+	Route::group(['middleware' => ['auth','prevent-back-history']], function () {
+
 		Route::get('/',array('as'=>'Dashboard' , 			'uses' =>'StudentPortalController@index'));
 		Route::get('/dashboard',array('as'=>'Dashboard' , 	'uses' =>'StudentPortalController@index'));
 		Route::get('auth/logout/{email}',array('as'=>'Logout' , 'uses' =>'AuthController@authLogout'));
@@ -287,16 +291,16 @@ Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], f
 
 		//Payment
 		Route::post('/sslcommerz/pay-via-ajax',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@payViaAjax'));
-	
+
 
 		Route::get('/payments/{type}',array('as'=>'Payment List' , 	'uses' =>'StudentPortalController@showPaymentList'));
 
 		Route::post('/payment/revise',array('as'=>'Revise Payment' , 	'uses' =>'StudentPortalController@savePaymentRevise'));
 		Route::get('/checkout/{id}',array('as'=>'Payment Checkout', 'uses' =>'StudentPortalController@checkoutShow'));
-		
+
 		Route::get('/student-info',array('as'=>'Student Details' , 'uses' =>'StudentPortalController@studentShow'));
-		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));	
-		
+		Route::post('/student-enroll',array('as'=>'Student Enroll','uses' =>'StudentPortalController@studentEnroll'));
+
 	});
 });
 

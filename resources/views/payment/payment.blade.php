@@ -45,7 +45,7 @@
 			<div class="card-body">
 				<form id="collection_status_form" name="payment_collection_status_form" enctype="multipart/form-data" class="form form-horizontal form-label-left ba">
 					@csrf
-					<div class="form-row">							 
+					<div class="form-row">
 						<div class="col-md-2">
 							<div class="position-relative form-group">
 								<label class="control-label" >From</label>
@@ -77,29 +77,29 @@
 							<div class="position-relative form-group">
 								<label class="control-label" >&nbsp;</label>
 								<div class="col-md-8">
-									<button type="submit" id="show_batch_datatable" class="btn btn-info btn-lg">Search</button>      
-								</div>           
-							</div>								
+									<button type="submit" id="show_batch_datatable" class="btn btn-info btn-lg">Search</button>
+								</div>
+							</div>
 						</div>
 					</div>
-				</form>	
+				</form>
 			</div>
 		</div>
 		<div class="main-card mb-3 card">
 			<div class="card-body">
 				<table class="table table-bordered table-hover payments_table" id="payments_table" style="width:100% !important; display:none" >
 					<thead>
-						<tr> 
+						<tr>
 							<th>ID</th>
 							<th>Student Name</th>
-							<th>Course Title</th>	
-							<th>Batch</th>	
+							<th>Course Title</th>
+							<th>Batch</th>
 							<th>Installment</th>
-							<th>Payment Month</th>												
+							<th>Payment Month</th>
 							<th>Payment Date </th>
 							<th>Type</th>
-							<th>Amount</th>	
-							<th>Actions</th>								
+							<th>Amount</th>
+							<th>Actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -109,7 +109,7 @@
 		</div>
 	</div>
 </div>
-  
+
 </div>
 <div class="modal fade" id="entry-form" >
 	<div class="modal-dialog modal-lg">
@@ -135,27 +135,27 @@
 												<input type="text" id="student_name" required name="student_name" class="form-control col-lg-12" />
 												<input type="hidden" id="student_id" required name="student_id"  />
 											</div>
-										</div>										
-									</div> 
+										</div>
+									</div>
 									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label  >Course & Batch<span class="required">*</span></label>
 												<select id="course_name" required name="course_name" class="form-control col-lg-12">
-													
+
 												</select>
-												
+
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label>Installment<span class="required">*</span></label>
-												<select id="installment_no" required name="installment_no" class="form-control col-lg-12">								
-												</select>												
+												<select id="installment_no" required name="installment_no" class="form-control col-lg-12">
+												</select>
 											</div>
 										</div>
-									</div>	
-									<div class="form-row">							
+									</div>
+									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label for="" class="">Amount<span class="required">*</span></label>
@@ -168,8 +168,8 @@
 												<input type="date" id="paid_date" name="paid_date" class="form-control col-lg-12 datepicker" required />
 											</div>
 										</div>
-									</div>	 
-									<div class="form-row">							 
+									</div>
+									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">Reference Number</label>
@@ -181,12 +181,12 @@
 												<label class="">Payment Status </label>
 												<select id="receive_status" name="receive_status" class="form-control col-lg-12">
 													<option value="Received">Received</option>
-													<option value="Not Received">Not Received</option>	
+													<option value="Not Received">Not Received</option>
 											</select>
 											</div>
 										</div>
-									</div>	
-									<div class="form-row">							 
+									</div>
+									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label class="">Payment Type </label>
@@ -196,7 +196,7 @@
 													<option value="Bkash">Bkash</option>
 													<option value="Rocket">SSRocketL</option>
 													<option value="EFT">EFT</option>
-													<option value="Others">Others</option>	
+													<option value="Others">Others</option>
 											</select>
 											</div>
 										</div>
@@ -205,7 +205,7 @@
 											<input type="file" class="form-control col-lg-12" name="attachment"  data-show-upload="true" data-show-caption="true" id="attachment" value="" >
 											<div id="attachment_div"></div>
 										</div>
-									</div>						
+									</div>
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
@@ -214,8 +214,8 @@
 											</div>
 										</div>
 									</div>
-									<hr>  						
-								</div>							
+									<hr>
+								</div>
 							</div>
 							<div class="form-group">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -244,7 +244,7 @@
 </div>
 
 @endsection
-@section('JScript')	
+@section('JScript')
 <script type="text/javascript" src="{{ asset('assets/js/page-js/payment/payment.js')}}"></script>
 @endsection
 

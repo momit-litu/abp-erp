@@ -14,7 +14,10 @@ class CreateBatchBooksTable extends Migration
     public function up()
     {
         Schema::create('batch_books', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->foreignId('batch_id');
+            $table->string('book_no');
+            $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });
     }
