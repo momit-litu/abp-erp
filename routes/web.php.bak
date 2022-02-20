@@ -208,11 +208,11 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/sms/send',array('as'=>'Send SMS' , 'action_id'=>'96', 'uses' =>'NotificationController@sendSMS'));
 
 	//Notification Templates
-	Route::get('/template',array('as'=>'Template', 'action_id'=>'117', 'uses' =>'TemplateController@index'));
-	Route::get('/templates',array('as'=>'Template List' ,'action_id'=>'117', 'uses' =>'TemplateController@showList'));
-	Route::get('/template/{id}',array('as'=>'Template Details' ,'action_id'=>'117', 'uses' =>'TemplateController@show'));
-	Route::post('/template',array('as'=>'Template Entry' , 'action_id'=>'117', 'uses' =>'TemplateController@createOrEdit'));
-	Route::get('/template/delete/{id}',array('as'=>'Template Delete' , 'action_id'=>'117', 'uses' =>'TemplateController@destroy'));
+	Route::get('/template',array('as'=>'Template', 'action_id'=>'96', 'uses' =>'TemplateController@index'));
+	Route::get('/templates',array('as'=>'Template List' ,'action_id'=>'96', 'uses' =>'TemplateController@showList'));
+	Route::get('/template/{id}',array('as'=>'Template Details' ,'action_id'=>'96', 'uses' =>'TemplateController@show'));
+	Route::post('/template',array('as'=>'Template Entry' , 'action_id'=>'96', 'uses' =>'TemplateController@createOrEdit'));
+	Route::get('/template/delete/{id}',array('as'=>'Template Delete' , 'action_id'=>'96', 'uses' =>'TemplateController@destroy'));
 	
 
 

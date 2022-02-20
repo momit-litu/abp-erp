@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class NotificationTemplate extends Model
 {
     protected $fillable= [
-        'id', 'title', 'details','type','placeholders','category','status'
+        'id', 'title', 'details','type','placeholders','category'
     ];
 
 
