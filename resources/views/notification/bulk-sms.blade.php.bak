@@ -97,17 +97,17 @@
 									<label for="" class="">Dont Send To</label> 
 									<div class="position-relative form-check">							
 										<label class="form-check-label">
-											<input type="checkbox" class="form-check-input" name="dont_send_dropout" value="1" > Dropout
+											<input type="checkbox" class="form-check-input" name="dont_send_dropout" value="" > Dropout
 										</label>
 									</div>
 									<div class="position-relative form-check">
 										<label class="form-check-label">
-											<input type="checkbox" class="form-check-input" name="dont_send_disabled" value="1" > Temporary Disabled
+											<input type="checkbox" class="form-check-input" name="dont_send_disabled" value="" > Temporary Disabled
 										</label>
 									</div>
 									<div class="position-relative form-check">
 										<label class="form-check-label">
-											<input type="checkbox" class="form-check-input" name="dont_send_selective" value="1" > Selective Student?
+											<input type="checkbox" class="form-check-input" name="dont_send_selective" value="" > Selective Student?
 										</label>									
 									</div>
 									<br>

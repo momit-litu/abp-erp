@@ -264,6 +264,7 @@ class NotificationController extends Controller
                     else 
                         $studentCondition .= " AND registration_completed ='Yes' ";
                     
+
                     if($request->all_student_type == 'enrolled'){
 						$studentCondition .= " AND type ='Enrolled' ";  						
 						if(isset($request->dont_send_disabled))

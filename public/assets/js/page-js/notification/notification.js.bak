@@ -151,7 +151,6 @@ $(document).ready(function () {
 	//Clear form
 	$("#clear_button").on('click',function(){		
 		$('#selected_receipants').html("");
-		$('#do_not_send_div').css('display','none');
 		clear_form();
 	});
 });
