@@ -9,7 +9,7 @@ $(document).ready(function () {
 	}
 
 
-	$("#show_batch_datatable").on('click',function(){
+	$("#show_batch_datatable").on('click',function(event){
 		event.preventDefault();
 		payment_datatable = $('#payments_table').DataTable({
 			destroy: true,
@@ -218,6 +218,12 @@ $(document).ready(function () {
 			var id = ui.item.id;
 			$(this).next().val(id);
 		},
+	});
+
+	
+	$("#receive_status").on('change',function(){ 
+		$('#paid_date').val(Date('m'));
+		$("#paid_date").datepicker('setDate', new Date());
 	});
 
 	//Entry And Update Function For Module
@@ -551,16 +557,31 @@ $(document).ready(function () {
 	}
 
 	emailRevisedPayment = function emailRevisedPayment(id){
-		$.ajax({
-			url: url+'/email/payment-revised/'+id,
-			cache: false,
-			success: function(response){
-				if(response){
-					toastr['success']( 'Email Sent successfully', 'Success!!!');
-				}
-				else{					
-					toastr['error']('Email not sent', 'Faild!!!');
-				}
+		swal({
+			title: "Are you sure?",
+			text: "You wants to send revised payment email?!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		}).then((willDelete) => {
+			if (willDelete) {
+				$.ajax({
+					url: url+'/email/payment-revised/'+id,
+					cache: false,
+					success: function(response){
+						if(response){
+							toastr['success']( 'Email Sent successfully', 'Success!!!');
+						}
+						else{					
+							toastr['error']('Email not sent', 'Faild!!!');
+						}
+					}
+				});
+			}
+			else {
+				swal("Your Data is safe..!", {
+				icon: "warning",
+				});
 			}
 		});
 	}
@@ -615,7 +636,7 @@ $(document).ready(function () {
 						else
 							batch_status = " <button class='btn btn-xs btn-info' disabled>Upcoming</button>";
 						
-						feeHtml = (batch_student['batch']['fees'] == batch_student['batch']['discounted_fees'])?`<span><b class="text-dark">`+batch_student['batch']['discounted_fees']+`</b></span>`:`<span class="pr-2"><b class="text-danger"><del>`+batch_student['batch']['fees']+`</del></b></span><span><b class="text-dark">`+batch_student['batch']['discounted_fees']+`</b></span>`;
+						feeHtml = (batch_student['batch']['fees'] > batch_student['batch']['discounted_fees'])?`<div class="widget-subheading opacity-10">Onetime Payment Fees: `+batch_student['batch']['discounted_fees']+`</div>`:'';
 	
 						tab_content += `
 						<div class="tab-pane `+active+`" id="tab-`+batch_student['id']+`" role="tabpanel">
@@ -627,11 +648,11 @@ $(document).ready(function () {
 												<div class="widget-content p-0">
 													<div class="widget-content-wrapper">					
 														<div class="widget-content-left">
-															<div class="widget-heading text-dark opacity-7"><h5>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h5></div>							
+															<div class="widget-heading text-dark opacity-7"><h5>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h5></div>		<div class="widget-heading text-dark opacity-7">`+$('#payment_student_name').val()+`</div>				
 															<div class="widget-heading text-dark opacity-7">Batch `+batch_student['batch']['batch_name']+batch_status+`</div>
 															<div class="widget-heading text-dark opacity-7">Enrollment ID : `+batch_student['student_enrollment_id']+`</div>
-															<div class="widget-subheading opacity-10">Course Fee: `+feeHtml+`</div>
-														</div>												
+															<div class="widget-subheading opacity-10">Total Fees: `+batch_student['batch']['fees']+`</div>`+feeHtml+`
+														</div>										
 													</div>
 												</div>
 											</li>

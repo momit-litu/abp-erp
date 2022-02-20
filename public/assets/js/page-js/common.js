@@ -20,13 +20,6 @@ $.ajaxSetup({
 });
 
 
-$('.form').iCheck({
-	checkboxClass: 'icheckbox_flat-green',
-	radioClass	: 'iradio_flat-green'
-});
-
-
-
 $('.modal').on('hide.bs.modal', function (e) {
 	clear_form();
   })

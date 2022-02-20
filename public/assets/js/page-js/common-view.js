@@ -169,7 +169,8 @@ emailInvoice = function emailInvoice(id){
 //download invoice
 
 downloadInvoice = function downloadInvoice(id){
-    window.location.href=url+'/download-invoice/'+id;
+    window.open(url+'/download-invoice/'+id, '_blank');
+    //window.location.href= url+'/download-invoice/'+id;
 	
 	/*$.ajax({
         url: url+'/download-invoice/'+id,

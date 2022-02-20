@@ -57,8 +57,9 @@
 							  <tr>
 								<td width="50%" class="purchase_item" style="font-size:12px"><span class="f-fallback">{{$invoice['only_course_name']}}</span><br>Batch : {{$invoice['batch_name']}}<br>Enrollment ID : {{$invoice['batch_student_enrollment_id']}}</td>
 								<td width="20%" align="right" class="purchase_item" style="font-size:12px"><span class="f-fallback">৳{{$invoiceDetails['actual_fees']}}</span></td>
-								<td class="align-right" width="20%" class="purchase_item" style="font-size:12px"><span class="f-fallback">৳ {{$invoiceDetails['actual_fees']}}</span></td>
-							  </tr> 
+								
+								<td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">৳ {{$invoiceDetails['total_payable']}}</span></td>
+							</tr>
 							  @if($invoiceDetails['discount']>0)
 								<tr>
 								  <td width="50%" class="" style="font-size:12px"><span class="f-fallback">Discount</span></td>

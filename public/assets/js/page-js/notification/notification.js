@@ -73,6 +73,13 @@ $(document).ready(function () {
 			$(this).val("");
 		},
 	});
+
+	$("#all_student_type").on('change',function(){
+		$('#message_body').val($('#sms_template_div_'+$(this).find('option:selected').attr('id')).html());	
+	});
+
+
+	
 	$("#sms_student_name").on('click',function(){
 		$(this).val("");
 	});

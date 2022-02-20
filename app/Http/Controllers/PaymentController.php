@@ -55,24 +55,61 @@ class PaymentController extends Controller
 		return view('payment.payment',$data);
     }
 
-	public function showList(){
+	public function showList(Request $request){
+
+        //, $to_date, $batch_id, $student_id) = $request->all();
+        $search_student_id  = $request->search_student_id;
+        $search_batch_id    = $request->search_batch_id;
+       // echo $from_date;die;
 		$admin_user_id 		= Auth::user()->id;
 		$edit_action_id 	= 88; // Batch edit
 		$delete_action_id 	= 89; // Batch delete
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
+      //  $batchId            = ($request->search_batch_id)
+	   $paymentsSql = StudentPayment::with('enrollment','enrollment.batch.course');
+        /*->when($search_batch_id, function($q) use ($search_batch_id){
+            $q->where('enrollment.batch_id', $search_batch_id);
+        })
+        ->when($from_date, function($q) use ($from_date){
+            $q->where('last_payment_date', '>=',$from_date);
+        })   */  
 
-	   $payments = StudentPayment::with('enrollment','enrollment.student', 'enrollment.batch','enrollment.batch.course')
-							->orderBy('created_at','desc')
-							->get();
+
+        if($request->search_student_id != "")  {
+            $search_student_id = $request->search_student_id;
+            $paymentsSql->whereHas('enrollment.student', function($query) use ($search_student_id){
+                $query->where('id',$search_student_id);
+            });
+        }
+        else
+            $paymentsSql->with('enrollment.student');
+
+        if($request->search_batch_id != "") {
+            $search_batch_id = $request->search_batch_id;
+            $paymentsSql->whereHas('enrollment.batch', function($query) use ($search_batch_id){
+                $query->where('id',$search_batch_id);
+            });
+        }
+        else
+            $paymentsSql->with('enrollment.batch');
+
+
+                            
+        if($request->search_from_date != "")
+            $paymentsSql->where('last_payment_date','>=',$request->search_from_date);
+        if($request->search_to_date != "")
+            $paymentsSql->where('last_payment_date','<=',$request->search_to_date);
+
+		$payments   =	$paymentsSql->orderBy('last_payment_date','desc')->get();
 		//dd($payments);	
         $return_arr = array();
         foreach($payments as $payment){
             $data['id'] 		    = $payment->id;            
 			$data['student_name']   =  "<a href='javascript:void(0)' onclick='studentView(".$payment->enrollment->student->id.")' />".$payment->enrollment->student->student_no.'-'.$payment->enrollment->student->name.' ('.$payment->enrollment->student->email.")</a>"; 
             $data['course_name']    = "<a href='javascript:void(0)' onclick='batchView(".$payment->enrollment->batch->id.")' />".$payment->enrollment->batch->course->title.' <br> ('.$payment->enrollment->batch->course->short_name.")</a>";
-            $data['batch_name']      = $payment->enrollment->batch->batch_name; 
-            $data['installment']      = $payment->installment_no; 
+            $data['batch_name']     = $payment->enrollment->batch->batch_name; 
+            $data['installment']    = $payment->installment_no; 
             $data['payment_month']  = ($payment->paid_date==null)?date('M y', strToTime($payment->last_payment_date)):date('M y', strToTime($payment->paid_date)); 
             $data['paid_date']      = $payment->paid_date; 
 			$data['payment_status'] = ($payment->payment_status=='Paid')?$payment->payment_status:"Due";

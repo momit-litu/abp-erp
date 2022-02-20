@@ -122,11 +122,11 @@ class StudentPayment extends Model
             }
 
             $rule = [
-                'student_id' 	=> 'required|string',
+                'student_id'  	=> 'required|string',
                 'course_name'   => 'required', 
                 'installment_no'=> 'required',
                 'paid_amount'   => 'required|numeric',
-                'paid_date' 	=> 'required',
+                'paid_date' 	  => 'required',
             ];
             $validation = \Validator::make($request, $rule);
 
@@ -154,7 +154,7 @@ class StudentPayment extends Model
                   if($studentPayment->enrollment->status == 'Inactive'){
                     $enrollment             = BatchStudent::with('batch', 'batch.course')->find($studentPayment->enrollment->id);
                     $enrollment->status     = "Active";
-                    $lastEnrollmentIdSQL       = BatchStudent::where('batch_id', $enrollment->batch_id)
+                    $lastEnrollmentIdSQL    = BatchStudent::where('batch_id', $enrollment->batch_id)
                                             ->where('student_enrollment_id','!=','')->orderBy('created_at', 'desc')->first();
                     $lastEnrollmentId = (!empty($lastEnrollmentIdSQL))?$lastEnrollmentIdSQL->student_enrollment_id:0;
                     $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);

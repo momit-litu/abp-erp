@@ -91,7 +91,28 @@
 										</select>
 									</div>
 								</div>
-							</div>												
+							</div>	
+							<div class="form-row">							
+								<div class="col-md-12">
+									<label for="" class="">Dont Send To</label>
+									<div class="position-relative form-check">										
+										<label class="form-check-label">
+											<input type="checkbox" class="form-check-input" name="dont_send[]" value="" > Dropout
+										</label>
+									</div>
+									<div class="position-relative form-check">
+										<label class="form-check-label">
+											<input type="checkbox" class="form-check-input" name="dont_send[]" value="" > Temporary Disabled
+										</label>
+									</div>
+									<div class="position-relative form-check">
+										<label class="form-check-label">
+											<input type="checkbox" class="form-check-input" name="dont_send[]" value="" > Selective Student?
+										</label>									
+									</div>
+									<br>
+								</div>
+							</div>											
 							<div class="form-row">		
 								<div class="col-md-12">
 									<div class="position-relative form-group">
