@@ -33,52 +33,51 @@
                             </div>
                         </div>
                     </div>
-                    <div class="page-title-actions">
-                        <button type="button" onclick='paymentAdd()' title="Add New Payment" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary">
-                            <i class="fa fa-plus"></i>
-                            Add New Payment
-                        </button>
-                    </div>
                 </div>
             </div>
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form id="collection_status_form" name="payment_collection_status_form" enctype="multipart/form-data" class="form form-horizontal form-label-left ba">
-                        @csrf
-                        <div class="form-row">
-                            <div class="col-md-4">
-                                <div class="position-relative form-group">
-                                    <label class="control-label" >Course & Batch</label>
-                                    <input type="text" id="search_batch_name" name="search_batch_name" class="form-control col-lg-12" />
-                                    <input type="hidden" id="search_batch_id" name="search_batch_id"/>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="position-relative form-group">
-                                    <label class="control-label" >Student</label>
-                                    <input type="text" id="search_student_name" name="search_student_name" class="form-control col-lg-12" />
-                                    <input type="hidden" id="search_student_id" name="search_student_id"/>
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <form id="collection_status_form" name="payment_collection_status_form" enctype="multipart/form-data" class="form form-horizontal form-label-left ba">
+                                @csrf
+                                <div class="form-row">
+                                    <div class="col-md-4">
+                                        <div class="position-relative form-group">
+                                            <label class="control-label" >Course</label>
+                                            <input type="text" id="course_name" name="course_name" class="form-control col-lg-12" />
+                                            <input type="hidden" id="search_batch_id" name="search_batch_id"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <label class="control-label" >Batch</label>
+                                            <input type="text" id="search_student_name" name="search_student_name" class="form-control col-lg-12" />
+                                            <input type="hidden" id="search_student_id" name="search_student_id"/>
+                                        </div>
+                                    </div>
 
-                            <div class="col-md-1">
-                                <div class="position-relative form-group">
-                                    <label class="control-label" >&nbsp;</label>
-                                    <div class="col-md-8">
-                                        <button type="submit" id="show_batch_datatable" class="btn btn-info btn-lg">Search</button>
+                                    <div class="col-md-1">
+                                        <div class="position-relative form-group">
+                                            <label class="control-label" >&nbsp;</label>
+                                            <div class="col-md-8">
+                                                <button type="submit" id="show_batch_datatable" class="btn btn-info btn-lg">Search</button>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="position-relative form-group">
-                                    <label class="control-label" >&nbsp;</label>
-                                    <div class="col-md-12">
-                                        <button type="submit" id="show_batch_datatable" class="btn btn-primary btn-lg">Add Book </button>
-                                    </div>
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="position-relative form-group">
+                                <label class="control-label" >&nbsp;</label>
+                                <div class="col-md-12">
+                                    <button type="submit" id="show_batch_datatable" onclick='bookAdd()' class="btn btn-primary btn-lg">Add Book </button>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
             <div class="main-card mb-3 card">
@@ -104,14 +103,12 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    </div>
+    </div></div>
     <div class="modal fade" id="entry-form" >
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="form-title"><i class="fa fa-plus"></i> Add  New Payment</h5>
+                    <h5 class="modal-title" id="form-title"><i class="fa fa-plus"></i> Add  New Book </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -119,98 +116,47 @@
                 <div class="modal-body">
                     <div class="main-card mb-3 card">
                         <div class="card-body">
-                            <form id="payment_form" autocomplete="off" name="payment_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
+                            <form id="book_form" autocomplete="off" name="book_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
                                 @csrf
                                 <input type="hidden" name="edit_id" id="edit_id">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <div class="position-relative form-group">
-                                                    <label class="">Student Name <span class="required">*</span></label>
-                                                    <input type="text" id="student_name" required name="student_name" class="form-control col-lg-12" />
-                                                    <input type="hidden" id="student_id" required name="student_id"  />
+                                                    <label class="">Book Name <span class="required">*</span></label>
+                                                    <input type="text" id="book_name" required name="book_name" class="form-control col-lg-12" />
+                                                    <input type="hidden" id="batch_id" required name="batch_id"  />
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label  >Course & Batch<span class="required">*</span></label>
-                                                    <select id="course_name" required name="course_name" class="form-control col-lg-12">
-
-                                                    </select>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label>Installment<span class="required">*</span></label>
-                                                    <select id="installment_no" required name="installment_no" class="form-control col-lg-12">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="" class="">Amount<span class="required">*</span></label>
-                                                    <input type="text" id="paid_amount" readonly required name="paid_amount"  class="form-control col-lg-12"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label  >Payment Date<span class="required">*</span></label>
-                                                    <input type="date" id="paid_date" name="paid_date" class="form-control col-lg-12 datepicker" required />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="company_name" class="">Reference Number</label>
-                                                    <input type="text" id="payment_refference_no" required name="payment_refference_no"  class="form-control col-lg-12"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label class="">Payment Status </label>
-                                                    <select id="receive_status" name="receive_status" class="form-control col-lg-12">
-                                                        <option value="Received">Received</option>
-                                                        <option value="Not Received">Not Received</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label class="">Payment Type </label>
-                                                    <select id="paid_type" name="paid_type" class="form-control col-lg-12">
-                                                        <option value="Cash">Cash</option>
-                                                        <option value="SSL">SSL</option>
-                                                        <option value="Bkash">Bkash</option>
-                                                        <option value="Rocket">SSRocketL</option>
-                                                        <option value="EFT">EFT</option>
-                                                        <option value="Others">Others</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label>Attachment</label>
-                                                <input type="file" class="form-control col-lg-12" name="attachment"  data-show-upload="true" data-show-caption="true" id="attachment" value="" >
-                                                <div id="attachment_div"></div>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <div class="position-relative form-group">
-                                                    <label  class="">Details</label>
-                                                    <input type="text" id="details" name="details" class="form-control col-lg-12" />
+                                                    <label for="company_name" class="">Active?</label>
+                                                    <input type="checkbox" id="status" name="status" checked="checked" value="1" class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                @if($actions['add_permisiion']>0)
+                                                    <button type="submit" id="save_book" class="btn btn-success  btn-lg">Save</button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th>Book Name</th>
+                                                <th>Status</th>
+                                            </tr>
+                                            <tr>
+                                                <td>Book Name</td>
+                                                <td>Active</td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -225,9 +171,7 @@
                 <div class="modal-footer">
                     <div class="col-md-12" style="display: flex; flex-direction: row;">
                         <div class="col-md-3 text-left">
-                            @if($actions['add_permisiion']>0)
-                                <button type="submit" id="save_payment" class="btn btn-success  btn-lg btn-block">Save</button>
-                            @endif
+
                         </div>
                         <div class="col-md-9 text-right">
                             <button type="button" id="clear_button" class="btn btn-warning">Clear</button>
@@ -238,10 +182,9 @@
             </div>
         </div>
     </div>
-
 @endsection
 @section('JScript')
-    <script type="text/javascript" src="{{ asset('assets/js/page-js/payment/payment.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/page-js/book/book.js')}}"></script>
 @endsection
 
 

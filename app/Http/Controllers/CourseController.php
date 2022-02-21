@@ -23,13 +23,13 @@ class CourseController extends Controller
         $description = \Request::route()->getAction();
         $this->page_desc = isset($description['desc']) ? $description['desc'] : $this->page_title;
     }
-	
+
     public function index()
     {
         $data['page_title'] 	= $this->page_title;
 		$data['module_name']	= "Courses";
 		$data['sub_module']		= "Courses";
-		
+
 		$data['levels'] 		=Level::all();
 		// action permissions
         $admin_user_id  		= Auth::user()->id;
@@ -50,14 +50,14 @@ class CourseController extends Controller
 	   $courses = Course::with('units')->with('level')
 							->orderBy('created_at','desc')
 							->get();
-				
+
         $return_arr = array();
         foreach($courses as $course){
 			$totalGlh =0;
 			foreach($course->units as $unit){
 				$totalGlh += $unit['glh'];
 			}
-			
+
             $data['status'] 	= ($course->status == 'Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
             $data['id'] 		= $course->id;
 			$data['code'] 		= $course->code;
@@ -67,12 +67,12 @@ class CourseController extends Controller
 			$data['level'] 		= $course->level->name;
 			$data['glh'] 		= $totalGlh;
 			$data['noOfUnits'] 	= count($course->units);
-			
+
 			$data['actions'] =" <button title='View' onclick='courseView(".$course->id.")' id='view_" . $course->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
 		   if($edit_permisiion>0){
                 $data['actions'] .="<button title='Edit' onclick='courseEdit(".$course->id.")' id=edit_" . $course->id . "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
             }
-			
+
 			$data['actions'] 	.=" <button title='Batch' onclick='courseBatch(".$course->id.")' id=batch" . $course->id . " class='btn btn-xs btn-hover-shine  btn-warning' ><i class='fa pe-7s-menu'></i></button>";
 
             if ($delete_permisiion>0) {
@@ -84,19 +84,18 @@ class CourseController extends Controller
         return json_encode(array('data'=>$return_arr));
 	}
 
-	
 	public function showBatchList($id){
 	   $batches = Batch::where('course_id',$id)
 							->orderBy('created_at','desc')
 							->get();
-		//dd($batches);		
+		//dd($batches);
         $return_arr = array();
         foreach($batches as $batch){
 			if($batch->running_status == 'Completed')
 				$data['running_status'] 	= "<button class='btn btn-xs btn-primary' disabled>Completed</button>";
-			else if($batch->running_status == 'Running')    
+			else if($batch->running_status == 'Running')
 				$data['running_status'] 	= "<button class='btn btn-xs btn-success' disabled>Running</button>";
-			else if($batch->running_status == 'Upcoming')    
+			else if($batch->running_status == 'Upcoming')
 				$data['running_status'] 	=  "<button class='btn btn-xs btn-info' disabled>Upcoming</button>";
 
 			$data['batch_name'] 	= $batch->batch_name;
@@ -129,7 +128,7 @@ class CourseController extends Controller
 
     public function show($id)
     {
-		if($id=="") return 0;		
+		if($id=="") return 0;
         $course = Course::with('units', 'level')->findOrFail($id);
 		return json_encode(array('course'=>$course));
     }
@@ -138,13 +137,13 @@ class CourseController extends Controller
     {
         if($id==""){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
-		}			
+		}
 		$course = Course::with('batches')->findOrFail($id);
 		$is_deletable = (count($course->batches)==0)?1:0; // 1:deletabe, 0:not-deletable
 		if(empty($course)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Course found"));
 		}
-		try {			
+		try {
 			DB::beginTransaction();
 			if($is_deletable){
 				CourseUnit::where('course_id', $course->id)->delete();
@@ -158,23 +157,23 @@ class CourseController extends Controller
 			}
 			DB::commit();
 			$return['response_code'] = 1;
-			
+
 			return json_encode($return);
 
-        } 
+        }
 		catch (\Exception $e){
 			DB::rollback();
 			$return['response_code'] 	= 0;
 			$return['message'] = "Failed to delete !".$e->getMessage();
 			return json_encode($return);
 		}
-		
+
     }
-	
+
 	public function courseAutoComplete(Request $request, $showtype){
 		$term = $_REQUEST['term'];
 		$user = Auth::user();
-		if($showtype =='Student'){			
+		if($showtype =='Student'){
 			$studentCourses = Student::with(['Courses'=>function($c) use ($term){
 				$c->where([
                     ['Courses.status', '=', 'Active'],
@@ -207,9 +206,9 @@ class CourseController extends Controller
 		}
 					//dd($json);
 		return json_encode($json);
-		
+
 	}
-	
+
     public function courseBatchAutoComplete(){
    		$term = $_REQUEST['term'];
 
@@ -224,9 +223,9 @@ class CourseController extends Controller
 			]);
 		})->get();
 
-		
+
 		$data_count = $data->count();
-		
+
 		if($data_count>0){
 			foreach ($data as $row) {
 				$json[] = array('id' => $row["id"],'label' => $row['course']["code"]." - ".$row['course']["title"]." , Batch: ".$row['batch_name'],);
@@ -235,7 +234,7 @@ class CourseController extends Controller
 		else {
 			$json[] = array('id' => "0",'label' => "Not Found !!!");
 		}
-		return json_encode($json);	
+		return json_encode($json);
 	}
 
 	public function batchAutoComplete($courseId = null){
@@ -253,7 +252,7 @@ class CourseController extends Controller
 		}
 		$data 		= $batchQuery->get();
 		$data_count = $data->count();
-		
+
 		if($data_count>0){
 			foreach ($data as $row) {
 				$json[] = array('id' => $row["id"],'label' => $row['batch_name'],);
@@ -262,14 +261,14 @@ class CourseController extends Controller
 		else {
 			$json[] = array('id' => "0",'label' => "Not Found !!!");
 		}
-		return json_encode($json);	
+		return json_encode($json);
 	}
-		
+
 	private function createCourse($request){
 		try {
             $rule = [
                 'code' 	=> 'required|string',
-                'title' => 'required', 
+                'title' => 'required',
 				'tqt' 	=> 'required',
 				'total_credit_hour' 	=> 'required',
 				'registration_fees' => 'required|numeric',
@@ -318,7 +317,7 @@ class CourseController extends Controller
 							'type' 			=>  $request['type'][$key],
 						]);
 					}
-				}				
+				}
 				$photo = (isset($request['course_profile_image']) && $request['course_profile_image']!= "")?$request['course_profile_image']:"";
                 if ($photo!="") {
 					$ext = $photo->getClientOriginalExtension();
@@ -333,7 +332,7 @@ class CourseController extends Controller
 				$return['message'] = "Course saved successfully";
 				return json_encode($return);
             }
-        } 
+        }
 		catch (\Exception $e){
 			DB::rollback();
 			$return['response_code'] 	= 0;
@@ -346,7 +345,7 @@ class CourseController extends Controller
 		try {
 			if($id==""){
 				return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
-			}			
+			}
 			$Course = Course::findOrFail($id);
 			if(empty($Course)){
 				return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No Course found"));
@@ -354,11 +353,11 @@ class CourseController extends Controller
 
             $rule = [
                 'code' 	=> 'required|string',
-                'title' => 'required', 
+                'title' => 'required',
 				'tqt' 	=> 'required',
-				'total_credit_hour' 	=> 'required',				
-				'registration_fees' => 'required|numeric', 
-				'course_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',		
+				'total_credit_hour' 	=> 'required',
+				'registration_fees' => 'required|numeric',
+				'course_profile_image' => 'mimes:jpeg,jpg,png,svg|max:5000',
             ];
             $validation = \Validator::make($request, $rule);
 
@@ -394,7 +393,7 @@ class CourseController extends Controller
 				$Course->registration_fees 	= $request['registration_fees'];
 				$Course->status 			= (isset($request['status']))?$request['status']:'Inactive';
 				$Course->update();
-				
+
 				if(isset($request['unit_ids']) && count($request['unit_ids'])>0){
 					$CourseUnit = CourseUnit::where('course_id',$Course->id )->delete();
 					foreach($request['unit_ids'] as $key=>$unit_id){
@@ -416,17 +415,17 @@ class CourseController extends Controller
                     $success = $photo->move($upload_path, $image_full_name);
                     $Course->course_profile_image = $image_full_name;
                     if(!is_null($old_image) && $Course->course_profile_image != $old_image){
-                        File::delete($upload_path.$old_image); 
+                        File::delete($upload_path.$old_image);
                     }
                 }
                 $Course->update();
-				
+
 				DB::commit();
 				$return['response_code'] = 1;
 				$return['message'] = "Course Updated successfully";
 				return json_encode($return);
             }
-        } 
+        }
 		catch (\Exception $e){
 			DB::rollback();
 			$return['response_code'] 	= 0;

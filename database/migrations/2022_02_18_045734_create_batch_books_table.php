@@ -17,6 +17,7 @@ class CreateBatchBooksTable extends Migration
             $table->increments('id');
             $table->foreignId('batch_id');
             $table->string('book_no');
+            $table->foreignId('created_by');
             $table->enum('status',['Active','Inactive'])->default('Active');
             $table->timestamps();
         });
