@@ -65,7 +65,11 @@ class ComposerAutoloaderInit03c1693c142df9abd2f75a719835a337
     }
 }
 
+<<<<<<< HEAD
 function composerRequire03c1693c142df9abd2f75a719835a337($fileIdentifier, $file)
+=======
+function composerRequirecbcdb63df724bb51fbdca2b609bf384e($fileIdentifier, $file)
+>>>>>>> 8a8f7e152b1632413133f4c19c97c25cdc295b0c
 {
     if (empty($GLOBALS['__composer_autoload_files'][$fileIdentifier])) {
         require $file;

@@ -1,11 +1,15 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
+        'pretty_version' => 'dev-razib_dev',
+        'version' => 'dev-razib_dev',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
+<<<<<<< HEAD
         'reference' => '3e7109ad67c0374e6320ea0f913e2683c1d60e29',
+=======
+        'reference' => 'b95c5f9f0d4014015412cc80a6ddf898843228d3',
+>>>>>>> 8a8f7e152b1632413133f4c19c97c25cdc295b0c
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -419,12 +423,16 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
+            'pretty_version' => 'dev-razib_dev',
+            'version' => 'dev-razib_dev',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
+<<<<<<< HEAD
             'reference' => '3e7109ad67c0374e6320ea0f913e2683c1d60e29',
+=======
+            'reference' => 'b95c5f9f0d4014015412cc80a6ddf898843228d3',
+>>>>>>> 8a8f7e152b1632413133f4c19c97c25cdc295b0c
             'dev_requirement' => false,
         ),
         'laravel/passport' => array(
