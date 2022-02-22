@@ -1,2 +1,4 @@
 ALTER TABLE `notification_templates`
 	ADD COLUMN `placeholders` MEDIUMTEXT NULL AFTER `details`;
+
+UPDATE `abpdb`.`menus` SET `menu_url`='email/send' WHERE  `id`=42;

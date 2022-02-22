@@ -3,7 +3,10 @@ $(document).ready(function () {
 	$("#sms_template").on('change',function(){
 		$('#message_body').val($('#sms_template_div_'+$(this).find('option:selected').attr('id')).html());	
 	});
-
+	$("#email_template").on('change',function(){
+		editors.message_body.setData($('#email_template_div_'+$(this).find('option:selected').attr('id')).html());	
+	});
+	
 	getPaymentBatchCourseDetails = function getPaymentBatchCourseDetails(id){	
 		$.ajax({
 			url: url+'/student-course-batch-autosuggest/'+id,
@@ -154,5 +157,49 @@ $(document).ready(function () {
 		$('#do_not_send_div').css('display','none');
 		clear_form();
 	});
+
+	
+	$("#sent_email_submit").on('click',function(){
+		event.preventDefault();
+		editors.message_body.updateSourceElement();
+		var formData = new FormData($('#sms_form')[0]);
+	
+		if($.trim($('#message_body').val()) == ""){
+			success_or_error_msg('#form_submit_error','danger',"Please enter message email body","#message_body");
+		}
+		else if($.trim($('#payment_type').val()) == "" && $.trim($('#all_student_type').val()) == "" && $.trim($('#sms_batch_name').val()) == "" &&   $.trim($('#selected_receipants').html()) == ""){
+			success_or_error_msg('#form_submit_error','danger',"Please select student","#sms_student_name");
+		}
+		else{
+			// validate the installment details
+			$.ajax({
+				url: url+"/email/send",
+				type:'POST',
+				data:formData,
+				async:false,
+				cache:false,
+				contentType:false,
+				processData:false,
+				success: function(data){
+					var response = JSON.parse(data);
+					if(response['response_code'] == 0){				
+						toastr['error']( response['message'], 'Failed!!!!');
+					}
+					else{
+						toastr['success'](response['message'], 'Success!!!');
+						$('#selected_receipants').html("");
+						clear_form();
+					}
+					$(window).scrollTop();
+				 }
+			});
+		}
+	});
+	//email
+
+
+
+
+
 });
 

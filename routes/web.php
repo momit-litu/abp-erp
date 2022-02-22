@@ -207,6 +207,11 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/sms/send',array('as'=>'Send SMS' , 'action_id'=>'96', 'uses' =>'NotificationController@sendSMSIndex'));
 	Route::post('/sms/send',array('as'=>'Send SMS' , 'action_id'=>'96', 'uses' =>'NotificationController@sendSMS'));
 
+	// Email
+	Route::get('/email/send',array('as'=>'Send Email' , 'action_id'=>'95', 'uses' =>'NotificationController@sendEmailIndex'));
+	Route::post('/email/send',array('as'=>'Send Email' , 'action_id'=>'95', 'uses' =>'NotificationController@sendEmail'));
+	
+
 	//Notification Templates
 	Route::get('/template',array('as'=>'Template', 'action_id'=>'117', 'uses' =>'TemplateController@index'));
 	Route::get('/templates',array('as'=>'Template List' ,'action_id'=>'117', 'uses' =>'TemplateController@showList'));
