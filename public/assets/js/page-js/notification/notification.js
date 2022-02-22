@@ -154,5 +154,15 @@ $(document).ready(function () {
 		$('#do_not_send_div').css('display','none');
 		clear_form();
 	});
+
+
+	// template
+	
+	templateAdd = function templateAdd(){
+		$("#form-title").html('<i class="fa fa-plus"></i> Add  New Template');
+		$('#entry-form').modal('show');
+	}
+
+
 });
 

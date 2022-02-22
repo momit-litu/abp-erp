@@ -13,4 +13,5 @@ class NotificationTemplate extends Model
     ];
 
 
+
 }

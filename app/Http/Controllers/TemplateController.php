@@ -37,7 +37,7 @@ class TemplateController extends Controller
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
         $data['actions']['add_permisiion']= $add_permisiion;
 
-		return view('notification.index',$data);
+		return view('notification.template',$data);
     }
 
 	public function showList(){
@@ -147,8 +147,8 @@ class TemplateController extends Controller
             $validation = \Validator::make($request, $rule);
 
             if($validation->fails()){
-                $return['response_code'] = "0";
-				$return['errors'] = $validation->errors();
+                $return['response_code']= "0";
+				$return['errors'] 		= $validation->errors();
 				return json_encode($return);
             }
             else{
@@ -164,8 +164,8 @@ class TemplateController extends Controller
                     'status' 			=> (isset($request['status']))?'Active':'Inactive'
                 ]);
 				DB::commit();
-				$return['response_code'] = 1;
-				$return['message'] = "Notification template saved successfully";
+				$return['response_code']= 1;
+				$return['message'] 		= "Notification template saved successfully";
 				return json_encode($return);
             }
         } 
@@ -198,85 +198,32 @@ class TemplateController extends Controller
             $validation = \Validator::make($request, $rule);
 
             if($validation->fails()){
-                $return['response_code'] = "0";
-				$return['errors'] = $validation->errors();
+                $return['response_code']= "0";
+				$return['errors'] 		= $validation->errors();
 				return json_encode($return);
             }
             else{
 				DB::beginTransaction();
 
- $notificationTemplate = NotificationTemplate::create([
-                    'code' 				=>  $request['code'],
-					'title'				=>  $request['title'],
-					'type'				=>  $request['type'],
-                    'details' 			=>  $request['details'],
-					'placeholders' 		=>  $request['placeholders'],
-					'category' 			=>  $request['category'],					
-                    'status' 			=> (isset($request['status']))?'Active':'Inactive'
-                ]);
-
-
 				$notificationTemplate->code 		= $request['code'];
-				$notificationTemplate->short_name 	= $request['short_name'];
-				$notificationTemplate->short_name_id= $request['short_name_id'];
+				$notificationTemplate->details 		= $request['details'];
+				$notificationTemplate->type			= $request['type'];
 				$notificationTemplate->title 		= $request['title'];
-				$notificationTemplate->tqt 			= $request['tqt'];
-				$notificationTemplate->objective 	= $request['objective'];
-				$notificationTemplate->glh 			= $request['glh'];
-				$notificationTemplate->study_mode 	= $request['study_mode'];
-				$Course->trainers 			= $request['trainers'];
-				$Course->accredited_by 		= $request['accredited_by'];
-				$Course->awarder_by 		= $request['awarder_by'];
-				$Course->semester_no 		= $request['semester_no'];
-				$Course->programme_duration = $request['programme_duration'];
-				$Course->semester_details 	= $request['semester_details'];
-				$Course->assessment 		= $request['assessment'];
-				$Course->grading_system 	= $request['grading_system'];
-				$Course->requirements 		= $request['requirements'];
-				$Course->experience_required= $request['experience_required'];
-				$Course->youtube_video_link = $request['youtube_video_link'];
-				$Course->total_credit_hour  = $request['total_credit_hour'];
-				$Course->level_id 			= $request['level_id'];
-				$Course->registration_fees 	= $request['registration_fees'];
-				$Course->status 			= (isset($request['status']))?$request['status']:'Inactive';
-				$Course->update();
-				
-				if(isset($request['unit_ids']) && count($request['unit_ids'])>0){
-					$CourseUnit = CourseUnit::where('course_id',$Course->id )->delete();
-					foreach($request['unit_ids'] as $key=>$unit_id){
-						CourseUnit::create([
-							'unit_id' 		=>  $unit_id,
-							'course_id' 	=>  $Course->id,
-							'type' 			=>  $request['type'][$key],
-						]);
-					}
-				}
-
-				$photo = (isset($request['course_profile_image']) && $request['course_profile_image']!= "")?$request['course_profile_image']:"";
-                if ($photo != "") {
-                    $old_image = $Course->course_profile_image;
-                    $image_name = time();
-                    $ext = $photo->getClientOriginalExtension();
-                    $image_full_name = $image_name . '.' . $ext;
-                    $upload_path = 'assets/images/courses/';
-                    $success = $photo->move($upload_path, $image_full_name);
-                    $Course->course_profile_image = $image_full_name;
-                    if(!is_null($old_image) && $Course->course_profile_image != $old_image){
-                        File::delete($upload_path.$old_image); 
-                    }
-                }
-                $Course->update();
+				$notificationTemplate->placeholders = $request['placeholders'];
+				$notificationTemplate->category 	= $request['category'];
+				$notificationTemplate->status 					= (isset($request['status']))?$request['status']:'Inactive';
+				$notificationTemplate->update();
 				
 				DB::commit();
 				$return['response_code'] = 1;
-				$return['message'] = "Course Updated successfully";
+				$return['message'] = "Notification Template Updated successfully";
 				return json_encode($return);
             }
         } 
 		catch (\Exception $e){
 			DB::rollback();
-			$return['response_code'] 	= 0;
-			$return['errors'] = "Failed to update !".$e->getMessage();
+			$return['response_code']= 0;
+			$return['errors'] 		= "Failed to update !".$e->getMessage();
 			return json_encode($return);
 		}
 	}

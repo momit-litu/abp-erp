@@ -214,6 +214,7 @@ $(document).ready(function () {
 		$('#unit_table tr:gt(0)').remove();
 	});
 	
+
 	
 	//Course detail View
 	 courseView = function courseView(id){	
