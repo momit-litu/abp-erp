@@ -30,7 +30,7 @@ class TemplateController extends Controller
 		$data['module_name']	= "Courses";
 		$data['sub_module']		= "Courses";
 		
-		$data['levels'] 		=Level::all();
+		$data['levels'] 		= Level::all();
 		// action permissions
         $admin_user_id  		= Auth::user()->id;
         $add_action_id  		= 117; 

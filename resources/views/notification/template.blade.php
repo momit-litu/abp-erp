@@ -86,7 +86,7 @@
 												<input type="text" id="title" name="title" class="form-control col-lg-12" />
 											</div>
 										</div>
-									</div>
+									</div> title details placeholders
 									<div class="form-row">
 										<div class="col-md-12">
 											<div class="position-relative form-group">
@@ -107,7 +107,7 @@
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label  class="">Template Category<span class="required">*</span>  </label>
-												<select id="level_id" name="level_id" class="form-control col-lg-12">
+												<select id="category" name="category" class="form-control col-lg-12">
 													@foreach($levels as $level )
 													<option value="{{$level->id}}">{{$level->name}}</option>
 													@endforeach
@@ -130,11 +130,9 @@
 												<label class="form-check-label">
 													<input type="checkbox" id="status" name="status" checked="checked" value="1" class="form-control col-lg-12"/> Is Active
 												</label>
-											</div>
-											
+											</div>											
 										</div>									
-									</div>
-									
+									</div>									
 								</div>							
 							</div>
 							<div class="form-group">
@@ -162,16 +160,13 @@
 			</div>
 		</div>
 	</div>
-
 </div>
-
 @endsection
-@section('JScript')	
-
+@section('JScript')
 <script type="text/javascript">
 	const Template_profile_image = "<?php echo asset('assets/images/Templates/'); ?>";
 	createEditor('details');
-	createEditor('placeholders');
+
 </script>	
 <script type="text/javascript" src="{{ asset('assets/js/page-js/notification/notification.js')}}"></script>
 @endsection

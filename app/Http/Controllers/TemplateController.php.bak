@@ -37,7 +37,7 @@ class TemplateController extends Controller
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
         $data['actions']['add_permisiion']= $add_permisiion;
 
-		return view('notification.index',$data);
+		return view('notification.template',$data);
     }
 
 	public function showList(){
