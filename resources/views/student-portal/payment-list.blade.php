@@ -101,7 +101,7 @@
                                                             <button class="btn-icon-vertical btn-square btn-transition btn btn-outline-link disabled text-danger">
                                                                 <h5><strong>{{count($batch_student['payments'])}}</strong></h5>
                                                                 
-                                                                Installment
+                                                                Instalment
                                                             </button>
                                                         </div>								
                                                     </div>
@@ -114,7 +114,7 @@
                                     <table class="mb-0 table-bordered table table-sm ">
                                         <thead>
                                         <tr>
-                                            <th class="text-center">Installment No</th>
+                                            <th class="text-center">Instalment No</th>
                                             <th class="text-center">Payment Date</th>
                                             <th class="text-right" width="100">Amount</th>
                                             <th class="text-center">Invoice</th>

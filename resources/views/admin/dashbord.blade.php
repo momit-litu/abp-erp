@@ -33,9 +33,6 @@
 								<option value="last_year">Last Year</option>
 							</select>
 						</div>
-						<button type="button" data-toggle="tooltip" data-placement="left" class="btn btn-dark" title="Show a Toastr Notification!">
-							<i class="fa fa-battery-three-quarters"></i>
-						</button>
 					</div>
 				</div>
 			</div>  

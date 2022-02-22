@@ -44,7 +44,7 @@
                                 <p><span><b>Student :</b></span> {{$student->student_no. " - ".$student->name }}</p>
                                 <p><b>Course :</b> {{$payment->enrollment->batch->course->title. " (".$payment->enrollment->batch->course->short_name.")"}}</p>
                                 <p><b>Batch :</b> {{$payment->enrollment->batch->batch_name}}</p>
-                                <p><b>Installment No. :</b> {{$payment->installment_no}}</p>
+                                <p><b>Instalment No. :</b> {{$payment->installment_no}}</p>
                                 <p><b>Payable Amount : </b> <span class="h6 "><b>{{$payment->payable_amount}}</b> Taka</span></p>
                             </div>  
                             <div class="col-md-8">

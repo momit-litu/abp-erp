@@ -62,14 +62,14 @@
                                         <button href="javascript:void(0)" class="btn btn-info btn-sm  disabled" disabled >{{ ($batch->running_status=='Running')?'Ongoing':$batch->running_status}}</button>
                                         <p class="mb-0"><b>Credit Hour</b> : &nbsp;{{ $batch->course->total_credit_hour}}</p>
                                         <p class="mb-0"><b>Total Unit</b> &nbsp; &nbsp;: &nbsp;{{ count($batch->course->units) }}</p>
-                                        <p ><b>Semister No</b> : {{ $batch->course->semester_no}}</p>
+                                        <p ><b>Semester No</b> : {{ $batch->course->semester_no}}</p>
 										<p class="text-dark mb-0"><b>Start Date</b> : {{ $batch->start_date}}</p>
                                         <p class="text-dark mb-0"><b>Time</b> : {{ $batch->class_schedule}}</p>
 										@if($batch->show_seat_limit=='Yes' )
                                             <p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
                                             <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p> 
                                         @endIf                   
-                                        <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Batch Full' }}</p>
+                                        <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Registration Closed' }}</p>
                                     </div>
                                     <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
                                         <div class="widget-content-wrapper ">

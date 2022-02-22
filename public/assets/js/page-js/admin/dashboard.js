@@ -126,7 +126,7 @@ var Index = function () {
 			<div class="col-sm-6 col-md-3">
 				<div class="card-shadow-primary mb-3 widget-chart widget-chart2 text-left card-btm-border card-shadow-primary border-success card ">
 					<div class="widget-chat-wrapper-outer">
-						<div class="widget-chart-content"><h6 class="widget-subheading">Pending Enrolled </h6>
+						<div class="widget-chart-content"><h6 class="widget-subheading">Enrolment Pending </h6>
 							<div class="widget-chart-flex">
 								<div class="widget-numbers mb-0 w-100">
 									<div class="widget-chart-flex">

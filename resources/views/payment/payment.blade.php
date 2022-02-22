@@ -94,7 +94,7 @@
 							<th>Student Name</th>
 							<th>Course Title</th>
 							<th>Batch</th>
-							<th>Installment</th>
+							<th>Instalment</th>
 							<th>Payment Month</th>
 							<th>Payment Date </th>
 							<th>Type</th>
@@ -149,7 +149,7 @@
 										</div>
 										<div class="col-md-6">
 											<div class="position-relative form-group">
-												<label>Installment<span class="required">*</span></label>
+												<label>Instalment<span class="required">*</span></label>
 												<select id="installment_no" required name="installment_no" class="form-control col-lg-12">
 												</select>
 											</div>

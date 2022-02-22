@@ -450,13 +450,13 @@
                                                     <label for="first_name" class="">Course Fee Plan </label>
                                                     <select id="batch_fees_id" name="batch_fees_id" class="form-control col-lg-12">
                                                         @foreach($batch->batch_fees as $key=>$batch_fee)
-                    								    <option value="{{$batch_fee->id}}">{{$batch_fee->plan_name.' ('.$batch_fee->payable_amount.')'}}</option>;
+                    								    <option value="{{$batch_fee->id}}">{{$batch_fee->payable_amount.' ('.$batch_fee->plan_name.')'}}</option>;
                                                         @endforeach
                             						</select> 	
                                                 </div>
                                             </div>
                                         </div>  
-                                        <div class="mt-3 position-relative form-check"><input name="terms_condition" id="terms_condition" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label" >Accept our <a target="new" href="{{url('portal/terms')}}">Terms and Conditions</a>.</label></div>   
+                                        <div class="mt-3 position-relative form-check"><input name="terms_condition" id="terms_condition" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label" >Accept <a target="new" href="{{url('portal/terms')}}">Terms and Conditions</a>.</label></div>   
                                     </div>
                                 </div>
                                 <div class="form-group">
