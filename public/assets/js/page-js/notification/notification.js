@@ -166,6 +166,82 @@ $(document).ready(function () {
 		$('#entry-form').modal('show');
 	}
 
+
+	$('#templates_table').DataTable({
+		"destroy": true,
+		"order": [[ 0, 'desc' ]],
+		"processing": true,
+		"serverSide": false,
+		"ajax": url+"/templates",
+		"aoColumns": [
+			{ mData: 'id'},
+			{ mData: 'title'},
+			{ mData: 'category', className: "text-center"},
+			{ mData: 'type', className: "text-center"},			
+			{ mData: 'status', className: "text-center"},
+			{ mData: 'actions' , className: "text-center"},
+		],
+		"columnDefs": [
+            { "targets": [ 0 ],  "visible": false },
+			{ "width": "100px", "targets":[ 3 ]},
+			{ "width": "100px", "targets":[ 4 ]},
+			{ "width": "120px", "targets":[ 5 ]},
+        ],
+	});
+
+	// title details edit_id placeholders category template_type status
+	$("#save_template").on('click',function(){
+		event.preventDefault();
+		$.ajaxSetup({
+			headers:{
+				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		editors.details.updateSourceElement();
+		var formData = new FormData($('#template_form')[0]);
+
+		if($.trim($('#title').val()) == ""){
+			success_or_error_msg('#form_submit_error','danger',"Please Insert Title","#title");
+		}
+		else{
+			$.ajax({
+				url: url+"/template",
+				type:'POST',
+				data:formData,
+				async:false,
+				cache:false,
+				contentType:false,
+				processData:false,
+				success: function(data){
+					var response = JSON.parse(data);
+					if(response['response_code'] == 0){
+						var errors	= response['errors'];						
+						resultHtml = '<ul>';
+						if(typeof(errors)=='string'){
+							resultHtml += '<li>'+ errors + '</li>';
+						}
+						else{
+							$.each(errors,function (k,v) {
+								resultHtml += '<li>'+ v + '</li>';
+							});
+						}
+						resultHtml += '</ul>';
+						toastr['error']( resultHtml, 'Failed!!!!');
+					}
+					else{
+						toastr['success']( 'Template Saved Successfully', 'Success!!!');
+						$('.modal').modal('hide')
+					
+						templates_table.ajax.reload();
+						clear_form();
+						$("#save_template").html('Save');
+					}
+					$(window).scrollTop();
+				 }
+			});
+		}
+	});
+
 	
 	$("#sent_email_submit").on('click',function(){
 		event.preventDefault();
@@ -204,6 +280,9 @@ $(document).ready(function () {
 		}
 	});
 	//email
+
+
+
 
 });
 

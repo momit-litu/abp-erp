@@ -1,9 +1,9 @@
-ALTER TABLE `notification_templates`
-	ADD COLUMN `placeholders` MEDIUMTEXT NULL AFTER `details`;
+
 
 CREATE TABLE `template_catergory` (
 	`id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
 	`category_name` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`placeholders` MEDIUMTEXT  NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
 	PRIMARY KEY (`id`) USING BTREE
 )
 COLLATE='utf8mb4_general_ci'

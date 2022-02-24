@@ -242,7 +242,7 @@ class NotificationController extends Controller
                             'commaSeperatedReceiverNumbers'=>$mobileNo,
                             'smsText'=>$smsBody,
                         );
-						dd($smsParam);
+
                         $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
                         if($response['status']=="FAILED")
                          $responseText .= $mobileNo." - Not Sent , ";

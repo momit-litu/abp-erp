@@ -397,7 +397,6 @@ class NotificationController extends Controller
 		return true;
 	}
 
-
     // Email
     public function sendEmailIndex()
     {

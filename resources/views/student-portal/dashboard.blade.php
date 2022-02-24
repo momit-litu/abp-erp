@@ -10,7 +10,7 @@
                         </i>
                     </div>
                     <div>ABP Courses
-                        <div class="page-title-subheading">ABP offers different batch for different course. 
+                        <div class="page-title-subheading">
                         </div>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
             <div class="col-md-12">
                 <div class="main-card mb-3 card ">
                     <div class="card-body"> 
-                        <h5 class="card-title">Ongoing course list <span></span>&nbsp;
+                        <h5 class="card-title">Admissions Going On<span></span>&nbsp;
                             @if(count($data['running_batches'])>0)
                                 <a href="{{url('portal/courses/Running')}}" class=" mb-2 mr-2 btn-hover-shine btn btn-info btn-sm" >Show All</a>
                             @endif
@@ -144,7 +144,7 @@
                                     <div class="card-body">
                                         <p class="mb-0"><b>Credit Hour</b> : &nbsp;{{ $batch->course->total_credit_hour}}</p>
                                         <p class="mb-0"><b>Total Unit</b> &nbsp; &nbsp;: &nbsp;{{ count($batch->course->units) }}</p>
-                                        <p ><b>Semister No</b> : {{ $batch->course->semester_no}}</p>
+                                        <p ><b>Semester No</b> : {{ $batch->course->semester_no}}</p>
 										<p class="text-dark mb-0"><b>Start Date</b> : {{ $batch->start_date}}</p>
                                         <p class="text-dark mb-0"><b>Time</b> : {{ $batch->class_schedule}}</p>
                                         @if($batch->show_seat_limit=='Yes' )
@@ -153,7 +153,7 @@
                                         @endIf
 										
 
-                                        <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Batch Full' }}</p>
+                                        <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Registration Closed' }}</p>
                                         
                                     </div>
                                     <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
@@ -161,12 +161,12 @@
                                             <div class="widget-content-left">
                                                 <div class="widget-heading">Course Fee </div>
                                                 <div class="widget-subheading text-danger">{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}
-                                                <br><span>Installment</span>
+                                                <br><span>Instalment</span>
                                                 </div>
                                             </div>
                                             <div class="widget-content-right">
                                                 <div class="widget-numbers text-warning"><span style="font-size: smaller;"> {{ $batch->discounted_fees }}</span></div>
-                                                <div class="widget-heading">Onetime:</div>
+                                                <div class="widget-heading">Onetime Payment:</div>
                                             </div>
                                         </div>
                                     </div>
@@ -195,7 +195,7 @@
             <div class="col-md-12">
                 <div class="main-card mb-3 card ">
                     <div class="card-body"> 
-                        <h5 class="card-title">Upcoming course list <span></span>&nbsp;
+                        <h5 class="card-title">Upcoming course <span></span>&nbsp;
                             @if(count($data['upcoming_batches'])>0)
                             <a href="{{url('portal/courses/Upcoming')}}" class=" mb-2 mr-2 btn-hover-shine btn btn-info btn-sm" >Show All</a>
                             @endif
@@ -226,7 +226,7 @@
                                     <div class="card-body">
                                         <p class="mb-0"><b>Credit Hour</b> : &nbsp;{{ $batch->course->total_credit_hour}}</p>
                                         <p class="mb-0"><b>Total Unit</b> &nbsp; &nbsp;: &nbsp;{{ count($batch->course->units) }}</p>
-                                        <p ><b>Semister No</b> : {{ $batch->course->semester_no}}</p>
+                                        <p ><b>Semester No</b> : {{ $batch->course->semester_no}}</p>
 										<p class="text-dark mb-0"><b>Start Date</b> : {{ $batch->start_date}}</p>
                                         <p class="text-dark mb-0"><b>Time</b> : {{ $batch->class_schedule}}</p>
                                         @if($batch->show_seat_limit=='Yes' )
@@ -234,7 +234,7 @@
                                             <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p> 
                                         @endIf
 
-                                        <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Batch Full' }}</p>
+                                        <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Registration Closed' }}</p>
 
 
 
@@ -244,12 +244,12 @@
                                             <div class="widget-content-left">
                                                 <div class="widget-heading">Course Fee </div>
                                                 <div class="widget-subheading text-danger">{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}
-                                                <br><span>Installment</span>
+                                                <br><span>Instalment</span>
                                                 </div>
                                             </div>
                                             <div class="widget-content-right">
                                                 <div class="widget-numbers text-warning"><span style="font-size: smaller;"> {{ $batch->discounted_fees }}</span></div>
-                                                <div class="widget-heading">Onetime:</div>
+                                                <div class="widget-heading">Onetime Payment:</div>
                                             </div>
                                         </div>
                                     </div>

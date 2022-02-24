@@ -54,7 +54,7 @@
 						@endif
 					@else
                         <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn  {{ ($batch->total_enrolled_student<$batch->student_limit)?'btn-success':'btn-danger' }} disabled" data-original-title="Example Tooltip">
-                            {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Batch Full' }}
+                            {{ ($batch->total_enrolled_student < $batch->student_limit)?'Registration Available ':'Registration Closed' }}
                         </button>
                     @endif                  
                 </div>    
@@ -254,11 +254,11 @@
 
                                     @if(!Auth::check() && $batch->total_enrolled_student<$batch->student_limit)
 										<button type="button" id="start_registration" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg col-md-12">
-                                            Register to this course
+                                            Register for this course
                                        </button>
 								    @elseif($batch->students->count()==0 && $batch->total_enrolled_student<$batch->student_limit)
                                         <button type="button" id="start_registration" title="registration" data-placement="bottom" class="btn-shadow mr-3 btn btn-success btn-lg col-md-12">
-                                            Register to this course
+                                            Register for this course
                                         </button>
                                     @endif
 
@@ -330,7 +330,7 @@
                                         </table>
                                     </div>
                                 @else
-                                    <h5 class="card-title">Fees Details</h5>
+                                    <h5 class="card-title">Fee Details</h5>
                                     <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
                                         <div class="widget-chart-content text-white">
                                             <div class="widget-chart-flex">
@@ -363,21 +363,19 @@
                                                 <table class="mb-0 table-bordered table table-sm ">
                                                     <thead>
                                                     <tr>
-                                                        <th class="text-center">Installment No</th>
-                                                        <th class="text-center">Month Duration</th>
-                                                        <th class="text-right">Amount</th>                                                   
+                                                        <th class="text-center">Instalment No</th>
+                                                        <th class="text-right">Amount</th>                                               
                                                     </tr>
                                                     </thead>
                                                     <tbody>										
                                                         @foreach($batch_fee->installments as $k=>$installment)
                                                         <tr>
-                                                            <th class="text-center">{{$installment->installment_no}}</th>
-                                                            <td class="text-center">{{$batch_fee->installment_duration}}</td>
-                                                            <td class="text-right">{{$installment->amount}}</td>                                               
+                                                            <th class="text-center">{{$installment->installment_no}}</th>   
+                                                            <td class="text-right">{{$installment->amount}}</td> 
                                                         </tr>
                                                         @endforeach 
                                                         <tr>
-                                                            <td colspan="2" class="text-right"><b>Total Payable Amount</b></td>
+                                                            <td class="text-right"><b>Total Payable Amount</b></td>
                                                             <td class="text-right"><b>
                                                            {{$batch_fee->installments->sum('amount')}}</b>
                                                             </td>
@@ -399,8 +397,8 @@
                         <ul class="nav nav-tabs nav-justified">
                             <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-0" class="nav-link active">Units</a></li>
                             <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-1" class="nav-link ">Semester Details</a></li>
-                            <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-2" class="nav-link show ">Requirements</a></li>
-                            <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-3" class="nav-link show ">Require Experience</a></li>
+                            <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-2" class="nav-link show ">Admission requirements</a></li>
+                           
                             <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-4" class="nav-link  show">Assessment</a></li>
                             <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-5" class="nav-link  show">Grading System</a></li>
                             
@@ -408,12 +406,11 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="tab-eg11-0" role="tabpanel">
                                 @foreach($batch->course->units as $key=>$unit)		
-                                      &nbsp; &nbsp; Unit {{$key+1}}: {{ strip_tags($unit->name) }} ({{$unit->tut}})</br>
+                                      &nbsp; &nbsp; Unit {{$key+1}}: {{ strip_tags($unit->name) }}</br>
 								@endforeach
                             </div>
                             <div class="tab-pane" id="tab-eg11-1" role="tabpanel"><p>  		 <?php echo $batch->course->semester_details; ?></p></div>
-                            <div class="tab-pane show" id="tab-eg11-2" role="tabpanel"><p>   <?php echo $batch->course->requirements; ?> </p></div>
-                            <div class="tab-pane  show" id="tab-eg11-3" role="tabpanel"><p>  <?php echo $batch->course->experience_required; ?> </p></div>
+                            <div class="tab-pane show" id="tab-eg11-2" role="tabpanel"><p>   <?php echo $batch->course->requirements; ?> </p></div>                            
                             <div class="tab-pane  show" id="tab-eg11-4" role="tabpanel"><p>  <?php echo $batch->course->assessment; ?></p></div>
                             <div class="tab-pane  show" id="tab-eg11-5" role="tabpanel"><p>  <?php echo $batch->course->grading_system; ?> </p></div>
                             <div class="tab-pane  show" id="tab-eg11-6" role="tabpanel"><p>
@@ -427,12 +424,12 @@
 </div>
 
 
-
+<!--
 
 <button class="btn btn-success" id="bKash_button" onclick="BkashPayment()">
     Pay with bKash
 </button>
-
+-->
 @include('student-portal.bkash-script')
 
 
