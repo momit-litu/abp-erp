@@ -80,13 +80,13 @@
                                         <div class="widget-content-wrapper ">
                                             <div class="widget-content-left">
                                                 <div class="widget-heading">Course Fee </div>
-                                                <div class="widget-subheading text-danger">{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}
-                                                <br><span>Instalment</span>
+                                                <div class="widget-subheading text-danger"> {{ $batch->discounted_fees }}
+                                                <br><span>Onetime payment</span>
                                                 </div>
                                             </div>
                                             <div class="widget-content-right">
-                                                <div class="widget-numbers text-warning"><span style="font-size: smaller;"> {{ $batch->discounted_fees }}</span></div>
-                                                <div class="widget-heading">Onetime payment:</div>
+                                                <div class="widget-numbers text-warning"><span style="font-size: smaller;">{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}</span></div>
+                                                <div class="widget-heading">Instalment</div>
                                             </div>
                                         </div>
                                     </div>

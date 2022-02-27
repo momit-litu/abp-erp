@@ -62,7 +62,6 @@ class NotificationController extends Controller
     public function sendSMS(Request $request)
     {
 		//dd($request->all());
-		
         try {
             $rule = [ 
 				'message_body' => 'required',
@@ -293,7 +292,7 @@ class NotificationController extends Controller
                         'commaSeperatedReceiverNumbers'=>$mobileNos,
                         'smsText'=>$request->message_body,
                     );
-
+                    //dd($smsParam);
                     $response = json_decode($this->SMSService->sendSMS($smsParam), true);
                     if($response['status']=="FAILED") throw new Exception($response['message']);
                     $message = "SMS sent successfully.";

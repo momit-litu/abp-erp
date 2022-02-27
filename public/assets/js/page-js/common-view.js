@@ -483,3 +483,15 @@ batchView = function batchView(id){
         }
     });
 }
+
+
+playPromoVideo = function playPromoVideo(link) {
+    var body =`<video width="100%" height="100%" controls>
+                <source src="`+link+`" type="video/mp4">
+                Your browser does not support HTML video.
+                </video>`;
+
+    $('#myModalLabelLg').html('Promo Video');
+    $('#modalBodyLg').html(body);
+    $("#generic_modal_lg").modal('show');
+}

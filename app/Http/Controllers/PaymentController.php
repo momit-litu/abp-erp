@@ -199,7 +199,8 @@ class PaymentController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;
-        $paymentDetails     = $this->studentPayment->getPaymentDetailByPaymentId($id);
+        $paymentDetails             = $this->studentPayment->getPaymentDetailByPaymentId($id);
+         $paymentDetails['paid_date']    = ($paymentDetails['payment_status']=='Paid')?$paymentDetails['paid_date']:date('Y-m-d');
         // Payment due sms = 1
         $smsBody            = NotificationTemplate::find(1);
         $settings           = Setting::first();

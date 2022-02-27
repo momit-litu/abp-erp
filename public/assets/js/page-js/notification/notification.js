@@ -167,11 +167,7 @@ $(document).ready(function () {
 	}
 
 
-<<<<<<< HEAD
 	templates_table = $('#templates_table').DataTable({
-=======
-	$('#templates_table').DataTable({
->>>>>>> 0e17fd2608c1134117b080c83df60469e1904e07
 		"destroy": true,
 		"order": [[ 0, 'desc' ]],
 		"processing": true,
@@ -246,135 +242,132 @@ $(document).ready(function () {
 		}
 	});
 
-<<<<<<< HEAD
-		//Template detail View
-		templateView = function templateView(id){	
-			$.ajax({
-				url: url+'/template/'+id,
-				cache: false,
-				success: function(response){
-					var response = JSON.parse(response);
-					var data = response['template'];
-					var statusHtml = (data['status']=="Active")?'<span class="badge badge-success">Active</span>':'<span class="badge badge-danger">In-active</span>';
-	
-					modalHtml  ="";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Template Title :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['title']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Type :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['type']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Category :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['temp_category']['category_name']+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['details']+"</div></div>";
-	
-					modalHtml += "</tbody></table></div></div>";
-					$('#myModalLabelLg').html(data['title']);
-					$('#modalBodyLg').html(modalHtml);
-					$("#generic_modal_lg").modal();				
-				}
-			});
-		}
-			
-		//Edit function for Module
-		templateEdit = function templateEdit(id){
-			var edit_id = id;
-			$('#unit_table tr:gt(0)').remove();
-			$("#admin_user_add_button").html("<b> Edit Template</b>");
-			
-			$.ajax({
-				url: url+'/template/'+edit_id,
-				cache: false,
-				success: function(response){
-					var response = JSON.parse(response);
-					var data = response['template'];				
-					$("#save_template").html('Update');
-					$("#short_name").val(data['short_name']);
-					$("#short_name_id").val(data['short_name_id']);
-					$("#trainers").val(data['trainers']);
-					$("#code").val(data['code']);
-					$("#title").val(data['title']);
-					$("#tqt").val(data['tqt']);
-					$("#total_credit_hour").val(data['total_credit_hour']);
-					$("#level_id").val(data['level_id']);
-					$("#registration_fees").val(data['registration_fees']);
-					$("#edit_id").val(data['id']);
-					$("#awarder_by").val(data['awarder_by']);
-					$("#programme_duration").val(data['programme_duration']);
-					$("#semester_no").val(data['semester_no']);
-					$("#glh").val(data['glh']);
-					$("#study_mode").val(data['study_mode']);
-					$("#youtube_video_link").val(data['youtube_video_link']);
-					(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
-	
-	
-					objective 			= (data['objective'] != null)?data['objective']:"";
-					accredited_by 		= (data['accredited_by'] != null)?data['accredited_by']:"";
-					semester_details 	= (data['semester_details'] != null)?data['semester_details']:"";
-					assessment 			= (data['assessment'] != null)?data['assessment']:"";
-					grading_system 		= (data['grading_system'] != null)?data['grading_system']:"";
-					requirements 		= (data['requirements'] != null)?data['requirements']:"";
-					experience_required = (data['experience_required'] != null)?data['experience_required']:"";
-	
-					editors.objective.setData(objective);
-					editors.accredited_by.setData(accredited_by);
-					editors.semester_details.setData(semester_details);
-					editors.assessment.setData(assessment);
-					editors.grading_system.setData(grading_system);
-					editors.requirements.setData(requirements);
-					editors.experience_required.setData(experience_required);
-	
-					var photo = (data["template_profile_image"]!=null && data["template_profile_image"]!="")?data["template_profile_image"]:'no-user-image.png';
-					$("#template_image").attr("src", template_profile_image+"/"+photo);
-	
-					if(!jQuery.isEmptyObject(data['units'])){
-						var trHtml = "";
-						var tota_glh =0;
-						$.each(data['units'], function(i,data){ 
-							var typeOption = (data['pivot']['type'] =='Optional')?"<option selected value='Optional'>Optional</option><option value='Mandatory'>Mandatory</option>":"<option value='Optional'>Optional</option><option selected value='Mandatory'>Mandatory</option>";				
-							trHtml 	+= "<tr>"+"<td><input type='hidden' name='unit_ids[]' value='"+data['id']+"' />"+data['unit_code']+"</td>"+"<td>"+data['name']+"</td>"+"<td>"+data['glh']+"<td>"+data['tut']+"</td>"+"</td>"+"<td><select name='type[]' class='form-control col-lg-12'>"+typeOption+"</select></td>"+"<td>"+data['assessment_type']+"</td>"+"<td><button onclick='$(this).parent().parent().remove();  calculateTotalUnit("+data['glh']+","+data['credit_hour']+","+data['tut']+")' ' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button></td>"+"</tr>";
-							tota_glh += parseFloat(data['glh']);
-						})
-						$('#glh').val(tota_glh)
-						$('#unit_table').append(trHtml);
-					}	
-					$('#entry-form').modal('show');
-				}
-			});
-		}
-	
-		//Delete Module
-		templateDelete = function templateDelete(id){
-			var delete_id = id;
-			swal({
-				title: "Are you sure?",
-				text: "You wants to delete item parmanently!",
-				icon: "warning",
-				buttons: true,
-				dangerMode: true,
-			}).then((willDelete) => {
-				if (willDelete) {
-					$.ajax({
-						url: url+'/template/delete/'+delete_id,
-						cache: false,
-						success: function(data){
-							var response = JSON.parse(data);
-							if(response['response_code'] == 0){
-								toastr['error']( response['message'], 'Faild!!!');
-							}
-							else{
-								toastr['success']( response['message'], 'Success!!!');
-								template_datatable.ajax.reload();
-							}
-						}
-					});
-				}
-				else {
-					swal("Your Data is safe..!", {
-					icon: "warning",
-					});
-				}
-			});
-		}
-	
 
-=======
->>>>>>> 0e17fd2608c1134117b080c83df60469e1904e07
+	//Template detail View
+	templateView = function templateView(id){	
+		$.ajax({
+			url: url+'/template/'+id,
+			cache: false,
+			success: function(response){
+				var response = JSON.parse(response);
+				var data = response['template'];
+				var statusHtml = (data['status']=="Active")?'<span class="badge badge-success">Active</span>':'<span class="badge badge-danger">In-active</span>';
+
+				modalHtml  ="";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Template Title :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['title']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Type :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['type']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Category :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['temp_category']['category_name']+"</div></div>";
+				modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['details']+"</div></div>";
+
+				modalHtml += "</tbody></table></div></div>";
+				$('#myModalLabelLg').html(data['title']);
+				$('#modalBodyLg').html(modalHtml);
+				$("#generic_modal_lg").modal();				
+			}
+		});
+	}
+		
+	//Edit function for Module
+	templateEdit = function templateEdit(id){
+		var edit_id = id;
+		$('#unit_table tr:gt(0)').remove();
+		$("#admin_user_add_button").html("<b> Edit Template</b>");
+		
+		$.ajax({
+			url: url+'/template/'+edit_id,
+			cache: false,
+			success: function(response){
+				var response = JSON.parse(response);
+				var data = response['template'];				
+				$("#save_template").html('Update');
+				$("#short_name").val(data['short_name']);
+				$("#short_name_id").val(data['short_name_id']);
+				$("#trainers").val(data['trainers']);
+				$("#code").val(data['code']);
+				$("#title").val(data['title']);
+				$("#tqt").val(data['tqt']);
+				$("#total_credit_hour").val(data['total_credit_hour']);
+				$("#level_id").val(data['level_id']);
+				$("#registration_fees").val(data['registration_fees']);
+				$("#edit_id").val(data['id']);
+				$("#awarder_by").val(data['awarder_by']);
+				$("#programme_duration").val(data['programme_duration']);
+				$("#semester_no").val(data['semester_no']);
+				$("#glh").val(data['glh']);
+				$("#study_mode").val(data['study_mode']);
+				$("#youtube_video_link").val(data['youtube_video_link']);
+				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
+
+
+				objective 			= (data['objective'] != null)?data['objective']:"";
+				accredited_by 		= (data['accredited_by'] != null)?data['accredited_by']:"";
+				semester_details 	= (data['semester_details'] != null)?data['semester_details']:"";
+				assessment 			= (data['assessment'] != null)?data['assessment']:"";
+				grading_system 		= (data['grading_system'] != null)?data['grading_system']:"";
+				requirements 		= (data['requirements'] != null)?data['requirements']:"";
+				experience_required = (data['experience_required'] != null)?data['experience_required']:"";
+
+				editors.objective.setData(objective);
+				editors.accredited_by.setData(accredited_by);
+				editors.semester_details.setData(semester_details);
+				editors.assessment.setData(assessment);
+				editors.grading_system.setData(grading_system);
+				editors.requirements.setData(requirements);
+				editors.experience_required.setData(experience_required);
+
+				var photo = (data["template_profile_image"]!=null && data["template_profile_image"]!="")?data["template_profile_image"]:'no-user-image.png';
+				$("#template_image").attr("src", template_profile_image+"/"+photo);
+
+				if(!jQuery.isEmptyObject(data['units'])){
+					var trHtml = "";
+					var tota_glh =0;
+					$.each(data['units'], function(i,data){ 
+						var typeOption = (data['pivot']['type'] =='Optional')?"<option selected value='Optional'>Optional</option><option value='Mandatory'>Mandatory</option>":"<option value='Optional'>Optional</option><option selected value='Mandatory'>Mandatory</option>";				
+						trHtml 	+= "<tr>"+"<td><input type='hidden' name='unit_ids[]' value='"+data['id']+"' />"+data['unit_code']+"</td>"+"<td>"+data['name']+"</td>"+"<td>"+data['glh']+"<td>"+data['tut']+"</td>"+"</td>"+"<td><select name='type[]' class='form-control col-lg-12'>"+typeOption+"</select></td>"+"<td>"+data['assessment_type']+"</td>"+"<td><button onclick='$(this).parent().parent().remove();  calculateTotalUnit("+data['glh']+","+data['credit_hour']+","+data['tut']+")' ' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button></td>"+"</tr>";
+						tota_glh += parseFloat(data['glh']);
+					})
+					$('#glh').val(tota_glh)
+					$('#unit_table').append(trHtml);
+				}	
+				$('#entry-form').modal('show');
+			}
+		});
+	}
+
+	//Delete Module
+	templateDelete = function templateDelete(id){
+		var delete_id = id;
+		swal({
+			title: "Are you sure?",
+			text: "You wants to delete item parmanently!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		}).then((willDelete) => {
+			if (willDelete) {
+				$.ajax({
+					url: url+'/template/delete/'+delete_id,
+					cache: false,
+					success: function(data){
+						var response = JSON.parse(data);
+						if(response['response_code'] == 0){
+							toastr['error']( response['message'], 'Faild!!!');
+						}
+						else{
+							toastr['success']( response['message'], 'Success!!!');
+							template_datatable.ajax.reload();
+						}
+					}
+				});
+			}
+			else {
+				swal("Your Data is safe..!", {
+				icon: "warning",
+				});
+			}
+		});
+	}
+
 	
 	$("#sent_email_submit").on('click',function(){
 		event.preventDefault();
