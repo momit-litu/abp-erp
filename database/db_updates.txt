@@ -1,9 +1,9 @@
-ALTER TABLE `notification_templates`
-	ADD COLUMN `placeholders` MEDIUMTEXT NULL AFTER `details`;
+
 
 CREATE TABLE `template_catergory` (
 	`id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
 	`category_name` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`placeholders` MEDIUMTEXT  NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
 	PRIMARY KEY (`id`) USING BTREE
 )
 COLLATE='utf8mb4_general_ci'
@@ -12,4 +12,12 @@ ENGINE=InnoDB
 
 
 ALTER TABLE `notification_templates`
-	CHANGE COLUMN `category` `category` BIGINT(20) NULL COLLATE 'utf8mb4_unicode_ci' AFTER `placeholders`;
+	CHANGE COLUMN `category` `category` BIGINT(20) NULL COLLATE 'utf8mb4_unicode_ci;
+
+INSERT INTO template_categories (`id`, `category_name`, `placeholders`) VALUES
+	(1, 'Unpaid', '[student_name],[payment_date]'),
+	(2, 'Student', '[student_name]'),
+	(3, 'upcoming-due', '[student_name],[month]'),
+	(4, 'otp', '');
+ALTER TABLE `notification_templates`
+	ADD COLUMN `status` ENUM('Active','Inactive') NOT NULL DEFAULT 'Active' AFTER `type`;

@@ -8,6 +8,8 @@ use App\Models\Batch;
 use App\Models\Level;
 use App\Models\Course;
 use App\Models\CourseUnit;
+use App\Models\NotificationTemplate;
+use App\Models\TemplateCategory;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 use Illuminate\Http\Response;
@@ -27,10 +29,10 @@ class TemplateController extends Controller
     public function index()
     {
         $data['page_title'] 	= $this->page_title;
-		$data['module_name']	= "Courses";
-		$data['sub_module']		= "Courses";
+		$data['module_name']	= "Notifications";
+		$data['sub_module']		= "Template";
 		
-		$data['levels'] 		= Level::all();
+		$data['categories'] 		= TemplateCategory::all();
 		// action permissions
         $admin_user_id  		= Auth::user()->id;
         $add_action_id  		= 117; 
@@ -47,17 +49,16 @@ class TemplateController extends Controller
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
 
-	   $templates = NotificationTemplate::all();		
+		$templates = NotificationTemplate::with('tempCategory')->where('status','Active')->get();		
+		//dd($templates);
         $return_arr = array();
         foreach($templates as $template){
-
             $data['status'] 	=($template->status == 'Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
             $data['id'] 		= $template->id;			
             $data['title'] 		= $template->title;
-			$data['details'] 	= $template->details;
+			$data['details'] 	= $template->details; 
 			$data['type'] 		= $template->type;
-			$data['placeholders']=$template->placeholders;
-			$data['category']	= $template->category;
+			$data['category']	= $template->tempCategory->category_name;
 			
 			$data['actions'] =" <button title='View' onclick='templateView(".$template->id.")' id='view_" . $template->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
 		    if($edit_permisiion>0){
@@ -86,14 +87,13 @@ class TemplateController extends Controller
 		else{
 			$response_data =  $this->createTemplate($request->all());
 		}
-
         return $response_data;
     }
 
     public function show($id)
     {
 		if($id=="") return 0;		
-        $template = NotificationTemplate::findOrFail($id);
+        $template = NotificationTemplate::with('tempCategory')->findOrFail($id);
 		return json_encode(array('template'=>$template));
     }
 
@@ -137,11 +137,9 @@ class TemplateController extends Controller
 	private function createTemplate($request){
 		try {
             $rule = [
-                'code' 			=> 'required|string',
                 'title' 		=> 'required', 
-				'type' 			=> 'required',
+				'template_type' 			=> 'required',
 				'details' 		=> 'required',
-				'placeholders' 	=> 'required',
 				'category' 		=> 'required',
             ];
             $validation = \Validator::make($request, $rule);
@@ -155,11 +153,9 @@ class TemplateController extends Controller
 				//dd($request);
 				DB::beginTransaction();
                 $notificationTemplate = NotificationTemplate::create([
-                    'code' 				=>  $request['code'],
 					'title'				=>  $request['title'],
-					'type'				=>  $request['type'],
+					'type'				=>  $request['template_type'],
                     'details' 			=>  $request['details'],
-					'placeholders' 		=>  $request['placeholders'],
 					'category' 			=>  $request['category'],					
                     'status' 			=> (isset($request['status']))?'Active':'Inactive'
                 ]);
@@ -188,11 +184,9 @@ class TemplateController extends Controller
 			}
 
             $rule = [
-                'code' 			=> 'required|string',
                 'title' 		=> 'required', 
-				'type' 			=> 'required',
+				'template_type'	=> 'required',
 				'details' 		=> 'required',
-				'placeholders' 	=> 'required',
 				'category' 		=> 'required',
             ];
             $validation = \Validator::make($request, $rule);
@@ -204,12 +198,9 @@ class TemplateController extends Controller
             }
             else{
 				DB::beginTransaction();
-
-				$notificationTemplate->code 		= $request['code'];
 				$notificationTemplate->details 		= $request['details'];
-				$notificationTemplate->type			= $request['type'];
+				$notificationTemplate->type			= $request['template_type'];
 				$notificationTemplate->title 		= $request['title'];
-				$notificationTemplate->placeholders = $request['placeholders'];
 				$notificationTemplate->category 	= $request['category'];
 				$notificationTemplate->status 					= (isset($request['status']))?$request['status']:'Inactive';
 				$notificationTemplate->update();

@@ -36,7 +36,7 @@
 				<div class="page-title-actions">
 					<button type="button" onclick='templateAdd()' title="Add New Template" data-placement="bottom" class="btn-shadow mr-3 btn btn-primary">
 						<i class="fa fa-plus"></i>
-						dd New Template
+						Add New Template
 					</button>
 				</div>
 			</div>
@@ -46,6 +46,7 @@
 				<table class="table table-bordered table-hover templates_table" id="templates_table" style="width:100% !important">
 					<thead>
 						<tr>
+							<th></th>
 							<th>Title</th>
 							<th width="120">Category</th>											
 							<th class="text-center" width="100" >Type </th>										
@@ -86,30 +87,14 @@
 												<input type="text" id="title" name="title" class="form-control col-lg-12" />
 											</div>
 										</div>
-									</div> title details placeholders
-									<div class="form-row">
-										<div class="col-md-12">
-											<div class="position-relative form-group">
-												<label  >Body<span class="required">*</span></label>
-												<textarea name="details" id="details" class='ckeditor'></textarea>
-											</div>
-										</div>
-									</div>	
-									<div class="form-row">
-										<div class="col-md-12">
-											<div class="position-relative form-group">
-												<label  >Placeholders<span class="required">* (ex: [placeholde1],[placeholde2],[placeholde3])</span></label>
-												<textarea name="placeholders" id="placeholders" class='ckeditor'></textarea>
-											</div>
-										</div>
-									</div>										
+									</div>
 									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-group">
 												<label  class="">Template Category<span class="required">*</span>  </label>
 												<select id="category" name="category" class="form-control col-lg-12">
-													@foreach($levels as $level )
-													<option value="{{$level->id}}">{{$level->name}}</option>
+													@foreach($categories as $category )
+													<option value="{{$category->id}}">{{$category->category_name}}</option>
 													@endforeach
 												</select>
 											</div>
@@ -120,17 +105,27 @@
 												<select id="template_type" name="template_type" class="form-control col-lg-12">
 												<option value="sms">SMS</option>
 												<option value="email">Email</option>
+												<option value="notification">Notification</option>
 											</select>
 											</div>
 										</div>	
 									</div>
 									<div class="form-row">
+										<div class="col-md-12">
+											<div id="placeholders"></div>
+											<div class="position-relative form-group">
+												<label  >Body<span class="required">*</span></label>
+												<textarea name="details" id="details" class='ckeditor'></textarea>
+											</div>
+										</div>
+									</div>										
+									<div class="form-row">
 										<div class="col-md-6">
 											<div class="position-relative form-check">							
 												<label class="form-check-label">
-													<input type="checkbox" id="status" name="status" checked="checked" value="1" class="form-control col-lg-12"/> Is Active
+													<input type="checkbox" class="form-check-input" checked name="status" value="1"> Is Active
 												</label>
-											</div>											
+											</div>									
 										</div>									
 									</div>									
 								</div>							
@@ -148,7 +143,7 @@
 				<div class="col-md-12" style="display: flex; flex-direction: row;">
 					<div class="col-md-3 text-left">
 						@if($actions['add_permisiion']>0)
-						<button type="submit" id="save_Template" class="btn btn-success  btn-lg btn-block">Save</button>
+						<button type="submit" id="save_template" class="btn btn-success  btn-lg btn-block">Save</button>
 
 					@endif
 					</div>
@@ -164,7 +159,6 @@
 @endsection
 @section('JScript')
 <script type="text/javascript">
-	const Template_profile_image = "<?php echo asset('assets/images/Templates/'); ?>";
 	createEditor('details');
 
 </script>	

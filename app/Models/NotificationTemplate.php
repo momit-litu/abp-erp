@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class NotificationTemplate extends Model
 {
-    protected $fillable= [
-        'id', 'title', 'details','type','placeholders','category','status'
+
+    protected $fillable = [
+        'title', 'details', 'category', 'type'
     ];
-
-
-
+	
+	public function tempCategory(){
+		return $this->hasOne('App\Models\templateCategory','id','category');
+	}
 }

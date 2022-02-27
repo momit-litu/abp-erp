@@ -397,7 +397,6 @@ class NotificationController extends Controller
 		return true;
 	}
 
-
     // Email
     public function sendEmailIndex()
     {
@@ -435,9 +434,8 @@ class NotificationController extends Controller
                 $allStudents        = array();
                 $selectedStudents   = array();
                 
-                echo "HERE into controller";die;
 
-  /*              // SMS for due payment only
+                // SMS for due payment only
                 if($request->sms_template =='Unpaid'){
                     $all_student_type = ($request->all_student_type != null)?$request->all_student_type:"";
                     $lastDate = Date('Y-m-d');
@@ -452,7 +450,7 @@ class NotificationController extends Controller
 						if(isset($request->dont_send_dropout))
 							$studentStatusCondition = " AND dropout = 'No' " ; 
 						if(isset($request->dont_send_disabled))
-							$studentStatusCondition = " AND s.status = 'Active' AND bs.status = 'Active' " ; 
+							$studentStatusCondition = " AND s.status = 'Active' AND bs.status = 'Active'"; 
 					}
 
                     if($request->sms_batch_id != null){
@@ -467,7 +465,7 @@ class NotificationController extends Controller
                     }
                     $paymentStudentSql = "
                                         SELECT 
-                                        sp.payable_amount, sp.last_payment_date, s.contact_no, s.name
+                                        sp.payable_amount, sp.last_payment_date, s.email, s.name
                                         from student_payments sp
                                         LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
                                         LEFT JOIN students s on s.id = bs.student_id
@@ -479,16 +477,17 @@ class NotificationController extends Controller
                     $studentPayments = DB::select($paymentStudentSql);
                     $responseText   = "";
                     foreach($studentPayments as $details){                  
-                        $mobileNo = $details->contact_no;
+                        $email = $details->email;
                         $replacableArray = ["[student_name]","[payment_amount]","[payment_date]"];
                         $replaceByArray = [$details->name, $details->payable_amount, $details->last_payment_date];
-                        $smsBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
+                        $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
                         $smsParam = array(
-                            'commaSeperatedReceiverNumbers'=>$mobileNo,
+                            'commaSeperatedReceiverNumbers'=>$email,
                             'smsText'=>$smsBody,
                         );
                        
                         $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
+                        $response       =   $this->duePaymentEmail($request->payment_id); 
                         if($response['status']=="FAILED")
                             $responseText .= $mobileNo." - Not Sent , ";
                     }
@@ -654,7 +653,7 @@ class NotificationController extends Controller
                     if($response['status']=="FAILED") throw new Exception($response['message']);
                     $message = "SMS sent successfully.";
                 }
-*/
+
 				DB::commit();
 				$return['response_code'] 	= 1;
 				$return['message'] 			= $message;
