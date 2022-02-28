@@ -382,7 +382,6 @@ class ReportController extends Controller
                 where e.status='Active'";
 
 
-
         if($request->from_date != "")
             $expencesSQL .= " And expense_date >= '".$request->from_date."'";
         if($request->to_date != "")
