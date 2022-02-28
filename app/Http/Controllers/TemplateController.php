@@ -93,7 +93,7 @@ class TemplateController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;		
-        $template = NotificationTemplate::findOrFail($id);
+        $template = NotificationTemplate::with('tempCategory')->findOrFail($id);
 		return json_encode(array('template'=>$template));
     }
 

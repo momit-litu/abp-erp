@@ -66,8 +66,6 @@ $(document).ready(function () {
 		minLength: 2,
 	});
 	
-
-
 	$("#start_registration, #start_registration_sm").on('click',function(){		
 		$('.step-content').css('display','none');
 		$('#student-info').css('display','block');

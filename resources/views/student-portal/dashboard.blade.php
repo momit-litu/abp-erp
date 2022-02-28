@@ -151,22 +151,19 @@
                                             <p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
                                             <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">Available : {{ ($batch->student_limit-$batch->total_enrolled_student) }}</p> 
                                         @endIf
-										
-
                                         <p  class="mb-0 {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->total_enrolled_student<$batch->student_limit)?'Registration Available':'Registration Closed' }}</p>
-                                        
                                     </div>
                                     <div class="card mb-3 widget-content" style="margin-bottom:0px !important;">
                                         <div class="widget-content-wrapper ">
                                             <div class="widget-content-left">
                                                 <div class="widget-heading">Course Fee </div>
-                                                <div class="widget-subheading text-danger">{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}
-                                                <br><span>Instalment</span>
+                                                <div class="widget-subheading text-danger"> {{ $batch->discounted_fees }}
+                                                <br><span>Onetime Payment</span>
                                                 </div>
                                             </div>
                                             <div class="widget-content-right">
-                                                <div class="widget-numbers text-warning"><span style="font-size: smaller;"> {{ $batch->discounted_fees }}</span></div>
-                                                <div class="widget-heading">Onetime Payment:</div>
+                                                <div class="widget-numbers text-warning"><span style="font-size: smaller;">{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}</span></div>
+                                                <div class="widget-heading">Instalment</div>
                                             </div>
                                         </div>
                                     </div>
@@ -243,13 +240,13 @@
                                         <div class="widget-content-wrapper ">
                                             <div class="widget-content-left">
                                                 <div class="widget-heading">Course Fee </div>
-                                                <div class="widget-subheading text-danger">{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}
-                                                <br><span>Instalment</span>
+                                                <div class="widget-subheading text-danger">{{ $batch->discounted_fees }}
+                                                <br><span>Onetime Payment</span>
                                                 </div>
                                             </div>
                                             <div class="widget-content-right">
-                                                <div class="widget-numbers text-warning"><span style="font-size: smaller;"> {{ $batch->discounted_fees }}</span></div>
-                                                <div class="widget-heading">Onetime Payment:</div>
+                                                <div class="widget-numbers text-warning"><span style="font-size: smaller;"> {{ ($batch->fees > $batch->discounted_fees)?$batch->fees:'' }}</span></div>
+                                                <div class="widget-heading">Instalment</div>
                                             </div>
                                         </div>
                                     </div>

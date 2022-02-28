@@ -10,7 +10,7 @@
 							<span class="d-inline-block pr-2">
 								<i class="pe-7s-users icon-gradient bg-mean-fruit"></i>
 							</span>
-							<span class="d-inline-block">Schedule Vs Collection Report</span>
+							<span class="d-inline-block">Financial Report</span>
 						</div>
 						<div class="page-title-subheading opacity-10">
 							<nav class="" aria-label="breadcrumb">

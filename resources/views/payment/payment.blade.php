@@ -142,9 +142,7 @@
 											<div class="position-relative form-group">
 												<label  >Course & Batch<span class="required">*</span></label>
 												<select id="course_name" required name="course_name" class="form-control col-lg-12">
-
 												</select>
-
 											</div>
 										</div>
 										<div class="col-md-6">

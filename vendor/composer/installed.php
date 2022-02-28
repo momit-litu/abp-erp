@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '4d109a7ac5e1773b6dbcea573e30f570274e3696',
+        'reference' => '78b73b52ea5888dddb0f141da3de7036f18d592f',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -424,7 +424,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '4d109a7ac5e1773b6dbcea573e30f570274e3696',
+            'reference' => '78b73b52ea5888dddb0f141da3de7036f18d592f',
             'dev_requirement' => false,
         ),
         'laravel/passport' => array(
@@ -829,8 +829,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0.0 || 2.0.0 || 3.0.0',
-                1 => '1.0|2.0',
+                0 => '1.0|2.0',
+                1 => '1.0.0 || 2.0.0 || 3.0.0',
             ),
         ),
         'psr/simple-cache' => array(
@@ -1302,12 +1302,12 @@
             'dev_requirement' => false,
         ),
         'twilio/sdk' => array(
-            'pretty_version' => '6.34.0',
-            'version' => '6.34.0.0',
+            'pretty_version' => '6.35.0',
+            'version' => '6.35.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twilio/sdk',
             'aliases' => array(),
-            'reference' => '336cc54d70a6e05f397ee25777d79482a4574efd',
+            'reference' => '9cfb888bdb2555365ef0b48a81c140394e53ab83',
             'dev_requirement' => false,
         ),
         'vlucas/phpdotenv' => array(

@@ -8,7 +8,6 @@ $(document).ready(function () {
 		$('#entry-form').modal('show');
 	}
 
-
 	$("#show_batch_datatable").on('click',function(event){
 		event.preventDefault();
 		payment_datatable = $('#payments_table').DataTable({
@@ -66,7 +65,6 @@ $(document).ready(function () {
 		$('#payments_table').css('display','block');
 	});
 
-
 	$("#course_name").on('change',function(){
 		id = $(this).val();
 		$.ajax({
@@ -88,7 +86,6 @@ $(document).ready(function () {
 			}
 		});
 	});
-
 
 	$("#search_batch_name").autocomplete({ 
 		search: function() {		
@@ -219,7 +216,6 @@ $(document).ready(function () {
 			$(this).next().val(id);
 		},
 	});
-
 	
 	$("#receive_status").on('change',function(){ 
 		$('#paid_date').val(Date('m'));
@@ -372,12 +368,12 @@ $(document).ready(function () {
 				var data = response['payment'];
 				if(data['payment_status']=='Paid'){
 					fee =  data['paid_amount'];		
-					date = data['paid_date'];		
+
 				}	
 				else{
-					fee = data['payable_amount'];	
-					date = data['last_payment_date'];			
+					fee = data['payable_amount'];			
 				}
+
 				
 				$("#save_payment").html('Update');
 				$("#student_id").val(data['student_id']);
@@ -385,7 +381,7 @@ $(document).ready(function () {
 				$("#course_name").html("<option value='"+data['course_id']+"'>"+data['course_name']+"</option>");
 				$("#installment_no").html("<option value='"+data['installment_no_value']+"'>Install No. "+data['installment_no']+" ("+fee+")"+"</option>");
 				$("#paid_amount").val(fee);
-				$("#paid_date").val(date);
+				$("#paid_date").val( data['paid_date']);
 				$("#receive_status").val(data['receive_status']);
 				$("#paid_type").val(data['paid_type']);				
 				$("#payment_refference_no").val(data['payment_refference_no']);

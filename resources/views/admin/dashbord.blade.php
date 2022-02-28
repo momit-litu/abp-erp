@@ -103,7 +103,9 @@
 								<span class="mr-2 opacity-7">
 									<i class="icon icon-anim-pulse ion-ios-analytics-outline"></i>
 								</span>
-									<span class="mr-1">View Complete Report</span>
+									<span class="mr-1">
+										<a class="text-white" href="{{ url('financial-report') }}">View Complete Report</a>
+										</span>
 								</button>
 							</div>
 						</div>
@@ -296,7 +298,8 @@
 							<div class="card-header-title font-size-lg text-capitalize font-weight-normal"><strong>Registered Students</strong>
 							</div>
 							<div class="btn-actions-pane-right">
-								<button class="btn-wide btn btn-primary btn-sm">View Full Report</button>
+								<a  class="btn-wide btn btn-primary btn-sm text-white" href="{{ url('student-report') }}">View Full Report</a>
+
 							</div>
 						</div>
 						<div class="table-responsive">
@@ -324,7 +327,7 @@
 							<div class="card-header-title font-size-lg text-capitalize font-weight-normal"><strong>Enrolled Students</strong>
 							</div>
 							<div class="btn-actions-pane-right">
-								<button class="btn-wide btn btn-warning btn-sm">View Full Report</button>
+								<a  class="btn-wide btn btn-warning btn-sm text-white" href="{{ url('student-report') }}">View Full Report</a>								
 							</div>
 						</div>
 						<div class="table-responsive">
@@ -351,7 +354,7 @@
 							<div class="card-header-title font-size-lg text-capitalize font-weight-normal"><strong>Payments</strong>
 							</div>
 							<div class="btn-actions-pane-right">
-								<button class="btn-wide btn btn-danger btn-sm">View Full Report</button>
+								<a  class="btn-wide btn btn-danger btn-sm text-white" href="{{ url('payment-collection-report') }}">View Full Report</a>
 							</div>
 						</div>
 						<div class="table-responsive">
@@ -378,7 +381,7 @@
 							<div class="card-header-title font-size-lg text-capitalize font-weight-normal"><strong>Upcoming Batches</strong>
 							</div>
 							<div class="btn-actions-pane-right">
-								<button class="btn-wide btn btn-primary btn-sm">View Full Report</button>
+								<a  class="btn-wide btn btn-info btn-sm text-white" href="{{ url('batch-report') }}">View Full Report</a>
 							</div>
 						</div>
 						<div class="table-responsive">
