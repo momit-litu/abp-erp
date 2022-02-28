@@ -79,6 +79,7 @@ Route::post('/student-autosuggest/{batch_id}',array('as'=>'Student Batch Autosug
 Route::get('/student-installment/{id}',array('as'=>'Student Installment List', 'uses' =>'PaymentController@studentInstallmentList'));
 
 Route::post('/expense-autosuggest',array('as'=>'Expense Autosuggest list', 'uses' =>'ExpenseController@expenseAutoComplete'));
+Route::get('/get-template-placeholders/{id}',array('as'=>'Template Placeholders', 'uses' =>'TemplateController@getPlaceholders'));
 
 Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'uses' =>'PaymentController@emailInvoice'));
 Route::get('/download-invoice/{id}',array('as'=>'Payment Invoice Download' , 'uses' =>'PaymentController@downloadInvoice'));

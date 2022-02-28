@@ -74,6 +74,13 @@ class TemplateController extends Controller
 	}
 
 	
+	public function getPlaceholders($id)
+    {	
+        $templateCategory = TemplateCategory::find($id);
+		return json_encode(array('placeholders'=>$templateCategory->placeholders));
+    }
+
+	
     public function createOrEdit(Request $request)
     {
 		$admin_user_id 		= Auth::user()->id;

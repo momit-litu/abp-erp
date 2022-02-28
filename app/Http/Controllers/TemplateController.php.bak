@@ -53,13 +53,12 @@ class TemplateController extends Controller
 		//dd($templates);
         $return_arr = array();
         foreach($templates as $template){
-			dd($template);
             $data['status'] 	=($template->status == 'Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
             $data['id'] 		= $template->id;			
             $data['title'] 		= $template->title;
 			$data['details'] 	= $template->details; 
 			$data['type'] 		= $template->type;
-			//$data['category']	= $template->tempCategory->category_name;
+			$data['category']	= $template->tempCategory->category_name;
 			
 			$data['actions'] =" <button title='View' onclick='templateView(".$template->id.")' id='view_" . $template->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
 		    if($edit_permisiion>0){
@@ -73,6 +72,13 @@ class TemplateController extends Controller
         }
         return json_encode(array('data'=>$return_arr));
 	}
+
+	
+	public function getPlaceholders($id)
+    {	
+        $templateCategory = TemplateCategory::find($id);
+		return json_encode(array('templateCategory'=>$templateCategory));
+    }
 
 	
     public function createOrEdit(Request $request)
@@ -94,7 +100,7 @@ class TemplateController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;		
-        $template = NotificationTemplate::findOrFail($id);
+        $template = NotificationTemplate::with('tempCategory')->findOrFail($id);
 		return json_encode(array('template'=>$template));
     }
 

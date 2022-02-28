@@ -122,8 +122,7 @@
 											<div id="placeholders"></div>
 											<div class="position-relative form-group">
 												<label  >Body<span class="required">*</span></label>
-												<!--<textarea name="details" id="details" class='ckeditor'></textarea> -->
-												<textarea  rows="4" id="details" required name="details"  class="form-control col-lg-12"></textarea>
+												<textarea name="details" id="details" class='ckeditor'></textarea>
 											</div>
 										</div>
 									</div>										
