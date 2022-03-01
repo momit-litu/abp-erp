@@ -212,7 +212,7 @@ $(document).ready(function () {
 				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 			}
 		});
-		//editors.details.updateSourceElement();
+		editors.details.updateSourceElement();
 		var formData = new FormData($('#template_form')[0]);
 
 		if($.trim($('#title').val()) == ""){
