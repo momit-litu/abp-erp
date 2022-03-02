@@ -46,7 +46,7 @@ class NotificationController extends Controller
     {
         $data['page_title'] 	= $this->page_title;
 		$data['module_name']	= "Notifications";
-		$data['sub_module']		= "SMS";
+		$data['sub_module']		= "Bulk SMS";
 		
 		//$data['courses'] 		=StudentPayment::where('status','Active')->get();
 		// action permissions
@@ -353,6 +353,7 @@ class NotificationController extends Controller
 		}
     }
 
+    // not using yet ???
     public function sendDuePaymentEmail(Request $request)
     {
         try {
@@ -403,7 +404,7 @@ class NotificationController extends Controller
     {
         $data['page_title'] 	= $this->page_title;
 		$data['module_name']	= "Notifications";
-		$data['sub_module']		= "Emails";
+		$data['sub_module']		= "Bulk Email";
 
         $admin_user_id  		= Auth::user()->id;
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,95 );
@@ -433,10 +434,11 @@ class NotificationController extends Controller
 				DB::beginTransaction();
                 $allStudents        = array();
                 $selectedStudents   = array();
-                $title				= "MOMIT u are a faul";
+                $title				= $request->title;
+                $emailBody          = $request->message_body;
 
                 // SMS for due payment only
-                if($request->sms_template =='Unpaid'){
+                if($request->email_template ==1){
                     $all_student_type = ($request->all_student_type != null)?$request->all_student_type:"";
                     $lastDate = Date('Y-m-d');
                     $studentStatusCondition = "";
@@ -464,15 +466,15 @@ class NotificationController extends Controller
 							$studentCondition =   " AND s.id IN($studentIds)" ; 
                     }
                     $paymentStudentSql = "
-                                        SELECT 
-                                        sp.payable_amount, sp.last_payment_date, s.email, s.name
-                                        from student_payments sp
-                                        LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
-                                        LEFT JOIN students s on s.id = bs.student_id
-                                        WHERE sp.payment_status='Unpaid' and sp.last_payment_date<'$lastDate'
-                                        $studentStatusCondition
-                                        $studentCondition
-                                    ";
+                                    SELECT 
+                                    sp.payable_amount, sp.last_payment_date, s.email, s.name
+                                    from student_payments sp
+                                    LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
+                                    LEFT JOIN students s on s.id = bs.student_id
+                                    WHERE sp.payment_status='Unpaid' and sp.last_payment_date<'$lastDate'
+                                    $studentStatusCondition
+                                    $studentCondition
+                                ";
 					
                     $studentPayments = DB::select($paymentStudentSql);
                     $responseText   = "";
@@ -481,19 +483,18 @@ class NotificationController extends Controller
                         $replacableArray = ["[student_name]","[payment_amount]","[payment_date]"];
                         $replaceByArray = [$details->name, $details->payable_amount, $details->last_payment_date];
                         $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
-                        $smsParam = array(
-                            'commaSeperatedReceiverNumbers'=>$email,
-                            'smsText'=>$emaiBody,
+
+						$emails[] = array(
+							'title'		=> $title,
+                            'address'	=> $details->email,
+                            'body'		=> $emaiBody,
                         );
-                       
-                        $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                        $response       =   $this->duePaymentEmail($request->payment_id); 
-                        if($response['status']=="FAILED")
-                            $responseText .= $mobileNo." - Not Sent , ";
-                    }
-                    $message = "SMS sent successfully. ".$responseText;
+                    }                    
+					$response = $this->bulkEmail($emails); 				 
+                    if($response['response_code']=="0") throw new Exception($response['message']);
+                    $message = "Email sent successfully.";
                 }
-                else if($request->sms_template =='upcoming-due'){ 
+                else if($request->email_template ==3){ 
                     $all_student_type = ($request->all_student_type != null)?$request->all_student_type:"";
                     $monthYear   = Date('Y-m');
                    // $toDate     = Date('Y-m').'-8';
@@ -539,22 +540,22 @@ class NotificationController extends Controller
                             $mobileNo = $details->contact_no;
                             $replacableArray = ["[student_name]","[month]"];
                             $replaceByArray = [$details->name, date('F')];
-                            $smsBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
-                            $smsParam = array(
-                                'commaSeperatedReceiverNumbers'=>$mobileNo,
-                                'smsText'=>$smsBody,
+                            $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
+
+                            $emails[] = array(
+                                'title'		=> $title,
+                                'address'	=> $details->email,
+                                'body'		=> $emaiBody,
                             );
-                            // echo $mobileNo.'---';
-                            $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                            if($response['status']=="FAILED")
-                                $responseText .= $mobileNo." - Not Sent , ";
                         }
-                        $message = "SMS sent successfully. ".$responseText;
+                        $response = $this->bulkEmail($emails); 				 
+                        if($response['response_code']=="0") throw new Exception($response['message']);
+                        $message = "Email sent successfully.";
                     }
                     else 
                         $message = "No record found.";
                 }
-                else if($request->sms_template =='student'){
+                else if($request->email_template ==2){
                     $studentSql = " SELECT s.contact_no, s.id AS student_id, NAME AS student_name, student_no
                                     FROM students s ";
                     $studentCondition = " WHERE contact_no IS NOT null ";
@@ -593,17 +594,16 @@ class NotificationController extends Controller
                     $responseText   = "";
                     foreach($students as $details){                  
                         $mobileNo = $details->contact_no;
-                        $smsBody    = str_replace('[student_name]',$details->student_name,$request->message_body);
-                        $smsParam = array(
-                            'commaSeperatedReceiverNumbers'=>$mobileNo,
-                            'smsText'=>$smsBody,
+                        $emaiBody    = str_replace('[student_name]',$details->student_name,$request->message_body);
+                        $emails[] = array(
+                            'title'		=> $title,
+                            'address'	=> $details->email,
+                            'body'		=> $emaiBody,
                         );
-                    
-                        $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                        if($response['status']=="FAILED")
-                         $responseText .= $mobileNo." - Not Sent , ";
                     }
-                    $message = "SMS sent successfully. ".$responseText;
+                    $response = $this->bulkEmail($emails); 				 
+                    if($response['response_code']=="0") throw new Exception($response['message']);
+                    $message = "Email sent successfully.";
                 }
                 // SMS for non template SMS or generic template body to any student or bulk students
                 else{ 
@@ -641,7 +641,7 @@ class NotificationController extends Controller
                     } 
                     $studentSql .=$studentCondition;
                     $students   = DB::select($studentSql);
-					$emailBody= $request->message_body;
+					
 					foreach($students as $student){
 						$emails[] = array(
 							'title'		=> $title,
@@ -649,10 +649,9 @@ class NotificationController extends Controller
                             'body'		=> $emailBody,
                         );
 					}
-					$response = $this->bulkEmail($emails); 
-					if($response['status']=="FAILED") throw new Exception($response['message']);
-						 
-                    if($response['status']=="FAILED") throw new Exception($response['message']);
+
+					$response = $this->bulkEmail($emails); 				 
+                    if($response['response_code']=="0") throw new Exception($response['message']);
                     $message = "Email sent successfully.";
                 }
 

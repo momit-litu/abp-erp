@@ -52,13 +52,14 @@ trait StudentNotification
 		Mail::to($studentPayments['student']['email'])->send(new paymentRevisedMail($studentPayments));
 	}
 
+	// not using yet ???
 	public function monthlyPaymentEmail($paymentId){
 		$studentPayment = new StudentPayment();
 		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
 		$this->duePaymentNotification($payment); 
 		Mail::to($payment['student_email'])->send(new monthlyPaymentRequestMail($payment));
 	}
-
+	// not using yet ???
 	public function duePaymentEmail($paymentId){
 		$studentPayment = new StudentPayment();
 		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
@@ -73,13 +74,22 @@ trait StudentNotification
 	
 	
 	public function bulkEmail($emails){
-		foreach($emails as $email){	
-			Mail::to( $email['address'])->send(new bulkMail( $email['title'],  $email['body']));
+		try{
+			foreach($emails as $email){	
+				$sendEmail = Mail::to( $email['address'])->send(new bulkMail( $email['title'],  $email['body']));
+			}
+			$return['response_code'] 	= 1;
+			$return['message'] 			= "Mail Sent";
+			return $return;
+		} 
+		catch (\Exception $e){
+			$return['response_code'] 	= 0;
+			$return['message'] 			=  $e->getMessage();
+			return $return;
 		}
-		/*$studentPayment = new StudentPayment();
-		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
-		$this->duePaymentNotification($payment); 
-		Mail::to($payment['student_email'])->send(new monthlyPaymentRequestMail($payment));*/
+
+
+		return $sendEmail;
 	}
 
 

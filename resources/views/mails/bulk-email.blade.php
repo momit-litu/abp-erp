@@ -446,60 +446,11 @@
             <!-- Email Body -->
             <tr>
               <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
-                 {{$body}}
                   <!-- Body content -->
                   <tr>
                     <td class="content-cell">
                       <div class="f-fallback">
-                        <h1>Dear {{$studentEnrollment['student']['name']}},</h1>
-                        <p>Here is your revised payment plan for the course <b>{{$studentEnrollment['batch']['course']['title']}}, Batch:  {{$studentEnrollment['batch']['batch_name']}}</b>.</p>
-                        <!-- Discount -->
-                        <table class="discount" align="left" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td align="left" style="text-align:left !important">
-                              <h1 class="f-fallback discount_heading"  style="text-align:left !important"> Details:</h1>
-                              <p class="f-fallback discount_body"  style="text-align:left !important">Course : ({{$studentEnrollment['batch']['course']['code']}}){{$studentEnrollment['batch']['course']['title']}} - {{$studentEnrollment['batch']['course']['short_name']}}</p>
-                              <p class="f-fallback discount_body"  style="text-align:left !important">Batch : {{$studentEnrollment['batch']['batch_name']}}</p>    
-                              <p class="f-fallback discount_body"  style="text-align:left !important">Payment Plan : {{$studentEnrollment['batch_fee']['plan_name']}}</p>                      
-                              <p class="f-fallback discount_body"  style="text-align:left !important">Course Fee : Tk  {{$studentEnrollment['batch_fee']['payable_amount']}}</p>
-                              <p class="f-fallback discount_body"  style="text-align:left !important">Payable  Amount : Tk {{$studentEnrollment['total_payable']}}</p>
-                            </td>
-                          </tr>                         
-                        </table>
-                        <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                            <th class="purchase_heading" colspan="4" align="left">
-                                <h3 class="f-fallback">
-                                    Payment Details
-                                </h3>
-                            </th>                                     
-                            </tr>
-                            <tr>
-                            <th class="purchase_heading" align="center">
-                                <p class="f-fallback"><b>Installment</b></p>
-                            </th>
-                            <th class="purchase_heading" align="center" style="text-align:center !important">
-                                <p class="f-fallback"><b>Payment Date</b></p>
-                                </th>
-                            <th class="purchase_heading" align="center" style="text-align:center !important">
-                                <p class="f-fallback" style="text-align:right !important"><b>Status</b></p>
-                            </th>
-                            <th class="purchase_heading" align="right">
-                                <p class="f-fallback" style="text-align:right !important"><b>Payable Amount</b></p>
-                            </th>
-                            </tr>
-                            @foreach ($studentEnrollment['payments'] as $payment)
-                            <tr>
-                                <td width="20%"  align="center" class="purchase_item">{{$payment['installment_no'] }}</td>
-                                <td width="40%"  align="center" class="purchase_item">{{$payment['last_payment_date'] }}</td>
-                                <td width="20%"  align="center" class="purchase_item">{{$payment['payment_status'] }}</td>
-                                <td width="20%"  align="right" class="purchase_item">TK {{$payment['payable_amount'] }}</td>
-                            </tr> 
-                            <tr>
-                                <td colspan="3"  style="text-align:right !important"><b>Balance</b></td><td style="text-align:right !important"><b>TK {{($studentEnrollment['balance'])}}</b></td>
-                            </tr>  
-                            @endforeach                
-                        </table>
+                        {{ $body }}
   
                         <p class="danger">                         
                         </p>

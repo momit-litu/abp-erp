@@ -6,7 +6,9 @@ $(document).ready(function () {
 		$('#message_body').val($('#sms_template_div_'+$(this).find('option:selected').attr('id')).html());	
 	});
 	$("#email_template").on('change',function(){
-		editors.message_body.setData($('#email_template_div_'+$(this).find('option:selected').attr('id')).html());	
+		editors.message_body.setData($('#email_template_div_'+$(this).find('option:selected').attr('id')).html());
+		$('#title').val($('#email_template_title_'+$(this).find('option:selected').attr('id')).html());
+		
 	});
 	
 	getPaymentBatchTemplateDetails = function getPaymentBatchTemplateDetails(id){	

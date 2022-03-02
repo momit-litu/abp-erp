@@ -53,10 +53,19 @@
 										</select>
 										@foreach ($emailTemplates as $template)
 										<div class="d-none" id="email_template_div_{{$template->id}}">{{$template->details}}</div>
+										<div class="d-none" id="email_template_title_{{$template->id}}">{{$template->title}}</div>
 										@endforeach
 									</div>
 								</div>
 							</div>	
+							<div class="form-row">							
+								<div class="col-md-12">
+									<div class="position-relative form-group">
+										<label for="" class="">Email Title</label>
+										<input type="text" id="title"  name="title" class=" mr-2 form-control col-md-12" />
+									</div>
+								</div>
+							</div>
 							<div class="form-row">							
 								<div class="col-md-12">
 									<div class="position-relative form-group">

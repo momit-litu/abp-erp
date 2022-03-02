@@ -32,7 +32,6 @@ class bulkMail extends Mailable
      */
     public function build()
     {
-       // return $this->view('view.name');
         $settings 	  = Setting::first();
         return $this->subject($this->title.' - '.$settings['company_name'])
             ->markdown('mails.bulk-email')
