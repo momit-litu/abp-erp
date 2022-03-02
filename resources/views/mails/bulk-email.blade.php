@@ -342,7 +342,7 @@
     }
     
     .email-body_inner {
-      width: 570px;
+      width: 670px;
       margin: 0 auto;
       padding: 0;
       -premailer-width: 570px;
@@ -434,7 +434,7 @@
     </style>
   </head>
   <body>
-    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    <table class="email-wrapper " width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
         <td align="center">
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -446,14 +446,12 @@
             <!-- Email Body -->
             <tr>
               <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
                   <!-- Body content -->
                   <tr>
                     <td class="content-cell">
                       <div class="f-fallback">
-                        {{ $body }}
-  
-                        <p class="danger">                         
-                        </p>
+                        {!! $body !!}                     
                         <br>
                         <p>If you have any questions, simply reply to this email or reach out to our <a href="{{$settings['support_url']}}">support team</a> for help.</p>
                         <p>Thank you,

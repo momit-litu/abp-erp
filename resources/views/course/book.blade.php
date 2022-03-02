@@ -10,7 +10,7 @@
 							<span class="d-inline-block pr-2">
 								<i class="pe-7s-users icon-gradient bg-mean-fruit"></i>
 							</span>
-                                <span class="d-inline-block">Book Management</span>
+                                <span class="d-inline-block">Course Books</span>
                             </div>
                             <div class="page-title-subheading opacity-10">
                                 <nav class="" aria-label="breadcrumb">
@@ -39,41 +39,29 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-10">
-                            <form id="collection_status_form" name="payment_collection_status_form" enctype="multipart/form-data" class="form form-horizontal form-label-left ba">
-                                @csrf
-                                <div class="form-row">
-                                    <div class="col-md-4">
-                                        <div class="position-relative form-group">
-                                            <label class="control-label" >Course</label>
-                                            <input type="text" id="course_name" name="course_name" class="form-control col-lg-12" />
-                                            <input type="hidden" id="search_batch_id" name="search_batch_id"/>
-                                        </div>
+                            <div class="form-row">
+                                <div class="col-md-11">
+                                    <div class="position-relative form-group">
+                                        <label class="control-label" >Course & Batch</label>
+                                        <input type="text" id="batch_name" name="batch_name" class="form-control col-lg-12" />
+                                        <input type="hidden" id="batch_id" name="batch_id"/>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="position-relative form-group">
-                                            <label class="control-label" >Batch</label>
-                                            <input type="text" id="search_student_name" name="search_student_name" class="form-control col-lg-12" />
-                                            <input type="hidden" id="search_student_id" name="search_student_id"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-1">
-                                        <div class="position-relative form-group">
-                                            <label class="control-label" >&nbsp;</label>
-                                            <div class="col-md-8">
-                                                <button type="submit" id="show_batch_datatable" class="btn btn-info btn-lg">Search</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
-                            </form>
+                                <div class="col-md-1 text-right">
+                                    <div class="position-relative form-group">
+                                        <label class="control-label" >&nbsp;</label>
+                                        <div class="col-md-8">
+                                            <button id="show_batch_books" class="btn btn-info btn-lg">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-2">
                             <div class="position-relative form-group">
                                 <label class="control-label" >&nbsp;</label>
                                 <div class="col-md-12">
-                                    <button type="submit" id="show_batch_datatable" onclick='bookAdd()' class="btn btn-primary btn-lg">Add Book </button>
+                                    <button style="display: none" id="add_books" onclick='bookAdd()' class="btn btn-primary btn-lg">Add Book </button>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +70,7 @@
             </div>
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <table class="table table-bordered table-hover payments_table" id="payments_table" style="width:100% !important; display:none" >
+                    <table class="table table-bordered table-hover payments_table" id="batch_books_table" style="width:100% !important; display:none" >
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -100,6 +88,7 @@
                         <tbody>
                         </tbody>
                     </table>
+                    <div class="col-md-12 alert alert-danger text-center" style="display: none" id="no_book_div">No record found. Add Book?</div>
                 </div>
             </div>
         </div>
@@ -120,41 +109,41 @@
                                 @csrf
                                 <input type="hidden" name="edit_id" id="edit_id">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-5 card">
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <div class="position-relative form-group">
                                                     <label class="">Book Name <span class="required">*</span></label>
                                                     <input type="text" id="book_name" required name="book_name" class="form-control col-lg-12" />
-                                                    <input type="hidden" id="batch_id" required name="batch_id"  />
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-12">
-                                                <div class="position-relative form-group">
-                                                    <label for="company_name" class="">Active?</label>
-                                                    <input type="checkbox" id="status" name="status" checked="checked" value="1" class="form-control col-lg-12"/>
+                                                <div class="position-relative form-check">				
+                                                    <label class="form-check-label">
+                                                        <input type="checkbox" checked class="form-check-input" name="status" value="1" > Active
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-12">
+                                                <br>
                                                 @if($actions['add_permisiion']>0)
-                                                    <button type="submit" id="save_book" class="btn btn-success  btn-lg">Save</button>
+                                                    <button id="save_book" class="btn btn-success  btn-lg">Save</button>
                                                 @endif
+                                                <p>&nbsp;</p>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-1"></div>
                                     <div class="col-md-6">
                                         <table class="table table-bordered">
                                             <tr>
                                                 <th>Book Name</th>
                                                 <th>Status</th>
-                                            </tr>
-                                            <tr>
-                                                <td>Book Name</td>
-                                                <td>Active</td>
+                                                <th></th>
                                             </tr>
                                         </table>
                                     </div>
@@ -174,8 +163,7 @@
 
                         </div>
                         <div class="col-md-9 text-right">
-                            <button type="button" id="clear_button" class="btn btn-warning">Clear</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -184,7 +172,7 @@
     </div>
 @endsection
 @section('JScript')
-    <script type="text/javascript" src="{{ asset('assets/js/page-js/book/book.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/page-js/course/book.js')}}"></script>
 @endsection
 
 

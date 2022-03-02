@@ -418,7 +418,7 @@ class NotificationController extends Controller
     
     public function sendEmail(Request $request)
     {
-		
+		//dd($request->all());
         try {
             $rule = [ 
 				'message_body' => 'required',
@@ -466,7 +466,7 @@ class NotificationController extends Controller
 							$studentCondition =   " AND s.id IN($studentIds)" ; 
                     }
                     $paymentStudentSql = "
-                                    SELECT 
+                                    SELECT sp.id as payment_id, 
                                     sp.payable_amount, sp.last_payment_date, s.email, s.name
                                     from student_payments sp
                                     LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
@@ -478,20 +478,22 @@ class NotificationController extends Controller
 					
                     $studentPayments = DB::select($paymentStudentSql);
                     $responseText   = "";
-                    foreach($studentPayments as $details){                  
-                        $email = $details->email;
-                        $replacableArray = ["[student_name]","[payment_amount]","[payment_date]"];
-                        $replaceByArray = [$details->name, $details->payable_amount, $details->last_payment_date];
-                        $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
+                    foreach($studentPayments as $details){     
+                        $this->monthlyPaymentEmail($details->payment_id);
+                        
+                        // $email = $details->email;
+                        // $replacableArray = ["[student_name]","[payment_amount]","[payment_date]"];
+                        // $replaceByArray = [$details->name, $details->payable_amount, $details->last_payment_date];
+                        // $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
 
-						$emails[] = array(
-							'title'		=> $title,
-                            'address'	=> $details->email,
-                            'body'		=> $emaiBody,
-                        );
+						// $emails[] = array(
+						// 	'title'		=> $title,
+                        //     'address'	=> $details->email,
+                        //     'body'		=> $emaiBody,
+                        // );
                     }                    
-					$response = $this->bulkEmail($emails); 				 
-                    if($response['response_code']=="0") throw new Exception($response['message']);
+					//$response = $this->bulkEmail($emails); 				 
+                    //if($response['response_code']=="0") throw new Exception($response['message']);
                     $message = "Email sent successfully.";
                 }
                 else if($request->email_template ==3){ 
@@ -523,8 +525,8 @@ class NotificationController extends Controller
 							$studentCondition =   " AND s.id IN($studentIds)" ; 
                     }
                     $paymentStudentSql = "
-                                        SELECT 
-                                        sp.payable_amount, sp.last_payment_date, s.contact_no, s.name
+                                        SELECT sp.id as payment_id, 
+                                        sp.payable_amount, sp.last_payment_date, s.email, s.name
                                         from student_payments sp
                                         LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
                                         LEFT JOIN students s on s.id = bs.student_id
@@ -537,10 +539,10 @@ class NotificationController extends Controller
                     $responseText   = "";
                     if(count($studentPayments)>0){
                         foreach($studentPayments as $details){                  
-                            $mobileNo = $details->contact_no;
                             $replacableArray = ["[student_name]","[month]"];
                             $replaceByArray = [$details->name, date('F')];
                             $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
+                            
 
                             $emails[] = array(
                                 'title'		=> $title,
@@ -548,6 +550,7 @@ class NotificationController extends Controller
                                 'body'		=> $emaiBody,
                             );
                         }
+                       // $this->monthlyPaymentEmail($details->payment_id);
                         $response = $this->bulkEmail($emails); 				 
                         if($response['response_code']=="0") throw new Exception($response['message']);
                         $message = "Email sent successfully.";
@@ -606,7 +609,8 @@ class NotificationController extends Controller
                     $message = "Email sent successfully.";
                 }
                 // SMS for non template SMS or generic template body to any student or bulk students
-                else{ 
+                else{
+                     
                     $studentSql = " SELECT s.email, s.id AS student_id, NAME AS stuudent_name, student_no
                                     FROM students s ";
                     $studentCondition = " WHERE email IS NOT null ";

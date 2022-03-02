@@ -10,6 +10,18 @@ $(document).ready(function () {
 
 	$("#show_batch_datatable").on('click',function(event){
 		event.preventDefault();
+
+/*
+	"data" : function ( d ) {
+		return $.extend( {}, d, {
+			"search_from_date": $("#search_from_date").val(),
+			"search_to_date":$("#search_to_date").val(),
+			"search_student_id":$('#search_student_id').val(),
+			"search_batch_id":$('#search_batch_id').val(),
+		} );
+	}
+*/
+
 		payment_datatable = $('#payments_table').DataTable({
 			destroy: true,
 			"order": [[ 0, 'desc' ]],

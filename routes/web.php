@@ -72,6 +72,7 @@ Route::get('/load-user-groups', array('as'=>'user-group' , 'uses' =>'AdminContro
 Route::post('/student-autosuggest',array('as'=>'Student Autosuggest list', 'uses' =>'StudentController@studentAutoComplete'));
 Route::post('/units-autosuggest',array('as'=>'Unit Autosuggest list', 'uses' =>'UnitController@unitAutoComplete'));
 Route::post('/course-autosuggest/{showType}',array('as'=>'Course Autosuggest list', 'uses' =>'CourseController@courseAutoComplete'));
+
 Route::get('/student-course-batch-autosuggest/{id}',array('as'=>'Student Course Batch Autosuggest list', 'uses' =>'PaymentController@courseBatchList'));
 Route::post('/course-batch-autosuggest',array('as'=>'Course Batch Autosuggest list', 'uses' =>'CourseController@courseBatchAutoComplete'));
 Route::post('/batch-autosuggest/{course_id}',array('as'=>'Batch Autosuggest list', 'uses' =>'CourseController@batchAutoComplete'));
@@ -187,7 +188,8 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
     // Razib Create Route Book and batch
     //Payments
-    Route::get('/books',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@index'));
+    Route::get('/batch-book',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@index'));
+	Route::post('/book',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@saveBook'));
 
 
     Route::get('/email/payment-revised/{id}',array('as'=>'Revised Payment Email' , 'action_id'=>'91', 'uses' =>'PaymentController@emailRevisedPayment'));
