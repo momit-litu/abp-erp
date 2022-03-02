@@ -73,7 +73,7 @@ trait StudentNotification
 	
 	public function bulkEmail($emails){
 		foreach($emails as $email){	
-		//	dd($email);
+			dd($email);
 			Mail::to($email->address)->send(new bulkMail($email->title, $email->body));
 		}
 		/*$studentPayment = new StudentPayment();
