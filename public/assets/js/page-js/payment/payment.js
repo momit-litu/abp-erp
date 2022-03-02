@@ -120,8 +120,10 @@ $(document).ready(function () {
 		search: function() {		
 		},
 		source: function(request, response) {
+			let batch = ($('#search_batch_id').val()!="")?$('#search_batch_id').val():'0';
+			//alert(batch)
 			$.ajax({
-				url: url+'/student-autosuggest/'+$('#search_batch_id').val(),
+				url: url+'/student-autosuggest/'+batch,
 				dataType: "json",
 				type: "post",
 				async:false,

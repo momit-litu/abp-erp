@@ -114,7 +114,7 @@
             <div class="col-md-12">
                 <div class="main-card mb-3 card ">
                     <div class="card-body"> 
-                        <h5 class="card-title">Admissions Going On<span></span>&nbsp;
+                        <h5 class="card-title">Ongoing Batches<span></span>&nbsp;
                             @if(count($data['running_batches'])>0)
                                 <a href="{{url('portal/courses/Running')}}" class=" mb-2 mr-2 btn-hover-shine btn btn-info btn-sm" >Show All</a>
                             @endif
@@ -192,7 +192,7 @@
             <div class="col-md-12">
                 <div class="main-card mb-3 card ">
                     <div class="card-body"> 
-                        <h5 class="card-title">Upcoming course <span></span>&nbsp;
+                        <h5 class="card-title">Admissions Going On <span></span>&nbsp;
                             @if(count($data['upcoming_batches'])>0)
                             <a href="{{url('portal/courses/Upcoming')}}" class=" mb-2 mr-2 btn-hover-shine btn btn-info btn-sm" >Show All</a>
                             @endif

@@ -209,29 +209,19 @@ class StudentController extends Controller
     public function studentBatchAutoComplete($batchId = null)
     {
         $term = $_REQUEST['term']; 
-        $sql = Student::select('id','student_no', 'name', 'email')
-        ->where([
-            ['status', '=', 'Active'],
-            ['student_no', 'like', '%' . $term . '%']
-        ])
-        ->orWhere([
-            ['status', '=', 'Active'],
-            ['email', 'like', '%' . $term . '%']
-        ])
-        ->orWhere([
-            ['status', '=', 'Active'],
-            ['name', 'like', '%' . $term . '%']
-        ]);
-
-        $sql->whereHas('batches', function($query) use ($batchId){
-            $query->where('batch_id',$batchId);
-        });
-        $data = $sql->get();
-
-        $data_count = $data->count();
+        $sql = "SELECT s.id AS id,student_no, name,email FROM students s
+                    LEFT JOIN batch_students bs ON bs.student_id=s.id
+                    WHERE bs.status='Active' and (student_no like '%".$term."%' or email like '%".$term."%'  or name like '%".$term."%' ) 
+                ";
+        if($batchId){
+            $sql .= " And bs.batch_id=$batchId";
+        }
+        $sql .= " group by s.id";
+        $data = DB::select($sql);
+        $data_count = count($data);
         if ($data_count > 0) {
             foreach ($data as $row) {
-                $json[] = array('id' => $row["id"], 'label' => $row["student_no"].' '.$row["name"] . " (" . $row["email"] . ")");
+                $json[] = array('id' => $row->id, 'label' => $row->student_no.' '.$row->name . " (" . $row->email . ")");
             }
         } else {
             $json[] = array('id' => "0", 'label' => "Not Found !!!");
