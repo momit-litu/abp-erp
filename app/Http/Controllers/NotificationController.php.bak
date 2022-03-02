@@ -644,9 +644,9 @@ class NotificationController extends Controller
 					$emailBody= $request->message_body;
 					foreach($students as $student){
 						$emails[] = array(
-							'title'		=> $title,
-                            'address'	=> $student->email,
-                            'body'		=> $emailBody,
+							'title'	=> $title,
+                            'email'	=> $student->email,
+                            'body'	=> $emailBody,
                         );
 					}
 					$response = $this->bulkEmail($emails); 
