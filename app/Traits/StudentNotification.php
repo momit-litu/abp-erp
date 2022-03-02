@@ -2,6 +2,7 @@
 namespace App\Traits;
 
 use App\Models\User;
+use App\Mail\bulkMail;
 use App\Models\Student;
 use App\Mail\InvoiceMail;
 use Illuminate\Support\Str;
@@ -73,8 +74,7 @@ trait StudentNotification
 	
 	public function bulkEmail($emails){
 		foreach($emails as $email){	
-		//	dd($email);
-			Mail::to($email->address)->send(new bulkMail($email->title, $email->body));
+			Mail::to( $email['address'])->send(new bulkMail( $email['title'],  $email['body']));
 		}
 		/*$studentPayment = new StudentPayment();
 		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
