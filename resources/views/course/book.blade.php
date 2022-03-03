@@ -61,7 +61,7 @@
                             <div class="position-relative form-group">
                                 <label class="control-label" >&nbsp;</label>
                                 <div class="col-md-12">
-                                    <button style="display: none" id="add_books" onclick='bookAdd()' class="btn btn-primary btn-lg">Add Book </button>
+                                    <button style="display: none" id="add_books" onclick='showBooks()' class="btn btn-primary btn-lg">Add Book </button>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                 @csrf
                                 <input type="hidden" name="edit_id" id="edit_id">
                                 <div class="row">
-                                    <div class="col-md-5 card">
+                                    <div class="col-md-5">
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <div class="position-relative form-group">
@@ -139,7 +139,7 @@
                                     </div>
                                     <div class="col-md-1"></div>
                                     <div class="col-md-6">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered" id='books_table'>
                                             <tr>
                                                 <th>Book Name</th>
                                                 <th>Status</th>

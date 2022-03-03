@@ -189,6 +189,8 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
     // Razib Create Route Book and batch
     //Payments
     Route::get('/batch-book',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@index'));
+    Route::get('/batch-books/{id}',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@bookList'));
+
 	Route::post('/book',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@saveBook'));
 
 

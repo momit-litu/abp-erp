@@ -1,9 +1,41 @@
 $(document).ready(function () {
-    bookAdd = function bookAdd(){
-        $("#clear_button").trigger('click');
-        $("#form-title").html('<i class="fa fa-plus"></i> Add  New Book');
-        $("#save_book").html('Save');
-        $('#entry-form').modal('show');
+    
+    bookEdit = function bookEdit(bookId){
+        event.preventDefault();
+        alert(bookId);
+        $('#edit_id').val(bookId);
+        $('#book_name').val($('#book_name_'+bookId).html());
+    }
+    
+    
+    
+    showBooks = function showBooks(){
+        if($('#batch_id').val()!=""){
+            $("#clear_button").trigger('click');
+            $("#form-title").html('<i class="fa fa-plus"></i> Add  New Book');
+            $("#save_book").html('Save');
+            $('#entry-form').modal('show');
+            $.ajax({
+                url: url+"/batch-books/"+$('#batch_id').val(),
+                type:'get',
+                async:false,
+                success: function(data){
+                    var bookHtml = "";
+                    if(!jQuery.isEmptyObject(data)){
+                        $.each(data, function(i,book){ 
+                            bookHtml += `
+                                <tr>
+                                    <td id="book_name_`+book['id']+`">`+book['name']+`</td>
+                                    <td>`+book['status']+`</td>
+                                    <td >`+book['action']+`</td>
+                                </tr>`;
+                        })
+                        $('#books_table').append(bookHtml);
+                    }
+                }
+            });
+        }
+         // books_table
     }
 
     
@@ -131,7 +163,15 @@ $(document).ready(function () {
 				contentType:false,
 				processData:false,
 				success: function(data){
-					alert('FUUUH')
+                    var response = JSON.parse(data);
+					if(response['response_code'] == 0){
+                        success_or_error_msg('#form_submit_error','danger',response['errors'],"#book_name");
+                    }
+                    else{
+                        $('#entry-form').modal('hide');
+                        // load grid
+
+                    }					
 				 }
 			});
 		}

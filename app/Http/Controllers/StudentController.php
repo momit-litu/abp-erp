@@ -228,8 +228,6 @@ class StudentController extends Controller
         }
         return json_encode($json);
     }
-    
-
 
     public function createOrEdit(Request $request)
     {

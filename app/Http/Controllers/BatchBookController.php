@@ -39,6 +39,23 @@ class BatchBookController extends Controller
     }
 
     
+    public function bookList($batchId)
+    {
+        $return_arr  = array(); 
+        $books = BatchBook::where('batch_id',$batchId)->get();
+       
+        foreach ($books as $book) {           
+            $data['name'] = $book->book_no;
+            $data['status'] = ($book->status == 'Active') ? "<button class='btn btn-xs btn-success' disabled>Active</button>" : "<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
+            $data['id'] = $book->id; 
+            $data['action'] = "<a href='javascript:void(0)' title='Edit' onclick='bookEdit(".$book->id.")' id=edit_" . $book->id . " class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></a>";
+            $return_arr[] = $data;
+        }
+        return $return_arr;
+    }
+
+
+    
     
     public function saveBook(Request $request)
     {
@@ -56,14 +73,29 @@ class BatchBookController extends Controller
                 return json_encode($return);
             } else {
                 DB::beginTransaction();
-                $data = [                   
-                    'batch_id'  => $request['batch_id'],
-                    'book_no'   => $request['book_name'],
-                    'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
-                ];
-                //dd($data);
-                $batchBook = BatchBook::create($data);
 
+                if(isset($request['edit_id'])){
+                    $batchBook = BatchBook::findOrFail($request['edit_id']);
+                    $batchBook->book_no = $request['book_name'];
+                    $batchBook->status = (isset($request['status'])) ? 'Active' : 'Inactive';
+                    $batchBook->save();
+                }
+                else{
+                    $data = [                   
+                        'batch_id'  => $request['batch_id'],
+                        'book_no'   => $request['book_name'],
+                        'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
+                    ];
+                    $batchBook = BatchBook::create($data);
+                    if($batchBook){
+                       // $batchStudents = 
+                        $data = [                   
+                            'batch_id'  => $request['batch_id'],
+                            'book_no'   => $request['book_name'],
+                            'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
+                        ];
+                    }
+                }
                 DB::commit();
                 $return['response_code'] = 1;
                 $return['message'] = "Book saved successfully";
