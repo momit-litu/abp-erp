@@ -13,7 +13,7 @@ class StudentPayment extends Model
 {
     use StudentNotification; 
     protected $fillable= [
-        'id', 'student_enrollment_id', 'installment_no','payable_amount','paid_amount', 'payment_status',  'paid_type', 'last_payment_date',  'paid_date', 'payment_refference_no', 'receive_status','details',  'attachment', 'invoice_no', 'payment_received_by','paid_by'
+        'id', 'student_enrollment_id', 'installment_no','payable_amount','paid_amount', 'payment_status',  'paid_type', 'last_payment_date',  'paid_date', 'payment_refference_no', 'receive_status','details',  'attachment', 'invoice_no', 'payment_received_by','paid_by','status'
     ];
 
     public function enrollment(){

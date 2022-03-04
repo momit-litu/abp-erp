@@ -10,12 +10,14 @@ use App\Models\Course;
 use App\Models\Setting;
 use App\Models\Student;
 use App\Models\BatchFee;
+use App\Models\StudentBook;
 use App\Models\BatchStudent;
 use Illuminate\Http\Request;
 use App\Traits\HasPermission;
 use Illuminate\Http\Response;
 use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
+use App\Models\BatchStudentUnit;
 use App\Traits\StudentNotification;
 use Illuminate\Support\Facades\File;
 
@@ -136,7 +138,9 @@ class BatchController extends Controller
 
     public function enrollStudent(Request $request)
     {
-        try {
+        try 
+        {
+            DB::beginTransaction();
             if($request['batch_id'] == "" || $request['student_id'] =="" || $request['batch_fees_id']==""){
                 $return['response_code'] = "0";
                 $return['errors'] = 'Validation failed';
@@ -146,7 +150,7 @@ class BatchController extends Controller
                 $studentEnrollmentCheck = BatchStudent::where('batch_id',$request['batch_id'] )->where('student_id', $request['student_id'])->first();
                 if($studentEnrollmentCheck){
                     $return['response_code'] = "0";
-                    $return['errors'] = 'Student already enrolled in thos batch';
+                    $return['errors'] = 'Student already enrolled in this batch';
                      return json_encode($return);
                 }
 
@@ -160,7 +164,7 @@ class BatchController extends Controller
                     'balance'       =>  $batchFee->payable_amount,
                 ]);
                 if($batchStudent){
-                    $enrollment             = BatchStudent::with('batch', 'batch.course')->find($batchStudent->id);
+                    $enrollment             = BatchStudent::with('batch', 'batch.course', 'batch.course.units','batch.books')->find($batchStudent->id);
 
                     $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$request['batch_id']);
 
@@ -170,6 +174,24 @@ class BatchController extends Controller
 
                     $enrollment->student_enrollment_id = $student_enrollment_id ;
                     $enrollment->save();
+
+                    // save into student batch units
+                    foreach($enrollment->batch->course->units as $unit){
+                        $batchStudentUnit = BatchStudentUnit::create([
+                            'batch_student_id'=>  $batchStudent->id,
+                            'unit_id'         =>  $unit->id,
+                            'created_by'      =>  Auth::user()->id
+                        ]);  
+                    }
+
+                    // save into student batch book
+                    foreach($enrollment->batch->books as $book){
+                        $studentBook = StudentBook::create([
+                            'batch_student_id'=>  $batchStudent->id,
+                            'batch_book_id'   =>  $book->id,
+                            'student_id'      =>  $request['student_id']
+                        ]);  
+                    }
 
                     $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
                     $batchFee->batch->update();
@@ -190,6 +212,7 @@ class BatchController extends Controller
                             'last_payment_date'     =>  $last_payment_date,
                         ]); 
                     }
+
                 }
              }				
             DB::commit();
@@ -325,8 +348,7 @@ class BatchController extends Controller
 			return json_encode($return);
 		}
     }
-    
-    
+     
     public function destroy($id)
     {
         if($id==""){
@@ -570,6 +592,238 @@ class BatchController extends Controller
 			DB::rollback();
 			$return['response_code'] 	= 0;
 			$return['errors'] = "Failed to update !".$e->getMessage();
+			return json_encode($return);
+		}
+	}
+
+
+    // batch transfer 
+    
+    
+    public function getCurrentBatch($courseId, $studentId)
+    {
+        if($courseId && $studentId){
+            $currentBatch = BatchStudent::whereHas('batch', function ($q) use ($courseId) {
+                $q->where('course_id', $courseId);
+            })
+            ->with('batch')
+            ->where('student_id',$studentId)
+            ->where('current_batch','Yes')
+            ->first();
+            if($currentBatch){
+                $returnArr = [
+                    'batch_student_id'  => $currentBatch->id,
+                    'batch_no'          => $currentBatch->batch->batch_name
+                ];
+                return $returnArr;
+            }
+            else return false;  
+        }
+    }
+
+    public function transferIndex()
+    {
+        $data['page_title'] 	= $this->page_title;
+		$data['module_name']	= "Batchs";
+		$data['sub_module']		= "Batch Transfer";
+		
+		$data['courses'] 		=Batch::where('status','Active')->get();
+		// action permissions
+        $admin_user_id  		= Auth::user()->id;
+        $add_action_id  		= 118; // Batch transfer entry
+        $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
+        $data['actions']['add_permisiion']= $add_permisiion;
+		return view('batch.transfer-index',$data);
+    }
+
+	public function transferShowList(){
+		$admin_user_id 		= Auth::user()->id;
+		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,118);
+		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,118);
+
+        $trasferedStudents = BatchStudent::with('batch', 'batch.course','prev_batch.batch','student')
+                                ->whereNotNull('prev_batch_student_id')
+                                ->where('current_batch','Yes')
+                                ->orderBy('created_at','desc')
+                                ->get();
+        //dd($trasferedStudent);
+        foreach($trasferedStudents as $trasferedStudent){
+            $data['id'] 		    = $trasferedStudent->id;            
+			$data['student_name']   = "<a href='javascript:void(0)' onclick='showStudent(".$trasferedStudent->student_id.")' />". $trasferedStudent->student->name."</a>";
+            $data['course_name']= "<a href='javascript:void(0)' onclick='showCourse(".$trasferedStudent->batch->course_id.")' />".$trasferedStudent->batch->course->title."</a>";
+            $data['from_batch_name'] = $trasferedStudent->batch->batch_name; 
+            $data['to_batch_name']   = $trasferedStudent->prev_batch->batch->batch_name; 
+
+            $data['transfer_date']   = (!is_null($trasferedStudent->transfer_date))?$trasferedStudent->transfer_date:'';   
+			$data['fee']             = number_format($trasferedStudent->transfer_fee,2);
+            $data['status']          = $trasferedStudent->status;
+            $data['actions']         = " <button title='View' onclick='transferView(".$trasferedStudent->id.")' id='view_" . $trasferedStudent->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
+
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));
+	}
+
+    public function transferShow($id)
+    {
+		if($id=="") return 0;		
+        $trasferedStudent = BatchStudent::with('batch', 'batch.course','prev_batch.batch','student')->find($id);
+
+        $return['id'] 		        = $trasferedStudent->id;            
+        $return['student_name']     = "<a href='javascript:void(0)' onclick='showStudent(".$trasferedStudent->student_id.")' />". $trasferedStudent->student->name."</a>";
+        $return['course_name']= "<a href='javascript:void(0)' onclick='showCourse(".$trasferedStudent->batch->course_id.")' />".$trasferedStudent->batch->course->title."</a>";
+        $return['from_batch_name']  = $trasferedStudent->batch->batch_name; 
+        $return['to_batch_name']    = $trasferedStudent->prev_batch->batch->batch_name; 
+
+        $return['transfer_date']    = (!is_null($trasferedStudent->transfer_date))?$trasferedStudent->transfer_date:'';   
+        $return['fee']              = number_format($trasferedStudent->transfer_fee,2);
+        $return['remarks']          = (!is_null($trasferedStudent->remarks))?$trasferedStudent->remarks:'';  
+        $return['status']           = $trasferedStudent->status;  
+
+        return json_encode(array('trasferedStudent'=>$return));
+    }
+
+    public function transferCreateOrEdit(Request $request)
+    {
+       // dd($request->all());
+		$admin_user_id 		= Auth::user()->id;
+        $entry_permission = $this->PermissionHasOrNot($admin_user_id,118);
+
+		// update
+		if(!is_null($request->input('edit_id')) && $request->input('edit_id') != ""){
+			$response_data =  $this->editBatchTransfer($request->all(), $request->input('edit_id') );
+		}
+		// new entry
+		else{
+			$response_data =  $this->createBatchtransfer($request->all());
+		}
+        return $response_data;
+    }
+
+    private function createBatchtransfer($request){
+        $admin_user_id 		= Auth::user()->id;
+		try {
+            $rule = [
+                'student_id' 	=> 'required',
+                'course_id'     => 'required', 
+				'from_batch_id' => 'required',
+				'to_batch_id'   => 'required'
+            ];
+            $validation = \Validator::make($request, $rule);
+
+            if($validation->fails()){
+                $return['response_code'] = "0";
+				$return['errors'] = $validation->errors();
+				return json_encode($return);
+            }
+            else{				
+				DB::beginTransaction();
+
+                $courseId   = $request['course_id'];
+                $studentId  = $request['student_id'];
+                $fromBatchId= $request['from_batch_id'];
+                $toBatchId  = $request['to_batch_id'];
+                $transferFee= ($request['transfer_fee']!="")?$request['transfer_fee']:0;
+
+                $currentBatch = BatchStudent::with('batch','batch_fee','payments','batch_student_units')->where('id',$fromBatchId)->first();
+              
+                $currentBatch->status        = 'Inactive';
+                $currentBatch->current_batch = 'Transfered'; 
+                $currentBatch->transfer_date = ($request['transfer_date'])?$request['transfer_date']:NULL;
+                $currentBatch->save();
+
+				$batchStudent = BatchStudent::create([
+                    'batch_id' 	    =>  $toBatchId,
+                    'student_id'	=>  $studentId,
+                    'batch_fees_id' =>  $currentBatch->batch_fees_id,
+                    'total_payable' =>  $currentBatch->total_payable+$transferFee,
+                    'balance'       =>  $currentBatch->balance+$transferFee,
+                    'prev_batch_student_id'=>$fromBatchId,
+                    'remarks'       =>  $request['remarks'],
+                    'transfer_fee'  =>  $transferFee,
+                    'transfer_date' =>  $request['transfer_date']
+                ]);
+                //dd($currentBatch);
+                if($batchStudent){
+                    $enrollment             = BatchStudent::with('batch', 'batch.course', 'batch.course.units','batch.books')->find($batchStudent->id);
+                   
+                    $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$request['to_batch_id']);
+
+                    $lastEnrollmentId = (!is_null($lastEnrollmentIdSQL[0]->max_enrollmen_id))?$lastEnrollmentIdSQL[0]->max_enrollmen_id:0;
+
+                    $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
+
+                    $enrollment->student_enrollment_id = $student_enrollment_id ;
+                    $enrollment->save();
+
+                    // save payments info for new batch
+                    foreach($currentBatch->payments as $key => $payment){
+                        StudentPayment::create([
+                            'student_enrollment_id' =>  $batchStudent->id,
+                            'installment_no'        =>  $payment->installment_no,
+                            'payable_amount'        =>  $payment->payable_amount,
+                            'last_payment_date'     =>  $payment->last_payment_date,
+                            'payment_status'        =>  $payment->payment_status,
+                            'paid_type'             =>  $payment->paid_type,
+                            'paid_amount'           =>  $payment->paid_amount,
+                            'paid_date'             =>  $payment->paid_date,
+                            'payment_refference_no' =>  $payment->payment_refference_no,
+                            'invoice_no'            =>  $payment->invoice_no,
+                            'details'               =>  $payment->details,
+                            'paid_by'               =>  $payment->paid_by,
+                        ]); 
+                        // update  payments info for old batch
+                        $oldStudentPayment = StudentPayment::find($payment->id);
+                        $oldStudentPayment->status = 'Inactive';
+                        $oldStudentPayment->save();
+                    }
+                    // transfer fee
+                    if($transferFee){
+                        StudentPayment::create([
+                            'student_enrollment_id' =>  $batchStudent->id,
+                            'installment_no'        =>  0,
+                            'payable_amount'        =>  $transferFee,
+                            'last_payment_date'     =>  date('Y-m-d')
+                        ]); 
+                    }   
+                               
+                    // save into student batch units
+                    foreach($currentBatch->batch_student_units as $key => $batchStudentUnitData){
+                        $batchStudentUnit = BatchStudentUnit::find($batchStudentUnitData->id);
+                        $batchStudentUnit->batch_student_id= $batchStudent->id;
+                        $batchStudentUnit->save();
+                    }
+
+                    // save into student batch book
+                    foreach($enrollment->batch->books as $book){
+                        $checkExistingBook = StudentBook::where('batch_student_id',$currentBatch->id)->where('batch_book_id',$book->id)->first();
+
+                        if(!empty($checkExistingBook)){
+                            $checkExistingBook->batch_student_id =  $batchStudent->id;
+                            $checkExistingBook->save();
+                        }
+                        else{
+                            $studentBook = StudentBook::create([
+                                'batch_student_id'=>  $batchStudent->id,
+                                'batch_book_id'   =>  $book->id,
+                                'student_id'      =>  $request['student_id']
+                            ]);                            
+                        }
+                    }
+                }   
+                
+                $this->batchTransferNotificationForStudent($batchStudent->id); 
+
+				DB::commit();
+				$return['response_code'] = 1;
+				$return['message'] = "Batch saved successfully";
+				return json_encode($return);
+            }
+        } 
+		catch (\Exception $e){
+			DB::rollback();
+			$return['response_code'] 	= 0;
+			$return['errors'] = "Failed to save !".$e->getMessage();
 			return json_encode($return);
 		}
 	}

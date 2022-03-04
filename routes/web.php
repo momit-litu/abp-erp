@@ -178,6 +178,14 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/batch',array('as'=>'Batch Entry' , 'action_id'=>'82', 'uses' =>'BatchController@createOrEdit'));
 	Route::get('/batch/delete/{id}',array('as'=>'Batch Delete' , 'action_id'=>'84', 'uses' =>'BatchController@destroy'));
 
+	//Batch transfer
+	Route::get('/batch-transfer',array('as'=>'Batch Transfer', 'action_id'=>'118', 'uses' =>'BatchController@transferIndex'));
+	Route::get('/batch-transfers',array('as'=>'Batch Transfer List' ,'action_id'=>'118', 'uses' =>'BatchController@transferShowList'));
+	Route::get('/batch-transfer/{id}',array('as'=>'Batch Transfer Details' ,'action_id'=>'118', 'uses' =>'BatchController@transferShow'));
+	Route::post('/batch-transfer',array('as'=>'Batch Transfer Entry' , 'action_id'=>'118', 'uses' =>'BatchController@transferCreateOrEdit'));
+
+	Route::post('/batch-current/{course_id}/{student_id}',array('as'=>'Batch details', 'action_id'=>'118', 'uses' =>'BatchController@getCurrentBatch'));
+	
 
 	//Payments
 	Route::get('/payment',array('as'=>'Payment', 'action_id'=>'86', 'uses' =>'PaymentController@index'));
@@ -186,13 +194,14 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/payment',array('as'=>'Payment Entry' , 'action_id'=>'87', 'uses' =>'PaymentController@createOrEdit'));
 	Route::get('/payment/delete/{id}',array('as'=>'Payment Delete' , 'action_id'=>'89', 'uses' =>'PaymentController@destroy'));
 
-    // Razib Create Route Book and batch
-    //Payments
+    //books
     Route::get('/batch-book',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@index'));
     Route::get('/batch-books/{id}',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@bookList'));
-
+	Route::get('/student-books/{id}',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@studenBookList'));
 	Route::post('/book',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@saveBook'));
-
+	Route::post('/feedback',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@saveFeedback'));
+	Route::get('/book-send/{id}',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@studenBookSend'));
+	
 
     Route::get('/email/payment-revised/{id}',array('as'=>'Revised Payment Email' , 'action_id'=>'91', 'uses' =>'PaymentController@emailRevisedPayment'));
 

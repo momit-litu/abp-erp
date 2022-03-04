@@ -2,7 +2,6 @@
 $(document).ready(function () {
 	// for get site url
 	var url = $('.site_url').val();
-
 	// icheck for the inputs
 	$('#batch_form').iCheck({
 		checkboxClass: 'icheckbox_flat-green',
@@ -511,7 +510,19 @@ $(document).ready(function () {
 									var student = response['student'];
 									toastr['success']( 'Student Enrollment Saved Successfully', 'Success!!!');
 									student_status = ("<button class='btn btn-xs btn-success' disabled>"+student['status']+"</button>");
-									student_data_table.row.add([response['total_enrolled_student'],student['student_no'],student['name'],student['email'], student['contact_no'], student_status,"<button type='button'  title='Remove Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove-student'><i class='fa fa-trash-alt'></i></button><input type='hidden' id='student_"+student['id']+"' value="+student['id']+" />"]).draw();
+									student_data_table.row.add([
+										response['total_enrolled_student'],
+										student['student_no'],
+										student['name'],
+										student['email'], 
+										student['contact_no'], 
+										"Not Sent",
+										student_status,
+										`<button type='button'  title='Remove Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove-student'><i class='fa fa-trash-alt'></i></button>
+										<input type='hidden' id='student_"+student['id']+"' value=`+student['id']+` />
+										<button type='button'  title='Dropout Student' data-placement='bottom' class='border-0 btn-transition btn btn-warning btn-xs dropout-student' ><i class='pe-7s-attention'></i></button>`
+									]
+									).draw();
 			
 									$('#total_enrolled_student').html(response['total_enrolled_student']);
 									$('#student_name').val("");
@@ -783,5 +794,7 @@ $(document).ready(function () {
 			}
 		});
 	}
+
+
 });
 

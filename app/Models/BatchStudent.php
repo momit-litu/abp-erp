@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BatchStudent extends Model
 {
     protected $fillable= [
-        'id','student_enrollment_id', 'batch_id', 'student_id','batch_fees_id','total_payable','total_paid','balance','status'
+        'id','student_enrollment_id', 'batch_id', 'student_id','batch_fees_id','total_payable','total_paid','balance','status','prev_batch_student_id','current_batch', 'overall_result','result_published_status', 'transfer_fee','transfer_date','remarks'
     ];
     public function payments(){
         return $this->hasMany('App\Models\StudentPayment','student_enrollment_id','id');
@@ -21,9 +21,15 @@ class BatchStudent extends Model
     public function batch(){
         return $this->hasOne('App\Models\Batch','id','batch_id');
     }
+    public function prev_batch(){
+        return $this->hasOne('App\Models\BatchStudent','id','prev_batch_student_id');
+    }
     public function batch_fee(){
         return $this->hasOne('App\Models\BatchFee','id','batch_fees_id');
-      }
+    }
+    public function batch_student_units(){
+        return $this->hasMany('App\Models\BatchStudentUnit','batch_student_id','id');
+    }
 
     public function getBatchesByStudentId($studentId)
     {

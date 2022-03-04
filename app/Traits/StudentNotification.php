@@ -13,6 +13,7 @@ use App\Mail\studentEnrollmentMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\studentRegistrationMail;
+use App\Notifications\studentBookSent;
 use App\Mail\monthlyPaymentRequestMail;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\newStudentCreated;
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\duePaymentNotification;
 use App\Notifications\newPaymentByStudentOwn;
+use App\Notifications\studentBatchTransfered;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait StudentNotification
@@ -120,11 +122,28 @@ trait StudentNotification
 	}
 
 	public function duePaymentNotification($payment){
-
 		/*$studentPayment = new StudentPayment();
 		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);*/
 		$notifyUser = User::where('student_id',$payment['student_id'])->get();
 		Notification::send($notifyUser, new duePaymentNotification(array('type'=>'Success',  'paymentId'=>$payment['id'], 'paymentAmount'=>$payment['paid_amount'] )));
 	}
+
+
+	public function bookSentNotificationForStudent($studentBook){
+		$notifyUser = User::where('student_id',$studentBook->student_id)->get();
+         Notification::send($notifyUser, new studentBookSent(array('type'=>'Success', 
+		 'studentId'=>$studentBook->student_id, 'courseId'=>$studentBook->book->batch_id, 'courseName'=>$studentBook->book->batch->course->title, 'bookName'=>$studentBook->book->book_no )));
+	}
+
+	public function batchTransferNotificationForStudent($batchStudentId){
+		$trasferedStudent = BatchStudent::with('batch', 'batch.course','prev_batch.batch','student')->find($batchStudentId);
+		$notifyUser = User::where('student_id',$trasferedStudent->student_id)->get();
+
+         Notification::send($notifyUser, new studentBatchTransfered(array('type'=>'Success', 
+		 'studentId'=>$trasferedStudent->student_id, 'courseId'=>$trasferedStudent->batch->course_id, 'courseName'=>$trasferedStudent->batch->course->title, 'transferForm'=>$trasferedStudent->batch->batch_name." to ".$trasferedStudent->prev_batch->batch->batch_name )));
+	}
+
+
+	
 
 }

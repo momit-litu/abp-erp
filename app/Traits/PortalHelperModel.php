@@ -78,7 +78,7 @@ trait PortalHelperModel
         try{
 			if (Auth::check()){
 				$studentId 		= Auth::user()->student_id;
-				$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units')
+				$batch   = Batch::with('course','batch_fees','books','batch_fees.installments', 'course.units')
 										->with(['students' => 	function ($query) use ($studentId) {
 											$query->where('student_id',$studentId); //->where('batch_students.status','Active');
 										}])

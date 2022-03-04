@@ -1,19 +1,14 @@
 $(document).ready(function () {
     
     bookEdit = function bookEdit(bookId){
-        event.preventDefault();
-        alert(bookId);
         $('#edit_id').val(bookId);
         $('#book_name').val($('#book_name_'+bookId).html());
-    }
-    
-    
+    }  
     
     showBooks = function showBooks(){
         if($('#batch_id').val()!=""){
-            $("#clear_button").trigger('click');
+            $("#edit_id").val('');
             $("#form-title").html('<i class="fa fa-plus"></i> Add  New Book');
-            $("#save_book").html('Save');
             $('#entry-form').modal('show');
             $.ajax({
                 url: url+"/batch-books/"+$('#batch_id').val(),
@@ -26,10 +21,11 @@ $(document).ready(function () {
                             bookHtml += `
                                 <tr>
                                     <td id="book_name_`+book['id']+`">`+book['name']+`</td>
-                                    <td>`+book['status']+`</td>
-                                    <td >`+book['action']+`</td>
+                                    <td class="tect-center">`+book['status']+`</td>
+                                    <td class="tect-center">`+book['action']+`</td>
                                 </tr>`;
                         })
+                        $('#books_table>tr').remove();
                         $('#books_table').append(bookHtml);
                     }
                 }
@@ -37,7 +33,6 @@ $(document).ready(function () {
         }
          // books_table
     }
-
     
 	$("#batch_name").autocomplete({ 
 		search: function() {		
@@ -66,77 +61,103 @@ $(document).ready(function () {
 	$("#batch_name").on('click',function(){ 
 		$(this).val("");
 		$(this).next().val("");
+        $('#add_books').css('display','none');
+        $('#edit_id').val('');
+        $('#book_name').val('');
+        $('#books_table>tr').remove();
+        $('#batch_books_div').css('display','none');
+    });
+
+    addFeedback = function addFeedback(studentBookId){
+        $("#student_book_id").val(studentBookId);
+        $('#feedback-form').modal('show');
+    }
+
+    $("#save_feedback").on('click',function(){
+		event.preventDefault();
+		$.ajaxSetup({
+			headers:{
+				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+			}
+		});
+
+		var formData = new FormData($('#feedback_form')[0]);
+       
+		if($.trim($('#feedback_details').val()) == "" || $.trim($('#student_book_id').val()) == ""){
+			success_or_error_msg('#form_submit_error','danger',"Please put details","#feedback_details");
+		}
+		else{
+			$.ajax({
+				url: url+"/feedback",
+				type:'POST',
+				data:formData,
+				async:false,
+				cache:false,
+				contentType:false,
+				processData:false,
+				success: function(data){
+                    var response = JSON.parse(data);
+					if(response['response_code'] == 0){
+                        success_or_error_msg('#form_submit_error','danger',response['errors'],"#book_name");
+                    }
+                    else{
+                        $('#feedback-form').modal('hide');
+                        $("#show_batch_books").trigger('click');
+                    }					
+				 }
+			});
+		}
 	});
     
+
+    sendBook = function sendBook(student_book_id){
+        swal({
+			title: "Confirm?",
+			text: "You wants to send the book!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		}).then((willDelete) => {
+			if (willDelete) {
+				$.ajax({
+					url: url+'/book-send/'+student_book_id,
+					cache: false,
+					success: function(data){
+						var response = JSON.parse(data);
+						if(response['response_code'] == 0){
+							toastr['error']( response['errors'], 'Faild!!!');
+						}
+						else{
+							toastr['success']( response['message'], 'Success!!!');
+						}
+					}
+				});
+			}
+			else {
+				swal("Your Data is safe..!", {
+				icon: "warning",
+				});
+			}
+		});
+    }
+
+
 	$("#show_batch_books").on('click',function(){
         if($('#batch_id').val()!=""){
             $('#add_books').css('display','block');
-            
-            /* 
-            batch_books_datatable = $('#payments_table').DataTable({
-                destroy: true,
-                "order": [[ 0, 'desc' ]],
-                "processing": true,
-                "serverSide": false,
-                "ajax": { 
-                    "url" : url+"/payments",
-                    "type": "POST",
-                    "data" : {
-                        "search_from_date": $("#search_from_date").val(),
-                        "search_to_date":$("#search_to_date").val(),
-                        "search_student_id":$('#search_student_id').val(),
-                        "search_batch_id":$('#search_batch_id').val(),
-                    }
-                },
-                "aoColumns": [
-                    { mData: 'id'},
-                    { mData: 'student_name'},
-                    { mData: 'course_name' },
-                    { mData: 'batch_name' ,  className: "text-center"},
-                    { mData: 'installment', className: "text-center"},
-                    { mData: 'payment_month', className: "text-center"},
-                    { mData: 'paid_date', className: "text-center"},
-                    { mData: 'payment_status', className: "text-center"},			
-                    { mData: 'paid_amount', className: "text-right"},
-                    { mData: 'actions', className: "text-left"},
-                ],
-                "columnDefs": [
-                    { "targets": [ 0 ],  "visible": false },
-                    { "width": "120px", "targets":[ 8 ]},
-                ],
-                "initComplete": function () {
-                    this.api().columns().every( function (key) {
-                        var column = this;		
-                        if( column[0] == 3 || column[0] == 5 ||  column[0] == 7  ){
-                            var select = $('<select><option value=""></option></select>')
-                                .appendTo( $(column.header()) )
-                                .on( 'change', function () {
-                                    var val = $.fn.dataTable.util.escapeRegex(
-                                        $(this).val()
-                                    );
-                                    column
-                                        .search( val ? '^'+val+'$' : '', true, false )
-                                        .draw();
-                                } );
-                            column.data().unique().sort().each( function ( d, j ) {
-                                select.append( '<option value="'+d+'">'+d+'</option>' )
-                            } );
-                        }
-                    } );
+            $.ajax({
+                url: url+"/student-books/"+$('#batch_id').val(),
+                type:'get',
+                async:false,
+                success: function(data){
+                    $('#batch_books_table_div').html(data);
                 }
             });
-        */
-            $('#batch_books_table').css('display','block');
-            $('#no_book_div').css('display','block');
-            
-
-
+            $('#batch_books_div').css('display','block');
         }else{
             $('#add_books').css('display','none');
-            $('#no_book_div').css('display','none');
         }        
     })
-
 
     $("#save_book").on('click',function(){
 		event.preventDefault();
@@ -169,11 +190,33 @@ $(document).ready(function () {
                     }
                     else{
                         $('#entry-form').modal('hide');
-                        // load grid
-
+                        $("#show_batch_books").trigger('click');
                     }					
 				 }
 			});
 		}
 	});
+
+    $("#student_books_table_search").on('keyup',function(){
+          // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("student_books_table_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("student_books_table");
+        tr = table.getElementsByTagName("tr");
+      
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+    });
+    
 });

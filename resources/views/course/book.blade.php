@@ -68,27 +68,21 @@
                     </div>
                 </div>
             </div>
-            <div class="main-card mb-3 card">
+            <div class="main-card mb-3 card" id="batch_books_div" style="display: none" >
                 <div class="card-body">
-                    <table class="table table-bordered table-hover payments_table" id="batch_books_table" style="width:100% !important; display:none" >
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Student Name</th>
-                            <th>Course Title</th>
-                            <th>Batch</th>
-                            <th>Installment</th>
-                            <th>Payment Month</th>
-                            <th>Payment Date </th>
-                            <th>Type</th>
-                            <th>Amount</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <div class="col-md-12 alert alert-danger text-center" style="display: none" id="no_book_div">No record found. Add Book?</div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6"></div>
+                        <div class="col-sm-12 col-md-6 text-right">
+                            <div id="student_book_table_filter" class="dataTables_filter">
+                                <label>
+                                    <input type="search" class="form-control form-control-sm text-left" placeholder="" id="student_books_table_search">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="batch_books_table_div" >
+                        
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -147,6 +141,64 @@
                                             </tr>
                                         </table>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div id="form_submit_error" class="text-center" style="display:none"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12" style="display: flex; flex-direction: row;">
+                        <div class="col-md-3 text-left">
+
+                        </div>
+                        <div class="col-md-9 text-right">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="feedback-form" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="form-title"><i class="fa fa-plus"></i> Add  Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <form id="feedback_form" autocomplete="off" name="feedback_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
+                                @csrf
+                                <input type="hidden" name="student_book_id" id="student_book_id">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <div class="position-relative form-group">
+                                                    <label class="">Feedback <span class="required">*</span></label>
+                                                    <textarea  rows="4" id="feedback_details" required name="feedback_details"  class="form-control col-lg-12"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <br>
+                                                @if($actions['add_permisiion']>0)
+                                                    <button id="save_feedback" class="btn btn-success  btn-lg">Save</button>
+                                                @endif
+                                                <p>&nbsp;</p>
+                                            </div>
+                                        </div>
+                                    </div>                                    
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12 col-sm-12 col-xs-12">

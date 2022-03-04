@@ -179,6 +179,8 @@ class StudentPortalController extends Controller
                     'status'        => 'Inactive',
                 ]);
                 if($batchStudent){
+                    $enrollment = BatchStudent::with('batch', 'batch.course', 'batch.course.units','batch.books')->find($batchStudent->id);
+
                    /* $enrollment             = BatchStudent::with('batch', 'batch.course')->find($batchStudent->id);
 
                     $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$request['batch_id']);
@@ -189,6 +191,24 @@ class StudentPortalController extends Controller
 
                     $enrollment->student_enrollment_id = $student_enrollment_id ;
                     $enrollment->save();*/
+
+                    // save into student batch units
+                    foreach($enrollment->batch->course->units as $unit){
+                        $batchStudentUnit = BatchStudentUnit::create([
+                            'batch_student_id'=>  $batchStudent->id,
+                            'unit_id'         =>  $unit->id,
+                            'created_by'      =>  Auth::user()->id
+                        ]);  
+                    }
+
+                    // save into student batch book
+                    foreach($enrollment->batch->books as $book){
+                        $studentBook = StudentBook::create([
+                            'batch_student_id'=>  $batchStudent->id,
+                            'batch_book_id'   =>  $book->id,
+                            'student_id'      =>  $studentId
+                        ]);  
+                    }
 
                     $batchFee->batch->total_enrolled_student = ($batchFee->batch->total_enrolled_student)+1;
                     $batchFee->batch->update();

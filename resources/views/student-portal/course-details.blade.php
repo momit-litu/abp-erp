@@ -267,6 +267,15 @@
                             </div>
                             <div class="col-md-1"></div>
                             <div class="col-md-5"> 
+                                
+                                @if(Auth::check() && count($batch->books) > 0)
+                                    <span class="card-title">Sent Books : </span>
+                                    @foreach($batch->books as $book)
+                                        <span class="badge badge-success">{{ $book->book_no }}</span>
+                                    @endforeach
+                                    <p>&nbsp;</p>                                
+                                @endif
+
                                 @if(Auth::check() && $batch->payments != "")
                                     <h5 class="card-title">Payment Details</h5>
                                     <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
