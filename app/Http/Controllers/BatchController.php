@@ -810,7 +810,7 @@ class BatchController extends Controller
                             ]);                            
                         }
                     }
-                }   
+                }  
                 
                 $this->batchTransferNotificationForStudent($batchStudent->id); 
 
