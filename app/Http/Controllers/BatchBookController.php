@@ -73,7 +73,7 @@ class BatchBookController extends Controller
                 ORDER BY bb.id ASC
             )A
             GROUP BY student_name 
-            ORDER BY  student_book_details";
+            ORDER BY  student_name";
 
         $studentBooks   = DB::select($sql);
         $table  = "";

@@ -10,7 +10,7 @@ class BatchStudentUnit extends Model
         'id',  'batch_student_id', 'unit_id', 'result','score', 'remarks',  'created_by',  'status'
     ];
    
-    public function level(){
+    public function unit(){
       return $this->hasOne('App\Models\Unit','id','unit_id');
     }	
     public function batchStudent(){

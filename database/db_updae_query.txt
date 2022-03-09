@@ -66,10 +66,27 @@ COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
 
-INSERT INTO result_states(`id`, `name`) VALUES ('1', '3.1.4.1.	Distinction');
+
+INSERT INTO result_states(`id`, `name`) VALUES ('1', 'Distinction');
 INSERT INTO result_states(`id`, `name`) VALUES ('2', 'Merit');
 INSERT INTO result_states(`id`, `name`) VALUES ('3', 'Pass');
 INSERT INTO result_states(`id`, `name`) VALUES ('4', 'Resit');
+
+
+CREATE TABLE `certificate_states` (
+	`id` BIGINT(20) UNSIGNED NOT NULL,
+	`name` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+;
+INSERT INTO certificate_states(`id`, `name`) VALUES ('1', 'Pending');
+INSERT INTO certificate_states(`id`, `name`) VALUES ('2', 'In process');
+INSERT INTO certificate_states(`id`, `name`) VALUES ('3', 'Ready to Delivery');
+INSERT INTO certificate_states(`id`, `name`) VALUES ('4', 'Received');
+
+
 
 
 ALTER TABLE `batch_students`
@@ -82,12 +99,27 @@ ALTER TABLE `batch_students`
 	CHANGE COLUMN `transfered_batch_id` `prev_batch_student_id` BIGINT(20) NULL DEFAULT NULL AFTER `current_batch`,
 	ADD COLUMN `transfer_fee` DOUBLE NULL DEFAULT NULL AFTER `prev_batch_student_id`,
 	ADD COLUMN `transfer_date` DATE NULL DEFAULT NULL AFTER `transfer_fee`,
-	ADD COLUMN `remarks` TEXT NULL DEFAULT NULL AFTER `transfer_date`;
+	
+ADD COLUMN `remarks` TEXT NULL DEFAULT NULL AFTER `transfer_date`;
 
 
 ALTER TABLE `student_payments`
 	ADD COLUMN `status` ENUM('Active','Inactive') NOT NULL DEFAULT 'Active' AFTER `paid_by`;
 
+
+
+Add Menu:
+	Academic
+	Results
+	Certificates
+Add Action: 
+	Result List
+	Result Entry/Update
+	Result Publish
+	Certificate List
+	Certificate Update
+	Certificate Edit
+	Certificate Print
 
 Updated:
 
@@ -118,7 +150,20 @@ modification update dev:
 8. clear cache
 9. add draft action
 
-
+run folling code to get inserted the unit into batch_student_unmits table
+resultController/showList
+        /*
+	$allBatchStrudents = BatchStudent::with('batch.course.units')->get();
+        foreach($allBatchStrudents as $allBatchStrudent){
+            foreach($allBatchStrudent->batch->course->units as $unit){
+                $batchStudentUnit = BatchStudentUnit::create([
+                    'batch_student_id'=>  $allBatchStrudent->id,
+                    'unit_id'         =>  $unit->id,
+                    'created_by'      =>  Auth::user()->id
+                ]);  
+            }
+        }
+        */
 
 
 

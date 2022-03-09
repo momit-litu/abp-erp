@@ -187,6 +187,22 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/batch-current/{course_id}/{student_id}',array('as'=>'Batch details', 'action_id'=>'118', 'uses' =>'BatchController@getCurrentBatch'));
 	
 
+
+	//results
+	Route::get('/result',array('as'=>'Result', 'action_id'=>'119', 'uses' =>'ResultController@index'));
+	Route::get('/results/{id}',array('as'=>'Result List' ,'action_id'=>'119', 'uses' =>'ResultController@showList'));
+	Route::get('/result/{id}',array('as'=>'Result Details' ,'action_id'=>'119', 'uses' =>'ResultController@show'));
+	Route::post('/result',array('as'=>'Result Edit' , 'action_id'=>'120', 'uses' =>'ResultController@updateResult'));
+	
+	//certificates
+	Route::get('/certificate',array('as'=>'Certificate', 'action_id'=>'122', 'uses' =>'ResultController@certificateIndex'));
+	Route::get('/certificates',array('as'=>'Certificate List' ,'action_id'=>'122', 'uses' =>'ResultController@certificateShowList'));
+	Route::get('/certificate/{id}',array('as'=>'Certificate Details' ,'action_id'=>'122', 'uses' =>'ResultController@certificateShow'));
+	Route::post('/certificate',array('as'=>'Certificate Edit' , 'action_id'=>'123', 'uses' =>'ResultController@certificateSave'));
+	Route::get('certificate/{id}/print',array('as'=>'Certificate Print' , 'action_id'=>'125', 'uses' =>'ResultController@certificatePrint'));
+	Route::get('certificate/{id}/transcript-print',array('as'=>'Certificate Print' , 'action_id'=>'125', 'uses' =>'ResultController@transcriptPrint'));
+	Route::get('certificate/{id}/printed/',array('as'=>'Certificate Save' , 'action_id'=>'125', 'uses' =>'ResultController@updatePrintStatus'));
+
 	//Payments
 	Route::get('/payment',array('as'=>'Payment', 'action_id'=>'86', 'uses' =>'PaymentController@index'));
 	Route::post('/payments',array('as'=>'Payment List' ,'action_id'=>'86', 'uses' =>'PaymentController@showList'));
