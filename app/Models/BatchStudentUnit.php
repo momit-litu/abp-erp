@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ResultState;
 use Illuminate\Database\Eloquent\Model;
 
 class BatchStudentUnit extends Model
@@ -17,6 +18,6 @@ class BatchStudentUnit extends Model
 		  return $this->hasOne('App\Models\BatchStudent','id','batch_student_id');
     }
     public function result(){
-      return $this->hasOne('App\Models\ResultStates','id','result');
+      return $this->hasOne('App\Models\ResultState','id','result');
     }	
 }

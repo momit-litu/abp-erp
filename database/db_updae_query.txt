@@ -39,6 +39,22 @@ ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
 
+CREATE TABLE `certificate_feedback` (
+	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`batch_student_id` BIGINT(20) NOT NULL,
+	`feedback` TEXT(65535) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
+	`created_at` TIMESTAMP NULL DEFAULT NULL,
+	`updated_at` TIMESTAMP NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=1
+;
+
+
+
+
 CREATE TABLE `batch_student_units` (
 	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`batch_student_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -98,9 +114,16 @@ ALTER TABLE `batch_students`
 ALTER TABLE `batch_students`
 	CHANGE COLUMN `transfered_batch_id` `prev_batch_student_id` BIGINT(20) NULL DEFAULT NULL AFTER `current_batch`,
 	ADD COLUMN `transfer_fee` DOUBLE NULL DEFAULT NULL AFTER `prev_batch_student_id`,
-	ADD COLUMN `transfer_date` DATE NULL DEFAULT NULL AFTER `transfer_fee`,
-	
-ADD COLUMN `remarks` TEXT NULL DEFAULT NULL AFTER `transfer_date`;
+	ADD COLUMN `transfer_date` DATE NULL DEFAULT NULL AFTER `transfer_fee`,	
+	ADD COLUMN `remarks` TEXT NULL DEFAULT NULL AFTER `transfer_date`;
+ALTER TABLE `batch_students`
+	ADD COLUMN `certificate_no` VARCHAR(50) NULL DEFAULT NULL AFTER `overall_result`;
+ALTER TABLE `batch_students`
+	ADD COLUMN `result_published_date` DATE NULL DEFAULT NULL AFTER `transfer_date`;
+ALTER TABLE `batch_students`
+	ADD COLUMN `certificate_status` BIGINT(20) NULL DEFAULT NULL AFTER `certificate_no`;
+ALTER TABLE `batch_students`
+	CHANGE COLUMN `certificate_status` `certificate_status` BIGINT(20) NOT NULL DEFAULT '1' AFTER `certificate_no`;
 
 
 ALTER TABLE `student_payments`

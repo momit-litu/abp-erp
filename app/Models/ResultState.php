@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ResultStates extends Model
+class ResultState extends Model
 {
     //
 }

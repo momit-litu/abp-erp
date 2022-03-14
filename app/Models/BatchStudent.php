@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BatchStudent extends Model
 {
     protected $fillable= [
-        'id','student_enrollment_id', 'batch_id', 'student_id','batch_fees_id','total_payable','total_paid','balance','status','prev_batch_student_id','current_batch', 'overall_result','result_published_status', 'transfer_fee','transfer_date','remarks'
+        'id','student_enrollment_id', 'batch_id', 'student_id','batch_fees_id','total_payable','total_paid','balance','status','prev_batch_student_id','current_batch', 'overall_result','result_published_status', 'transfer_fee','transfer_date','remarks', 'result_published_date','certificate_no'
     ];
     public function payments(){
         return $this->hasMany('App\Models\StudentPayment','student_enrollment_id','id');
@@ -30,7 +30,6 @@ class BatchStudent extends Model
     public function batch_student_units(){
         return $this->hasMany('App\Models\BatchStudentUnit','batch_student_id','id');
     }
-
     public function getBatchesByStudentId($studentId)
     {
         $studentsCourses = $this->with('batch')->with('batch.course')->where('student_id', $studentId)
@@ -57,5 +56,11 @@ class BatchStudent extends Model
             $return_arr[] = $data;
         }
         return  (object) $return_arr;
+    }
+    public function certificate_status(){
+        return $this->hasOne('App\Models\CertificateState','id','certificate_status');
+    }	
+    public function batch_student_feedback(){
+        return $this->hasMany('App\Models\CertificateFeedback','batch_student_id','id');
     }
 }

@@ -10,6 +10,7 @@ use App\Models\Course;
 use App\Models\Setting;
 use App\Models\Student;
 use App\Models\BatchFee;
+use App\Models\ResultState;
 use App\Models\StudentBook;
 use App\Models\BatchStudent;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ use Illuminate\Http\Response;
 use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
 use App\Models\BatchStudentUnit;
+use App\Models\CertificateState;
+use App\Models\CertificateFeedback;
 use App\Traits\StudentNotification;
 use Illuminate\Support\Facades\File;
 
@@ -69,7 +72,6 @@ class ResultController extends Controller
 		return view('result.result-index',$data);
     }
 
-
     public function showList($batchId)
     {        
         /*
@@ -85,18 +87,20 @@ class ResultController extends Controller
         }
         */
         $admin_user_id 		= Auth::user()->id;
-        $edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,120);       
+        $edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,120);  
+        $publish_permisiion = $this->PermissionHasOrNot($admin_user_id,121);      
         $return_arr         = array(); 
         $sql = "SELECT student_no, student_id, student_name,student_enrollment_id,student_status,
-                GROUP_CONCAT(student_result_details) student_result_details, batch_student_id
+                GROUP_CONCAT(student_result_details) student_result_details, batch_student_id, balance, result_published_status, overall_result, certificate_status
                 FROM (
-                        SELECT  s.student_no as student_no, s.name AS student_name, bs.student_enrollment_id, bs.status AS student_status, s.id as student_id, bs.id as batch_student_id,
+                        SELECT  s.student_no as student_no, s.name AS student_name, bs.student_enrollment_id, bs.status AS student_status, s.id as student_id, bs.id as batch_student_id, balance, result_published_status,overall_result, cs.name as certificate_status,
                         CONCAT(bsu.id,'@', u.unit_code, '@',ifnull(rs.name,''), '@',ifnull(bsu.score,'')) AS student_result_details
                         FROM batch_students bs 
                         left join batch_student_units bsu ON bsu.batch_student_id=bs.id
                         LEFT JOIN units u ON u.id = bsu.unit_id
                         LEFT JOIN students s ON s.id = bs.student_id
                         left join result_states rs ON rs.id = bsu.result 
+                        left join certificate_states cs ON cs.id = bs.certificate_status
                         WHERE bs.batch_id=$batchId
                         ORDER BY bs.id ASC
                 )A
@@ -113,22 +117,34 @@ class ResultController extends Controller
                 $tableBody .= "<td><a href='javascript:void(0)' onclick='studentView(".$studentResult->student_id.")' />".$studentResult->student_no."</a></td>";
                 $tableBody .= "<td><a href='javascript:void(0)' onclick='studentView(".$studentResult->student_id.")' />".$studentResult->student_name."</a></td>";
                 $tableBody .= "<td>".$studentResult->student_enrollment_id."</td>";
-                $tableBody .= "<td class='text-center '>".$studentResult->student_status."</td>";
+                $statusHtml = ($studentResult->student_status =="Active")?"<button class='btn btn-xs btn-success' disabled >$studentResult->student_status</button>":"<button class='btn btn-xs btn btn-danger' disabled>$studentResult->student_status</button>";
+                $publishHtml= ($studentResult->result_published_status =="Published")?"<button class='btn btn-xs btn-success' disabled >$studentResult->result_published_status</button>":"<button class='btn btn-xs btn btn-danger' disabled>NP</button>";
+                $paymenthHtml= ($studentResult->balance == 0)?"<button class='btn btn-xs btn-success' disabled >Paid</button>":"<button class='btn btn-xs btn btn-warning' disabled>Due</button>";
+
+                $tableBody .=  "<td class='text-center '>$statusHtml</td>                                
+                                <td class='text-center '>$paymenthHtml</td>
+                                <td class='text-center '>$publishHtml</td>
+                                <td class='text-center '><b>$studentResult->overall_result</b></td>
+                                ";
+
 
                 $resultInfoArr        = explode(',',$studentResult->student_result_details);
                 $studentResultInfoArr = array();
                 foreach($resultInfoArr as $resultInfo){
-                    $singleBookArr    = explode('@',$resultInfo);
-                    $studentResultId  = $singleBookArr[0];
-                    $studentUnitCode  = $singleBookArr[1];
-                    $studentResult    = ($singleBookArr[2]!="")?"<span class='text-success'>$singleBookArr[2]</span>":"<span class='text-danger'>NP</span>";
+                    $singleResultArr    = explode('@',$resultInfo);
+                    $studentResultId  = $singleResultArr[0];
+                    $studentUnitCode  = $singleResultArr[1];
+                    $studentResult    = ($singleResultArr[2]!="")?"<span class='text-success'>$singleResultArr[2]</span>":"<span class='text-danger'>NP</span>";
                     $tableBody .= "<td class='text-center'>".$studentResult."</td>";                   
                     if($once)$tableHead .=  "<th class='text-center'>".$studentUnitCode."</th>";
                 }
                 $once =0;
                 $tableBody .= "<td class='text-center'><button title='Result Details' onclick='viewResult(".$batch_student_id.")' id='view_" . $batch_student_id. "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
                 if($edit_permisiion>0){
-                    $tableBody .="<button title='Edit' onclick='resultEdit(".$batch_student_id.")' id=edit_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>";
+                    $tableBody .="<button title='Edit' onclick='editResult(".$batch_student_id.")' id=edit_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>&nbsp;";
+                }
+                if($publish_permisiion>0){
+                    $tableBody .="<button title='Edit' onclick='publishResult(".$batch_student_id.")' id=publish_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-warning' ><i class='pe-7s-note2'></i></button>";
                 }
                 $tableBody .= "</td></tr>";
             }
@@ -138,10 +154,13 @@ class ResultController extends Controller
                     <tr>
                         <th width='80'>Student No.</th>
                         <th>Student Name</th>
-                        <th width='100'>Enrollment Id</th>
-                        <th width='80' class='text-center'>Status</th>
+                        <th width='100'>Enrollment Id</th>                        
+                        <th width='80' class='text-center'>Status</th>                        
+                        <th width='80' class='text-center'>Paymemt Status</th>
+                        <th width='80' class='text-center'>Publish Status</th>
+                        <th width='80' class='text-center'>Result</th>
                         $tableHead
-                        <th width='80'></th>
+                        <th width='120'></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -160,25 +179,213 @@ class ResultController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;	
-        $result = BatchStudent::with('student','batch','batch.course','batch_student_units','batch_student_units.unit','batch_student_units.result')->findOrFail($id);
-        return json_encode(array('result'=>$result));
+        $result = BatchStudent::with('student','batch','batch.course','batch_student_units','batch_student_units.unit','batch_student_units.result','certificate_status','batch_student_feedback')->findOrFail($id);
+        $resultStatus = ResultState::all();
+        return json_encode(array('result'=>$result , 'resultStatus'=>$resultStatus));
        
     }
 
     public function updateResult(Request $request)
     {
-       // dd($request->all());
-		$admin_user_id 		= Auth::user()->id;
-        $entry_permission = $this->PermissionHasOrNot($admin_user_id,118);
 
-		// update
-		if(!is_null($request->input('edit_id')) && $request->input('edit_id') != ""){
-			$response_data =  $this->editBatchTransfer($request->all(), $request->input('edit_id') );
-		}
-		// new entry
-		else{
-			$response_data =  $this->createBatchtransfer($request->all());
-		}
-        return $response_data;
+       // dd($request->all());
+		$admin_user_id 	  = Auth::user()->id;
+        $entry_permission = $this->PermissionHasOrNot($admin_user_id,120);
+		try 
+        {
+            DB::beginTransaction();
+            if(!is_null($request->input('edit_id')) && $request->input('edit_id') != ""){
+                $batchStudentId = $request->input('edit_id');
+                $scores         = $request->input('score');
+                $results        = $request->input('studentResults');
+
+                $batchStudent   = BatchStudent::with('batch_student_units')->find($batchStudentId);
+                foreach($batchStudent->batch_student_units as $unitResult){
+                    $unitResult->score   = $scores[$unitResult->id];
+                    $unitResult->result  = $results[$unitResult->id];
+                    $unitResult->save();
+                }
+            }
+
+            DB::commit();
+            $return['response_code'] = 1;
+            $return['message'] = "Result saved successfully";
+            return json_encode($return);
+        } 
+        catch (\Exception $e){
+            DB::rollback();
+            $return['response_code'] 	= 0;
+            $return['errors'] = "Failed to save !".$e->getMessage();
+            return json_encode($return);
+        }
     }
+
+    public function publishResult($id)
+    {
+		if($id=="") return 0;	
+        $result = BatchStudent::findOrFail($id);
+        $result->result_published_status = 'Published';
+        $result->save();
+        return true;
+       
+    }
+
+    public function certificateIndex()
+    {
+        $data['page_title'] 	= $this->page_title;
+		$data['module_name']	= "Academic";
+		$data['sub_module']		= "Certificates";
+		
+		$data['courses'] 		=Batch::where('status','Active')->get();
+        $data['certificateStates'] =CertificateState::all();
+		// action permissions
+        $admin_user_id  		= Auth::user()->id;
+        $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,123 );
+        $data['actions']['add_permisiion']= $add_permisiion;
+		return view('result.certificate-index',$data);
+    }
+
+    public function certificateShowList($batchId)
+    {        
+        $admin_user_id 		= Auth::user()->id;
+        $edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,123);     
+        $return_arr         = array(); 
+        $sql = "  SELECT  s.student_no as student_no, s.name AS student_name, bs.student_enrollment_id, bs.status AS student_status, s.id as student_id, bs.id as batch_student_id, balance, result_published_status,overall_result, certificate_status, certificate_no, cs.name as certificate_status, group_CONCAT(feedback,'</ br>') AS feedbacks
+                FROM batch_students bs 
+                LEFT JOIN students s ON s.id = bs.student_id
+                LEFT JOIN certificate_states cs ON cs.id = bs.certificate_status
+                LEFT JOIN certificate_feedback cf ON cf.batch_student_id=bs.id
+                WHERE bs.batch_id=$batchId
+                GROUP BY bs.id
+                ORDER BY bs.id ASC";
+
+        $studentResults   = DB::select($sql);
+        $table  = "";
+        if(count($studentResults) > 0){
+            $tableHead = $tableBody = "";
+            $once= 1;
+            foreach ($studentResults as $studentResult) {   
+                $batch_student_id =  $studentResult->batch_student_id;
+                $tableBody .= "<tr role='row'>";
+                $tableBody .= "<td><a href='javascript:void(0)' onclick='studentView(".$studentResult->student_id.")' />".$studentResult->student_no."</a></td>";
+                $tableBody .= "<td><a href='javascript:void(0)' onclick='studentView(".$studentResult->student_id.")' />".$studentResult->student_name."</a></td>";
+                $tableBody .= "<td>".$studentResult->student_enrollment_id."</td>";
+                $statusHtml = ($studentResult->student_status =="Active")?"<button class='btn btn-xs btn-success' disabled >$studentResult->student_status</button>":"<button class='btn btn-xs btn btn-danger' disabled>$studentResult->student_status</button>";
+                $publishHtml= ($studentResult->result_published_status =="Published")?"<button class='btn btn-xs btn-success' disabled >$studentResult->result_published_status</button>":"<button class='btn btn-xs btn btn-danger' disabled>NP</button>";
+                $paymenthHtml= ($studentResult->balance == 0)?"<button class='btn btn-xs btn-success' disabled >Paid</button>":"<button class='btn btn-xs btn btn-warning' disabled>Due</button>";
+
+
+                $tableBody .=  "<td class='text-center '>$statusHtml</td>                                
+                                <td class='text-center '>$paymenthHtml</td>
+                                <td class='text-center '>$publishHtml</td>
+                                <td class='text-center '><b>$studentResult->overall_result</b></td>
+                                <td class='text-center '><button class='btn btn-xs btn-info' disabled >$studentResult->certificate_status</button></td>
+                                <td class='text-center '>$studentResult->certificate_no</td>
+                                <td class='text-center '>$studentResult->feedbacks</td>
+                                ";
+                $tableBody .= "<td class='text-center'><button title='Result Details' onclick='viewResult(".$batch_student_id.")' id='view_" . $batch_student_id. "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
+                
+                if($edit_permisiion>0){
+                    $tableBody .="<button title='Edit' onclick='editCertificate(".$batch_student_id.")' id=edit_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>&nbsp;";
+                }
+                $tableBody .="<button title='Edit' onclick='addFeedback(".$batch_student_id.")' id=add_feedback_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-success' ><i class='fa fa-plus'></i></button>&nbsp;";
+
+                $tableBody .= "</td></tr>";
+            }
+            $table = "
+                <table class='table table-bordered table-hover dataTable no-footer' id='student_result_table'  style='width:100% !important' >
+                <thead>
+                    <tr>
+                        <th width='80'>Student No.</th>
+                        <th>Student Name</th>
+                        <th width='100'>Enrollment Id</th>                        
+                        <th width='80' class='text-center'>Status</th>                        
+                        <th width='80' class='text-center'>Paymemt Status</th>
+                        <th width='80' class='text-center'>Publish Status</th>
+                        <th width='80' class='text-center'>Overall Result</th>
+                        <th width='80' class='text-center'>Certificate Status</th>
+                        <th width='80' class='text-center'>Certificate No.</th>
+                        <th width='80' class='text-center'>Feedback</th>
+                        <th width='120'></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    $tableBody
+                </tbody>
+            </table>
+            ";
+        }
+        else{
+            $table = '<div class="col-md-12 alert alert-danger text-center">No record found.</div>';
+        }
+        return $table; 
+    }
+    
+    public function updateCertificate(Request $request)
+    {
+
+       // dd($request->all());
+		$admin_user_id 	  = Auth::user()->id;
+        $entry_permission = $this->PermissionHasOrNot($admin_user_id,123);
+		try 
+        {
+            DB::beginTransaction();
+            if(!is_null($request->input('edit_id')) && $request->input('edit_id') != ""){
+                $batchStudentId = $request->input('edit_id');  
+                $batchStudent   = BatchStudent::with('batch_student_units')->find($batchStudentId);
+                $batchStudent->certificate_no       =  $request->input('certificate_no');
+                $batchStudent->certificate_status   =  $request->input('certificate_status');
+                $batchStudent->save();
+            }
+
+            DB::commit();
+            $return['response_code'] = 1;
+            $return['message'] = "Certificate saved successfully";
+            return json_encode($return);
+        } 
+        catch (\Exception $e){
+            DB::rollback();
+            $return['response_code'] 	= 0;
+            $return['errors'] = "Failed to save !".$e->getMessage();
+            return json_encode($return);
+        }
+    }
+
+    
+    public function saveFeedback(Request $request)
+    {
+        try {
+            $rule = [
+                'feedback_details' => 'required',	
+                'batch_student_id' => 'required',		
+            ];
+            $validation = \Validator::make($request->all(), $rule);
+            //dd($request);
+
+            if ($validation->fails()) {
+                $return['response_code'] = 0;
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            } else {
+                DB::beginTransaction();
+                $data = [                   
+                    'feedback'          => $request['feedback_details'],
+                    'batch_student_id'   => $request['batch_student_id']
+                ];
+                CertificateFeedback::create($data);
+                
+                DB::commit();
+                $return['response_code']    = 1;
+                $return['message']          = "Feedback saved successfully";
+                return json_encode($return);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $return['response_code'] = 0;
+            $return['errors'] = "Failed to save !" . $e->getMessage();
+            return json_encode($return);
+        }
+    }
+
+    
 }
