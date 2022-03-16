@@ -528,7 +528,6 @@ class StudentPortalController extends Controller
         $page_title = $this->page_title;
         $studentId 		= Auth::user()->student_id; 
         $paymentDetails = $this->studentPayment->getPaymentDetailsByStudentId($studentId);
-
         $batcheResponse = $this->courseList(1,50, $type);
         $data['type']   = $type;
 

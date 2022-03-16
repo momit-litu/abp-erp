@@ -20,6 +20,6 @@ class Batch extends Model
       return $this->hasMany('App\Models\BatchBook','batch_id','id');
     }
     public function students(){
-      return $this->belongsToMany('App\Models\Student','batch_students')->withPivot('id','total_payable', 'total_paid', 'status','student_enrollment_id','welcome_email','dropout');
+      return $this->belongsToMany('App\Models\Student','batch_students')->withPivot('id','total_payable', 'total_paid', 'status','student_enrollment_id','welcome_email','dropout','current_batch','prev_batch_student_id');
     }
 }

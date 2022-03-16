@@ -38,7 +38,11 @@
                 <div class="pb-5 pl-5 pr-5 pt-3">
                     <div class="dropdown-menu nav p-0 dropdown-menu-inline dropdown-menu-rounded dropdown-menu-hover-primary">
                         @foreach ($batchStudents as $key=>$batch_student)
-                            <a data-toggle="tab" href="#tab-{{ $batch_student['id'] }}" class="mr-1 ml-1 border-0 btn-transition {{ ($key==0?'active':'') }} btn btn-outline-primary course-tab" id="course-tab-{{ $batch_student['id'] }}">{{ $batch_student['batch']['course']['title'] }} </a>	   
+                            @if($batch_student['current_batch']=='Transfered')
+                                <a data-toggle="tab" href="#tab-{{ $batch_student['id'] }}" class="mr-1 ml-1 border-0 btn-transition {{ ($key==0?'active':'') }} btn btn-outline-primary course-tab d-none" id="course-tab-{{ $batch_student['id'] }}">{{ $batch_student['batch']['course']['title'] }} </a>
+                            @else
+                                <a data-toggle="tab" href="#tab-{{ $batch_student['id'] }}" class="mr-1 ml-1 border-0 btn-transition {{ ($key==0?'active':'') }} btn btn-outline-primary course-tab" id="course-tab-{{ $batch_student['id'] }}">{{ $batch_student['batch']['course']['title'] }} </a>
+                            @endif
                         @endforeach                                   
                     </div>
                    
@@ -51,6 +55,13 @@
                                 <div class="col-md-12 mb-3 card text-white bg-dark">&nbsp;<br>
                                    <h5>{{ $batch_student['batch']['course']['code'].'-'.$batch_student['batch']['course']['title'] }}</h5><br>
                                    <h5 class="widget-heading text-white">Batch {{$batch_student['batch']['batch_name']}}</h5>
+                                   @if($batch_student['prev_batch_student_id']!=null)
+                                    <h5 class="widget-heading text-danger">Transfered From 
+                                        <a data-toggle="tab" href="#tab-{{ $batch_student['prev_batch_student_id'] }}" class="mr-1 ml-1 border-0 btn-transition btn btn-primary course-tab " id="course-tab-{{ $batch_student['prev_batch_student_id'] }}">{{$batch_student['prev_batch']['batch']['batch_name']}} </a>                                       
+                                        </h5>
+                                    @elseif($batch_student['current_batch']=='Transfered')
+                                        <h5 class="widget-heading text-danger">Transfered </h5>
+                                   @endif
                                    <h6>Student Enrollment ID : {{$batch_student['student_enrollment_id']}}</h6>
                                    
                                 </div>
@@ -140,8 +151,8 @@
                                                     <button class='btn btn-xs btn-danger' disabled>Due</button>
                                                     @endif
                                                 </th>
-                                                <td class="text-center">
-                                                    @if($payment['payment_status'] != 'Paid')
+                                                <td class="text-center"> 
+                                                    @if($payment['payment_status'] != 'Paid' && $batch_student['current_batch']!='Transfered')
                                                     <a type="button" class="border-0 btn-transition btn btn-primary btn-sm" href="{{ url('portal/checkout/'.$payment['id'])}}">Pay</a>
                                                     @endif
                                                 </td>

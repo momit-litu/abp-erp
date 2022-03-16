@@ -4,7 +4,9 @@ use Auth;
 use App\Models\Batch;
 use App\Models\Course;
 use Illuminate\Support\Str;
+use App\Models\BatchStudent;
 use App\Models\StudentPayment;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -32,7 +34,7 @@ trait PortalHelperModel
 									$query/*->where('batch_students.status','Active')*/->where('student_id',$studentId);
 								})
 								->with(['students'=> function($q) use ($studentId){
-                                      $q->where('student_id',$studentId);
+                                      $q->where('student_id',$studentId)/* ->where('current_batch','Yes') */;
                                 }]);
 				$batchesQuery 	= ($type=='Registered')?$batchesQuery->where('running_status','!=','Completed'):$batchesQuery->where('running_status','Completed');
 				
@@ -91,6 +93,11 @@ trait PortalHelperModel
 			if($batch->students->count()  >0){
 				$enrollmentId 	= $batch->students[0]->pivot->id;
 				$batch['payments']		=StudentPayment::with('enrollment','enrollment.batch_fee','enrollment.batch_fee.installments')->where('student_enrollment_id',$enrollmentId)->get();
+				
+				//$resultHtml = $this->getResultList($enrollmentId);
+				//echo $resultHtml;die;
+				//$result = BatchStudent::with('batch_student_units','batch_student_units.unit','batch_student_units.result','certificate_status','batch_student_feedback')->findOrFail($enrollmentId);
+
 			}
 			//dd($batch);
 			return $batch;
@@ -98,4 +105,68 @@ trait PortalHelperModel
 			return 0;
         }
     }	
+
+
+	public function getResultList($enrollmentId){
+
+		$sql = "SELECT student_no, student_id, student_name,student_enrollment_id,student_status,
+		GROUP_CONCAT(student_result_details) student_result_details, batch_student_id, balance, result_published_status, certificate_status, certificate_no
+		FROM (
+				SELECT  s.student_no as student_no, s.name AS student_name, bs.student_enrollment_id, bs.status AS student_status, s.id as student_id, bs.id as batch_student_id, balance, result_published_status, cs.name as certificate_status, certificate_no, 
+				CONCAT(bsu.id,'@', u.unit_code, '@',ifnull(rs.name,''), '@',ifnull(bsu.score,'')) AS student_result_details
+				FROM batch_students bs 
+				left join batch_student_units bsu ON bsu.batch_student_id=bs.id
+				LEFT JOIN units u ON u.id = bsu.unit_id
+				LEFT JOIN students s ON s.id = bs.student_id
+				left join result_states rs ON rs.id = bsu.result 
+				left join certificate_states cs ON cs.id = bs.certificate_status
+				WHERE bs.id=$enrollmentId  AND bs.status = 'Active'
+				ORDER BY bs.id ASC
+		)A
+		GROUP BY student_name 
+		ORDER BY  student_name";
+
+		$studentResults   = DB::select($sql);
+		$table  = "";
+		if(count($studentResults) > 0){
+			$tableHead = $tableBody = "";
+			$once= 1;
+			foreach ($studentResults as $studentResult) {   
+				$batch_student_id =  $studentResult->batch_student_id;
+				$tableBody .= "<tr role='row'>";
+				$resultInfoArr        = explode(',',$studentResult->student_result_details);
+				$studentResultInfoArr = array();
+				foreach($resultInfoArr as $resultInfo){
+					$singleResultArr    = explode('@',$resultInfo);
+				// $studentResultId  = $singleResultArr[0];
+					$studentUnitCode  = $singleResultArr[1];
+					$studentResult    = ($singleResultArr[2]!="")?"<span class='text-success'>$singleResultArr[2]</span>":"<span class='text-danger'>NP</span>";
+					$tableBody .= "<td class='text-center'>".$studentResult."</td>";                   
+					if($once)$tableHead .=  "<th class='text-center'>".$studentUnitCode."</th>";
+				}
+				$once =0;
+				$tableBody .= "</tr>";
+			}
+			$table = "
+				<table class='table table-bordered table-hover dataTable no-footer' id='student_result_table'  style='width:100% !important' >
+				<thead>
+					<tr>						
+						<th>Certificate Status</th>
+						<th>Certificate Number</th>
+						$tableHead
+					</tr>
+				</thead>
+				<tbody>
+					<td class='text-center'>".$studentResult->certificate_status."</td>
+					<td class='text-center'>".$studentResult->certificate_no."</td>
+					$tableBody
+				</tbody>
+			</table>
+			";
+		}
+		return $table;
+	}
+
+
+
 }

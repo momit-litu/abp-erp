@@ -303,19 +303,20 @@ studentPayments = function studentPayments(id){
                 $.each(data['batchStudents'], function(i,batch_student){ 
                     var installment_tr = "";
                     active= (i==0)?"active":"";
+                    let tabVisibility = ( batch_student['current_batch'] == 'Transfered')?"d-none":"";
                     courseHtml += `
-                        <a data-toggle="tab" href="#tab-`+batch_student['id']+`" class="mr-1 ml-1 border-0 btn-transition `+active+` btn btn-outline-primary course-tab" id="course-tab-`+batch_student['id']+`">`+batch_student['batch']['course']['title']+`</a>												
-                    `;
+							<a data-toggle="tab" href="#tab-`+batch_student['id']+`" class="mr-1 ml-1 border-0 btn-transition `+active+` btn btn-outline-primary course-tab `+tabVisibility+`" id="course-tab-`+batch_student['id']+`">`+batch_student['batch']['course']['title']+`</a>												
+						`;
 
                     if(!jQuery.isEmptyObject(batch_student['payments'])){
                         $.each(batch_student['payments'], function(j,payment){ 	
                             var invoice_no = (payment['invoice_no'] == null)?"":`<a href="javascript:void(0)" onclick="paymentInvoice(`+payment['id']+`)" >`+payment['invoice_no']+`</a>`;
 
                             var payment_status = (payment['payment_status']=='Paid')?"<button class='btn btn-xs btn-success' disabled>Paid</button>":"<button class='btn btn-xs btn-danger' disabled>Due</button>";
-
+                            let installment_no_td = (payment['installment_no']==0)?"Transfer Fee":payment['installment_no'];
                             installment_tr += 
                             `<tr>
-                                <th class="text-center">`+payment['installment_no']+`</th>
+                                <th class="text-center">`+installment_no_td+`</th>
                                 <td class="text-center">`+payment['last_payment_date']+`</td>
                                 <td class="text-right">`+payment['payable_amount']+`</td>
                                 <td class="text-center">`+invoice_no+`</td>
@@ -330,7 +331,15 @@ studentPayments = function studentPayments(id){
                         batch_status = " <button class='btn btn-xs btn-primary' disabled>Running</button>";
                     else
                         batch_status = " <button class='btn btn-xs btn-info' disabled>Upcoming</button>";
-                    
+
+                    let transferedStatus = "";
+                    if( batch_student['prev_batch_student_id'] != null){
+                        transferedStatus = "<br><span class='text-danger text-uppercase'> Transfered from Batch <a data-toggle='tab' href='#tab-"+batch_student['prev_batch_student_id']+"' class='mr-1 ml-1 border-0 btn-transition btn btn-primary course-tab show' id='course-tab-"+batch_student['prev_batch_student_id']+"'>"+batch_student['prev_batch']['batch']['batch_name']+"</a></span>";
+                    }
+                    if( batch_student['current_batch'] == 'Transfered'){
+                        transferedStatus = "<br><span class='text-danger text-uppercase'> Transfered</span>";
+                    }
+
                     feeHtml = (batch_student['batch']['fees'] == batch_student['batch']['discounted_fees'])?`<span><b class="text-dark">`+batch_student['batch']['discounted_fees']+`</b></span>`:`<span class="pr-2"><b class="text-danger"><del>`+batch_student['batch']['fees']+`</del></b></span><span><b class="text-dark">`+batch_student['batch']['discounted_fees']+`</b></span>`;
                     
                     tab_content += `
@@ -343,8 +352,8 @@ studentPayments = function studentPayments(id){
                                             <div class="widget-content p-0">
                                                 <div class="widget-content-wrapper">					
                                                     <div class="widget-content-left">
-                                                        <div class="widget-heading text-dark opacity-7"><h5>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h5></div>
-                                                        <div class="widget-heading text-dark opacity-7">Batch `+batch_student['batch']['batch_name']+batch_status+`</div>
+                                                        <div class="widget-heading text-dark opacity-7"><h6>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h6></div>
+                                                        <div class="widget-heading text-dark opacity-7">Batch `+batch_student['batch']['batch_name']+batch_status+transferedStatus+`</div>
                                                         <div class="widget-subheading opacity-10">Course Fee: `+feeHtml+`</div>
                                                     </div>												
                                                 </div>

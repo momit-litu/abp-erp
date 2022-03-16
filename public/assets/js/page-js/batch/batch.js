@@ -431,7 +431,7 @@ $(document).ready(function () {
 							std_button += "<button type='button'  title='Remove Student' data-placement='bottom' class='border-0 btn-transition btn btn-outline-danger btn-xs remove-student' ><i class='fa fa-trash-alt'></i></button>";
 						}
 						student_status += (student['pivot']['dropout'] == 'Yes')?"<button class='btn btn-xs btn-warning' disabled>Dropout</button>":"";
-
+						student_status += (student['pivot']['current_batch'] == 'Transfered')?"<button class='btn btn-xs btn-info' disabled>Transfered</button>":"";
 
 						modalHtml 	+= "<tr><td>"+(i+1)+"</td><td>"+student['student_no']+"</td>"+"<td>"+student['pivot']['student_enrollment_id']+"</td>"+"<td>"+student['name']+"</td>"+"<!--<td class='text-left'>"+student['email']+"</td>-->"+"<td class='text-left'>"+student['contact_no']+"</td>"+"<td class='text-center'>"+student['pivot']['welcome_email']+"</td>"+"<td class='text-center'>"+student_status+"<td style='width:65px !important; text-align:right'>"+std_button+"<input type='hidden' id='student_"+student['id']+"' value="+student['id']+" /><button type='button'  title='Dropout Student' data-placement='bottom' class='border-0 btn-transition btn btn-warning btn-xs dropout-student' ><i class='pe-7s-attention'></i></button></td></tr>";
 					}) 

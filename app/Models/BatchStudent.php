@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BatchStudent extends Model
 {
     protected $fillable= [
-        'id','student_enrollment_id', 'batch_id', 'student_id','batch_fees_id','total_payable','total_paid','balance','status','prev_batch_student_id','current_batch', 'overall_result','result_published_status', 'transfer_fee','transfer_date','remarks', 'result_published_date','certificate_no'
+        'id','student_enrollment_id', 'batch_id', 'student_id','batch_fees_id','total_payable','total_paid','balance','status','prev_batch_student_id','current_batch', 'result_published_status', 'transfer_fee','transfer_date','remarks', 'result_published_date','certificate_no'
     ];
     public function payments(){
         return $this->hasMany('App\Models\StudentPayment','student_enrollment_id','id');
@@ -32,13 +32,20 @@ class BatchStudent extends Model
     }
     public function getBatchesByStudentId($studentId)
     {
-        $studentsCourses = $this->with('batch')->with('batch.course')->where('student_id', $studentId)
+        $studentsCourses = $this->with('batch','prev_batch','batch.course')
+                ->where('student_id', $studentId)
+                ->where('current_batch', 'Yes')
                 ->orderBy('created_at','desc')
                 ->get();
 
         $return_arr = array();
-        foreach($studentsCourses as $studentsCourse){        
-            $data['batch_name'] = $studentsCourse->batch->batch_name; 
+        foreach($studentsCourses as $studentsCourse){     
+            if($studentsCourse->prev_batch_student_id){
+                $data['batch_name'] = $studentsCourse->batch->batch_name.' <span class="text-danger">(Trasfered from '.$studentsCourse->prev_batch->batch->batch_name.')</span>';
+            }
+            else 
+                $data['batch_name'] = $studentsCourse->batch->batch_name; 
+
             $data['course_name']= $studentsCourse->batch->course->title;
             $data['student_enrollment_id']= $studentsCourse->student_enrollment_id;       
             $data['start_date'] = $studentsCourse->batch->start_date; 

@@ -67,7 +67,7 @@ class PaymentController extends Controller
 		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$edit_action_id);
 		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,$delete_action_id);
       //  $batchId            = ($request->search_batch_id)
-	   $paymentsSql = StudentPayment::with('enrollment','enrollment.batch.course');
+	   $paymentsSql = StudentPayment::with('enrollment','enrollment.batch.course')->where('status','Active');
         /*->when($search_batch_id, function($q) use ($search_batch_id){
             $q->where('enrollment.batch_id', $search_batch_id);
         })
@@ -160,7 +160,8 @@ class PaymentController extends Controller
         $return_arr = array();
         foreach($batchStudents as $batchStudent){
             $data['id'] = $batchStudent->id;
-            $data['detail'] = $batchStudent->batch->course->title. ' - '.$batchStudent->batch->batch_name;
+            $transferedText = ($batchStudent->current_batch == 'Transfered')?' (Transfered)':"";
+            $data['detail'] = $batchStudent->batch->course->title. ' - '.$batchStudent->batch->batch_name.$transferedText;
             $return_arr[] = $data;
         }        
         return json_encode(array('courses'=>$return_arr));	

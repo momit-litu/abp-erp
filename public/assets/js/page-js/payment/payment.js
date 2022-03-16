@@ -612,9 +612,12 @@ $(document).ready(function () {
 					$.each(data['batchStudents'], function(i,batch_student){ 
 						var installment_tr = "";
 						active= (i==0)?"active":"";
+						let tabVisibility = ( batch_student['current_batch'] == 'Transfered')?"d-none":"";
+
 						courseHtml += `
-							<a data-toggle="tab" href="#tab-`+batch_student['id']+`" class="mr-1 ml-1 border-0 btn-transition `+active+` btn btn-outline-primary course-tab" id="course-tab-`+batch_student['id']+`">`+batch_student['batch']['course']['title']+`</a>												
+							<a data-toggle="tab" href="#tab-`+batch_student['id']+`" class="mr-1 ml-1 border-0 btn-transition `+active+` btn btn-outline-primary course-tab `+tabVisibility+`" id="course-tab-`+batch_student['id']+`">`+batch_student['batch']['course']['title']+`</a>												
 						`;
+					
 
 						if(!jQuery.isEmptyObject(batch_student['payments'])){
 							$.each(batch_student['payments'], function(j,payment){ 	
@@ -627,15 +630,19 @@ $(document).ready(function () {
 
 								<button type="button"   class="border-0 btn-transition btn btn-outline-danger btn-xs" onClick="deleteSchedule(`+payment['id']+`)" ><i class="fa fa-trash-alt"></i></button>`:"";
 								
+								let installment_no_td  = (payment['installment_no']==0)?"Transfer Fee":payment['installment_no'];
+
+								let actionButtonAccess = ( batch_student['current_batch'] == 'Transfered')?"":actions;
 								installment_tr += 
 								`<tr>
-									<th class="text-center">`+payment['installment_no']+`</th>
+									<th class="text-center">`+installment_no_td+`</th>
 									<td class="text-center">`+payment['last_payment_date']+`</td>
 									<td class="text-right">`+payment['payable_amount']+`</td>
 									<td class="text-center">`+invoice_no+`</td>
 									<th class="text-center">`+payment_status+`</th>
-									<td class="text-center">`+actions+`</td>
+									<td class="text-center">`+actionButtonAccess+`</td>
 								</tr>`;
+								
 							});
 						}
 						
@@ -647,7 +654,23 @@ $(document).ready(function () {
 							batch_status = " <button class='btn btn-xs btn-info' disabled>Upcoming</button>";
 						
 						feeHtml = (batch_student['batch']['fees'] > batch_student['batch']['discounted_fees'])?`<div class="widget-subheading opacity-10">Onetime Payment Fees: `+batch_student['batch']['discounted_fees']+`</div>`:'';
-	
+	                    
+						let transferedStatus = "";
+						if( batch_student['prev_batch_student_id'] != null){
+							transferedStatus = "<br><span class='text-danger text-uppercase'> Transfered from Batch <a data-toggle='tab' href='#tab-"+batch_student['prev_batch_student_id']+"' class='mr-1 ml-1 border-0 btn-transition btn btn-primary course-tab show' id='course-tab-"+batch_student['prev_batch_student_id']+"'>"+batch_student['prev_batch']['batch']['batch_name']+"</a></span>";
+						}
+
+						let installment_button_html = "";
+						if( batch_student['current_batch'] == 'Transfered'){
+							transferedStatus = "<br><span class='text-danger text-uppercase'> Transfered</span>";
+						}
+						else{
+							installment_button_html = `<button type="button" onclick="installmentAdd(`+batch_student['id']+`)" title="Add New installment" data-placement="bottom" class="btn-shadow mr-3 btn btn-success">
+								<i class="fa fa-plus"></i>
+								Installment
+							</button>`;
+						}
+
 						tab_content += `
 						<div class="tab-pane `+active+`" id="tab-`+batch_student['id']+`" role="tabpanel">
 							<div class="row">
@@ -659,7 +682,7 @@ $(document).ready(function () {
 													<div class="widget-content-wrapper">					
 														<div class="widget-content-left">
 															<div class="widget-heading text-dark opacity-7"><h5>`+batch_student['batch']['course']['code']+` - `+batch_student['batch']['course']['title']+`</h5></div>		<div class="widget-heading text-dark opacity-7">`+$('#payment_student_name').val()+`</div>				
-															<div class="widget-heading text-dark opacity-7">Batch `+batch_student['batch']['batch_name']+batch_status+`</div>
+															<div class="widget-heading text-dark opacity-7">Batch `+batch_student['batch']['batch_name']+batch_status+transferedStatus+`</div>
 															<div class="widget-heading text-dark opacity-7">Enrollment ID : `+batch_student['student_enrollment_id']+`</div>
 															<div class="widget-subheading opacity-10">Total Fees: `+batch_student['batch']['fees']+`</div>`+feeHtml+`
 														</div>										
@@ -710,10 +733,7 @@ $(document).ready(function () {
 											<th class="text-center">Invoice</th>
 											<th class="text-center">Status</th>
 											<th class="text-center">
-												<button type="button" onclick="installmentAdd(`+batch_student['id']+`)" title="Add New installment" data-placement="bottom" class="btn-shadow mr-3 btn btn-success">
-													<i class="fa fa-plus"></i>
-													Installment
-												</button>
+												`+installment_button_html+`
 											</th>
 										</tr>
 										</thead>

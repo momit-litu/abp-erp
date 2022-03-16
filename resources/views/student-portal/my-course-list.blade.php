@@ -83,7 +83,9 @@
                                         </div>
                                     </div>
                                     <div class="d-block text-center card-footer bg-light">
-                                        @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
+                                        @if($batch->students->count()==1 && $batch->students[0]->getOriginal()  ['pivot_current_batch'] =='Transfered')
+                                            <button href="javascript:void(0)" class="btn btn-danger btn-sm  disabled" disabled >Transfered</button>
+                                        @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
                                             <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
                                         @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
                                             <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>

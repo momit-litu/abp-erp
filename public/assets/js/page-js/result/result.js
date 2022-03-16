@@ -294,7 +294,7 @@ function viewResult(id){
 			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Batch:</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['batch']['batch_name']+"</div></div>";
 			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Enrollment Id :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['student_enrollment_id']+"</div></div>";
 			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+statusHtml+"</div></div>";
-			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Result Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+publishHtml+"</div></div>";
+			//modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Result Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+publishHtml+"</div></div>";
 			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Certificate Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+certificatehHtml+"</div></div>";
 
 			modalHtml +="<div class='row '>&nbsp;<br><div class='col-lg-12'><strong>Result Details:</strong></div>"+"<div class='col-lg-12'>";
@@ -310,13 +310,7 @@ function viewResult(id){
 				
 				});
 			}
-			var overallResult = (data['overall_result']==null)?"":data['overall_result']; 
-			modalHtml += `
-							<tr>
-								<td colspan="3" class='text-right'><strong>Overall Result:</strong></dtdiv>
-								<td  class='text-center'><b>`+overallResult+`</b></td>
-							</tr>
-							</tbody></table><br>
+			modalHtml += `</tbody></table><br>
 							<div class='row '>&nbsp;<br><div class='col-lg-12'><strong>Feedbacks:</strong></div>
 							&nbsp;<br><div class='col-lg-12'>`+feedbacks+`</div>
 						</div></div>`;
@@ -348,7 +342,7 @@ function editResult(id){
 			var resultHtml = "";
 			if(!jQuery.isEmptyObject(data['batch_student_units'])){
 				$.each(data['batch_student_units'], function(i,unit){ 						
-					var resultOption = "";
+				/*	var resultOption = "";
 					$.each(response['resultStatus'], function(i,resultStatus){ 	
 
 						if(unit['result']!=null && unit['result']['id']==resultStatus['id'])
@@ -360,10 +354,10 @@ function editResult(id){
 					var resultStateSelect = `<select name="studentResults[`+unit['id']+`]" class="form-control result">
 												<option selected="" value="Null">Not Given</option>
 												`+resultOption+`
-										    </select>`;
+										    </select>`;*/
 					var resultScoreInput = `<input type='text' value='`+unit['score']+`' name='score[`+unit['id']+`]' id='score_`+unit['id']+`' class='score form-controll' />`
 
-					resultHtml 	+= "<tr class='table-active'><td>("+unit['unit']['unit_code']+") "+unit['unit']['name']+"</td>"+"<td class='text-center'>"+unit['unit']['credit_hour']+"</td>"+"<td class='text-center'>"+resultScoreInput+"</td>"+"<td class='text-center'>"+resultStateSelect+"</td>"+"</tr>";
+					resultHtml 	+= "<tr class='table-active'><td>("+unit['unit']['unit_code']+") "+unit['unit']['name']+"</td>"+"<td class='text-center'>"+unit['unit']['credit_hour']+"</td>"+"<td class='text-center'>"+resultScoreInput+"</td></tr>";
 				});
 			}
 			$('#form-title').html('Result of '+data['student']['name']);
@@ -372,7 +366,7 @@ function editResult(id){
 		}
 	});
 }
-
+/*
 function publishResult(batch_student_id){
 	swal({
 		title: "Result Publish!",
@@ -403,7 +397,7 @@ function publishResult(batch_student_id){
 			});
 		}
 	});
-}
+}*/
 
 function editCertificate(id){	
 	$.ajax({
@@ -422,7 +416,7 @@ function editCertificate(id){
 			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Batch:</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['batch']['batch_name']+"</div></div>";
 			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Enrollment Id :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['student_enrollment_id']+"</div></div>";
 			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+statusHtml+"</div></div>";
-			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Result Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+publishHtml+"</div></div>";
+			//modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Result Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+publishHtml+"</div></div>";
 			modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Certificate Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+certificatehHtml+"</div></div>";
 
 			modalHtml +="<div class='row '>&nbsp;<br><div class='col-lg-12'><strong>Result Details:</strong></div>"+"<div class='col-lg-12'>";
@@ -438,13 +432,7 @@ function editCertificate(id){
 				
 				});
 			}
-			var overallResult = (data['overall_result']==null)?"":data['overall_result']; 
-			modalHtml += `
-							<tr>
-								<td colspan="3" class='text-right'><strong>Overall Result:</strong></dtdiv>
-								<td  class='text-center'><b>`+overallResult+`</b></td>
-							</tr>
-							</tbody></table>
+			modalHtml += `</tbody></table>
 						</div></div>`;
 						
 			$('#edit_id').val(id);

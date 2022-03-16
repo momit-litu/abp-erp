@@ -126,7 +126,11 @@
                 <div class="main-card mb-3 card">
                     <div class="card-body">
 					@if(Auth::check())
-                        @if($batch->students->count()==1 && $batch->students[0]->pivot->status =='Inactive')
+                        @if($batch->students->count()==1 && $batch->students[0]->pivot->current_batch =='Transfered')
+                            <div class="alert alert-danger ">
+                                <button class="btn btn-sm btn-danger disabled">Transfered</button><br>
+                            </div>
+                        @elseif($batch->students->count()==1 && $batch->students[0]->pivot->status =='Inactive')
                             <div class="alert alert-danger ">
                                 <button class="btn btn-sm btn-danger disabled">Registration Pending</button><br>
                                 You registration to this course is still pending. Please make the payment to enroll.
@@ -160,7 +164,12 @@
                                             <div class="widget-content-wrapper">                               
                                                 <div class="widget-content-left">
                                                     <div class="widget-heading">Batch</div>
-                                                    <div class="widget-subheading">{{ $batch->batch_name}}</div>
+                                                    <div class="widget-subheading">{{ $batch->batch_name}}
+                                                    @if($batch->students[0]->pivot->prev_batch_student_id !='null')
+                                                    <strong class="text-danger">  (Transfered from other batch {{-- $batch->students[0]->pivot->prev_batch_student_id --}} )</strong>
+                                                    @endif
+                                                    </div>
+
                                                 </div>
                                                 <div class="widget-content-right">
                                                     @if($batch->running_status=='Running')
@@ -329,7 +338,7 @@
                                                             @endif
                                                         </td>
                                                         <td class="text-center">
-                                                            @if($payment['payment_status'] != 'Paid')
+                                                            @if($payment['payment_status'] != 'Paid' &&  $batch->students[0]->pivot->current_batch == 'Yes')
                                                                 <a type="button" class="border-0 btn-transition btn btn-primary btn-sm" href="{{ url('portal/checkout/'.$payment['id'])}}">Pay</a>
                                                             @endif
                                                         </td>

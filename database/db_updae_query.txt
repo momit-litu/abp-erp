@@ -81,12 +81,24 @@ CREATE TABLE result_states(
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
+ALTER TABLE `result_states`
+	ADD COLUMN `heighest_mark` SMALLINT(3) NULL DEFAULT NULL AFTER `name`,
+	ADD COLUMN `lowest_mark` SMALLINT(3) NULL DEFAULT NULL AFTER `heighest_mark`;
+ALTER TABLE `result_states`
+	CHANGE COLUMN `heighest_mark` `heighest_mark` FLOAT(8,2) NULL DEFAULT NULL AFTER `name`,
+	CHANGE COLUMN `lowest_mark` `lowest_mark` FLOAT(8,2) NULL DEFAULT NULL AFTER `heighest_mark`;
 
 
 INSERT INTO result_states(`id`, `name`) VALUES ('1', 'Distinction');
 INSERT INTO result_states(`id`, `name`) VALUES ('2', 'Merit');
 INSERT INTO result_states(`id`, `name`) VALUES ('3', 'Pass');
 INSERT INTO result_states(`id`, `name`) VALUES ('4', 'Resit');
+
+UPDATE `abpdb`.`result_states` SET `heighest_mark`='100', `lowest_mark`='80' WHERE  `id`=1;
+UPDATE `abpdb`.`result_states` SET `heighest_mark`='79.99', `lowest_mark`='65' WHERE  `id`=2;
+UPDATE `abpdb`.`result_states` SET `heighest_mark`='64.99', `lowest_mark`='50' WHERE  `id`=3;
+UPDATE `abpdb`.`result_states` SET `heighest_mark`='49.99', `lowest_mark`='0.00' WHERE  `id`=4;
+
 
 
 CREATE TABLE `certificate_states` (
@@ -108,8 +120,7 @@ INSERT INTO certificate_states(`id`, `name`) VALUES ('4', 'Received');
 ALTER TABLE `batch_students`
 	ADD COLUMN `current_batch` ENUM('Yes','Transfered') NOT NULL DEFAULT 'Yes' AFTER `status`,
 	ADD COLUMN `transfered_batch_id` BIGINT(20) NULL DEFAULT NULL AFTER `current_batch`,
-	ADD COLUMN `overall_result` VARCHAR(50) NULL DEFAULT NULL AFTER `transfered_batch_id`,
-	ADD COLUMN `result_published_status` ENUM('Published','Not-published') NOT NULL DEFAULT 'Not-published' AFTER `dropout`;
+	ADD COLUMN `result_published_status` ENUM('Published','Not-published') NOT NULL DEFAULT 'Published' AFTER `dropout`;
 
 ALTER TABLE `batch_students`
 	CHANGE COLUMN `transfered_batch_id` `prev_batch_student_id` BIGINT(20) NULL DEFAULT NULL AFTER `current_batch`,

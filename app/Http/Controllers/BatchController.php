@@ -304,6 +304,11 @@ class BatchController extends Controller
             }
             $batchStudent->update();
 
+            $batch                              = Batch::find($request['batch_id']);
+            $currentTotalEnrolledStudent        = $batch->total_enrolled_student+1;
+            $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+            $batch->update();
+
 			DB::commit();
             $return['message'] = "Student status updated";
 			$return['response_code'] = 1;
@@ -323,7 +328,7 @@ class BatchController extends Controller
         if($request['batch_id']=="" || $request['student_id']==""){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! "));
 		}
-        $batchStudent = BatchStudent::where([['batch_id',$request['batch_id']], ['student_id',$request['student_id']]])->first();
+        $batchStudent = BatchStudent::with('payments')->where([['batch_id',$request['batch_id']], ['student_id',$request['student_id']]])->first();
                
         if(empty($batchStudent)){
 			return json_encode(array('response_code'=>0, 'errors'=>"Invalid request! No record found"));
@@ -331,7 +336,36 @@ class BatchController extends Controller
 		try {			
 			DB::beginTransaction();
 			$batchStudent->dropout  = ($batchStudent->dropout == 'Yes')?'No':'Yes';
+            $batchStudent->status   = ($batchStudent->dropout == 'Yes')?'Inactive':'Active';
             $batchStudent->update();
+            if($batchStudent->dropout == 'Yes'){
+                $batch                              = Batch::find($request['batch_id']);
+                $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
+                $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+                $batch->update();
+                foreach($batchStudent->payments as $key => $payment){
+                    $studentPayment = StudentPayment::find($payment->id);
+                    if($studentPayment->payment_status =='Unpaid'){
+                        $studentPayment->status = 'Inactive';
+                        $studentPayment->save();
+                    }
+                }
+                
+            }
+            else{
+                $batch                              = Batch::find($request['batch_id']);
+                $currentTotalEnrolledStudent        = $batch->total_enrolled_student+1;
+                $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+                $batch->update();
+                foreach($batchStudent->payments as $key => $payment){
+                    $studentPayment = StudentPayment::find($payment->id);
+                    if($studentPayment->payment_status =='Unpaid'){
+                        $studentPayment->status = 'Active';
+                        $studentPayment->save();
+                    }
+                }
+            }
+
             $message  =  ($batchStudent->dropout == 'Yes')?'Student dropout successfull':'Student dropout Cancelled';
             $responseCode  =  ($batchStudent->dropout == 'Yes')?1:2;
 
@@ -656,7 +690,8 @@ class BatchController extends Controller
 
             $data['transfer_date']   = (!is_null($trasferedStudent->transfer_date))?$trasferedStudent->transfer_date:'';   
 			$data['fee']             = number_format($trasferedStudent->transfer_fee,2);
-            $data['status']          = $trasferedStudent->status;
+            $data['status']          =   ($trasferedStudent->status=='Active')?"<button class='btn btn-xs btn-success' disabled>Active</button>":"<button class='btn btn-xs btn-danger' disabled>Inactive</button>";
+            
             $data['actions']         = " <button title='View' onclick='transferView(".$trasferedStudent->id.")' id='view_" . $trasferedStudent->id . "' class='btn btn-xs btn-info btn-hover-shine' ><i class='lnr-eye'></i></button>&nbsp;";
 
             $return_arr[] = $data;
@@ -732,11 +767,18 @@ class BatchController extends Controller
                 $currentBatch->transfer_date = ($request['transfer_date'])?$request['transfer_date']:NULL;
                 $currentBatch->save();
 
+                // update prev batch total enrollment
+                $batch                              = Batch::find($request['from_batch_id']);
+                $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
+                $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+                $batch->update();
+
 				$batchStudent = BatchStudent::create([
                     'batch_id' 	    =>  $toBatchId,
                     'student_id'	=>  $studentId,
                     'batch_fees_id' =>  $currentBatch->batch_fees_id,
                     'total_payable' =>  $currentBatch->total_payable+$transferFee,
+                    'total_paid'    =>  $currentBatch->total_paid,
                     'balance'       =>  $currentBatch->balance+$transferFee,
                     'prev_batch_student_id'=>$fromBatchId,
                     'remarks'       =>  $request['remarks'],
@@ -745,6 +787,12 @@ class BatchController extends Controller
                 ]);
                 //dd($currentBatch);
                 if($batchStudent){
+                    // update current  batch total enrollment
+                    $batch                              = Batch::find($request['to_batch_id']);
+                    $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
+                    $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+                    $batch->update();
+
                     $enrollment             = BatchStudent::with('batch', 'batch.course', 'batch.course.units','batch.books')->find($batchStudent->id);
                    
                     $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$request['to_batch_id']);
@@ -769,7 +817,7 @@ class BatchController extends Controller
                             'paid_date'             =>  $payment->paid_date,
                             'payment_refference_no' =>  $payment->payment_refference_no,
                             'invoice_no'            =>  $payment->invoice_no,
-                            'details'               =>  $payment->details,
+                            'details'               =>  $payment->details.' '.($payment->paid_amount>0)?" Paid against old batch":"",
                             'paid_by'               =>  $payment->paid_by,
                         ]); 
                         // update  payments info for old batch

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\BatchStudent;
+use App\Models\BatchStudentUnit;
 use Illuminate\Support\Facades\DB;
 use App\Traits\StudentNotification;
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +77,14 @@ class StudentPayment extends Model
         $batchStudent->total_payable = $totalPayable;
         $batchStudent->total_paid = $totalPaid;
         $batchStudent->balance    = ($totalPayable-$totalPaid);
+  
+        if(($totalPayable-$totalPaid) == 0 ) {
+            $unPublishedResult  =  BatchStudentUnit::where('batch_student_id',$student_enrollment_id)->whereNull('result')->first();
+            if(empty($unPublishedResult))
+                $batchStudent->certificate_status = 2;
+        }
         $batchStudent->update();
+
     }
 
     public function removePayment($id){         	
@@ -193,7 +201,7 @@ class StudentPayment extends Model
     public function getPaymentDetailsByStudentId($student_id)
     {
 
-      $studentPayments = BatchStudent::with('payments','revise_requests','batch','batch.course')->where('student_id',$student_id)->orderBy('id', 'DESC')->get()->toArray();
+      $studentPayments = BatchStudent::with('payments','revise_requests','batch','batch.course','prev_batch','prev_batch.batch')->where('student_id',$student_id)/*->where('current_batch', 'Yes')*/->orderBy('id', 'DESC')->get()->toArray();
      // dd($studentPayments);
       return $studentPayments;
     }

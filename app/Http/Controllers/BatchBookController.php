@@ -80,11 +80,13 @@ class BatchBookController extends Controller
         if(count($studentBooks) > 0){
             $tableHead = $tableBody = "";
             $once= 1;
-            foreach ($studentBooks as $studentBook) {   
+            foreach ($studentBooks as $studentBook) {  
+                $statusHtml = ($studentBook->student_status =="Active")?"<button class='btn btn-xs btn-success' disabled >$studentBook->student_status</button>":"<button class='btn btn-xs btn btn-danger' disabled>$studentBook->student_status</button>";
+
                 $tableBody .= "<tr role='row'>";
                 $tableBody .= "<td>".$studentBook->student_name."</td>";
                 $tableBody .= "<td>".$studentBook->student_enrollment_id."</td>";
-                $tableBody .= "<td>".$studentBook->student_status."</td>";
+                $tableBody .= "<td>$statusHtml</td>";
 
                 $bookInfoArr        = explode(',',$studentBook->student_book_details);
                 $studentBookInfoArr = array();
@@ -93,8 +95,9 @@ class BatchBookController extends Controller
                     $studentBookId  = $singleBookArr[0];
                     $studentBookNo  = $singleBookArr[1];
                     $studentBookSent= ($singleBookArr[2]!="")?'checked':'';
+                    $disabled       = ($studentBook->student_status =="Inactive")?"disabled":"";
 
-                    $tableBody .= '<td class="text-center book-check"><input onclick="sendBook('.$studentBookId.')" style="cursor: pointer;" type="checkbox" '.$studentBookSent.'  name="status" value="'.$studentBookId.'"></td>';
+                    $tableBody .= '<td class="text-center book-check"><input onclick="sendBook('.$studentBookId.')" style="cursor: pointer;" '.$disabled.' type="checkbox" '.$studentBookSent.'  name="status" value="'.$studentBookId.'"></td>';
 
                     $feedbackHtml = "";
                     $bookfeedbacks = StudentBooksFeedback::where('student_book_id',$studentBookId)->get();
