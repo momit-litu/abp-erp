@@ -3,12 +3,32 @@ $(document).ready(function () {
 	$( ".draggable" ).draggable();
 	
 	$("#sms_template").on('change',function(){
-		$('#message_body').val($('#sms_template_div_'+$(this).find('option:selected').attr('id')).html());	
+		var edit_id = $(this).val();
+		$.ajax({
+			url: url+'/template/'+edit_id,
+			cache: false,
+			success: function(response){
+				var response = JSON.parse(response);
+				var data = response['template'];				
+				$('#message_body').val(data['details']);	
+			}
+		});	
 	});
+
 	$("#email_template").on('change',function(){
-		editors.message_body.setData($('#email_template_div_'+$(this).find('option:selected').attr('id')).html());
-		$('#title').val($('#email_template_title_'+$(this).find('option:selected').attr('id')).html());
-		
+		var edit_id = $(this).val();
+		$.ajax({
+			url: url+'/template/'+edit_id,
+			cache: false,
+			success: function(response){
+				var response = JSON.parse(response);
+				var data = response['template'];				
+				$("#title").val(data['title']);
+				$("#email_template_category").val(data['category']);				
+				details = (data['details'] != null)?data['details']:"";
+				editors.message_body.setData(details);
+			}
+		});		
 	});
 	
 	getPaymentBatchTemplateDetails = function getPaymentBatchTemplateDetails(id){	
@@ -214,7 +234,7 @@ $(document).ready(function () {
 				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 			}
 		});
-		//editors.details.updateSourceElement();
+		editors.details.updateSourceElement();
 		var formData = new FormData($('#template_form')[0]);
 
 		if($.trim($('#title').val()) == ""){
@@ -296,55 +316,15 @@ $(document).ready(function () {
 				var response = JSON.parse(response);
 				var data = response['template'];				
 				$("#save_template").html('Update');
-				$("#short_name").val(data['short_name']);
-				$("#short_name_id").val(data['short_name_id']);
-				$("#trainers").val(data['trainers']);
-				$("#code").val(data['code']);
-				$("#title").val(data['title']);
-				$("#tqt").val(data['tqt']);
-				$("#total_credit_hour").val(data['total_credit_hour']);
-				$("#level_id").val(data['level_id']);
-				$("#registration_fees").val(data['registration_fees']);
 				$("#edit_id").val(data['id']);
-				$("#awarder_by").val(data['awarder_by']);
-				$("#programme_duration").val(data['programme_duration']);
-				$("#semester_no").val(data['semester_no']);
-				$("#glh").val(data['glh']);
-				$("#study_mode").val(data['study_mode']);
-				$("#youtube_video_link").val(data['youtube_video_link']);
+				$("#title").val(data['title']);
+				$("#category").val(data['category']);
+				$("#template_type").val(data['type']);
+				$('#category').trigger('change');
 				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
+				details = (data['details'] != null)?data['details']:"";
+				editors.details.setData(details);
 
-
-				objective 			= (data['objective'] != null)?data['objective']:"";
-				accredited_by 		= (data['accredited_by'] != null)?data['accredited_by']:"";
-				semester_details 	= (data['semester_details'] != null)?data['semester_details']:"";
-				assessment 			= (data['assessment'] != null)?data['assessment']:"";
-				grading_system 		= (data['grading_system'] != null)?data['grading_system']:"";
-				requirements 		= (data['requirements'] != null)?data['requirements']:"";
-				experience_required = (data['experience_required'] != null)?data['experience_required']:"";
-
-				editors.objective.setData(objective);
-				editors.accredited_by.setData(accredited_by);
-				editors.semester_details.setData(semester_details);
-				editors.assessment.setData(assessment);
-				editors.grading_system.setData(grading_system);
-				editors.requirements.setData(requirements);
-				editors.experience_required.setData(experience_required);
-
-				var photo = (data["template_profile_image"]!=null && data["template_profile_image"]!="")?data["template_profile_image"]:'no-user-image.png';
-				$("#template_image").attr("src", template_profile_image+"/"+photo);
-
-				if(!jQuery.isEmptyObject(data['units'])){
-					var trHtml = "";
-					var tota_glh =0;
-					$.each(data['units'], function(i,data){ 
-						var typeOption = (data['pivot']['type'] =='Optional')?"<option selected value='Optional'>Optional</option><option value='Mandatory'>Mandatory</option>":"<option value='Optional'>Optional</option><option selected value='Mandatory'>Mandatory</option>";				
-						trHtml 	+= "<tr>"+"<td><input type='hidden' name='unit_ids[]' value='"+data['id']+"' />"+data['unit_code']+"</td>"+"<td>"+data['name']+"</td>"+"<td>"+data['glh']+"<td>"+data['tut']+"</td>"+"</td>"+"<td><select name='type[]' class='form-control col-lg-12'>"+typeOption+"</select></td>"+"<td>"+data['assessment_type']+"</td>"+"<td><button onclick='$(this).parent().parent().remove();  calculateTotalUnit("+data['glh']+","+data['credit_hour']+","+data['tut']+")' ' class='btn btn-xs btn-hover-shine btn-danger'><i class='fa fa-trash'></i></button></td>"+"</tr>";
-						tota_glh += parseFloat(data['glh']);
-					})
-					$('#glh').val(tota_glh)
-					$('#unit_table').append(trHtml);
-				}	
 				$('#entry-form').modal('show');
 			}
 		});
@@ -422,9 +402,6 @@ $(document).ready(function () {
 		}
 	});
 	//email
-
-
-
 
 });
 

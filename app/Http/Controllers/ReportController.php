@@ -42,7 +42,7 @@ class ReportController extends Controller
     {
 		$courseSQL  = Course::with('batches','batches.students','units','level')/*->where('status','Active')*/;
         $courses = $courseSQL->get();
-        //dd($expences);
+        //dd($courses);
         $return_arr = array();
         foreach($courses as $course){
 
@@ -334,7 +334,7 @@ class ReportController extends Controller
         else
             $paymentSQL->with('enrollment.batch');
             
-        $payments = $paymentSQL->orderBy('created_at','desc')->get();
+        $payments = $paymentSQL->where('status','Active')->orderBy('created_at','desc')->get();
         
         
         //dd($payments);
@@ -426,7 +426,7 @@ class ReportController extends Controller
 	public function expenseIncomeList(Request $request)
     {
         $expenseCondition  = "";
-        $paymentCondition = " where  payment_status != 'Unpaid' ";
+        $paymentCondition = " where  payment_status != 'Unpaid' and status='Active' ";
         if($request->from_date != "" && $request->to_date != ""){            
             $expenseCondition .=" where  expense_date between '".$request->from_date."' and '".$request->to_date."'";
             $paymentCondition .="  and paid_date between '".$request->from_date."' and '".$request->to_date."'";
@@ -434,7 +434,7 @@ class ReportController extends Controller
         
 
         $expenseIncomes = DB::select("
-            SELECT SUM(expense_amount) as expense_amount, SUM(income_amount) as income_amount, month_year
+            SELECT SUM(expense_amount) as expense_amount, SUM(income_amount) as income_amount, month_year, month,YEAR
             FROM(
                 SELECT 
                     SUM(amount) AS expense_amount, 
@@ -457,6 +457,7 @@ class ReportController extends Controller
                 GROUP BY month,YEAR
             )A
             GROUP BY  month_year
+            order by YEAR desc, month desc
         ");
 
         $return_arr = array();
@@ -502,7 +503,6 @@ class ReportController extends Controller
         }
 
         
-
         $payments = DB::select("
              SELECT SUM(sp.payable_amount) AS payable_amount, SUM(sp.paid_amount) AS paid_amount, payment_type,  s.student_no,  b.id,  b.batch_name, c.title
             FROM student_payments sp
@@ -512,6 +512,7 @@ class ReportController extends Controller
             LEFT JOIN batch_fees bf ON bf.id=bs.batch_fees_id
             LEFT JOIN courses c ON c.id=b.course_id
             $paymentCondition  
+             and sp.status='Active'
             GROUP BY sp.student_enrollment_id
         ");
         
@@ -558,8 +559,8 @@ class ReportController extends Controller
         }
 
          if($paymentScheduleInfoPermission){
-            $totalScheludes = StudentPayment::where('payable_amount','>','0')->count();
-            $totalReceives = StudentPayment::where('payment_status','Paid')->count();
+            $totalScheludes = StudentPayment::where('payable_amount','>','0')->where("status","Active")->count();
+            $totalReceives = StudentPayment::where('payment_status','Paid')->where("status","Active")->count();
             
             $paymentScheduleInfo['schedulePaymentsNo']= $totalScheludes;
             $paymentScheduleInfo['receivedPaymetsNo'] = $totalReceives;
@@ -568,8 +569,8 @@ class ReportController extends Controller
          }
 
          if($financialstatusPermission){
-            $totalScheludes   = StudentPayment::where('payable_amount','>','0')->sum('payable_amount');
-            $totalCollections = StudentPayment::where('payment_status','Paid')->sum('paid_amount');
+            $totalScheludes   = StudentPayment::where('payable_amount','>','0')->where("status","Active")->sum('payable_amount');
+            $totalCollections = StudentPayment::where('payment_status','Paid')->where("status","Active")->sum('paid_amount');
 
             $totalExpences    = Expense::where('status','Active')->sum('amount');
             $totalPayments    = Expense::where('payment_status','Paid')->sum('amount');

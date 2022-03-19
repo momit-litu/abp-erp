@@ -19,10 +19,11 @@ class bulkMail extends Mailable
      *
      * @return void
      */
-    public function __construct($title, $body)
+    public function __construct($title, $body, $emailFrom)
     {
         $this->title 	= $title;
 		$this->body 	= $body;
+        $this->emailFrom= $emailFrom;
     }
 
     /**
@@ -32,12 +33,14 @@ class bulkMail extends Mailable
      */
     public function build()
     {
+
         $settings 	  = Setting::first();
         return $this->subject($this->title.' - '.$settings['company_name'])
             ->markdown('mails.bulk-email')
+            ->from($this->emailFrom)
             ->with([
-                'body' => $this->body,
-                'settings' => $settings,
+                'body'      => $this->body,
+                'settings'  => $settings
             ]);
 			
     }

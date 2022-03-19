@@ -40,7 +40,7 @@
 				<form id="sms_form" autocomplete="off" name="sms_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
 					@csrf
 					<div class="row">
-						<div class="col-md-8 col-sm-12">	
+						<div class="col-md-12 col-sm-12">	
 							<div class="form-row">							
 								<div class="col-md-12">
 									<div class="position-relative form-group">
@@ -48,12 +48,9 @@
 										<select name="sms_template" id="sms_template" class="form-control col-lg-12">
 											<option value="">Select a SMS template</option>
 											@foreach ($smsTemplates as $template)
-											<option value="{{$template->category}}" id="{{$template->id}}">{{$template->title}}</option>
+											<option value="{{$template->id}}">{{$template->title}}</option>
 											@endforeach
 										</select>
-										@foreach ($smsTemplates as $template)
-										<div class="d-none" id="sms_template_div_{{$template->id}}">{{$template->details}}</div>
-										@endforeach
 									</div>
 								</div>
 							</div>	
@@ -77,7 +74,7 @@
 										</select>
 									</div>
 								</div>-->
-								<div class="col-md-6">
+								<div class="col-md-4">
 									<div class="position-relative form-group">
 										<label for="" class="">All Student?</label>
 										<select name="all_student_type" id="all_student_type" class="form-control col-lg-12">
@@ -147,12 +144,10 @@
 					</div>
 					<div class="form-group">
 						<div class="col-md-8 col-sm-12" style="display: flex; flex-direction: row;">
-							<div class="col-md-3 text-left">
+							<div class="col-md-12 text-left">
 								@if($actions['add_permisiion']>0)
-								<button type="submit" id="sent_sms_submit" class="btn btn-success  btn-lg btn-block">Sent SMS</button>
-							@endif
-							</div>
-							<div class="col-md-9 text-right">
+									<button type="submit" id="sent_sms_submit" class="btn btn-success">Sent SMS</button>								
+								@endif
 								<button type="button" id="clear_button" class="btn btn-danger">Clear</button>
 							</div>
 						</div>

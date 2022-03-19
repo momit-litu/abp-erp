@@ -406,6 +406,12 @@
                                         </div>
                                     </div>
                                 @endif
+                                
+                                <h5 class="card-title">RESULTS</h5>
+                                @if(Auth::check() && isset($batch->studentResultHtml))
+                                {!! $batch->studentResultHtml !!}
+    
+                                @endif
                             </div>
                         </div>
                     </div>

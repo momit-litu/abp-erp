@@ -40,7 +40,7 @@
 				<form id="sms_form" autocomplete="off" name="sms_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
 					@csrf
 					<div class="row">
-						<div class="col-md-8 col-sm-12">	
+						<div class="col-md-12 col-sm-12">	
 							<div class="form-row">							
 								<div class="col-md-12">
 									<div class="position-relative form-group">
@@ -48,20 +48,17 @@
 										<select name="email_template" id="email_template" class="form-control col-lg-12">
 											<option value="">Select a Email template</option>
 											@foreach ($emailTemplates as $template)
-											<option value="{{$template->category}}" id="{{$template->id}}">{{$template->title}}</option>
+											<option value="{{$template->id}}">{{$template->title}}</option>
 											@endforeach
 										</select>
-										@foreach ($emailTemplates as $template)
-										<div class="d-none" id="email_template_div_{{$template->id}}">{{$template->details}}</div>
-										<div class="d-none" id="email_template_title_{{$template->id}}">{{$template->title}}</div>
-										@endforeach
 									</div>
 								</div>
 							</div>	
 							<div class="form-row">							
 								<div class="col-md-12">
 									<div class="position-relative form-group">
-										<label for="" class="">Email Title</label>
+										<label for="" class="">Email Title</label>					
+										<input type="hidden" name="email_template_category" id="email_template_category">
 										<input type="text" id="title"  name="title" class=" mr-2 form-control col-md-12" />
 									</div>
 								</div>
@@ -145,8 +142,20 @@
 										</div>
 									</div>
 								</div>
-							</div>	
-							<hr><br>	 					
+							</div>
+							<hr><br>	
+							<div class="form-row">		
+								<div class="col-md-12">
+									<div class="position-relative form-group">
+										<label for="" class="">Email From Address</label>						
+										<select name="email_from_address" id="email_from_address" class="form-control col-lg-12">
+											@foreach($fromEmails as $fromEmail)
+												<option value="{{ $fromEmail}}">{{ $fromEmail}}</option>
+											@endforeach											
+										</select>
+									</div>
+								</div>
+							</div>	 					
 						</div>							
 					</div>
 					<div class="form-group">
@@ -156,14 +165,10 @@
 					</div>
 					<div class="form-group">
 						<div class="col-md-8 col-sm-12" style="display: flex; flex-direction: row;">
-							<div class="col-md-3 text-left">
-								@if($actions['add_permisiion']>0)
-								<button type="submit" id="sent_email_submit" class="btn btn-success  btn-lg btn-block">Sent Email</button>
+							@if($actions['add_permisiion']>0)
+							<button type="submit" id="sent_email_submit" class="btn btn-success">Sent Email</button>&nbsp;
 							@endif
-							</div>
-							<div class="col-md-9 text-right">
-								<button type="button" id="clear_button" class="btn btn-danger">Clear</button>
-							</div>
+							<button type="button" id="clear_button" class="btn btn-danger">Clear</button>
 						</div>
 					</div>
 				</form>

@@ -34,9 +34,9 @@ $(document).ready(function () {
 		else if($.trim($('#site_name').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Please Insert Site Name","#site_name");
 		}
-		else if($.trim($('#admin_email').val()) == ""){
+		/*else if($.trim($('#admin_email').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Insert Admin Email","#admin_email");
-		}
+		}*/
 		else if($.trim($('#admin_mobile').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Insert Admin Mobile","#admin_mobile");
 		}

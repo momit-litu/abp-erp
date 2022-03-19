@@ -77,8 +77,8 @@ trait StudentNotification
 	
 	public function bulkEmail($emails){
 		try{
-			foreach($emails as $email){	
-				$sendEmail = Mail::to( $email['address'])->send(new bulkMail( $email['title'],  $email['body']));
+			foreach($emails as $email){
+				$sendEmail = Mail::to( $email['address'])->send(new bulkMail( $email['title'],  $email['body'],  $email['from']));
 			}
 			$return['response_code'] 	= 1;
 			$return['message'] 			= "Mail Sent";

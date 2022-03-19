@@ -101,6 +101,7 @@ UPDATE `abpdb`.`result_states` SET `heighest_mark`='49.99', `lowest_mark`='0.00'
 
 
 
+
 CREATE TABLE `certificate_states` (
 	`id` BIGINT(20) UNSIGNED NOT NULL,
 	`name` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',

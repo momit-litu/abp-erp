@@ -103,9 +103,9 @@
 											<div class="position-relative form-group">
 												<label class="">Template Type</label>
 												<select id="template_type" name="template_type" class="form-control col-lg-12">
-												<option value="sms">SMS</option>
-												<option value="email">Email</option>
-												<option value="notification">Notification</option>
+												<option value="SMS">SMS</option>
+												<option value="Email">Email</option>
+												<option value="Notification">Notification</option>
 											</select>
 											</div>
 										</div>	

@@ -49,7 +49,7 @@ class SettingController extends Controller
             'company_name' 		=> 'Required|max:100',
             'short_name' 		=> 'Required|max:10',
             'site_name' 		=> 'Required',
-            'admin_email' 		=> 'Required|email',
+           // 'admin_email' 		=> 'Required|email',
             'admin_mobile' 		=> 'Required',
             'logo_image' 		=> 'mimes:jpeg,jpg,png,svg'
         ];

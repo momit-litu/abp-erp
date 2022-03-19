@@ -62,7 +62,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="position-relative form-group"><label for="short_name" class="">Admin Email</label>
+									<div class="position-relative form-group"><label for="short_name" class="">Admin Emails <small class="text-danger">( Add multiple emails by comma ',' seperated)</small></label>
 										<input type="email" id="admin_email" name="admin_email"  class="form-control col-lg-12"value="{{ $setting['admin_email'] }}" />
 									</div>
 								</div>

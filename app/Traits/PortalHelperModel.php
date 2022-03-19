@@ -94,10 +94,8 @@ trait PortalHelperModel
 				$enrollmentId 	= $batch->students[0]->pivot->id;
 				$batch['payments']		=StudentPayment::with('enrollment','enrollment.batch_fee','enrollment.batch_fee.installments')->where('student_enrollment_id',$enrollmentId)->get();
 				
-				//$resultHtml = $this->getResultList($enrollmentId);
-				//echo $resultHtml;die;
-				//$result = BatchStudent::with('batch_student_units','batch_student_units.unit','batch_student_units.result','certificate_status','batch_student_feedback')->findOrFail($enrollmentId);
-
+				$resultHtml = $this->getResultList($enrollmentId);
+				$batch['studentResultHtml']	= $resultHtml;
 			}
 			//dd($batch);
 			return $batch;
@@ -131,24 +129,28 @@ trait PortalHelperModel
 		if(count($studentResults) > 0){
 			$tableHead = $tableBody = "";
 			$once= 1;
-			foreach ($studentResults as $studentResult) {   
-				$batch_student_id =  $studentResult->batch_student_id;
-				$tableBody .= "<tr role='row'>";
+			foreach ($studentResults as $studentResult) {  
+				$certificateNo = ($studentResult->certificate_no == null)?"N/P":$studentResult->certificate_no;
+				$tableBody .= "<tr role='row'>
+					<td class='text-center'>".$studentResult->certificate_status."</td>
+					<td class='text-center'>".$certificateNo."</td>
+				";
+				$certificateNo = 
 				$resultInfoArr        = explode(',',$studentResult->student_result_details);
-				$studentResultInfoArr = array();
 				foreach($resultInfoArr as $resultInfo){
 					$singleResultArr    = explode('@',$resultInfo);
 				// $studentResultId  = $singleResultArr[0];
 					$studentUnitCode  = $singleResultArr[1];
-					$studentResult    = ($singleResultArr[2]!="")?"<span class='text-success'>$singleResultArr[2]</span>":"<span class='text-danger'>NP</span>";
-					$tableBody .= "<td class='text-center'>".$studentResult."</td>";                   
+					$studentResultStatus    = ($singleResultArr[2]!="")?"<span class='text-success'>$singleResultArr[2]</span>":"<span class='text-danger'>NP</span>";
+					$tableBody .= "<td class='text-center'>".$studentResultStatus."</td>";                   
 					if($once)$tableHead .=  "<th class='text-center'>".$studentUnitCode."</th>";
 				}
 				$once =0;
 				$tableBody .= "</tr>";
 			}
+
 			$table = "
-				<table class='table table-bordered table-hover dataTable no-footer' id='student_result_table'  style='width:100% !important' >
+				<table class='table table-bordered dataTable no-footer' id='student_result_table'  style='width:100% !important' >
 				<thead>
 					<tr>						
 						<th>Certificate Status</th>
@@ -157,8 +159,6 @@ trait PortalHelperModel
 					</tr>
 				</thead>
 				<tbody>
-					<td class='text-center'>".$studentResult->certificate_status."</td>
-					<td class='text-center'>".$studentResult->certificate_no."</td>
 					$tableBody
 				</tbody>
 			</table>

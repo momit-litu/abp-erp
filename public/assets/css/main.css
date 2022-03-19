@@ -4939,3 +4939,17 @@ td.column-right {
 .margin-top-5{
 	margin-top:8px;
 }
+
+.ck-editor__editable {
+    height: 1000px !important;
+}
+
+.ck-editor {
+	height: 1000px;
+}
+
+@media (max-width: 1200px) {
+	.ck-editor {
+		height: 1000px;
+	}
+}
