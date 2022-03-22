@@ -14,6 +14,6 @@ class NotificationTemplate extends Model
     ];
 	
 	public function tempCategory(){
-		return $this->hasOne('App\Models\templateCategory','id','category');
+		return $this->hasOne('App\Models\TemplateCategory','id','category');
 	}
 }

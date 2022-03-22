@@ -61,68 +61,6 @@
             </div>
         </div> 
         <div class="row">
-            
-           <!-- <div class="col-md-3">
-                <div class="main-card mb-3 card">
-                    <div class="card-body"><h5 class="card-title"></h5>
-                        <div class="thumbnail text-center photo_view_postion_b" >
-                            <div class="student_profile_image" >
-                                <img style="width:100%" src="{{ ($batch->course->course_profile_image)?asset('assets/images/courses/'.$batch->course->course_profile_image):asset('assets/images').'/no_image.png' }}" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-            <div class="col-md-12">
-                <!--iv class="main-card mb-3 card">
-                    <div class="no-gutters row">
-                        <div class="col-md-4">
-                            <div class="widget-content">
-                                <div class="widget-content-wrapper">
-                                    <div class="widget-content-right ml-0 mr-3">
-                                        <div class="widget-numbers text-success"> {{ $batch->student_limit}}</div>
-                                    </div>
-                                    <div class="widget-content-left">
-                                        <div class="widget-heading">Total Seat</div>
-                                        <div class="widget-subheading">No of seat may increase</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="widget-content">
-                                <div class="widget-content-wrapper">
-                                    <div class="widget-content-right ml-0 mr-3">
-                                        <div class="widget-numbers text-warning">{{$batch->total_enrolled_student}}</div>
-                                    </div>
-                                    <div class="widget-content-left">
-                                        <div class="widget-heading">Total Enrolled Student</div>
-                                        <div class="widget-subheading"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="widget-content">
-                                <div class="widget-content-wrapper">
-                                    <div class="widget-content-right ml-0 mr-3">
-                                        <div class="widget-numbers text-danger"> 
-                                            <span  class=" {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">{{ ($batch->student_limit-$batch->total_enrolled_student) }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="widget-content-left">
-                                        <div class="widget-heading">
-                                            <span  class=" {{ ($batch->total_enrolled_student<$batch->student_limit)?'text-success':'text-danger' }}">
-                                                {{ ($batch->total_enrolled_student<$batch->student_limit)?"Available":"Booked" }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            -->
                 <div class="main-card mb-3 card">
                     <div class="card-body">
 					@if(Auth::check())
@@ -165,7 +103,7 @@
                                                 <div class="widget-content-left">
                                                     <div class="widget-heading">Batch</div>
                                                     <div class="widget-subheading">{{ $batch->batch_name}}
-                                                    @if($batch->students[0]->pivot->prev_batch_student_id !='null')
+                                                    @if($batch->students->count()==1 && $batch->students[0]->pivot->prev_batch_student_id !='null')
                                                     <strong class="text-danger">  (Transfered from other batch {{-- $batch->students[0]->pivot->prev_batch_student_id --}} )</strong>
                                                     @endif
                                                     </div>
@@ -407,7 +345,6 @@
                                     </div>
                                 @endif
                                 
-                                <h5 class="card-title">RESULTS</h5>
                                 @if(Auth::check() && isset($batch->studentResultHtml))
                                 {!! $batch->studentResultHtml !!}
     

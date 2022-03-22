@@ -2,10 +2,10 @@ Not Updated:
 
 run migration
 
+
 ALTER TABLE `student_payments`
 	CHANGE COLUMN `paid_type` `paid_type` ENUM('Cash','SSL','Bkash','Rocket','EFT','Others') NOT NULL DEFAULT 'Cash' COLLATE 'utf8mb4_unicode_ci' AFTER `payment_status`;
 SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='abpdb';
-
 
 
 CREATE TABLE student_books(
@@ -23,7 +23,6 @@ CREATE TABLE student_books(
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1;
-
 
 
 CREATE TABLE student_books_feedback(
@@ -54,7 +53,6 @@ AUTO_INCREMENT=1
 
 
 
-
 CREATE TABLE `batch_student_units` (
 	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`batch_student_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -81,6 +79,9 @@ CREATE TABLE result_states(
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
+
+
+
 ALTER TABLE `result_states`
 	ADD COLUMN `heighest_mark` SMALLINT(3) NULL DEFAULT NULL AFTER `name`,
 	ADD COLUMN `lowest_mark` SMALLINT(3) NULL DEFAULT NULL AFTER `heighest_mark`;
@@ -94,11 +95,10 @@ INSERT INTO result_states(`id`, `name`) VALUES ('2', 'Merit');
 INSERT INTO result_states(`id`, `name`) VALUES ('3', 'Pass');
 INSERT INTO result_states(`id`, `name`) VALUES ('4', 'Resit');
 
-UPDATE `abpdb`.`result_states` SET `heighest_mark`='100', `lowest_mark`='80' WHERE  `id`=1;
-UPDATE `abpdb`.`result_states` SET `heighest_mark`='79.99', `lowest_mark`='65' WHERE  `id`=2;
-UPDATE `abpdb`.`result_states` SET `heighest_mark`='64.99', `lowest_mark`='50' WHERE  `id`=3;
-UPDATE `abpdb`.`result_states` SET `heighest_mark`='49.99', `lowest_mark`='0.00' WHERE  `id`=4;
-
+UPDATE `result_states` SET `heighest_mark`='100', `lowest_mark`='80' WHERE  `id`=1;
+UPDATE `result_states` SET `heighest_mark`='79.99', `lowest_mark`='65' WHERE  `id`=2;
+UPDATE `result_states` SET `heighest_mark`='64.99', `lowest_mark`='50' WHERE  `id`=3;
+UPDATE `result_states` SET `heighest_mark`='49.99', `lowest_mark`='0.00' WHERE  `id`=4;
 
 
 
@@ -117,7 +117,6 @@ INSERT INTO certificate_states(`id`, `name`) VALUES ('4', 'Received');
 
 
 
-
 ALTER TABLE `batch_students`
 	ADD COLUMN `current_batch` ENUM('Yes','Transfered') NOT NULL DEFAULT 'Yes' AFTER `status`,
 	ADD COLUMN `transfered_batch_id` BIGINT(20) NULL DEFAULT NULL AFTER `current_batch`,
@@ -129,17 +128,77 @@ ALTER TABLE `batch_students`
 	ADD COLUMN `transfer_date` DATE NULL DEFAULT NULL AFTER `transfer_fee`,	
 	ADD COLUMN `remarks` TEXT NULL DEFAULT NULL AFTER `transfer_date`;
 ALTER TABLE `batch_students`
+	ADD COLUMN `overall_result` VARCHAR(50) NULL DEFAULT NULL AFTER remarks;
+ALTER TABLE `batch_students`
 	ADD COLUMN `certificate_no` VARCHAR(50) NULL DEFAULT NULL AFTER `overall_result`;
+
 ALTER TABLE `batch_students`
 	ADD COLUMN `result_published_date` DATE NULL DEFAULT NULL AFTER `transfer_date`;
 ALTER TABLE `batch_students`
-	ADD COLUMN `certificate_status` BIGINT(20) NULL DEFAULT NULL AFTER `certificate_no`;
+	ADD COLUMN `certificate_status` BIGINT(20) NULL DEFAULT '1' AFTER `certificate_no`;
 ALTER TABLE `batch_students`
 	CHANGE COLUMN `certificate_status` `certificate_status` BIGINT(20) NOT NULL DEFAULT '1' AFTER `certificate_no`;
 
 
 ALTER TABLE `student_payments`
 	ADD COLUMN `status` ENUM('Active','Inactive') NOT NULL DEFAULT 'Active' AFTER `paid_by`;
+
+
+
+CREATE TABLE IF NOT EXISTS `template_categories` (
+  `id` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `category_name` varchar(50) DEFAULT NULL,
+  `placeholders` mediumtext DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `template_categories` (`id`, `category_name`, `placeholders`) VALUES
+	(1, 'Unpaid', '[student_name],[payment_date],[payment_amount],[course_name],[installment_no]'),
+	(2, 'Student', '[student_name]'),
+	(3, 'upcoming-due', '[student_name],[month],[payment_amount],[course_name],[installment_no]'),
+	(4, 'otp', ''),
+	(5, 'welcome', '[student_name],[course_name]');
+
+ALTER TABLE `notification_templates`
+	ADD COLUMN `placeholders` MEDIUMTEXT NULL AFTER `details`;
+
+ALTER TABLE `notification_templates`
+	ADD COLUMN `status` ENUM('Active','Inactive') NOT NULL DEFAULT 'Active' AFTER type;
+
+INSERT INTO `notification_templates` (`id`, `title`, `details`, `category`, `type`, `status`, `created_at`, `updated_at`) VALUES
+	(5, 'Payment due email', '<p>Dear [student_name],&nbsp;</p><p>Greetings from ABP, This is just a reminder that your monthly installment([installment_no]) payment amount of [payment_amount] is due against the course [course_name] for this month. the payment date was at [payment_date]</p><p>&nbsp;Please make the payment ASAP using ABP Payment Portal: https://abpbd.org/app&nbsp;</p><p>Best regards,</p><p>&nbsp;ABP</p>', 1, 'Email', 'Active', '2021-08-24 18:36:30', '2022-03-19 16:42:47'),
+	(6, 'Close Notice', 'Hello [student_name],\r\n the institution will remain close untill 12-10-2021 \r\nThank you\r\nABP', 2, 'Email', 'Active', NULL, NULL),
+	(7, 'Monthly upcoming payment reminder', '<p>Dear [student_name],&nbsp;</p><p>Greetings from ABP, This is just a gentle reminder that your monthly installment([installment_no]) payment amount of [payment_amount] is due against the course [course_name] for this month.</p><p>&nbsp;Please make the payment by 7th of [month] using ABP Payment Portal: https://abpbd.org/app&nbsp;</p><p>Best regards,</p><p>&nbsp;ABP</p><p>&nbsp;</p>', 3, 'Email', 'Active', NULL, '2022-03-19 16:40:50'),
+	(8, 'Welcome Email', '<p>Dear [student_name],&nbsp;</p><p>Greetings from ABP, Welcome to the course [course_name]</p><ul><li>MOMIT</li><li>LITU</li><li>MUNIF</li></ul><p>&nbsp;Best regards, ABP</p>', 5, 'Email', 'Active', '2022-02-25 02:10:02', '2022-03-19 06:39:11');
+
+
+
+INSERT INTO `menus` (`id`, `module_name`, `menu_title`, `menu_url`, `parent_id`, `serial_no`, `menu_icon_class`, `status`, `created_at`, `updated_at`) VALUES
+	(54, 'Books', 'Books', 'batch-book', 15, 3, NULL, 1, '2022-02-18 05:16:34', '2022-02-18 05:16:34'),
+	(55, 'Template', 'Template', 'template', 40, 3, NULL, 1, '2022-02-25 02:02:05', '2022-02-25 02:02:05'),
+	(56, 'Batch Transfer', 'Batch Transfer', 'batch-transfer', 15, NULL, NULL, 1, '2022-03-04 09:06:24', '2022-03-08 15:41:23'),
+	(57, 'Academic', 'Academic', '', 0, NULL, 'lnr-layers', 1, '2022-03-08 15:50:20', '2022-03-08 15:50:20'),
+	(58, 'Results', 'Results', 'result', 57, NULL, NULL, 1, '2022-03-08 15:51:32', '2022-03-08 15:51:32'),
+	(59, 'Certificates', 'Certificates', 'certificate', 57, NULL, NULL, 1, '2022-03-08 15:52:04', '2022-03-08 15:52:04');
+
+
+change email url to email/send
+
+run script for result data
+    public function showList($batchId)
+    {        
+/*        
+        $allBatchStrudents = BatchStudent::with('batch.course.units')->get();
+        foreach($allBatchStrudents as $allBatchStrudent){
+            foreach($allBatchStrudent->batch->course->units as $unit){
+                $batchStudentUnit = BatchStudentUnit::create([
+                    'batch_student_id'=>  $allBatchStrudent->id,
+                    'unit_id'         =>  $unit->id,
+                    'created_by'      =>  Auth::user()->id
+                ]);  
+            }
+        }
+*/
 
 
 
