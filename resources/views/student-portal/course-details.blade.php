@@ -343,12 +343,13 @@
                                             @endforeach                                       
                                         </div>
                                     </div>
-                                @endif
-                                
-                                @if(Auth::check() && isset($batch->studentResultHtml))
-                                {!! $batch->studentResultHtml !!}
-    
-                                @endif
+                                @endif                               
+                               
+                            </div>
+                            <div class="main-card mb-3 col-md-12 card">
+                            @if(Auth::check() && isset($batch->studentResultHtml))
+                            {!! $batch->studentResultHtml !!}
+                            @endif
                             </div>
                         </div>
                     </div>
