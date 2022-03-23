@@ -88,16 +88,22 @@ trait PortalHelperModel
 			}
 			else
 				$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units','students')->find($batchId);
-									 
+		         
+       
 			//$payments = "";
 			if($batch->students->count()  >0){
 				$enrollmentId 	= $batch->students[0]->pivot->id;
 				$batch['payments']		=StudentPayment::with('enrollment','enrollment.batch_fee','enrollment.batch_fee.installments')->where('student_enrollment_id',$enrollmentId)->get();
 				
-				$resultHtml = $this->getResultList($enrollmentId);
+				if (Auth::check())
+				    $resultHtml = $this->getResultList($enrollmentId);
+				else
+				     $resultHtml = "";
+				  
 				$batch['studentResultHtml']	= $resultHtml;
 			}
-			//dd($batch);
+			
+					   
 			return $batch;
         }catch(\Exception $e){
 			return 0;
@@ -126,6 +132,7 @@ trait PortalHelperModel
 
 		$studentResults   = DB::select($sql);
 		$table  = "";
+		
 		if(count($studentResults) > 0){
 			$tableHead = $tableBody = "";
 			$once= 1;
@@ -150,6 +157,7 @@ trait PortalHelperModel
 			}
 
 			$table = "
+			    <h5 class='card-title'>RESULTS</h5>
 				<table class='table table-bordered dataTable no-footer' id='student_result_table'  style='width:100% !important' >
 				<thead>
 					<tr>						

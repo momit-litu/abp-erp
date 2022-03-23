@@ -103,7 +103,7 @@
                                                 <div class="widget-content-left">
                                                     <div class="widget-heading">Batch</div>
                                                     <div class="widget-subheading">{{ $batch->batch_name}}
-                                                    @if($batch->students->count()==1 && $batch->students[0]->pivot->prev_batch_student_id !='null')
+                                                    @if($batch->students->count()==1 && $batch->students[0]->pivot->prev_batch_student_id !=null)
                                                     <strong class="text-danger">  (Transfered from other batch {{-- $batch->students[0]->pivot->prev_batch_student_id --}} )</strong>
                                                     @endif
                                                     </div>
@@ -222,8 +222,8 @@
                                     @endforeach
                                     <p>&nbsp;</p>                                
                                 @endif
-
-                                @if(Auth::check() && $batch->payments != "")
+                          
+                                @if(Auth::check() && count($batch->payments) > "")
                                     <h5 class="card-title">Payment Details</h5>
                                     <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
                                         <div class="widget-chart-content text-white">
@@ -240,7 +240,7 @@
                                                 <div class="widget-numbers widget-numbers ">{{ $batch->students[0]->pivot->total_payable }}
                                                 </div>
                                                 <div class="widget-description  widget-numbers">
-                                                    @if($batch->payments[0]->payment_status == 'Paid')
+                                                    @if(isset($batch->payments[0]->payment_status) && $batch->payments[0]->payment_status == 'Paid')
                                                         <span class="text-success">{{ $batch->students[0]->pivot->total_paid}}</span>
                                                     @else
                                                         <span class="text-danger">{{ $batch->students[0]->pivot->total_paid}}</span>
@@ -353,7 +353,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="main-card mb-3 card">
+                <div class="main-card mb-3 col-md-12 card">
                     <div class="card-body"><h5 class="card-title">More Details:</h5>
                         <ul class="nav nav-tabs nav-justified">
                             <li class="nav-item"><a data-toggle="tab" href="#tab-eg11-0" class="nav-link active">Units</a></li>

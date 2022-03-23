@@ -672,6 +672,8 @@ class BatchController extends Controller
 
 	public function transferShowList(){
 		$admin_user_id 		= Auth::user()->id;
+		$edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,118);
+		$delete_permisiion 	= $this->PermissionHasOrNot($admin_user_id,118);
         $return_arr     = array();
 
         $trasferedStudents = BatchStudent::with('batch', 'batch.course','prev_batch.batch','student')
@@ -767,7 +769,8 @@ class BatchController extends Controller
                 $currentBatch->save();
 
                 // update prev batch total enrollment
-                $batch                              = Batch::find($currentBatch->id);
+                $batch = Batch::find($currentBatch->batch_id);
+
                 $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
                 $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
                 $batch->update();
@@ -784,10 +787,11 @@ class BatchController extends Controller
                     'transfer_fee'  =>  $transferFee,
                     'transfer_date' =>  $request['transfer_date']
                 ]);
-                //dd($currentBatch);
+                
                 if($batchStudent){
                     // update current  batch total enrollment
                     $batch                              = Batch::find($request['to_batch_id']);
+                    
                     $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
                     $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
                     $batch->update();

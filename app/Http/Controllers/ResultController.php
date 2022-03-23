@@ -74,7 +74,7 @@ class ResultController extends Controller
 
     public function showList($batchId)
     {        
-        /*
+/*        
         $allBatchStrudents = BatchStudent::with('batch.course.units')->get();
         foreach($allBatchStrudents as $allBatchStrudent){
             foreach($allBatchStrudent->batch->course->units as $unit){
@@ -85,7 +85,7 @@ class ResultController extends Controller
                 ]);  
             }
         }
-        */
+*/
         $admin_user_id 		= Auth::user()->id;
         $edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,120);  
         $publish_permisiion = $this->PermissionHasOrNot($admin_user_id,121);      
