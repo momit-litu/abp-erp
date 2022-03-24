@@ -107,7 +107,7 @@ class BatchBookController extends Controller
                             $feedbackHtml .=$bookfeedback->feedback." (".$bookfeedback->createdBy->first_name." @".date('Y-m-d', strToTime($bookfeedback->created_at)).")</br>";
                         }
                     }
-                   $addFeedbackButton =  "<div class='col-md-12 text-right'><a href='javascript:void(0)' title='Add Feedback' onclick='addFeedback(".$studentBookId.")'  class='btn btn-xs btn-hover-shine  btn-primary' >+</a></div>";
+                   $addFeedbackButton =  "<div class='col-md-12 text-right'><a href='javascript:void(0)' title='Add Feedback' onclick='addFeedback(".$studentBookId.")'  class='btn btn-xs btn-hover-shine  btn-success' >+</a></div>";
 
                     $tableBody .= "<td>".$feedbackHtml.$addFeedbackButton."</td>";
 

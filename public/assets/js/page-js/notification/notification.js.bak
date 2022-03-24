@@ -33,7 +33,7 @@ $(document).ready(function () {
 	
 	getPaymentBatchTemplateDetails = function getPaymentBatchTemplateDetails(id){	
 		$.ajax({
-			url: url+'/student-course-batch-autosuggest/'+id,
+			url: url+'/student-template-batch-autosuggest/'+id,
 			cache: false,
 			success: function(response){
 				var option ="";
@@ -114,7 +114,7 @@ $(document).ready(function () {
 		},
 		source: function(request, response) {
 			$.ajax({
-				url: url+'/course-batch-autosuggest',
+				url: url+'/template-batch-autosuggest',
 				dataType: "json",
 				type: "post",
 				async:false,

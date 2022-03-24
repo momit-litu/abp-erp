@@ -363,11 +363,11 @@ class PaymentController extends Controller
         $invoiceDetails['total_paid']    = $batchStudent->total_paid;
         $invoiceDetails['balance']       = $batchStudent->balance;        
         $invoiceDetails['payments']      = $batchStudent->payments;
-		$invoice 		= $payment;
-		$invoiceName 	= $payment['student_no'].$payment['only_student_name'].$payment['invoice_no'].'.pdf';
+		$invoice = $payment;
+		
 		
         $pdf = PDF::loadView('payment.invoice', compact('invoice', 'settings','invoiceDetails'));
-        return $pdf->download($invoiceName);
+        return $pdf->download('invoice.pdf');
     }
     
 

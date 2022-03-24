@@ -182,6 +182,13 @@ INSERT INTO `menus` (`id`, `module_name`, `menu_title`, `menu_url`, `parent_id`,
 	(59, 'Certificates', 'Certificates', 'certificate', 57, NULL, NULL, 1, '2022-03-08 15:52:04', '2022-03-08 15:52:04');
 
 
+// need dev update
+ALTER TABLE `students`
+	CHANGE COLUMN `passing_year` `passing_year` VARCHAR(50) NULL DEFAULT NULL AFTER `how_know`;
+ALTER TABLE `student_books_feedback`
+	ADD COLUMN `created_by` BIGINT(20) NOT NULL AFTER `student_book_id`;
+
+
 change email url to email/send
 
 run script for result data

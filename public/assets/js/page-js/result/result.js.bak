@@ -285,7 +285,7 @@ function viewResult(id){
 			var feedbacks = "";
 			if(!jQuery.isEmptyObject(data['batch_student_feedback'])){
 				$.each(data['batch_student_feedback'], function(i,feedback){ 
-					feedbacks += feedback['feedback']+"<b> "+"@"+feedback['created_at']+"</b> : "+"<br>";	
+					feedbacks += feedback['feedback']+"<b> "+feedback['createdBy']['first_name']+"@"+feedback['created_at']+"</b> : "+"<br>";	
 				})
 			} 
 
