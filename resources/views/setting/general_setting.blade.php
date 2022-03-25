@@ -104,7 +104,7 @@
 					</div>
 					<div class="form-group">
 						<label class="control-label col-md-2 col-sm-2 col-xs-6"></label>
-						@if($actions['update_permisiion']==1)
+						@if($actions['update_permisiion']>1)
 							<div class="col-md-3 col-sm-3 col-xs-12">
 								<button type="submit" id="save_general_setting" class="btn btn-success btn-lg btn-block">Save</button>
 							</div>
