@@ -179,7 +179,7 @@
 										</div>
 										<div class="col-md-3">
 											<div class="position-relative form-group">
-												<label for="company_name" class="">Draft?</label>
+												<label for="company_name" class="">Draft/Hide?</label>
 												<input type="checkbox" id="draft" name="draft" value="1" class="form-control col-lg-12"/>
 											</div>
 										</div>

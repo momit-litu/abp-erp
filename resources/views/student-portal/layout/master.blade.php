@@ -38,6 +38,7 @@
             <div id="session_message_code"> {{(Session::has('message'))?Session::get('response_code'):""}}</div>
         </div>
 		@yield('content')
+
         <div class="body-block-example-1 d-none">
             <div class="loader bg-transparent no-shadow p-0">
                 <div class="ball-grid-pulse">

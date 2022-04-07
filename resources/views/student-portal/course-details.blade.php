@@ -60,8 +60,8 @@
                 </div>    
             </div>
         </div> 
-        <div class="row">
-                <div class="main-card mb-3 card">
+        <div class="row" >
+                <div class="main-card mb-3  col-md-12  card" >
                     <div class="card-body">
 					@if(Auth::check())
                         @if($batch->students->count()==1 && $batch->students[0]->pivot->current_batch =='Transfered')
@@ -83,7 +83,7 @@
                         <p>
                             {{ strip_tags($batch->course->objective) }}
                         </p>
-                        <div class="row">
+                        <div class="row" >
                             <div class="col-md-6">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">
@@ -222,8 +222,8 @@
                                     @endforeach
                                     <p>&nbsp;</p>                                
                                 @endif
-                          
-                                @if(Auth::check() && count($batch->payments) > "")
+
+                                @if(Auth::check() && isset($batch->payments) && count($batch->payments) > 0)
                                     <h5 class="card-title">Payment Details</h5>
                                     <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
                                         <div class="widget-chart-content text-white">

@@ -11,6 +11,8 @@ use \App\Models\Course;
 use App\Models\Setting;
 use \App\Models\Student;
 use App\Models\BatchFee;
+use App\Models\BatchStudentUnit;
+use App\Models\StudentBook;
 use App\Models\UserGroup;
 use App\Models\WebAction;
 use App\Models\BatchStudent;
@@ -154,6 +156,7 @@ class StudentPortalController extends Controller
 
     public function studentEnroll(Request $request)
     { 
+
         $studentId 		= Auth::user()->student_id; 
         try {
             if($request['register_batch_id'] == "" || $request['batch_fees_id']==""){

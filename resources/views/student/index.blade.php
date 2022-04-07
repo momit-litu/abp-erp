@@ -181,7 +181,7 @@
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label>Passing Year</label>
-                                                    <input  type="date"  id="passing_year" name="passing_year"  class="form-control col-lg-12"/>
+                                                    <input  type="number" maxlength="4"  id="passing_year" name="passing_year"  class="form-control col-lg-12"/>
                                                 </div>
                                             </div> 
                                             <div class="col-md-6">

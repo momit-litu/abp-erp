@@ -45,7 +45,6 @@ trait StudentNotification
 
 	public function enrollmentEmail($enrollmentId){
 		$studentPayments = BatchStudent::with('payments','student','batch','batch.course','batch_fee','batch_fee.installments')->find($enrollmentId);
-		//dd($studentPayments);
 		Mail::to($studentPayments['student']['email'])->send(new studentEnrollmentMail($studentPayments));
 	}
 

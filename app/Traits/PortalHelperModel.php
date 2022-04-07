@@ -5,6 +5,7 @@ use App\Models\Batch;
 use App\Models\Course;
 use Illuminate\Support\Str;
 use App\Models\BatchStudent;
+use App\Models\StudentBook;
 use App\Models\StudentPayment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -80,15 +81,22 @@ trait PortalHelperModel
         try{
 			if (Auth::check()){
 				$studentId 		= Auth::user()->student_id;
-				$batch   = Batch::with('course','batch_fees','books','batch_fees.installments', 'course.units')
+				$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units')
 										->with(['students' => 	function ($query) use ($studentId) {
 											$query->where('student_id',$studentId); //->where('batch_students.status','Active');
 										}])
 										->find($batchId);
-			}
+				$books  =  DB::select("SELECT bb.book_no
+							FROM student_books sb
+							LEFT JOIN batch_books bb ON bb.id=sb.batch_book_id
+							WHERE sb.STATUS='Active' AND bb.STATUS='Active' AND student_id=$studentId AND bb.batch_id=$batchId");
+				$batch->books = $books;
+		}
 			else
 				$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units','students')->find($batchId);
 		         
+				
+				//dd($batch);
        
 			//$payments = "";
 			if($batch->students->count()  >0){
