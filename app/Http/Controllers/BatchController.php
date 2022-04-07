@@ -164,15 +164,12 @@ class BatchController extends Controller
                     'balance'       =>  $batchFee->payable_amount,
                 ]);
                 if($batchStudent){
-                    $enrollment             = BatchStudent::with('batch', 'batch.course', 'batch.course.units','batch.books')->find($batchStudent->id);
+                    $enrollment             = BatchStudent::with('batch', 'batch.course')->find($batchStudent->id);
 
                     $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$request['batch_id']);
-
                     $lastEnrollmentId = (!is_null($lastEnrollmentIdSQL[0]->max_enrollmen_id))?$lastEnrollmentIdSQL[0]->max_enrollmen_id:0;
-
                     $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
-
-                    $enrollment->student_enrollment_id = $student_enrollment_id ;
+                    $enrollment->student_enrollment_id = $student_enrollment_id ;                    
                     $enrollment->save();
 
                     // save into student batch units
