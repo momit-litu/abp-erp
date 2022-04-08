@@ -13,6 +13,7 @@ use App\Traits\StudentNotification;
 use App\Http\Controllers\Controller;
 use App\Models\StudentBooksFeedback;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\Null_;
 
 class BatchBookController extends Controller
 {
@@ -59,22 +60,22 @@ class BatchBookController extends Controller
     public function studenBookList($batchId)
     {
         $return_arr  = array(); 
-        $sql = "SELECT student_name,student_enrollment_id,student_status,
+        $sql = "SELECT student_name,student_enrollment_id,student_status, book_status, 
         GROUP_CONCAT(student_book_details) student_book_details
             FROM (
-                SELECT  s.name AS student_name, bb.id, bs.student_enrollment_id, bs.status AS student_status,
+                SELECT  s.name AS student_name, bb.id, bs.student_enrollment_id, bs.status AS student_status, bb.status AS book_status, 
             CONCAT(sb.id,'@', bb.book_no , '@',ifnull(sb.sent_date,'')) AS student_book_details
             
                 FROM batch_books bb
                 LEFT JOIN student_books sb ON sb.batch_book_id = bb.id
                 LEFT JOIN batch_students bs ON bs.id = sb.batch_student_id
                 LEFT JOIN students s ON s.id = sb.student_id
-                WHERE bb.batch_id=$batchId  
+                WHERE bb.batch_id=$batchId   AND bb.status='Active'
                 ORDER BY bb.id ASC
             )A
             GROUP BY student_name 
             ORDER BY  id,student_name";
-
+   
         $studentBooks   = DB::select($sql);
         $table  = "";
         if(count($studentBooks) > 0){
@@ -89,13 +90,14 @@ class BatchBookController extends Controller
                 $tableBody .= "<td>$statusHtml</td>";
 
                 $bookInfoArr        = explode(',',$studentBook->student_book_details);
+
                 $studentBookInfoArr = array();
                 foreach($bookInfoArr as $bookInfo){
                     $singleBookArr  = explode('@',$bookInfo);
                     $studentBookId  = $singleBookArr[0];
                     $studentBookNo  = $singleBookArr[1];
                     $studentBookSent= ($singleBookArr[2]!="")?'checked':'';
-                    $disabled       = ($studentBook->student_status =="Inactive")?"disabled":"";
+                    $disabled       = ($studentBook->student_status =="Inactive" || $studentBook->student_status =="Inactive")?"disabled":"";
 
                     $tableBody .= '<td class="text-center book-check"><input onclick="sendBook('.$studentBookId.')" style="cursor: pointer;" '.$disabled.' type="checkbox" '.$studentBookSent.'  name="status" value="'.$studentBookId.'"></td>';
 
@@ -104,7 +106,7 @@ class BatchBookController extends Controller
 					//dd($bookfeedbacks);
 					if(count($bookfeedbacks)>0){
                         foreach($bookfeedbacks as $bookfeedback){
-                            $feedbackHtml .=$bookfeedback->feedback." (".$bookfeedback->createdBy->first_name." @".date('Y-m-d', strToTime($bookfeedback->created_at)).")</br>";
+                            $feedbackHtml .=$bookfeedback->feedback." <br> (".$bookfeedback->createdBy->first_name." @".date('Y-m-d', strToTime($bookfeedback->created_at)).")</br>";
                         }
                     }
                    $addFeedbackButton =  "<div class='col-md-12 text-right'><a href='javascript:void(0)' title='Add Feedback' onclick='addFeedback(".$studentBookId.")'  class='btn btn-xs btn-hover-shine  btn-primary' >+</a></div>";
@@ -239,11 +241,19 @@ class BatchBookController extends Controller
         try {
             DB::beginTransaction();
             $studentBook = StudentBook::with('student', 'book','book.batch','book.batch.course')->where('id',$studentBookId)->first();
-            $studentBook->sent_date = date('Y-m-d');
 			$sentOrNot   = $studentBook->status;
-            $sent = $studentBook->save();
-            if($sent && $sentOrNot=='Inactive'){
-                $this->bookSentNotificationForStudent($studentBook);  
+
+            if($sentOrNot=='Inactive'){
+                $studentBook->sent_date = date('Y-m-d');
+                $studentBook->status    = 'Active';
+                $sent = $studentBook->save();
+                if($sent)
+                    $this->bookSentNotificationForStudent($studentBook);  
+            }
+            else{
+                $studentBook->sent_date = Null;
+                $studentBook->status    = 'Inactive';
+                $studentBook->save();
             }
               
             DB::commit();
@@ -257,6 +267,4 @@ class BatchBookController extends Controller
             return json_encode($return);
         }
     }
-
-    //student_name course_name from_batch_name to_batch_name transfer_date fee actions
 }

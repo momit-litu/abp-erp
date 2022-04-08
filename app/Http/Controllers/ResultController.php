@@ -106,7 +106,7 @@ class ResultController extends Controller
                 )A
                 GROUP BY student_name 
                 ORDER BY  student_name";
-
+    
         $studentResults   = DB::select($sql);
         $table  = "";
         if(count($studentResults) > 0){
@@ -176,7 +176,8 @@ class ResultController extends Controller
     public function show($id)
     {
 		if($id=="") return 0;	
-        $result = BatchStudent::with('student','batch','batch.course','batch_student_units','batch_student_units.unit','batch_student_units.result','certificate_status','batch_student_feedback','batch_student_feedback')->findOrFail($id);
+        $result = BatchStudent::with('student','batch','batch.course','batch_student_units','batch_student_units.unit','batch_student_units.result','certificate_status','batch_student_feedback','batch_student_feedback.createdBy')
+        ->findOrFail($id);
         $resultStatus = ResultState::all();
         return json_encode(array('result'=>$result , 'resultStatus'=>$resultStatus));
        

@@ -113,7 +113,7 @@ $(document).ready(function () {
     sendBook = function sendBook(student_book_id){
         swal({
 			title: "Confirm?",
-			text: "You wants to send the book!",
+			text: "You want to change the book sending status!",
 			icon: "warning",
 			buttons: true,
 			dangerMode: true,

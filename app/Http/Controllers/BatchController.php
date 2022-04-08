@@ -249,6 +249,8 @@ class BatchController extends Controller
 			DB::beginTransaction();
                 if(count($batchStudent->payments)==0){
                     StudentPayment::where('student_enrollment_id',$batchStudent->id)->delete();
+                    BatchStudentUnit::where('batch_student_id',$batchStudent->id)->delete();
+                    StudentBook::where('batch_student_id',$batchStudent->id)->delete();                    
                     $batchStudent->delete();                   
                     $return['message'] = "Deletaed successfully";
                     $return['response_code'] = 1;

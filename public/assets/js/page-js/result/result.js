@@ -32,6 +32,7 @@ $(document).ready(function () {
     });
 
 	$("#show_batch_result").on('click',function(){
+		$('#result_div').css('display','none');
         if($('#batch_id').val()!=""){
             $.ajax({
                 url: url+"/results/"+$('#batch_id').val(),
@@ -39,9 +40,10 @@ $(document).ready(function () {
                 async:false,
                 success: function(data){
                     $('#result_table_div').html(data);
+					$('#result_div').css('display','block');
                 }
             });
-            $('#result_div').css('display','block');
+            
         }     
     })
 
@@ -285,7 +287,8 @@ function viewResult(id){
 			var feedbacks = "";
 			if(!jQuery.isEmptyObject(data['batch_student_feedback'])){
 				$.each(data['batch_student_feedback'], function(i,feedback){ 
-					feedbacks += feedback['feedback']+"<b> "+"@"+feedback['created_at']+"</b> : "+"<br>";	
+					$
+					feedbacks += feedback['feedback']+"<b> "+"("+feedback['created_by']['first_name']+" @"+feedback['created_at']+" )</b>"+"<br>";	
 				})
 			} 
 

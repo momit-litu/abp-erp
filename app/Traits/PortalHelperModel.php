@@ -86,10 +86,12 @@ trait PortalHelperModel
 											$query->where('student_id',$studentId); //->where('batch_students.status','Active');
 										}])
 										->find($batchId);
+
 				$books  =  DB::select("SELECT bb.book_no
 							FROM student_books sb
 							LEFT JOIN batch_books bb ON bb.id=sb.batch_book_id
-							WHERE sb.STATUS='Active' AND bb.STATUS='Active' AND student_id=$studentId AND bb.batch_id=$batchId");
+							WHERE sb.STATUS='Active' AND bb.STATUS='Active'   AND student_id=$studentId AND bb.batch_id=$batchId");
+				
 				$batch->books = $books;
 		}
 			else

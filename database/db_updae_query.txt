@@ -15,7 +15,7 @@ CREATE TABLE student_books(
 	`student_id` BIGINT(20) NOT NULL,
 	`sent_date`  TIMESTAMP NULL DEFAULT NULL,
 	`received_date`  TIMESTAMP NULL DEFAULT NULL,
-	`status` ENUM('Active','Inactive') NOT NULL DEFAULT 'Active' COLLATE 'utf8mb4_unicode_ci',
+	`status` ENUM('Active','Inactive') NOT NULL DEFAULT 'Inactive' COLLATE 'utf8mb4_unicode_ci',
 	`created_at` TIMESTAMP NULL DEFAULT NULL,
 	`updated_at` TIMESTAMP NULL DEFAULT NULL,
 	PRIMARY KEY (`id`) USING BTREE
@@ -110,6 +110,10 @@ CREATE TABLE `certificate_states` (
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
+ALTER TABLE `certificate_feedback`
+	ADD COLUMN `created_by` BIGINT(20) NULL DEFAULT NULL AFTER `feedback`;
+
+
 INSERT INTO certificate_states(`id`, `name`) VALUES ('1', 'Pending');
 INSERT INTO certificate_states(`id`, `name`) VALUES ('2', 'In process');
 INSERT INTO certificate_states(`id`, `name`) VALUES ('3', 'Ready to Delivery');
@@ -207,6 +211,8 @@ run script for result data
         }
 */
 
+run script 
+UPDATE student_books SET `status`='Inactive'
 
 
 Add Menu:
