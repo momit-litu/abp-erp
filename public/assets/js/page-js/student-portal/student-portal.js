@@ -115,8 +115,24 @@ $(document).ready(function () {
 						});
 					}
 					$('#attachment_table').append(attachment_html);
-					$('.remove-doc').on('click',function(){
-						$(this).closest('tr').remove();
+					$('.remove-doc').on('click',function(even){
+						even.preventDefault();
+						swal({
+							title: "Are you sure?",
+							text: "You wants to delete the document parmanently!",
+							icon: "warning",
+							buttons: true,
+							dangerMode: true,
+						}).then((willDelete) => {
+							if (willDelete) {
+								$(this).closest('tr').remove();
+							}
+							else {
+								swal("Your Data is safe..!", {
+								icon: "warning",
+								});
+							}
+						});						
 					})
 				}
 			});
@@ -128,10 +144,10 @@ $(document).ready(function () {
 	});
 
 	//Entry And Update Function For Module
-	$("#save_student").on('click',function(){
+	$("#save_student").on('click',function(event){
 		event.preventDefault();
-		var formData = new FormData($('#student_form')[0]);
-
+		var formData 		= new FormData($('#student_form')[0]);
+		var passing_year 	= $.trim($('#passing_year').val());
 		if($.trim($('#name').val()) == ""){
             success_or_error_msg('#student_form_submit_error','danger',"Please enter Full name","#name");
 		}
@@ -162,10 +178,10 @@ $(document).ready(function () {
 		else if(user_id == "" && $.trim($('#password').val()) != $.trim($('#confirm_password').val())){
 			success_or_error_msg('#student_form_submit_error','danger',"Please provide the same password","#password");
 		}	
-		/*else if($.trim($('#passing_year').val()) == ""){
-			success_or_error_msg('#student_form_submit_error','danger',"Please enter  passing year","#passing_year");
+		else if( passing_year== "" || passing_year.length>4){
+			success_or_error_msg('#student_form_submit_error','danger',"Please check  passing year","#passing_year");
 		}
-		else if($.trim($('#current_emplyment').val()) == ""){
+		/*else if($.trim($('#current_emplyment').val()) == ""){
 			success_or_error_msg('#student_form_submit_error','danger',"Please enter last current emplyment","#current_emplyment");
 		}*/
 		else{

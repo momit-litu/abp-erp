@@ -274,7 +274,17 @@
                                             <table class="mb-0 table table-bordered" id='attachment_table'>
 												@if(count($student->documents)>0)
 													@foreach($student->documents as $document)
-														<tr><td><input type='text' class='d-none' name='std_docs[]' value='{{$document->id}}' /> <a clas='formData' target='_blank'  href='/assets/images/student/documents/{{ $document->document_name }}' >{{ $document->document_name }}</a></td><td width='50'><button class='border-0 btn-transition btn btn-outline-danger remove-doc'><i class='fa fa-trash-alt'></i></button></td></tr>
+														<tr>
+															<td>
+																<input type='text' class='d-none' name='std_docs[]' value='{{$document->id}}' /> 
+																	<a clas='formData' target='_blank'  href='/assets/images/student/documents/{{ $document->document_name }}' >{{ $document->document_name }}</a>
+															</td>
+															<td width='50'>
+																<button class='border-0 btn-transition btn btn-outline-danger remove-doc' >
+																	<i class='fa fa-trash-alt'></i>
+																</button>
+															</td>
+														</tr>
 													@endforeach
 												@endif
                                             </table>

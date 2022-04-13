@@ -3,11 +3,78 @@ $(document).ready(function () {
 	
 	// for get site url
 	var url = $('.site_url').val();
-	/*----- My Profile ------*/
+
+	
+	var last_qualification_id =  $.trim($('#last_qualification_id').val());
+	if(last_qualification_id!='') $('#last_qualification').val(last_qualification_id)
+
+	
+	$("#current_emplyment").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/employement-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		appendTo : $('#student_form'),
+		minLength: 2,
+	});
+
+	$("#current_designation").autocomplete({ 
+		search: function() {		
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: url+'/designation-autosuggest',
+				dataType: "json",
+				type: "post",
+				async:false,
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+				}
+			});
+		},
+		appendTo : $('#student_form'),
+		minLength: 2,
+	});
+	
 	edit_profile = function edit_profile(){
 		$("#edit_profile_menu_tab").removeClass('hidden');
 		$("#edit_profile_tab").trigger('click');		
 	}
+
+	$('.remove-doc').on('click',function(even){
+		even.preventDefault();
+		swal({
+			title: "Are you sure?",
+			text: "You wants to delete the document parmanently!",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		}).then((willDelete) => {
+			if (willDelete) {
+				$(this).closest('tr').remove();
+			}
+			else {
+				swal("Your Data is safe..!", {
+				icon: "warning",
+				});
+			}
+		});						
+	})
 
 	$('#update_profile_info').click(function(event){		
 		event.preventDefault();
@@ -16,6 +83,7 @@ $(document).ready(function () {
 				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 			}
 		});
+
 		var formData = new FormData($('#my_profile_form')[0]);
 
 		if($.trim($('#first_name').val()) == ""){
@@ -62,10 +130,10 @@ $(document).ready(function () {
 		}	
 	});
 
-	$("#update_student_profile_info").on('click',function(){
+	$("#update_student_profile_info").on('click',function(event){
 		event.preventDefault();
 		var formData = new FormData($('#student_form')[0]);
-
+		var passing_year = $.trim($('#passing_year').val());
 		if($.trim($('#name').val()) == ""){
             success_or_error_msg('#student_form_submit_error','danger',"Please enter Full name","#name");
 		}
@@ -86,6 +154,12 @@ $(document).ready(function () {
 		}
 		else if($.trim($('#nid').val()) == ""){
 			success_or_error_msg('#student_form_submit_error','danger',"Please enter NID No","#nid");
+		}
+		else if($.trim($('#last_qualification').val()) == ""){
+			success_or_error_msg('#student_form_submit_error','danger',"Please enter last qualification","#last_qualification");
+		}
+		else if( passing_year== "" || passing_year.length>4){
+			success_or_error_msg('#student_form_submit_error','danger',"Please check  passing year","#passing_year");
 		}
 		else{
 			$.ajax({
@@ -122,9 +196,6 @@ $(document).ready(function () {
 			});
 		}
 	});
-
-
-
 
 	change_password = function change_password(){
 		$.ajax({
