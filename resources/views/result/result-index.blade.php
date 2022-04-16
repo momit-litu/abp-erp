@@ -38,7 +38,7 @@
             <div class="main-card mb-3 card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-md-9">
                             <div class="form-row">
                                 <div class="col-md-10">
                                     <div class="position-relative form-group">
@@ -53,6 +53,24 @@
                                         <div class="col-md-8">
                                             <button id="show_batch_result" class="btn btn-info btn-lg">Search</button>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <div class="position-relative form-group" id="upload_result" style="display: none !important">
+                                <label class="control-label" >&nbsp;</label>
+                                <div class="col-md-12">
+                                    <div class="widget-content-right">
+                                        <button class="border-0 btn-transition btn btn-outline-info" onclick="exportSampleResult('sample')" title="Download Sampl CSV">
+                                            <i class="fa fa-file-excel"></i>
+                                        </button>
+                                        <button class="border-0 btn-transition btn btn-outline-danger" onclick="uploadResult()" title="Upload Result" >
+                                            <i class="fa fa-upload"></i>
+                                        </button>
+                                        <button class="border-0 btn-transition btn btn-outline-success" onclick="exportSampleResult('report')" title="Download Report">
+                                            <i class="fa fa-download"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -131,6 +149,63 @@
                         <div class="col-md-9 text-right">
                             <button type="button" id="clear_button" class="btn btn-warning">Clear</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="upload-result-form" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="form-title"><i class="fa fa-plus"></i> Upload CSV Book</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <form id="csv_form" autocomplete="off" name="csv_form" enctype="multipart/form-data" class="form form-horizontal form-label-left">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <div class="position-relative form-group">
+                                                    <label class="">CSV File <span class="required">*</span></label>
+                                                    <input name="csv_result_file" id="csv_result_file" type="file"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <br>
+                                                @if($actions['add_permisiion']>0)
+                                                    <button id="save_csv" class="btn btn-success  btn-lg">Upload Book Status</button>
+                                                @endif
+                                                <p>&nbsp;</p>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div id="form_csv_submit_error" class="text-center" style="display:none"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12" style="display: flex; flex-direction: row;">
+                        <div class="col-md-3 text-left">
+
+                        </div>
+                        <div class="col-md-9 text-right">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>

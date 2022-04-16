@@ -19,11 +19,12 @@ class bulkMail extends Mailable
      *
      * @return void
      */
-    public function __construct($title, $body, $emailFrom)
+    public function __construct($title, $body, $emailFrom, $customSigneture)
     {
         $this->title 	= $title;
 		$this->body 	= $body;
         $this->emailFrom= $emailFrom;
+        $this->customSigneture= $customSigneture;
     }
 
     /**
@@ -40,7 +41,8 @@ class bulkMail extends Mailable
             ->from($this->emailFrom)
             ->with([
                 'body'      => $this->body,
-                'settings'  => $settings
+                'settings'  => $settings,
+                'customSigneture'  => $this->customSigneture,
             ]);
 			
     }

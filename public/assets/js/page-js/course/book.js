@@ -34,6 +34,54 @@ $(document).ready(function () {
          // books_table
     }
     
+
+	exportSampleBook = function exportSampleBook(type){
+		if($('#batch_id').val()!=""){
+			window.open(window.location.href = url+"/book-csv/"+$('#batch_id').val()+"/"+type, '_blank');
+        }
+	}	
+
+	uploadBook = function uploadBook(){
+		$('#upload-book-form').modal('show');
+	}	
+
+	$("#save_csv").on('click',function(event){
+		event.preventDefault();
+		$.ajaxSetup({
+			headers:{
+				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+			}
+		});
+
+		var formData = new FormData($('#csv_form')[0]);
+       
+		// if($.trim($('#feedback_details').val()) == "" || $.trim($('#student_book_id').val()) == ""){
+		// 	success_or_error_msg('#form_submit_error','danger',"Please put details","#feedback_details");
+		// }
+		// else{
+		$.ajax({
+			url: url+"/book-csv-upload",
+			type:'POST',
+			data:formData,
+			async:false,
+			cache:false,
+			contentType:false,
+			processData:false,
+			success: function(data){
+				var response = JSON.parse(data);
+				if(response['response_code'] == 0){
+					success_or_error_msg('#form_csv_submit_error','danger',response['errors'],"");
+				}
+				else{
+					$('#upload-book-form').modal('hide');
+					$("#show_batch_books").trigger('click');
+				}					
+			}
+		});
+		//}
+	});
+
+	
 	$("#batch_name").autocomplete({ 
 		search: function() {		
 		},
@@ -61,7 +109,8 @@ $(document).ready(function () {
 	$("#batch_name").on('click',function(){ 
 		$(this).val("");
 		$(this).next().val("");
-        $('#add_books').css('display','none');
+        $('#add_books').css('display','none');	
+			
         $('#edit_id').val('');
         $('#book_name').val('');
         $('#books_table>tr').remove();
@@ -144,7 +193,7 @@ $(document).ready(function () {
 
 	$("#show_batch_books").on('click',function(){
         if($('#batch_id').val()!=""){
-            $('#add_books').css('display','block');
+            $('#add_books').css('display','block');	
             $.ajax({
                 url: url+"/student-books/"+$('#batch_id').val(),
                 type:'get',
@@ -155,7 +204,7 @@ $(document).ready(function () {
             });
             $('#batch_books_div').css('display','block');
         }else{
-            $('#add_books').css('display','none');
+            $('#add_books').css('display','none');					
         }        
     })
 

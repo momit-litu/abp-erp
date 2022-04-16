@@ -24,6 +24,9 @@ use App\Models\CertificateFeedback;
 use App\Traits\StudentNotification;
 use Illuminate\Support\Facades\File;
 
+use App\Exports\ResultExport;
+use App\Imports\ResultImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ResultController extends Controller
 {
@@ -173,6 +176,49 @@ class ResultController extends Controller
         return $table; 
     }
 
+    public function csvResult($batchId, $type)
+    {
+        $filename = 'result'.Time().'.xlsx';
+        return Excel::download(new ResultExport($batchId, $type), $filename);
+    }
+
+    
+    public function saveCSVResult(Request $request)
+    {
+        try {
+            $rule = [
+                'csv_result_file' => 'required|mimes:xlsx'
+            ];
+            $validation = \Validator::make($request->all(), $rule);
+            //dd($request);
+
+            if ($validation->fails()) {
+                $return['response_code'] = 0;
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            } else {
+                DB::beginTransaction();
+                $csv = $request->file('csv_result_file');
+                if (isset($csv) && $csv!="") {
+                    $ext        = $csv->getClientOriginalExtension();
+                    $csv_full_name = $csv->getClientOriginalName().'_'.time() . '.' . $ext;
+                    $upload_path = 'assets/images/results/';
+                    $success = $csv->move($upload_path, $csv_full_name);
+                    Excel::import(new ResultImport, $upload_path.$csv_full_name);
+                }  
+            }
+            DB::commit();
+            $return['response_code']    = 1;
+            $return['message']          = "CSV Upload successfully";
+            return json_encode($return);
+        } catch (\Exception $e) {
+            DB::rollback();
+            $return['response_code'] = 0;
+            $return['errors'] = "Failed to save !" . $e->getMessage();
+            return json_encode($return);
+        }
+    }
+
     public function show($id)
     {
 		if($id=="") return 0;	
@@ -199,8 +245,7 @@ class ResultController extends Controller
                 $batchStudent   = BatchStudent::with('batch_student_units')->find($batchStudentId);
                 foreach($batchStudent->batch_student_units as $unitResult){
                     if(is_numeric($scores[$unitResult->id])){
-                        $result = ResultState::where('heighest_mark','>',$scores[$unitResult->id])->where('lowest_mark','<',$scores[$unitResult->id])->first();
- 
+                        $result = ResultState::where('heighest_mark','>=',$scores[$unitResult->id])->where('lowest_mark','<=',$scores[$unitResult->id])->first();
                         $unitResult->score   = $scores[$unitResult->id];
                         $unitResult->result  = $result->id;
                         $unitResult->save();
@@ -258,14 +303,19 @@ class ResultController extends Controller
         $admin_user_id 		= Auth::user()->id;
         $edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,123);     
         $return_arr         = array(); 
-        $sql = "  SELECT  s.student_no as student_no, s.name AS student_name, bs.student_enrollment_id, bs.status AS student_status, s.id as student_id, bs.id as batch_student_id, balance, result_published_status, certificate_status, certificate_no, cs.name as certificate_status, group_CONCAT(feedback,'</ br>') AS feedbacks
-                FROM batch_students bs 
+        $sql = "  SELECT s.student_no AS student_no, s.name AS student_name, bs.student_enrollment_id, 
+                bs.status AS student_status, s.id AS student_id, bs.id AS batch_student_id, balance,
+                result_published_status, certificate_status, certificate_no, 
+                cs.name AS certificate_status, GROUP_CONCAT(feedback,' (', u.first_name ,' @',date_format(cf.created_at,'%Y-%m-%d'),') <br>') AS feedbacks
+                FROM batch_students bs
                 LEFT JOIN students s ON s.id = bs.student_id
                 LEFT JOIN certificate_states cs ON cs.id = bs.certificate_status
                 LEFT JOIN certificate_feedback cf ON cf.batch_student_id=bs.id
+                LEFT JOIN users u ON u.id = cf.created_by
                 WHERE bs.batch_id=$batchId AND bs.status = 'Active'
                 GROUP BY bs.id
                 ORDER BY bs.id ASC";
+             //   echo $sql;die;
 
         $studentResults   = DB::select($sql);
         $table  = "";
@@ -294,7 +344,7 @@ class ResultController extends Controller
                 if($edit_permisiion>0){
                     $tableBody .="<button title='Edit' onclick='editCertificate(".$batch_student_id.")' id=edit_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>&nbsp;";
                 }
-                $tableBody .="<button title='Edit' onclick='addFeedback(".$batch_student_id.")' id=add_feedback_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-success' ><i class='fa fa-plus'></i></button>&nbsp;";
+                $tableBody .="<button title='Add feedback' onclick='addFeedback(".$batch_student_id.")' id=add_feedback_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-success' ><i class='fa fa-plus'></i></button>&nbsp;";
 
                 $tableBody .= "</td></tr>";
             }
@@ -374,7 +424,8 @@ class ResultController extends Controller
                 DB::beginTransaction();
                 $data = [                   
                     'feedback'          => $request['feedback_details'],
-                    'batch_student_id'   => $request['batch_student_id']
+                    'batch_student_id'  => $request['batch_student_id'],
+                    'created_by'        => Auth::user()->id
                 ];
                 CertificateFeedback::create($data);
                 

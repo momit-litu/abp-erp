@@ -157,11 +157,13 @@ CREATE TABLE IF NOT EXISTS `template_categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `template_categories` (`id`, `category_name`, `placeholders`) VALUES
-	(1, 'Unpaid', '[student_name],[payment_date],[payment_amount],[course_name],[installment_no]'),
-	(2, 'Student', '[student_name]'),
-	(3, 'upcoming-due', '[student_name],[month],[payment_amount],[course_name],[installment_no]'),
-	(4, 'otp', ''),
-	(5, 'welcome', '[student_name],[course_name]');
+	(1, 'Unpaid', '[student_name],[payment_date],[payment_amount],[course_name],[installment_no]
+,[email]'),
+	(2, 'Student', '[student_name],[email]'),
+	(3, 'Upcoming-due', '[student_name],[month],[payment_amount],[course_name],[installment_no],[email]'),
+	(4, 'OTP', ''),
+	(5, 'Welcome', '[student_name],[course_name],[email]')
+	(6, 'General', '[student_name],[email]'),
 
 ALTER TABLE `notification_templates`
 	ADD COLUMN `placeholders` MEDIUMTEXT NULL AFTER `details`;
@@ -193,6 +195,11 @@ ALTER TABLE `student_books_feedback`
 	ADD COLUMN `created_by` BIGINT(20) NOT NULL AFTER `student_book_id`;
 
 
+
+
+
+
+
 change email url to email/send
 
 run script for result data
@@ -215,6 +222,9 @@ run script
 UPDATE student_books SET `status`='Inactive'
 
 
+
+
+
 Add Menu:
 	Academic
 	Results
@@ -227,6 +237,18 @@ Add Action:
 	Certificate Update
 	Certificate Edit
 	Certificate Print
+
+
+
+
+
+add folder in images/
+book
+result
+
+
+
+
 
 Updated:
 

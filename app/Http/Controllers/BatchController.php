@@ -675,7 +675,7 @@ class BatchController extends Controller
 
         $trasferedStudents = BatchStudent::with('batch', 'batch.course','prev_batch.batch','student')
                                 ->whereNotNull('prev_batch_student_id')
-                                ->where('current_batch','Yes')
+                               // ->where('current_batch','Yes')
                                 ->orderBy('created_at','desc')
                                 ->get();
         //dd($trasferedStudent);

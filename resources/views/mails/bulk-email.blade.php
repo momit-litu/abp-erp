@@ -452,11 +452,11 @@
                     <td class="content-cell">
                       <div class="f-fallback">
                         {!! $body !!}                     
-                        <br>
-                        <p>If you have any questions, simply reply to this email or reach out to our <a href="{{$settings['support_url']}}">support team</a> for help.</p>
-                        <p>Thank you,
-                          <br>Admin
-                          <br> {{$settings['company_name']}}</p>
+                        @if (!$customSigneture)
+                          <br>
+                          <p>If you have any questions, simply reply to this email or reach out to our <a href="{{$settings['support_url']}}">support team</a> for help.</p>
+                          <p> Thank you, <br>Admin<br> {{$settings['company_name']}} </p>
+                        @endif
                       </div>
                     </td>
                   </tr>

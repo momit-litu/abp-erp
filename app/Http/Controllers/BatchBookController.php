@@ -13,7 +13,13 @@ use App\Traits\StudentNotification;
 use App\Http\Controllers\Controller;
 use App\Models\StudentBooksFeedback;
 use Illuminate\Support\Facades\Auth;
+
+use App\Exports\BookExport;
+use App\Imports\BookImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use phpDocumentor\Reflection\Types\Null_;
+
 
 class BatchBookController extends Controller
 {
@@ -59,7 +65,6 @@ class BatchBookController extends Controller
 
     public function studenBookList($batchId)
     {
-        $return_arr  = array(); 
         $sql = "SELECT student_name,student_enrollment_id,student_status, book_status, 
         GROUP_CONCAT(student_book_details) student_book_details
             FROM (
@@ -91,7 +96,6 @@ class BatchBookController extends Controller
 
                 $bookInfoArr        = explode(',',$studentBook->student_book_details);
 
-                $studentBookInfoArr = array();
                 foreach($bookInfoArr as $bookInfo){
                     $singleBookArr  = explode('@',$bookInfo);
                     $studentBookId  = $singleBookArr[0];
@@ -139,6 +143,60 @@ class BatchBookController extends Controller
         }
 
         return $table;
+    }
+       
+    public function csvBook($batchId, $type)
+    {
+        $filename = 'result'.Time().'xlsx';
+        return Excel::download(new BookExport($batchId, $type), $filename);
+    }
+
+    
+    public function saveCSVBook(Request $request)
+    {
+        try {
+            $rule = [
+                'csv_book_file' => 'required|mimes:xlsx'
+            ];
+            $validation = \Validator::make($request->all(), $rule);
+            //dd($request);
+
+            if ($validation->fails()) {
+                $return['response_code'] = 0;
+                $return['errors'] = $validation->errors();
+                return json_encode($return);
+            } else {
+                DB::beginTransaction();
+                $csv = $request->file('csv_book_file');
+                if (isset($csv) && $csv!="") {
+                    $ext        = $csv->getClientOriginalExtension();
+                    $csv_full_name = $csv->getClientOriginalName().'_'.time() . '.' . $ext;
+                    $upload_path = 'assets/images/books/';
+                    $success = $csv->move($upload_path, $csv_full_name);
+                    Excel::import(new BookImport, $upload_path.$csv_full_name);
+                }  
+            }
+
+            /*
+                $data = [                   
+                    'feedback'          => $request['feedback_details'],
+                    'student_book_id'   => $request['student_book_id'],
+					'created_by'		=> Auth::user()->id
+                ];
+                StudentBooksFeedback::create($data);
+                
+            */
+
+            DB::commit();
+            $return['response_code']    = 1;
+            $return['message']          = "CSV Upload successfully";
+            return json_encode($return);
+        } catch (\Exception $e) {
+            DB::rollback();
+            $return['response_code'] = 0;
+            $return['errors'] = "Failed to save !" . $e->getMessage();
+            return json_encode($return);
+        }
     }
         
     public function saveBook(Request $request)

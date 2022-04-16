@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
+            Log::info('Today',array());
             Log::debug('Today:'.date('Y-m-d'));
             $todaysBatches = Batch::where('start_date',date('Y-m-d'));
             foreach($todaysBatches as $batch){
@@ -35,7 +36,8 @@ class Kernel extends ConsoleKernel
                 $batch->save();
                 Log::debug('batch status changed :'.$batch->id);
             }
-        })->daily()->at('13:00');
+        })->everyMinute();
+        //->daily()->at('13:00');
     }
 
     /**

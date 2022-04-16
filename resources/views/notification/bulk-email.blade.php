@@ -72,17 +72,6 @@
 								</div>
 							</div>		
 							<div class="form-row">							
-								<!--<div class="col-md-6">
-									<div class="position-relative form-group">
-										<label for="" class="">Payment type</label>
-										<select name="payment_type" id="payment_type" class="form-control col-lg-12">
-											<option value="">Select payment type</option>
-											<option value="All">All</option>
-											<option value="Due">Due</option>
-											<option value="Paid">Paid</option>
-										</select>
-									</div>
-								</div>-->
 								<div class="col-md-6">
 									<div class="position-relative form-group">
 										<label for="" class="">All Student?</label>
@@ -155,7 +144,17 @@
 										</select>
 									</div>
 								</div>
-							</div>	 					
+							</div>
+							<div class="form-row">
+								<div class="col-md-6">
+									<div class="position-relative form-check">							
+										<label class="form-check-label">
+											<input type="checkbox" id="default_signeture" class="form-check-input" checked name="default_signeture" value="1">Default Email Signeture ?
+										</label>
+									</div>									
+								</div>									
+							</div>
+
 						</div>							
 					</div>
 					<div class="form-group">
@@ -185,6 +184,7 @@
 <script type="text/javascript">
 	const course_profile_image = "<?php echo asset('assets/images/courses/'); ?>";
 	createEditor('message_body');
+	
 </script>	
 <script type="text/javascript" src="{{ asset('assets/js/page-js/notification/notification.js')}}"></script>
 @endsection

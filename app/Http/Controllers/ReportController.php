@@ -535,6 +535,7 @@ class ReportController extends Controller
 
 	public function dashboardContent($period)
     {
+
         $admin_user_id  = Auth::user()->id;
 		$return_arr     = array();
         $registrationInfoPermission    = $this->PermissionHasOrNot($admin_user_id,106 );//Dashboard Registration info
@@ -546,21 +547,36 @@ class ReportController extends Controller
 		$paymentsPermission            = $this->PermissionHasOrNot($admin_user_id,112 );//Dashboard Payments  
 		$upcomingBatchesPermission     = $this->PermissionHasOrNot($admin_user_id,113 );//Dashboard Upcoming Batches 		
 		
-        if($registrationInfoPermission){        
-           $registrationInfo['selfRegistered']    = Student::where("register_type","Self")->count();
-           $registrationInfo['adminRegistered']   = Student::where("register_type","Admin")->count();
+        
+        if($period =='today'){
+            $startDate  = date('Y-m-d');
+        }
+        else if($period =='last_week'){
+            $startDate  = date('Y-m-d', strtotime('-7 days'));
+        }
+        else if($period =='last_month'){
+            $startDate  = date('Y-m-d', strtotime('-1 month'));
+        }
+        else if($period =='last_year'){
+            $startDate  = date('Y-m-d', strtotime('-1 year'));
+        }
+        $endDate    = date('Y-m-d');
 
-           $registrationInfo['selfEnrolled']      = BatchStudent::where("status","Active")->count();
+        if($registrationInfoPermission){        
+           $registrationInfo['selfRegistered']    = Student::where("register_type","Self")->whereDate('created_at','>=',$startDate)->whereDate('created_at','<=',$endDate)->count();
+           $registrationInfo['adminRegistered']   = Student::where("register_type","Admin")->whereDate('created_at','>=',$startDate)->whereDate('created_at','<=',$endDate)->count();
+
+           $registrationInfo['selfEnrolled']      = BatchStudent::where("status","Active")->whereDate('created_at','>=',$startDate)->whereDate('created_at','<=',$endDate)->count();
            $registrationInfo['adminEnrolled']     = 0;
-           $registrationInfo['selfPending']       = BatchStudent::where("status","Inactive")->count();
+           $registrationInfo['selfPending']       = BatchStudent::where("status","Inactive")->whereDate('created_at','>=',$startDate)->whereDate('created_at','<=',$endDate)->count();
            $registrationInfo['adminPending']      = 0;
-           $registrationInfo['dropout']           = 10;
+           $registrationInfo['dropout']           = BatchStudent::where("dropout","Yes")->whereDate('updated_at','>=',$startDate)->whereDate('updated_at','<=',$endDate)->count();
            $return_arr['registrationInfo']        = $registrationInfo;
         }
 
          if($paymentScheduleInfoPermission){
-            $totalScheludes = StudentPayment::where('payable_amount','>','0')->where("status","Active")->count();
-            $totalReceives = StudentPayment::where('payment_status','Paid')->where("status","Active")->count();
+            $totalScheludes = StudentPayment::where('payable_amount','>','0')->where("status","Active")->whereDate('last_payment_date','>=',$startDate)->whereDate('last_payment_date','<=',$endDate)->count();
+            $totalReceives = StudentPayment::where('payment_status','Paid')->where("status","Active")->whereDate('last_payment_date','>=',$startDate)->whereDate('last_payment_date','<=',$endDate)->count();
             
             $paymentScheduleInfo['schedulePaymentsNo']= $totalScheludes;
             $paymentScheduleInfo['receivedPaymetsNo'] = $totalReceives;

@@ -264,6 +264,12 @@ class StudentPortalController extends Controller
 
     private function saveStudent($request, $id, $photo, $documents)
     {
+
+        $student = Student::find(62);
+        //$this->registrationCompletedNotification($student);
+        $this->registrationConfirmEmail($student->id);
+
+        die;
         
         try {
             $rule = [
@@ -271,7 +277,7 @@ class StudentPortalController extends Controller
                 'date_of_birth' => 'required',
                 'student_address_field' => 'required',
                 'contact_no' => 'Required|max:11|unique:users,contact_no',
-                //'student_email' => 'Required|email|unique:users',
+                'student_email' => 'Required|email',
                 'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:2000',
                 'documents.*' => 'max:2000',
 				'password'  => 'required|min:4|',
@@ -285,6 +291,7 @@ class StudentPortalController extends Controller
                 $return['errors'] = $validation->errors();
                 return json_encode($return);
             } else {
+
                 DB::beginTransaction();
 
                 $emailVerification = Student::where([['email', $request['student_email']]])->first();

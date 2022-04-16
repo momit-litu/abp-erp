@@ -441,7 +441,8 @@ class NotificationController extends Controller
                 $title				= $request->title;
                 $emailBody          = $request->message_body;
                 $fromEmail          = $request->email_from_address;
-            
+                $customSigneture    = (!isset($request->default_signeture))?1:"";
+
                 // Email for due payment only
                 if($request->email_template_category ==1){
                     $all_student_type = ($request->all_student_type != null)?$request->all_student_type:"";
@@ -481,19 +482,21 @@ class NotificationController extends Controller
                         WHERE sp.payment_status='Unpaid' and sp.last_payment_date<'$lastDate'
                         $studentStatusCondition
                         $studentCondition
+                        group by s.email
                     ";
 					//echo $paymentStudentSql;die;
                     $studentPayments = DB::select($paymentStudentSql);
                     if(count($studentPayments)>0){
                         foreach($studentPayments as $details){                  
-                            $replacableArray = ["[student_name]","[payment_date]","[payment_amount]","[course_name]","[installment_no]"];
-                            $replaceByArray = [$details->name, $details->payment_date, $details->payment_amount, $details->course_name,$details->installment_no];
+                            $replacableArray = ["[student_name]","[email]","[payment_date]","[payment_amount]","[course_name]","[installment_no]"];
+                            $replaceByArray = [$details->name, $details->email, $details->payment_date, $details->payment_amount, $details->course_name,$details->installment_no];
                             $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
                             $emails[] = array(
                                 'title'		=> $title,
                                 'address'	=> $details->email,
                                 'body'		=> $emaiBody,
                                 'from'		=> $fromEmail,
+                                'customSigneture'=>$customSigneture
                             );
                         }
                         $response = $this->bulkEmail($emails); 				 
@@ -550,19 +553,21 @@ class NotificationController extends Controller
                         WHERE sp.payment_status='Unpaid' and DATE_FORMAT(sp.last_payment_date,'%Y-%m') ='$monthYear'
                         $studentStatusCondition
                         $studentCondition
+                        group by s.email
                     ";
 
                     $studentPayments = DB::select($paymentStudentSql);
                     if(count($studentPayments)>0){
                         foreach($studentPayments as $details){                  
-                            $replacableArray = ["[student_name]","[month]","[payment_amount]","[course_name]","[installment_no]"];
-                            $replaceByArray = [$details->name, $details->month, $details->payment_amount, $details->course_name,$details->installment_no];
+                            $replacableArray = ["[student_name]","[email]","[month]","[payment_amount]","[course_name]","[installment_no]"];
+                            $replaceByArray = [$details->name, $details->email,  $details->month, $details->payment_amount, $details->course_name,$details->installment_no];
                             $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
                             $emails[] = array(
                                 'title'		=> $title,
                                 'address'	=> $details->email,
                                 'body'		=> $emaiBody,
                                 'from'		=> $fromEmail,
+                                'customSigneture'=>$customSigneture
                             );
                         }
                         $response = $this->bulkEmail($emails); 				 
@@ -574,7 +579,7 @@ class NotificationController extends Controller
                 }
                 // student type
                 else if($request->email_template_category ==2){
-                    $studentSql = " SELECT s.email, s.id AS student_id, NAME AS student_name,       student_no  FROM students s ";
+                    $studentSql = " SELECT s.email, s.id AS student_id, NAME AS student_name,  student_no  FROM students s ";
                     $studentCondition = " WHERE email IS NOT null ";
                     
 					if($request->all_student_type == 'active')
@@ -597,7 +602,7 @@ class NotificationController extends Controller
 
                     if($request->sms_batch_id != null){
                             $studentSql .=  " LEFT JOIN batch_students AS bs ON bs.student_id=s.id  "; 
-                            $studentCondition .= " AND bs.batch_id=".$request->sms_batch_id;  
+                            $studentCondition .= " AND bs.batch_id=".$request->sms_batch_id." AND bs.status='Active'";  
                          }
                     else if(isset($request->student_ids)){
 						$studentIds = implode(',',  $request->student_ids);
@@ -606,16 +611,20 @@ class NotificationController extends Controller
 						else
 							$studentCondition .=   " AND s.id IN($studentIds)" ; 	
                     } 
-                    $studentSql .=$studentCondition;
+                    $studentSql .=$studentCondition.'  group by s.email';
+                    //dd($studentSql);
                     $students   = DB::select($studentSql);
                     $responseText   = "";
-                    foreach($students as $details){            
-                        $emaiBody    = str_replace('[student_name]',$details->student_name,$request->message_body);
+                    foreach($students as $details){   
+                        $replacableArray = ["[student_name]","[email]"];
+                        $replaceByArray = [$details->student_name, $details->email];
+                        $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
                         $emails[] = array(
                             'title'		=> $title,
                             'address'	=> $details->email,
                             'body'		=> $emaiBody,
                             'from'		=> $fromEmail,
+                            'customSigneture'=>$customSigneture
                         );
                     }
                     $response = $this->bulkEmail($emails); 				 
@@ -623,7 +632,7 @@ class NotificationController extends Controller
                     $message = "Email sent successfully.";
                 }
                  // Email for welcome 
-                if($request->email_template_category ==5){
+                else if($request->email_template_category ==5){
                     $all_student_type = ($request->all_student_type != null)?$request->all_student_type:"";
                     $lastDate = Date('Y-m-d');
                     $studentStatusCondition = "";
@@ -659,12 +668,13 @@ class NotificationController extends Controller
                         WHERE bs.welcome_email ='Not-sent' AND bs.`status`='Active' 
                         $studentStatusCondition
                         $studentCondition
+                        group by s.email
                     ";
                     $batchStudents = DB::select($batchStudentSql);
                     if(count($batchStudents)>0){
                         foreach($batchStudents as $details){                  
-                            $replacableArray = ["[student_name]","[course_name]"];
-                            $replaceByArray = [$details->name,  $details->course_name];
+                            $replacableArray = ["[student_name]","[email]","[course_name]"];
+                            $replaceByArray = [$details->name,$details->email, $details->course_name];
                             $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
                             $emails[] = array(
                                 'bStudentId'=>$details->b_student_id,
@@ -672,6 +682,7 @@ class NotificationController extends Controller
                                 'address'	=> $details->email,
                                 'body'		=> $emaiBody,
                                 'from'		=> $fromEmail,
+                                'customSigneture'=>$customSigneture
                             );
                         }
                         $response = $this->bulkEmail($emails); 				 
@@ -721,19 +732,20 @@ class NotificationController extends Controller
 						else
 							$studentCondition .=   " AND s.id IN($studentIds)" ; 	
                     } 
-                    $studentSql .=$studentCondition;
+                    $studentSql .=$studentCondition.'  group by s.email';
                     $students   = DB::select($studentSql);
 					
 					foreach($students as $student){
                         if($student->email!=""){
-                            
-                            $emailBody    = str_replace('[student_name]',$student->student_name,$emailBody); 
-                            //echo $emaiBody;die;                       
+                            $replacableArray = ["[student_name]","[email]"];
+                            $replaceByArray = [$details->student_name, $details->email];
+                            $emaiBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);                   
                             $emails[] = array(
                                 'title'		=> $title,
                                 'address'	=> $student->email,
                                 'body'		=> $emailBody,
                                 'from'		=> $fromEmail,
+                                'customSigneture'=>$customSigneture
                             );
                         }
 					}

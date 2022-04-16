@@ -27,6 +27,7 @@ $(document).ready(function () {
 
 	$("#batch_name").on('click',function(){
 		$('#result_div').css('display','none');		
+		$('#upload_result').css('display','none');	
 		$(this).val("");
 		$(this).next().val("");
     });
@@ -34,6 +35,7 @@ $(document).ready(function () {
 	$("#show_batch_result").on('click',function(){
 		$('#result_div').css('display','none');
         if($('#batch_id').val()!=""){
+			$('#upload_result').css('display','block');	
             $.ajax({
                 url: url+"/results/"+$('#batch_id').val(),
                 type:'get',
@@ -43,7 +45,9 @@ $(document).ready(function () {
 					$('#result_div').css('display','block');
                 }
             });
-            
+        } 
+		else{
+            $('#upload_result').css('display','none');					
         }     
     })
 
@@ -168,6 +172,55 @@ $(document).ready(function () {
 		}
 	}); 
 
+
+
+	exportSampleResult = function exportSampleResult(type){
+		if($('#batch_id').val()!=""){
+			window.open(window.location.href = url+"/result-csv/"+$('#batch_id').val()+"/"+type, '_blank');
+        }
+	}	
+
+	uploadResult = function uploadResult(){
+		$('#upload-result-form').modal('show');
+	}	
+
+	$("#save_csv").on('click',function(event){
+		event.preventDefault();
+		$.ajaxSetup({
+			headers:{
+				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+			}
+		});
+
+		var formData = new FormData($('#csv_form')[0]);
+
+		$.ajax({
+			url: url+"/result-csv-upload",
+			type:'POST',
+			data:formData,
+			async:false,
+			cache:false,
+			contentType:false,
+			processData:false,
+			success: function(data){
+				var response = JSON.parse(data);
+				if(response['response_code'] == 0){
+					success_or_error_msg('#form_csv_submit_error','danger',response['errors'],"");
+				}
+				else{
+					$('#upload-result-form').modal('hide');
+					$("#show_batch_results").trigger('click');
+				}					
+			}
+		});
+	});
+
+
+
+
+
+
+
 	// certificate
 	$("#show_batch_certificate").on('click',function(){
         if($('#batch_id').val()!=""){
@@ -287,8 +340,8 @@ function viewResult(id){
 			var feedbacks = "";
 			if(!jQuery.isEmptyObject(data['batch_student_feedback'])){
 				$.each(data['batch_student_feedback'], function(i,feedback){ 
-					$
-					feedbacks += feedback['feedback']+"<b> "+"("+feedback['created_by']['first_name']+" @"+feedback['created_at']+" )</b>"+"<br>";	
+					let created_at = feedback['created_at'].split('T');
+					feedbacks += feedback['feedback']+"<b> "+"("+feedback['created_by']['first_name']+" @"+created_at[0]+" )</b>"+"<br>";	
 				})
 			} 
 

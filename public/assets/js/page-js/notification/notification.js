@@ -139,7 +139,7 @@ $(document).ready(function () {
 	});
 
 	//Entry And Update Function For Module
-	$("#sent_sms_submit").on('click',function(){
+	$("#sent_sms_submit").on('click',function(event){
 		event.preventDefault();
 		var formData = new FormData($('#sms_form')[0]);
 	
@@ -364,8 +364,17 @@ $(document).ready(function () {
 		});
 	}
 
+	// $('#custom_signeture_div').hide();
+	// $("#default_signeture").click(function(){
+	// 	if($(this).prop("checked") == true){
+	// 		$('#custom_signeture').val("");
+	// 		$('#custom_signeture_div').hide();
+	// 	}
+	// 	else
+	// 	$('#custom_signeture_div').show();
+	// })
 	
-	$("#sent_email_submit").on('click',function(){
+	$("#sent_email_submit").on('click',function(event){
 		event.preventDefault();
 		editors.message_body.updateSourceElement();
 		var formData = new FormData($('#sms_form')[0]);

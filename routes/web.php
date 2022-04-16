@@ -31,7 +31,6 @@ Route::get('/index',array('as'=>'index', 'uses' =>'StudentPortalController@index
 Route::get('/courses/{type}',array('as'=>'Course List' , 	'uses' =>'StudentPortalController@showCourseList'));
 */
 
-
 //Route::get('/login',array('as'=>'index', 'uses' =>'AuthController@authLogin'));
 Route::get('/auth',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
 Route::get('auth/login',array('as'=>'Sign in', 'uses' =>'AuthController@authLogin'));
@@ -41,7 +40,6 @@ Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 Route::get('/payment/{id}',array('as'=>'Payment Details' , 'uses' =>'PaymentController@show'));
 Route::post('/sslcommerz/success',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentSuccess'));
 Route::post('/sslcommerz/fail',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentFail'));
-
 
 #Login
 
@@ -63,9 +61,6 @@ Route::post('auth/forget/password-otp',array('as'=>'OTP login' , 'uses' =>'AuthC
 Route::get('auth/forget/password-otp/verify',array('as'=>'OTP login Verify' , 'uses' =>'AuthController@otpVerification'));
 Route::post('auth/forget/password-otp/verify',array('as'=>'OTP Submit' , 'uses' =>'AuthController@otpVerificationPost'));
 
-
-
-
 Route::post('ckeditor/upload', 'CKEditorController@upload')->name('ckeditor.image-upload');
 
 Route::get('/load-user-groups', array('as'=>'user-group' , 'uses' =>'AdminController@loadUserGroups'));
@@ -84,8 +79,6 @@ Route::get('/get-template-placeholders/{id}',array('as'=>'Template Placeholders'
 
 Route::get('/email/payment-invoice/{id}',array('as'=>'Payment Invoice Email' , 'uses' =>'PaymentController@emailInvoice'));
 Route::get('/download-invoice/{id}',array('as'=>'Payment Invoice Download' , 'uses' =>'PaymentController@downloadInvoice'));
-
-
 
 Route::post('/employement-autosuggest',array('as'=>'Employement Autosuggest list', 'uses' =>'StudentPortalController@employementAutoComplete'));
 Route::post('/designation-autosuggest',array('as'=>'Designation Autosuggest list', 'uses' =>'StudentPortalController@designationAutoComplete'));
@@ -186,16 +179,12 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 
 	Route::post('/batch-current/{course_id}/{student_id}',array('as'=>'Batch details', 'action_id'=>'118', 'uses' =>'BatchController@getCurrentBatch'));
 	
-
-
 	//results
 	Route::get('/result',array('as'=>'Result', 'action_id'=>'119', 'uses' =>'ResultController@index'));
 	Route::get('/results/{id}',array('as'=>'Result List' ,'action_id'=>'119', 'uses' =>'ResultController@showList'));
 	Route::get('/result/{id}',array('as'=>'Result Details' ,'action_id'=>'119', 'uses' =>'ResultController@show'));
 	Route::post('/result',array('as'=>'Result Edit' , 'action_id'=>'120', 'uses' =>'ResultController@updateResult'));
 	Route::get('/result-publish/{id}',array('as'=>'Result Details' ,'action_id'=>'121', 'uses' =>'ResultController@publishResult'));
-
-
 
 	//certificates
 	Route::get('/certificate',array('as'=>'Certificate', 'action_id'=>'122', 'uses' =>'ResultController@certificateIndex'));
@@ -219,12 +208,17 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
     //books
     Route::get('/batch-book',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@index'));
     Route::get('/batch-books/{id}',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@bookList'));
+	Route::get('/book-csv/{id}/{type}',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@csvBook'));
+	Route::post('/book-csv-upload',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@saveCSVBook'));
+	
+	Route::get('/result-csv/{id}/{type}',array('as'=>'Books', 'action_id'=>'119', 'uses' =>'ResultController@csvResult'));
+	Route::post('/result-csv-upload',array('as'=>'Books', 'action_id'=>'119', 'uses' =>'ResultController@saveCSVResult'));
+
 	Route::get('/student-books/{id}',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@studenBookList'));
 	Route::post('/book',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@saveBook'));
 	Route::post('/feedback',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@saveFeedback'));
 	Route::get('/book-send/{id}',array('as'=>'Books', 'action_id'=>'115', 'uses' =>'BatchBookController@studenBookSend'));
 	
-
     Route::get('/email/payment-revised/{id}',array('as'=>'Revised Payment Email' , 'action_id'=>'91', 'uses' =>'PaymentController@emailRevisedPayment'));
 
 	//Payment Schedule
@@ -234,12 +228,10 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/payment-schedule',array('as'=>'Payment Schedule Entry' , 'action_id'=>'91', 'uses' =>'PaymentController@scheduleUpdate'));
 	Route::get('/payment-schedule/delete/{id}',array('as'=>'Payment Schedule Delete' , 'action_id'=>'92', 'uses' =>'PaymentController@scheduleDestroy'));
 
-
 	Route::get('/revise-payment',array('as'=>'Payment Revise', 'action_id'=>'93', 'uses' =>'PaymentController@reviseIndex'));
 	Route::get('/revise-payments',array('as'=>'Payment Revise List' ,'action_id'=>'93', 'uses' =>'PaymentController@reviseShowList'));
 	Route::get('/revise-payments/{id}',array('as'=>'Payment Revise Details' ,'action_id'=>'93', 'uses' =>'PaymentController@reviseShow'));
 	Route::post('/revise-payments',array('as'=>'Payment Revise Update' , 'action_id'=>'93', 'uses' =>'PaymentController@reviseUpdate'));
-
 
 	//Notifications
 	//SMS
@@ -251,7 +243,6 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('/email/send',array('as'=>'Send Email' , 'action_id'=>'95', 'uses' =>'NotificationController@sendEmailIndex'));
 	Route::post('/email/send',array('as'=>'Send Email' , 'action_id'=>'95', 'uses' =>'NotificationController@sendEmail'));
 	
-
 	//Notification Templates
 	Route::get('/template',array('as'=>'Template', 'action_id'=>'117', 'uses' =>'TemplateController@index'));
 	Route::get('/templates',array('as'=>'Template List' ,'action_id'=>'117', 'uses' =>'TemplateController@showList'));
@@ -259,9 +250,6 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/template',array('as'=>'Template Entry' , 'action_id'=>'117', 'uses' =>'TemplateController@createOrEdit'));
 	Route::get('/template/delete/{id}',array('as'=>'Template Delete' , 'action_id'=>'117', 'uses' =>'TemplateController@destroy'));
 	
-
-
-
 	//Batch student enroll
 	Route::get('/batch-students/{id}',array('as'=>'Batch Students List' ,'action_id'=>'85', 'uses' =>'BatchController@studentShow'));
 	Route::post('/batch-student',array('as'=>'Batch Student Entry' , 'action_id'=>'85', 'uses' =>'BatchController@enrollStudent'));
@@ -269,17 +257,12 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::post('/batch-student/update',array('as'=>'Batch Student update' , 'action_id'=>'85', 'uses' =>'BatchController@reAddStudent'));
 	Route::post('/batch-student/dropout',array('as'=>'Batch Student dropout' , 'action_id'=>'85', 'uses' =>'BatchController@dropoutStudent'));
 
-
-
-
 	//students
 	Route::get('student',array('as'=>'Student' , 'action_id'=>'38', 'uses' =>'StudentController@index'));
 	Route::get('/students',array('as'=>'Student List' ,  'action_id'=>'38','uses' =>'StudentController@showList'));
 	Route::get('/student/{id}',array('as'=>'Student View' , 'action_id'=>'38', 'uses' =>'StudentController@show'));
 	Route::post('/student',array('as'=>'Student Entry', 'action_id'=>'39', 'uses' =>'StudentController@createOrEdit'));
 	Route::get('/student/delete/{id}',array('as'=>'Student Delete', 'action_id'=>'41', 'uses' =>'StudentController@destroy'));
-
-
 
 	// expense
 	Route::get('expense/expense-category',array('as'=>'Expense Category' , 'action_id'=>'66', 'uses' =>'ExpenseController@categoryIndex'));
@@ -299,8 +282,6 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
     Route::get('/expense/expense-detail-list/{id}',array('as'=>'Expense List' ,'action_id'=>'77', 'uses' =>'ExpenseController@showDetail'));
     Route::post('/expense/expense-detail',array('as'=>'Expense Entry' ,'action_id'=>'77', 'uses' =>'ExpenseController@ExpensDetailcreateOrEdit'));
     Route::get('/expense/expense-detail-delete/{id}',array('as'=>'Expense Delete' ,'action_id'=>'80', 'uses' =>'ExpenseController@destroyDetail'));
-
-
 
 	// Reports
 	Route::get('course-report',array('as'=>'Course Report' , 'action_id'=>'97', 'uses' =>'ReportController@courseReport'));
@@ -351,7 +332,6 @@ Route::group(['prefix' => 'portal', 'middleware' => ['prevent-back-history']], f
 
 		//Payment
 		Route::post('/sslcommerz/pay-via-ajax',array('as'=>'example1', 'uses' =>'SslCommerzPaymentController@payViaAjax'));
-
 
 		Route::get('/payments/{type}',array('as'=>'Payment List' , 	'uses' =>'StudentPortalController@showPaymentList'));
 
