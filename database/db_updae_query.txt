@@ -29,6 +29,7 @@ CREATE TABLE student_books_feedback(
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`student_book_id` BIGINT(20) NOT NULL,
 	`feedback` TEXT NULL,
+	`created_by` BIGINT(20) UNSIGNED NOT NULL,
 	`created_at` TIMESTAMP NULL DEFAULT NULL,
 	`updated_at` TIMESTAMP NULL DEFAULT NULL,
 	PRIMARY KEY (`id`) USING BTREE
@@ -42,6 +43,7 @@ CREATE TABLE `certificate_feedback` (
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`batch_student_id` BIGINT(20) NOT NULL,
 	`feedback` TEXT(65535) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
+	`created_by` BIGINT(20) UNSIGNED NOT NULL,
 	`created_at` TIMESTAMP NULL DEFAULT NULL,
 	`updated_at` TIMESTAMP NULL DEFAULT NULL,
 	PRIMARY KEY (`id`) USING BTREE
@@ -110,8 +112,7 @@ CREATE TABLE `certificate_states` (
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
-ALTER TABLE `certificate_feedback`
-	ADD COLUMN `created_by` BIGINT(20) NULL DEFAULT NULL AFTER `feedback`;
+
 
 
 INSERT INTO certificate_states(`id`, `name`) VALUES ('1', 'Pending');
@@ -191,8 +192,7 @@ INSERT INTO `menus` (`id`, `module_name`, `menu_title`, `menu_url`, `parent_id`,
 // need dev update
 ALTER TABLE `students`
 	CHANGE COLUMN `passing_year` `passing_year` VARCHAR(50) NULL DEFAULT NULL AFTER `how_know`;
-ALTER TABLE `student_books_feedback`
-	ADD COLUMN `created_by` BIGINT(20) NOT NULL AFTER `student_book_id`;
+
 
 
 
@@ -223,7 +223,8 @@ UPDATE student_books SET `status`='Inactive'
 
 
 
-
+excel: 
+https://docs.laravel-excel.com/3.1/getting-started/installation.html
 
 Add Menu:
 	Academic

@@ -277,7 +277,7 @@
 														<tr>
 															<td>
 																<input type='text' class='d-none' name='std_docs[]' value='{{$document->id}}' /> 
-																	<a clas='formData' target='_blank'  href='/assets/images/student/documents/{{ $document->document_name }}' >{{ $document->document_name }}</a>
+																	<a clas='formData' target='_blank'  href="{{ asset('assets') }}/images/student/documents/{{ $document->document_name }}" >{{ $document->document_name }}</a>
 															</td>
 															<td width='50'>
 																<button class='border-0 btn-transition btn btn-outline-danger remove-doc' >
