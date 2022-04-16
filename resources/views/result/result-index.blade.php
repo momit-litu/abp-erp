@@ -62,14 +62,14 @@
                                 <label class="control-label" >&nbsp;</label>
                                 <div class="col-md-12">
                                     <div class="widget-content-right">
-                                        <button class="border-0 btn-transition btn btn-outline-info" onclick="exportSampleResult('sample')" title="Download Sampl CSV">
-                                            <i class="fa fa-file-excel"></i>
+                                        <button class="border-0 btn-transition btn btn-outline-info btn-lg " onclick="exportSampleResult('sample')" title="Download Sampl CSV">
+                                            <i class="fa fa-file-excel fa-lg"></i>
                                         </button>
-                                        <button class="border-0 btn-transition btn btn-outline-danger" onclick="uploadResult()" title="Upload Result" >
-                                            <i class="fa fa-upload"></i>
+                                        <button class="border-0 btn-transition btn btn-outline-danger btn-lg" onclick="uploadResult()" title="Upload Result" >
+                                            <i class="fa fa-upload fa-lg"></i>
                                         </button>
-                                        <button class="border-0 btn-transition btn btn-outline-success" onclick="exportSampleResult('report')" title="Download Report">
-                                            <i class="fa fa-download"></i>
+                                        <button class="border-0 btn-transition btn btn-outline-success btn-lg" onclick="exportSampleResult('report')" title="Download Report">
+                                            <i class="fa fa-download fa-lg"></i>
                                         </button>
                                     </div>
                                 </div>

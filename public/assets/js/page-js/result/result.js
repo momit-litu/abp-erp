@@ -205,11 +205,11 @@ $(document).ready(function () {
 			success: function(data){
 				var response = JSON.parse(data);
 				if(response['response_code'] == 0){
-					success_or_error_msg('#form_csv_submit_error','danger',response['errors'],"");
+					success_or_error_msg('#form_csv_submit_error','danger',"Please select file","");
 				}
 				else{
 					$('#upload-result-form').modal('hide');
-					$("#show_batch_results").trigger('click');
+					$("#show_batch_result").trigger('click');
 				}					
 			}
 		});

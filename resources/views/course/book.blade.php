@@ -50,7 +50,7 @@
                                 <div class="col-md-1 text-right">
                                     <div class="position-relative form-group">
                                         <label class="control-label" >&nbsp;</label>
-                                        <div class="col-md-8">
+                                        <div class="col-md-12">
                                             <button id="show_batch_books" class="btn btn-info btn-lg">Search</button>
                                         </div>
                                     </div>
@@ -62,17 +62,17 @@
                                 <label class="control-label" >&nbsp;</label>
                                 <div class="col-md-12">
                                     <div class="widget-content-right">
-                                        <button class="border-0 btn-transition btn btn-outline-primary" onclick="showBooks()" title="Add Books">
-                                            <i class="fa fa-plus"></i>
+                                        <button class="border-0 btn-transition btn btn-outline-primary btn-lg" onclick="showBooks()" title="Add Books">
+                                            <i class="fa fa-plus fa-lg"></i>
                                         </button>
-                                        <button class="border-0 btn-transition btn btn-outline-info" onclick="exportSampleBook('sample')" title="Download Sampl CSV">
-                                            <i class="fa fa-file-excel"></i>
+                                        <button class="border-0 btn-transition btn btn-outline-info btn-lg" onclick="exportSampleBook('sample')" title="Download Sampl CSV">
+                                            <i class="fa fa-file-excel fa-lg"></i>
                                         </button>
-                                        <button class="border-0 btn-transition btn btn-outline-danger" onclick="uploadBook()" title="Upload Book Status" >
-                                            <i class="fa fa-upload"></i>
+                                        <button class="border-0 btn-transition btn btn-outline-danger btn-lg" onclick="uploadBook()" title="Upload Book Status" >
+                                            <i class="fa fa-upload fa-lg"></i>
                                         </button>
-                                        <button class="border-0 btn-transition btn btn-outline-success" onclick="exportSampleBook('report')" title="Download Report">
-                                            <i class="fa fa-download"></i>
+                                        <button class="border-0 btn-transition btn btn-outline-success btn-lg" onclick="exportSampleBook('report')" title="Download Report">
+                                            <i class="fa fa-download fa-lg"></i>
                                         </button>
                                     </div>
                                 </div>

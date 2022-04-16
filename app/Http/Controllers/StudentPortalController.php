@@ -265,11 +265,11 @@ class StudentPortalController extends Controller
     private function saveStudent($request, $id, $photo, $documents)
     {
 
-        $student = Student::find(62);
+       // $student = Student::find(62);
         //$this->registrationCompletedNotification($student);
-        $this->registrationConfirmEmail($student->id);
+        //$this->registrationConfirmEmail($student->id);
 
-        die;
+        //die;
         
         try {
             $rule = [

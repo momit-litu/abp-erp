@@ -79,7 +79,8 @@ class BatchBookController extends Controller
                 ORDER BY bb.id ASC
             )A
             GROUP BY student_name 
-            ORDER BY  id,student_name";
+            ORDER BY  student_name";
+            //echo $sql;die;
    
         $studentBooks   = DB::select($sql);
         $table  = "";
@@ -147,7 +148,7 @@ class BatchBookController extends Controller
        
     public function csvBook($batchId, $type)
     {
-        $filename = 'result'.Time().'xlsx';
+        $filename = 'book'.Time().'.xlsx';
         return Excel::download(new BookExport($batchId, $type), $filename);
     }
 
@@ -239,7 +240,7 @@ class BatchBookController extends Controller
                                 'batch_book_id'     => $batchBook->id,
                                 'student_id'        => $batchStudent->student_id,
                                 'batch_student_id'  => $batchStudent->id,
-                                'status'            => $batchStudent->status,
+                               // 'status'            => $batchStudent->status,
                             ];
                             StudentBook::create($studentData);
                         }        

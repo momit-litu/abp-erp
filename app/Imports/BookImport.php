@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Imports;
-
+use Auth;
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -37,13 +37,14 @@ class BookImport implements ToModel, WithHeadingRow
                         WHERE bs.student_enrollment_id = '$studentEnrollmentId' AND book_no='$bookName'
                         ";
                     $studentBook = DB::select($sql);
-                    $data = [                   
-                        'feedback'          => $value,
-                        'student_book_id'   => $studentBook[0]->id,
-                        'created_by'		=> Auth::user()->id
-                    ];
-                    StudentBooksFeedback::create($data);
-
+                    if($value!=""){
+                        $data = [                   
+                            'feedback'          => $value,
+                            'student_book_id'   => $studentBook[0]->id,
+                            'created_by'		=> Auth::user()->id
+                        ];
+                        StudentBooksFeedback::create($data);
+                    }
                 }
                 else{
                     $bookName = $key;

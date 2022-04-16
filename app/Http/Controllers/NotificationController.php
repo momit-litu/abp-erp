@@ -626,6 +626,8 @@ class NotificationController extends Controller
                             'from'		=> $fromEmail,
                             'customSigneture'=>$customSigneture
                         );
+                        //$this->registrationConfirmEmail($details->student_id);
+                        //echo "STOP HERE";die;
                     }
                     $response = $this->bulkEmail($emails); 				 
                     if($response['response_code']=="0") throw new Exception($response['message']);

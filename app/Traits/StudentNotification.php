@@ -88,8 +88,6 @@ trait StudentNotification
 			$return['message'] 			=  $e->getMessage();
 			return $return;
 		}
-
-
 		return $sendEmail;
 	}
 

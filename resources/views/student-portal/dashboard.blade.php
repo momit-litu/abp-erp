@@ -194,9 +194,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-			<div class="col-md-12">
+            <div class="col-md-12">
                 <div class="main-card mb-3 card ">
                     <div class="card-body"> 
                         <h5 class="card-title">Ongoing Batches<span></span>&nbsp;
@@ -205,22 +203,22 @@
                             @endif
                         </h5>
                         <div class="row">
-							@if(count($data['running_batches'])==0)
-							<div class="col-md-12 col-xs-12 alert alert-warning fade show">
-								Unfortunately not found any course
-							</div>
-							@else
-							@foreach($data['running_batches'] as $batch)
+                            @if(count($data['running_batches'])==0)
+                            <div class="col-md-12 col-xs-12 alert alert-warning fade show">
+                                Unfortunately not found any course
+                            </div>
+                            @else
+                            @foreach($data['running_batches'] as $batch)
                             <div class="col-md-3 col-xs-12">
                                 <div class="card-hover-shadow card-border mb-3 card">
                                     <div class="dropdown-menu-header">
                                         <div class="dropdown-menu-header-inner  bg-happy-green">
                                             <div class="menu-header-content">
                                                 <div class="fixed-title-height">
-												<h5 class="menu-header-title">{{$batch->course->short_name. $batch->batch_name }}</h5>
-												<h6 class="menu-header-subtitle">{{ $batch->course->title }}</h6>
-												</div>
-													<div class="menu-header-btn-pane">
+                                                <h5 class="menu-header-title">{{$batch->course->short_name. $batch->batch_name }}</h5>
+                                                <h6 class="menu-header-subtitle">{{ $batch->course->title }}</h6>
+                                                </div>
+                                                    <div class="menu-header-btn-pane">
                                                     <a class="mr-2 btn btn-dark btn-sm" target="_blank" href="{{ $batch->course->youtube_video_link}}">View Promo Video</a>
                                                 </div>
                                             </div>
@@ -230,7 +228,7 @@
                                         <p class="mb-0"><b>Credit Hour</b> : &nbsp;{{ $batch->course->total_credit_hour}}</p>
                                         <p class="mb-0"><b>Total Unit</b> &nbsp; &nbsp;: &nbsp;{{ count($batch->course->units) }}</p>
                                         <p ><b>Semester No</b> : {{ $batch->course->semester_no}}</p>
-										<p class="text-dark mb-0"><b>Start Date</b> : {{ $batch->start_date}}</p>
+                                        <p class="text-dark mb-0"><b>Start Date</b> : {{ $batch->start_date}}</p>
                                         <p class="text-dark mb-0"><b>Time</b> : {{ $batch->class_schedule}}</p>
                                         @if($batch->show_seat_limit=='Yes' )
                                             <p class="mb-0">Total Seat : {{ $batch->student_limit}}</p>
@@ -252,28 +250,30 @@
                                             </div>
                                         </div>
                                     </div>
-                               
+                                
                                     <div class="d-block text-center card-footer bg-light">
-                                       @if(Auth::check())
-										   @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
-												<button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
-											@elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
-												<a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
-											@elseif($batch->total_enrolled_student<$batch->student_limit)
-												<a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
-											@endif
-										@endif
-										
+                                        @if(Auth::check())
+                                            @if($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Active')
+                                                <button href="javascript:void(0)" class="btn btn-warning btn-sm  disabled" disabled >Enrolled</button>
+                                            @elseif($batch->students->count()>0 && $batch->students[0]->getOriginal()['pivot_status'] =='Inactive')
+                                                <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-danger btn-sm">Pending</a>
+                                            @elseif($batch->total_enrolled_student<$batch->student_limit)
+                                                <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-success btn-sm">Register</a>
+                                            @endif
+                                        @endif
+                                        
                                         <a href="{{ url('portal/course/'.$batch->id) }}" class="btn-shadow-primary btn btn-primary btn-sm">Details</a>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
-							@endif
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
 </div>
 @endsection

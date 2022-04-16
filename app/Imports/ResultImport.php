@@ -6,15 +6,15 @@ use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\DB;
-use App\Models\StudentBook;
-use App\Models\StudentBooksFeedback;
-use App\Traits\StudentNotification;
+use App\Models\BatchStudentUnit;
+use App\Models\BatchStudent;
+use App\Models\ResultState;
+use phpDocumentor\Reflection\Types\Null_;
 
 use function PHPSTORM_META\map;
 
 class ResultImport implements ToModel, WithHeadingRow
 {
-    use StudentNotification;
     /**
     * @param array $row
     *
@@ -22,47 +22,45 @@ class ResultImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+
         $studentEnrollmentId = $row['student_enrollment_id'];
+
         foreach($row as $key=>$value){
            if($key != 'course_batch' && $key != 'student_name' &&  $key != 'student_enrollment_id'){
-                $statusOrFeedback = strpos($key, 'feedback');
-                //feedback of the book
-                if($statusOrFeedback){
-                    $bookArr = explode('_feedback',$key);
-                    $bookName = $bookArr[0];
-                    $sql = "SELECT sb.*, bb.book_no
-                        FROM batch_students bs 
-                        LEFT JOIN student_books sb ON sb.batch_student_id=bs.id
-                        LEFT JOIN batch_books bb ON bb.id=sb.batch_book_id
-                        WHERE bs.student_enrollment_id = '$studentEnrollmentId' AND book_no='$bookName'
-                        ";
-                    $studentBook = DB::select($sql);
+                
+                $unitName = str_replace('_',' ',$key);
+                $score    = $value;
 
+                $sql = "SELECT bsu.id as bsu_id, bs.id as bs_id
+                        FROM batch_students bs 
+                        LEFT JOIN batch_student_units bsu ON bsu.batch_student_id = bs.id
+                        LEFT JOIN units u ON u.id = bsu.unit_id
+                        WHERE bs.student_enrollment_id = '$studentEnrollmentId' AND u.unit_code='$unitName'            
+                    ";
+
+                $studentResult = DB::select($sql);
+                $batchStudent  = BatchStudent::find($studentResult[0]->bs_id);
+                $studentResult = BatchStudentUnit::where('id',$studentResult[0]->bsu_id)->first();
+     
+                if(is_numeric($score)){                    
+                    $result = ResultState::where('heighest_mark','>=',$score)->where('lowest_mark','<=',$score)->first();
+                    $studentResult->score   = $score;
+                    $studentResult->result  = $result->id;
+                    $studentResult->save();
                 }
                 else{
-                    $bookName = $key;
-                    $sql = "SELECT sb.*, bb.book_no
-                        FROM batch_students bs 
-                        LEFT JOIN student_books sb ON sb.batch_student_id=bs.id
-                        LEFT JOIN batch_books bb ON bb.id=sb.batch_book_id
-                        WHERE bs.student_enrollment_id = '$studentEnrollmentId' AND book_no='$bookName'
-                        ";
-                    $studentBook = DB::select($sql);
-
-                    $studentBook = StudentBook::with('student', 'book','book.batch','book.batch.course')->where('id',$studentBook[0]->id)->first();
-                    if($value=='Sent'){
-                        $studentBook->sent_date = date('Y-m-d');
-                        $studentBook->status    = 'Active';
-                        $sent = $studentBook->save();
-                        if($sent)
-                            $this->bookSentNotificationForStudent($studentBook);  
-                    }
-                    else{
-                        $studentBook->sent_date = Null;
-                        $studentBook->status    = 'Inactive';
-                        $studentBook->save();
-                    }
+                    $studentResult->score   = '';
+                    $studentResult->result  = Null;
+                    $studentResult->save();
                 }
+
+                if($batchStudent->balance == 0 ) {
+                    $unPublishedResult  =  BatchStudentUnit::where('batch_student_id',$batchStudentId)->whereNull('result')->first();
+                    if(empty($unPublishedResult))
+                        $batchStudent->certificate_status = 2;
+                }
+                $batchStudent->update();
+
             }
         }
     }

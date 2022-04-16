@@ -56,8 +56,7 @@
         </div>
     </div>
 </div>
-<button id="tostr-show"></button>
-<div class="app-drawer-overlay d-none animated fadeIn"></div>
+
 <input type="hidden" class="site_url" value="{{url('/')}}">
 <input type="hidden" id="logo_name" value="{{$site_settings['logo']}}">
 <input type="hidden" id="fade_logo_name" value="{{$site_settings['fade_logo']}}">
