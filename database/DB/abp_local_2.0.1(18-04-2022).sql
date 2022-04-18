@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               10.4.11-MariaDB - mariadb.org binary distribution
+-- Server version:               10.4.22-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
--- HeidiSQL Version:             11.0.0.5919
+-- HeidiSQL Version:             11.3.0.6295
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -10,6 +10,7 @@
 /*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Dumping structure for table abpdb.actions
 CREATE TABLE IF NOT EXISTS `actions` (
@@ -143,21 +144,22 @@ CREATE TABLE IF NOT EXISTS `batches` (
   PRIMARY KEY (`id`),
   KEY `FK_batches_courses` (`course_id`),
   CONSTRAINT `FK_batches_courses` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batches: ~10 rows (approximately)
+-- Dumping data for table abpdb.batches: ~11 rows (approximately)
 /*!40000 ALTER TABLE `batches` DISABLE KEYS */;
 INSERT INTO `batches` (`id`, `course_id`, `batch_name`, `start_date`, `end_date`, `class_schedule`, `fees`, `discounted_fees`, `student_limit`, `total_enrolled_student`, `details`, `running_status`, `status`, `draft`, `show_seat_limit`, `featured`, `created_by`, `created_at`, `updated_at`) VALUES
 	(5, 9, '12', '2021-08-15', NULL, 'Monday 12.00PM - 2.00PM', 50000, 48000, 20, 20, 'some details', 'Upcoming', 'Active', 'No', 'No', 'No', 0, '2021-07-08 14:07:47', '2021-08-17 20:00:50'),
 	(10, 9, '13', '2021-10-15', NULL, 'Monday 12.00PM - 2.00PM', 60000, 55000, 30, 6, NULL, 'Upcoming', 'Active', 'No', 'No', 'No', 0, '2021-07-08 14:31:13', '2021-09-23 03:43:57'),
 	(11, 9, '14', '2022-01-01', NULL, 'Monday 12.00PM - 2.00PM', 50000, 44000, 20, 5, NULL, 'Running', 'Active', 'No', 'No', 'No', 0, '2021-07-08 18:50:31', '2022-01-18 07:31:24'),
 	(12, 10, '01', '2021-09-01', '2022-08-31', 'Monday 12.00PM - 2.00PM', 25000, 20000, 30, 11, NULL, 'Running', 'Active', 'No', 'No', 'Yes', 0, '2021-07-14 15:28:26', '2022-03-04 06:03:25'),
-	(13, 10, '045', '2021-08-29', '2021-09-29', 'Monday 12.00PM - 2.00PM', 500000, 500000, 50, 1, NULL, 'Completed', 'Active', 'No', 'No', 'No', 0, '2021-09-01 10:13:10', '2021-09-25 06:58:17'),
+	(13, 10, '045', '2021-08-29', '2021-09-29', 'Monday 12.00PM - 2.00PM', 500000, 500000, 50, 0, NULL, 'Completed', 'Active', 'No', 'No', 'No', 0, '2021-09-01 10:13:10', '2022-04-13 18:39:20'),
 	(15, 9, '14', '2021-11-11', NULL, 'Monday 12.00PM - 2.00PM', 80000, 78000, 50, 4, NULL, 'Upcoming', 'Inactive', 'No', 'No', 'No', 0, '2021-09-23 04:20:06', '2022-01-18 10:51:32'),
-	(16, 10, '046', '2022-01-01', NULL, NULL, 660000, 60000, 40, 2, NULL, 'Upcoming', 'Active', 'No', 'No', 'No', 0, '2021-10-07 13:30:36', '2022-01-18 07:28:19'),
+	(16, 10, '046', '2022-01-01', NULL, NULL, 660000, 60000, 40, 1, NULL, 'Upcoming', 'Active', 'No', 'No', 'No', 0, '2021-10-07 13:30:36', '2022-04-13 18:39:20'),
 	(17, 9, 'Test Batch1', '2022-01-19', NULL, NULL, 40000, 40000, 5, 1, NULL, 'Upcoming', 'Active', 'Yes', 'No', 'No', 0, '2022-01-18 10:57:57', '2022-03-02 15:49:30'),
-	(18, 16, '01', '2022-04-01', '2022-07-31', '12.00-2.00', 80000, 76000, 20, 1, NULL, 'Upcoming', 'Active', 'No', 'Yes', 'Yes', 1, '2022-03-16 17:07:05', '2022-03-16 18:25:31'),
-	(19, 16, '02', '2022-08-01', '2022-11-30', '3.00-5.00', 80000, 76000, 30, 1, NULL, 'Upcoming', 'Active', 'No', 'No', 'No', 1, '2022-03-16 17:08:45', '2022-03-16 17:11:35');
+	(18, 16, '01', '2022-04-01', '2022-07-31', '12.00-2.00', 80000, 76000, 20, 5, NULL, 'Upcoming', 'Active', 'No', 'Yes', 'Yes', 1, '2022-03-16 17:07:05', '2022-04-16 13:48:39'),
+	(19, 16, '02', '2022-08-01', '2022-11-30', '3.00-5.00', 80000, 76000, 30, 0, NULL, 'Upcoming', 'Active', 'No', 'No', 'No', 1, '2022-03-16 17:08:45', '2022-04-16 13:48:39'),
+	(20, 16, '03', '2022-05-01', '2022-05-30', '12.00 - 13.00', 100, 100, 20, 3, NULL, 'Upcoming', 'Active', 'No', 'No', 'No', 1, '2022-04-16 17:14:23', '2022-04-16 17:15:42');
 /*!40000 ALTER TABLE `batches` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.batch_books
@@ -170,9 +172,9 @@ CREATE TABLE IF NOT EXISTS `batch_books` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batch_books: ~10 rows (approximately)
+-- Dumping data for table abpdb.batch_books: ~12 rows (approximately)
 /*!40000 ALTER TABLE `batch_books` DISABLE KEYS */;
 INSERT INTO `batch_books` (`id`, `batch_id`, `book_no`, `created_by`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 13, 'asdasdFF', 0, 'Active', '2022-03-02 20:01:18', '2022-03-03 14:06:33'),
@@ -184,7 +186,10 @@ INSERT INTO `batch_books` (`id`, `batch_id`, `book_no`, `created_by`, `status`, 
 	(16, 12, 'Book3', 1, 'Active', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
 	(17, 18, 'Book1', 1, 'Active', '2022-03-16 17:12:18', '2022-03-16 17:12:18'),
 	(18, 18, 'Book2', 1, 'Active', '2022-03-16 17:12:29', '2022-03-16 17:12:29'),
-	(19, 19, 'Book1', 1, 'Active', '2022-03-16 17:12:47', '2022-03-16 17:12:47');
+	(19, 19, 'Book1', 1, 'Active', '2022-03-16 17:12:47', '2022-03-16 17:12:47'),
+	(20, 18, 'Book3', 1, 'Active', '2022-04-08 15:54:34', '2022-04-08 15:54:34'),
+	(21, 20, 'Book1', 1, 'Active', '2022-04-16 17:18:24', '2022-04-16 17:18:24'),
+	(22, 20, 'Book2', 1, 'Active', '2022-04-16 17:18:36', '2022-04-16 17:18:36');
 /*!40000 ALTER TABLE `batch_books` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.batch_fees
@@ -202,9 +207,9 @@ CREATE TABLE IF NOT EXISTS `batch_fees` (
   PRIMARY KEY (`id`),
   KEY `FK_batch_fees_batches` (`batch_id`),
   CONSTRAINT `FK_batch_fees_batches` FOREIGN KEY (`batch_id`) REFERENCES `batches` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batch_fees: ~19 rows (approximately)
+-- Dumping data for table abpdb.batch_fees: ~20 rows (approximately)
 /*!40000 ALTER TABLE `batch_fees` DISABLE KEYS */;
 INSERT INTO `batch_fees` (`id`, `batch_id`, `plan_name`, `total_installment`, `installment_duration`, `payable_amount`, `payment_type`, `status`, `created_at`, `updated_at`) VALUES
 	(10, 5, 'Onetime', 1, 0, 48000.00, 'Onetime', 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
@@ -225,7 +230,9 @@ INSERT INTO `batch_fees` (`id`, `batch_id`, `plan_name`, `total_installment`, `i
 	(32, 18, 'Onetime', 1, 0, 76000.00, 'Onetime', 'Active', '2022-03-16 17:07:05', '2022-03-16 17:07:05'),
 	(33, 18, '2 installment', 2, 2, 80000.00, 'Installment', 'Active', '2022-03-16 17:07:05', '2022-03-16 17:07:05'),
 	(34, 19, 'Onetime', 1, 0, 76000.00, 'Onetime', 'Active', '2022-03-16 17:08:45', '2022-03-16 17:08:45'),
-	(35, 19, '3Installment', 3, 1, 80000.00, 'Installment', 'Active', '2022-03-16 17:08:45', '2022-03-16 17:08:45');
+	(35, 19, '3Installment', 3, 1, 80000.00, 'Installment', 'Active', '2022-03-16 17:08:45', '2022-03-16 17:08:45'),
+	(36, 19, '1Installment', 1, 1, 70000.00, 'Installment', 'Active', '2022-03-24 07:32:17', '2022-03-24 07:32:17'),
+	(37, 20, 'Onetime', 1, 0, 100.00, 'Onetime', 'Active', '2022-04-16 17:14:23', '2022-04-16 17:14:23');
 /*!40000 ALTER TABLE `batch_fees` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.batch_fees_details
@@ -240,9 +247,9 @@ CREATE TABLE IF NOT EXISTS `batch_fees_details` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_batch_fees_details_batch_fees` (`batch_fees_id`),
   CONSTRAINT `FK_batch_fees_details_batch_fees` FOREIGN KEY (`batch_fees_id`) REFERENCES `batch_fees` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batch_fees_details: ~32 rows (approximately)
+-- Dumping data for table abpdb.batch_fees_details: ~34 rows (approximately)
 /*!40000 ALTER TABLE `batch_fees_details` DISABLE KEYS */;
 INSERT INTO `batch_fees_details` (`id`, `batch_fees_id`, `installment_no`, `amount`, `status`, `created_at`, `updated_at`) VALUES
 	(10, 10, 1, 48000.00, 'Active', '2021-07-08 14:07:47', '2021-07-08 14:07:47'),
@@ -274,9 +281,11 @@ INSERT INTO `batch_fees_details` (`id`, `batch_fees_id`, `installment_no`, `amou
 	(73, 33, 1, 50000.00, 'Active', '2022-03-16 17:07:05', '2022-03-16 17:07:05'),
 	(74, 33, 2, 30000.00, 'Active', '2022-03-16 17:07:05', '2022-03-16 17:07:05'),
 	(75, 34, 1, 76000.00, 'Active', '2022-03-16 17:08:45', '2022-03-16 17:08:45'),
-	(76, 35, 1, 30000.00, 'Active', '2022-03-16 17:08:45', '2022-03-16 17:08:45'),
-	(77, 35, 2, 30000.00, 'Active', '2022-03-16 17:08:45', '2022-03-16 17:08:45'),
-	(78, 35, 3, 20000.00, 'Active', '2022-03-16 17:08:45', '2022-03-16 17:08:45');
+	(82, 36, 1, 70000.00, 'Active', '2022-03-24 07:32:17', '2022-03-24 07:32:17'),
+	(83, 35, 1, 30000.00, 'Active', '2022-03-24 07:32:23', '2022-03-24 07:32:23'),
+	(84, 35, 2, 30000.00, 'Active', '2022-03-24 07:32:23', '2022-03-24 07:32:23'),
+	(85, 35, 3, 20000.00, 'Active', '2022-03-24 07:32:23', '2022-03-24 07:32:23'),
+	(86, 37, 1, 100.00, 'Active', '2022-04-16 17:14:23', '2022-04-16 17:14:23');
 /*!40000 ALTER TABLE `batch_fees_details` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.batch_students
@@ -309,27 +318,27 @@ CREATE TABLE IF NOT EXISTS `batch_students` (
   KEY `FK_batch_students_students` (`student_id`),
   CONSTRAINT `FK_batch_students_batches` FOREIGN KEY (`batch_id`) REFERENCES `batches` (`id`),
   CONSTRAINT `FK_batch_students_students` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batch_students: ~30 rows (approximately)
+-- Dumping data for table abpdb.batch_students: ~36 rows (approximately)
 /*!40000 ALTER TABLE `batch_students` DISABLE KEYS */;
 INSERT INTO `batch_students` (`id`, `batch_id`, `student_id`, `batch_fees_id`, `student_enrollment_id`, `total_payable`, `total_paid`, `balance`, `status`, `current_batch`, `prev_batch_student_id`, `transfer_fee`, `transfer_date`, `result_published_date`, `remarks`, `overall_result`, `certificate_no`, `certificate_status`, `dropout`, `result_published_status`, `welcome_email`, `created_at`, `updated_at`) VALUES
 	(33, 11, 21, 20, 'HRM14004', 44000.00, 44000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Sent', '2021-07-12 08:21:31', '2022-03-19 18:30:06'),
 	(34, 12, 28, 25, '', 20000.00, 15000.00, 5000.00, 'Inactive', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 'No', 'Not-published', 'Not-sent', '2021-07-14 15:28:50', '2022-03-12 11:48:30'),
 	(35, 5, 21, 12, '', 52000.00, 32000.00, 20000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Sent', '2021-08-17 20:00:50', '2022-03-19 18:30:06'),
 	(36, 12, 21, 24, '', 20000.00, 20000.00, 0.00, 'Inactive', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-08-18 10:57:17', '2021-09-27 03:59:09'),
-	(40, 11, 39, 24, 'HRM14004', 20000.00, 20000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-13 14:35:43', '2021-09-19 06:39:23'),
+	(40, 11, 39, 24, 'HRM14004', 20000.00, 20000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Sent', '2021-09-13 14:35:43', '2022-04-13 19:21:09'),
 	(45, 10, 42, 18, 'HRM13002', 55000.00, 55000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-15 01:26:52', '2021-09-15 01:54:04'),
 	(46, 11, 42, 20, 'HRM14002', 44000.00, 44000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-15 02:01:36', '2021-09-15 02:02:24'),
 	(47, 11, 38, 20, 'HRM14003', 44000.00, 44000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-15 02:04:22', '2022-01-18 07:53:41'),
-	(49, 12, 42, 24, 'GDF01001', 20000.00, 20000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, 'AA', 1, 'No', 'Published', 'Not-sent', '2021-09-15 02:52:27', '2022-03-11 19:58:27'),
+	(49, 12, 42, 24, 'GDF01001', 20000.00, 20000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, 'AA', 2, 'No', 'Published', 'Not-sent', '2021-09-15 02:52:27', '2022-04-08 19:24:25'),
 	(50, 12, 38, 24, 'GDF01002', 20000.00, 0.00, 20000.00, 'Inactive', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-18 06:34:20', '2022-03-04 19:54:44'),
 	(51, 10, 38, 18, 'HRM13001', 55000.00, 0.00, 55000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-23 03:43:57', '2021-09-23 04:55:41'),
 	(52, 15, 38, 29, 'HRM14001', 80000.00, 50000.00, 30000.00, 'Inactive', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-23 04:20:37', '2022-01-18 07:28:56'),
 	(53, 12, 39, 25, 'GDF01003', 22000.00, 0.00, 22000.00, 'Inactive', 'Transfered', NULL, NULL, '2022-03-05', NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-23 04:37:23', '2022-03-04 21:50:54'),
 	(54, 13, 38, 26, '', 500000.00, 0.00, 500000.00, 'Inactive', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-25 06:58:17', '2021-09-25 06:58:17'),
 	(55, 15, 40, 29, '', 80000.00, 0.00, 80000.00, 'Inactive', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-27 00:27:21', '2021-09-27 00:27:21'),
-	(56, 15, 39, 29, 'HRM14002', 80000.00, 0.00, 80000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-27 00:31:04', '2021-09-27 00:31:04'),
+	(56, 15, 39, 29, 'HRM14002', 80000.00, 0.00, 80000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Sent', '2021-09-27 00:31:04', '2022-04-13 19:21:09'),
 	(57, 15, 37, 29, 'HRM14004', 80000.00, 50000.00, 30000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-09-27 00:33:00', '2022-02-17 19:13:31'),
 	(64, 16, 39, 30, 'GDF046005', 60000.00, 60000.00, 0.00, 'Inactive', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-10-17 03:52:13', '2021-10-17 03:53:47'),
 	(65, 12, 48, 24, '', 20000.00, 0.00, 20000.00, 'Inactive', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2021-11-25 06:54:45', '2021-11-25 06:54:45'),
@@ -338,12 +347,18 @@ INSERT INTO `batch_students` (`id`, `batch_id`, `student_id`, `batch_fees_id`, `
 	(77, 12, 32, 25, 'GDF01004', 22000.00, 0.00, 22000.00, 'Inactive', 'Transfered', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2022-03-04 05:55:39', '2022-03-04 20:12:50'),
 	(78, 12, 49, 24, 'GDF01005', 20000.00, 0.00, 20000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2022-03-04 06:03:25', '2022-03-04 06:03:25'),
 	(84, 16, 32, 25, 'GDF046006', 22111.00, 0.00, 22111.00, 'Active', 'Yes', 77, 111, '2022-03-05', NULL, NULL, 'AAA', NULL, 1, 'No', 'Not-published', 'Not-sent', '2022-03-04 20:12:50', '2022-03-04 20:12:50'),
-	(91, 13, 39, 25, 'GDF045001', 22005.00, 0.00, 22005.00, 'Active', 'Yes', 53, 5, '2022-03-05', NULL, 'test', NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
+	(91, 13, 39, 25, 'GDF045001', 22005.00, 0.00, 22005.00, 'Inactive', 'Transfered', 53, 5, '2022-04-14', NULL, 'test', NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2022-03-04 21:50:54', '2022-04-13 18:39:20'),
 	(92, 18, 38, 33, 'TS01001', 80000.00, 50000.00, 30000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2022-03-16 17:09:52', '2022-03-16 17:16:43'),
 	(93, 18, 21, 32, 'TS01002', 76000.00, 0.00, 76000.00, 'Inactive', 'Transfered', NULL, NULL, '2022-03-17', NULL, NULL, NULL, NULL, 1, 'Yes', 'Not-published', 'Not-sent', '2022-03-16 17:10:30', '2022-03-16 18:25:31'),
-	(94, 18, 32, 33, 'TS01003', 80000.00, 0.00, 80000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2022-03-16 17:10:51', '2022-03-16 17:10:51'),
+	(94, 18, 32, 33, 'TS01003', 80000.00, 0.00, 80000.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, 'C-202201', 3, 'No', 'Not-published', 'Not-sent', '2022-03-16 17:10:51', '2022-04-16 16:59:54'),
 	(95, 19, 49, 34, 'TS02001', 76000.00, 76000.00, 0.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Not-published', 'Not-sent', '2022-03-16 17:11:35', '2022-03-16 17:11:35'),
-	(96, 19, 21, 32, 'TS02002', 77000.00, 77000.00, 0.00, 'Active', 'Yes', 93, 1000, '2022-03-17', NULL, NULL, NULL, NULL, 2, 'No', 'Published', 'Sent', '2022-03-16 18:01:22', '2022-03-19 18:30:06');
+	(96, 19, 21, 32, 'TS02002', 77000.00, 77000.00, 0.00, 'Active', 'Yes', 93, 1000, '2022-03-17', NULL, NULL, NULL, NULL, 2, 'No', 'Published', 'Sent', '2022-03-16 18:01:22', '2022-03-19 18:30:06'),
+	(102, 18, 39, 32, 'TS01004', 76000.00, 0.00, 76000.00, 'Inactive', 'Transfered', NULL, NULL, '2022-04-16', NULL, NULL, NULL, NULL, 1, 'No', 'Published', 'Sent', '2022-04-08 16:51:49', '2022-04-16 13:48:39'),
+	(103, 16, 39, 25, 'GDF046007', 22338.00, 0.00, 22338.00, 'Active', 'Yes', 91, 333, '2022-04-14', NULL, 'asd asd sadsadsd', NULL, NULL, 1, 'No', 'Published', 'Sent', '2022-04-13 18:39:20', '2022-04-15 17:54:49'),
+	(104, 19, 39, 32, 'TS02003', 76077.00, 77.00, 76000.00, 'Active', 'Yes', 102, 77, '2022-04-16', NULL, NULL, NULL, NULL, 1, 'No', 'Published', 'Not-sent', '2022-04-16 13:48:39', '2022-04-16 15:00:26'),
+	(105, 20, 38, 37, 'TS03001', 100.00, 0.00, 100.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Published', 'Not-sent', '2022-04-16 17:14:57', '2022-04-16 17:14:57'),
+	(106, 20, 32, 37, 'TS03002', 100.00, 0.00, 100.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Published', 'Not-sent', '2022-04-16 17:15:28', '2022-04-16 17:15:28'),
+	(107, 20, 39, 37, 'TS03003', 100.00, 0.00, 100.00, 'Active', 'Yes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'No', 'Published', 'Not-sent', '2022-04-16 17:15:42', '2022-04-16 17:15:42');
 /*!40000 ALTER TABLE `batch_students` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.batch_student_units
@@ -359,9 +374,9 @@ CREATE TABLE IF NOT EXISTS `batch_student_units` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.batch_student_units: ~58 rows (approximately)
+-- Dumping data for table abpdb.batch_student_units: ~66 rows (approximately)
 /*!40000 ALTER TABLE `batch_student_units` DISABLE KEYS */;
 INSERT INTO `batch_student_units` (`id`, `batch_student_id`, `unit_id`, `result`, `score`, `remarks`, `created_by`, `status`, `created_at`, `updated_at`) VALUES
 	(9, 33, '23', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
@@ -380,8 +395,8 @@ INSERT INTO `batch_student_units` (`id`, `batch_student_id`, `unit_id`, `result`
 	(22, 46, '24', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
 	(23, 47, '23', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
 	(24, 47, '24', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
-	(25, 49, '23', 1, '90', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-11 17:48:57'),
-	(26, 49, '24', 3, '89', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-11 17:48:57'),
+	(25, 49, '23', 2, '67', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-04-08 19:24:25'),
+	(26, 49, '24', 1, '91', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-04-08 19:24:25'),
 	(27, 50, '23', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
 	(28, 50, '24', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
 	(29, 51, '23', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
@@ -412,16 +427,24 @@ INSERT INTO `batch_student_units` (`id`, `batch_student_id`, `unit_id`, `result`
 	(54, 78, '24', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
 	(55, 84, '23', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
 	(56, 84, '24', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
-	(57, 91, '23', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
-	(58, 91, '24', NULL, '', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-03-09 18:08:00'),
-	(59, 92, '23', NULL, '', NULL, 1, 'Active', '2022-03-16 17:09:52', '2022-03-16 17:09:52'),
-	(60, 92, '24', NULL, '', NULL, 1, 'Active', '2022-03-16 17:09:52', '2022-03-16 17:09:52'),
+	(57, 103, '23', 4, '49', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-04-13 18:49:05'),
+	(58, 103, '24', 3, '51', NULL, 1, 'Active', '2022-03-09 18:08:00', '2022-04-13 18:49:29'),
+	(59, 92, '23', 1, '90', NULL, 1, 'Active', '2022-03-16 17:09:52', '2022-04-16 11:15:17'),
+	(60, 92, '24', 4, '12', NULL, 1, 'Active', '2022-03-16 17:09:52', '2022-04-16 11:19:43'),
 	(61, 96, '23', 1, '98', NULL, 1, 'Active', '2022-03-16 17:10:30', '2022-03-16 22:02:42'),
 	(62, 96, '24', 3, '56', NULL, 1, 'Active', '2022-03-16 17:10:30', '2022-03-16 22:14:23'),
 	(63, 94, '23', 1, '89', NULL, 1, 'Active', '2022-03-16 17:10:51', '2022-03-16 21:32:35'),
-	(64, 94, '24', NULL, '', NULL, 1, 'Active', '2022-03-16 17:10:51', '2022-03-16 21:30:37'),
+	(64, 94, '24', 2, '79', NULL, 1, 'Active', '2022-03-16 17:10:51', '2022-04-16 11:15:17'),
 	(65, 95, '23', NULL, '', NULL, 1, 'Active', '2022-03-16 17:11:35', '2022-03-16 17:11:35'),
-	(66, 95, '24', NULL, '', NULL, 1, 'Active', '2022-03-16 17:11:35', '2022-03-16 17:11:35');
+	(66, 95, '24', NULL, '', NULL, 1, 'Active', '2022-03-16 17:11:35', '2022-03-16 17:11:35'),
+	(75, 104, '23', NULL, '', NULL, 1, 'Active', '2022-04-08 16:51:49', '2022-04-16 13:48:39'),
+	(76, 104, '24', NULL, '', NULL, 1, 'Active', '2022-04-08 16:51:49', '2022-04-16 13:48:39'),
+	(77, 105, '23', NULL, '', NULL, 1, 'Active', '2022-04-16 17:14:57', '2022-04-16 17:14:57'),
+	(78, 105, '24', NULL, '', NULL, 1, 'Active', '2022-04-16 17:14:57', '2022-04-16 17:14:57'),
+	(79, 106, '23', 1, '98', NULL, 1, 'Active', '2022-04-16 17:15:28', '2022-04-16 17:34:37'),
+	(80, 106, '24', NULL, '', NULL, 1, 'Active', '2022-04-16 17:15:28', '2022-04-16 17:15:28'),
+	(81, 107, '23', 2, '67', NULL, 1, 'Active', '2022-04-16 17:15:42', '2022-04-16 17:34:08'),
+	(82, 107, '24', 3, '51', NULL, 1, 'Active', '2022-04-16 17:15:42', '2022-04-16 17:34:08');
 /*!40000 ALTER TABLE `batch_student_units` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.certificate_feedback
@@ -429,18 +452,22 @@ CREATE TABLE IF NOT EXISTS `certificate_feedback` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `batch_student_id` bigint(20) NOT NULL,
   `feedback` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.certificate_feedback: ~3 rows (approximately)
+-- Dumping data for table abpdb.certificate_feedback: ~7 rows (approximately)
 /*!40000 ALTER TABLE `certificate_feedback` DISABLE KEYS */;
-INSERT INTO `certificate_feedback` (`id`, `batch_student_id`, `feedback`, `created_at`, `updated_at`) VALUES
-	(1, 49, 'sdf sd fsdfsf', '2022-03-11 20:20:50', '2022-03-11 20:20:50'),
-	(2, 49, 'g dgf gdgfdgg', NULL, NULL),
-	(3, 34, 'some feedback', '2022-03-12 11:48:21', '2022-03-12 11:48:21'),
-	(4, 92, 'sdsdas dd ad', '2022-03-16 17:26:57', '2022-03-16 17:26:57');
+INSERT INTO `certificate_feedback` (`id`, `batch_student_id`, `feedback`, `created_by`, `created_at`, `updated_at`) VALUES
+	(1, 49, 'sdf sd fsdfsf', 1, '2022-03-11 20:20:50', '2022-03-11 20:20:50'),
+	(2, 49, 'g dgf gdgfdgg', 1, '2022-03-11 20:20:50', NULL),
+	(3, 34, 'some feedback', 1, '2022-03-12 11:48:21', '2022-03-12 11:48:21'),
+	(4, 92, 'sdsdas dd ad', 1, '2022-03-16 17:26:57', '2022-03-16 17:26:57'),
+	(5, 84, 'this is a feedback', 1, '2022-04-13 18:56:35', '2022-04-13 18:56:35'),
+	(6, 84, 'this is a another feedback', 1, '2022-04-13 18:59:43', '2022-04-13 18:59:43'),
+	(7, 84, 'aaa', 1, '2022-04-13 19:06:46', '2022-04-13 19:06:46');
 /*!40000 ALTER TABLE `certificate_feedback` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.certificate_states
@@ -549,7 +576,7 @@ CREATE TABLE IF NOT EXISTS `expenses` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.expenses: ~5 rows (approximately)
+-- Dumping data for table abpdb.expenses: ~7 rows (approximately)
 /*!40000 ALTER TABLE `expenses` DISABLE KEYS */;
 INSERT INTO `expenses` (`id`, `expense_head_id`, `expense_date`, `amount`, `details`, `attachment`, `payment_status`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 1, '2021-08-26', 1500.00, 'Electric bill for the month of June 2021', 'assets/images/expense/1625575679.png', 'Paid', 'Active', '2021-07-06 12:47:59', '2021-07-06 12:47:59'),
@@ -572,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `expense_heads` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.expense_heads: ~5 rows (approximately)
+-- Dumping data for table abpdb.expense_heads: ~8 rows (approximately)
 /*!40000 ALTER TABLE `expense_heads` DISABLE KEYS */;
 INSERT INTO `expense_heads` (`id`, `expense_head_name`, `expense_category_id`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 'Monthly Electric bill', 2, 'Active', '2021-07-06 12:41:47', '2021-07-06 12:58:21'),
@@ -596,7 +623,7 @@ CREATE TABLE IF NOT EXISTS `expnese_categories` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.expnese_categories: ~5 rows (approximately)
+-- Dumping data for table abpdb.expnese_categories: ~6 rows (approximately)
 /*!40000 ALTER TABLE `expnese_categories` DISABLE KEYS */;
 INSERT INTO `expnese_categories` (`id`, `category_name`, `parent_id`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 'BILL', NULL, 'Active', NULL, NULL),
@@ -646,7 +673,7 @@ CREATE TABLE IF NOT EXISTS `menus` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.menus: ~40 rows (approximately)
+-- Dumping data for table abpdb.menus: ~43 rows (approximately)
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
 INSERT INTO `menus` (`id`, `module_name`, `menu_title`, `menu_url`, `parent_id`, `serial_no`, `menu_icon_class`, `status`, `created_at`, `updated_at`) VALUES
 	(4, 'Users', 'Users', '', 0, 5, 'pe-7s-users', 1, NULL, NULL),
@@ -702,7 +729,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.migrations: ~9 rows (approximately)
+-- Dumping data for table abpdb.migrations: ~11 rows (approximately)
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(8, '2016_06_01_000001_create_oauth_auth_codes_table', 8),
@@ -732,12 +759,16 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.notifications: ~186 rows (approximately)
+-- Dumping data for table abpdb.notifications: ~245 rows (approximately)
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
 INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
 	('0020134e-9171-415b-b55a-afdb3bc7b437', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":125,"Message":"Muniff has made a payment of TK 1000"}', NULL, '2022-03-16 22:09:43', '2022-03-16 22:09:43'),
 	('00332164-170e-451b-afcf-129978b07a82', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":38,"Message":"Maariz Hasan has enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-23 04:20:37', '2021-09-23 04:20:37'),
+	('01aa1210-700c-477f-a988-885f7c69a14c', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":136,"Message":"MMM has made a payment of TK 77"}', NULL, '2022-04-16 15:00:27', '2022-04-16 15:00:27'),
 	('0463d393-b328-4c74-9907-818171ad7320', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":47,"Message":"New student registration done. MOMIT TEST"}', NULL, '2021-11-25 06:37:56', '2021-11-25 06:37:56'),
+	('049be778-89f6-41b6-8293-b30b58186eae', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 39, '{"Type":"Courses","Id":12,"Message":"Book2 has been sent for the course Post Graduate on  Finance"}', NULL, '2022-03-24 08:39:44', '2022-03-24 08:39:44'),
+	('054f0828-96e0-4270-9e30-6e471b4a28a7', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 09:04:53', '2022-04-16 09:04:53'),
+	('05979d49-4cd7-4d35-a9da-e76908a09284', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":61,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 14:01:02', '2022-04-15 14:01:02'),
 	('05f89e17-12df-49d3-adc0-49c698b47a2c', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Message":"Maariz Hasan has made a payment of TK 20000 OKKK","Id":"66"}', NULL, '2021-09-08 06:51:26', '2021-09-08 06:51:26'),
 	('061ae2e1-3626-4b01-becc-2adf6506978f', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":40,"Message":"New student registration done. nnnn"}', NULL, '2021-09-14 12:29:11', '2021-09-14 12:29:11'),
 	('07dd6b21-b461-41ab-b8d9-493e254c16d8', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 36, '{"Type":"Courses","Id":39,"Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 02:04:22', '2021-09-15 02:04:22'),
@@ -745,6 +776,8 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 	('09fa3ce9-20c2-4540-82dd-32869b1311b5', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":48,"Message":"MOMIT TEST NEW 2 has enrolled in  Post Graduate on  Finance"}', NULL, '2021-11-25 06:54:45', '2021-11-25 06:54:45'),
 	('0af64a02-3606-4b86-bfb4-7a12b8194edf', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 23, '{"Type":"Success","Message":" You have a due payment of TK 44000. Please make the payment."}', '2021-09-13 05:18:00', '2021-09-03 13:39:45', '2021-09-13 05:18:00'),
 	('0ba5e597-f9ad-4fee-90de-9f4df8b662eb', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":21,"Message":"Muniff enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-13 12:09:40', '2021-09-13 12:09:40'),
+	('0d5de997-910a-46dd-ba8d-d8e918044bd5', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 17:02:48', '2022-04-16 17:02:48'),
+	('0dc4544c-a187-4bca-8341-d2ab7775b6cf', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 17:52:00', '2022-04-15 17:52:00'),
 	('0f635415-dfe2-47ba-b9e4-9cd18117b4ae', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Message":"Maariz Hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-08 01:55:51', '2021-09-08 01:55:51'),
 	('0face6f8-cd48-408a-bd6c-1600538ab21f', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":74,"Message":"MMM has made a payment of TK 44000"}', NULL, '2021-09-15 02:05:37', '2021-09-15 02:05:37'),
 	('12c93482-75c2-4415-ba55-057e76e5deb8', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 35, '{"Type":"Courses","Id":15,"Message":"Enrollment has been successful in  Post Graduate on Human Resource Management"}', NULL, '2021-09-23 04:20:37', '2021-09-23 04:20:37'),
@@ -753,24 +786,37 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 	('13c5822b-669c-4f25-b8a0-37a6240df4a1', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":32,"Message":"Litu has enrolled in  Post Graduate on  Finance"}', NULL, '2021-10-07 13:51:51', '2021-10-07 13:51:51'),
 	('15616a48-6bb3-41a9-bde3-e1a90f5a2a45', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":51,"Message":"New student registration done. Test Meeting"}', NULL, '2021-12-20 08:40:51', '2021-12-20 08:40:51'),
 	('15d11673-f78c-4120-9b76-6ad6e7754911', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 52, '{"Type":"Courses","Id":17,"Message":"Enrollment has been successful in  Post Graduate on Human Resource Management"}', NULL, '2022-01-19 02:42:10', '2022-01-19 02:42:10'),
+	('17a158ee-8d2a-4a41-9915-fe66bf0f474b', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 17:48:36', '2022-04-15 17:48:36'),
+	('1e98d0dc-fb68-41c5-aae2-4fa48ef24a7a', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 17:48:36', '2022-04-15 17:48:36'),
 	('1f47d443-941e-47ed-9c6b-0e5a9708d37e', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 35, '{"Type":"Payments","Id":78,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-05 08:27:27', '2022-03-05 08:27:27'),
 	('1fc5fd4b-fd07-4198-b775-1d3c62234e3f', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 37, '{"Type":"Courses","Id":15,"Message":"Enrollment has been successful in  Post Graduate on Human Resource Management"}', NULL, '2021-09-27 00:27:22', '2021-09-27 00:27:22'),
 	('2451ef47-8c78-4c06-97c1-5ec003402e8c', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":49,"Message":"New student registration done. MMounota"}', NULL, '2021-11-29 01:14:29', '2021-11-29 01:14:29'),
+	('271cf095-e2b2-4f3e-a206-dedde6a13817', 'App\\Notifications\\studentBatchTransfered', 'App\\Models\\User', 36, '{"Type":"Courses","Id":10,"Message":"Batch transfer from 046 to 045  (Post Graduate on  Finance)"}', NULL, '2022-04-13 18:39:20', '2022-04-13 18:39:20'),
 	('2877a8dd-c403-4270-839d-ef4160f74ad7', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 39, '{"Type":"Payments","Id":71,"Message":"Payment has been successfull of TK 55000"}', NULL, '2021-09-15 01:15:28', '2021-09-15 01:15:28'),
 	('2933ff6e-5516-4d47-94c2-4e9d21e5ec74', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Message":"Maariz Hasan has made a payment of TK 10000"}', NULL, '2021-09-08 02:01:49', '2021-09-08 02:01:49'),
+	('2a2b4793-95a0-4dc6-b628-5b3e6731a95a', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Enrollment has been successful in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:13:37', '2022-04-07 18:13:37'),
+	('2cbb84b7-fcdc-4279-8a3b-77930f28771a', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Enrollment has been successful in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:08:46', '2022-04-07 18:08:46'),
+	('2cce819f-2c22-45ad-8fdc-208a269b8445', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":39,"Message":"MMM has enrolled in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:15:52', '2022-04-07 18:15:52'),
 	('2d19e9ae-8371-4154-a308-2aef0ef5cbe8', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 23, '{"Type":"Payments","Id":125,"Message":"Payment has been successfull of TK 1000"}', NULL, '2022-03-16 22:03:57', '2022-03-16 22:03:57'),
 	('2f9f2c00-5653-4ac7-bdfb-57a757cde43a', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":73,"Message":"ggg hasan has made a payment of TK 44000"}', NULL, '2021-09-15 02:02:24', '2021-09-15 02:02:24'),
 	('310b0fba-abac-4b35-aa9a-2d57657dd401', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 45, '{"Type":"Courses","Id":12,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2021-11-25 06:54:45', '2021-11-25 06:54:45'),
+	('3198dfb8-bef2-42ab-a468-7eb4732b359c', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":39,"Message":"MMM has enrolled in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:17:36', '2022-04-07 18:17:36'),
+	('32c0139c-1936-44d1-aab2-96d4f8842c39', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book3 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 10:02:55', '2022-04-16 10:02:55'),
 	('3537d731-3146-4726-8db5-03423037e4b7', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":76,"Message":"ggg hasan has made a payment of TK 20000"}', NULL, '2021-09-15 03:07:06', '2021-09-15 03:07:06'),
 	('35d748e6-67f6-435d-9ac1-98755ec193e6', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 39, '{"Type":"Courses","Id":42,"Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 01:12:29', '2021-09-15 01:12:29'),
+	('37226729-bb7d-4a0d-9c2f-493986b57eca', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":60,"Message":"New student registration done. GHuuum"}', NULL, '2022-04-15 13:52:04', '2022-04-15 13:52:04'),
 	('38ecfbcf-e6fc-47fb-9763-1d0408693ca9', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 02:01:36', '2021-09-15 02:01:36'),
 	('3e902fa6-4401-45a3-9bca-a5cdb60067e1', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 23, '{"Type":"Success","Message":" You have a due payment of TK 44000. Please make the payment."}', '2021-09-13 05:16:58', '2021-09-03 13:43:07', '2021-09-13 05:16:58'),
 	('3eea46d9-09db-4216-b742-8f18c4cf2f7d', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":40,"Message":"New student registration done. nnnn"}', NULL, '2021-09-14 12:29:11', '2021-09-14 12:29:11'),
 	('3f1a6d87-2fab-4b5a-9756-f92ed9faf4f6', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 23, '{"Type":"Payments","Id":56,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-02 18:06:38', '2022-03-02 18:06:38'),
 	('3f8a46cf-e2aa-451d-8986-1a11428f1058', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 36, '{"Type":"Payments","Id":83,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-02 18:21:08', '2022-03-02 18:21:08'),
 	('3fd5bcc0-b579-4d24-8f04-301b438d3946', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 34, '{"Type":"Payments","Id":92,"Message":"Payment has been successfull of TK 30000"}', NULL, '2022-02-17 19:13:32', '2022-02-17 19:13:32'),
+	('402cafd6-a4c3-44fb-a2c8-2d2b109b8032', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":39,"Message":"MMM has enrolled in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:08:46', '2022-04-07 18:08:46'),
+	('41ea24a7-367b-4391-b80e-d513929dcff4', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 05:26:14', '2022-04-16 05:26:14'),
 	('435ff140-790f-43f0-84e6-27dda0b783f3', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 23, '{"Type":"Payments","Id":124,"Message":"Payment has been successfull of TK 76000"}', NULL, '2022-03-16 21:57:53', '2022-03-16 21:57:53'),
+	('4734e40b-d348-439e-a4c6-26efff20da24', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":39,"Message":"MMM has enrolled in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:17:36', '2022-04-07 18:17:36'),
 	('4833be6f-dce3-47cd-be2c-f1d1dec6fc3b', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 01:07:53', '2021-09-15 01:07:53'),
+	('48bf6a19-97e6-49c7-8b4c-331d59710381', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 17:49:10', '2022-04-15 17:49:10'),
 	('4921d7fd-d8f1-444e-afc6-aa32f5736213', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 46, '{"Type":"Courses","Id":19,"Message":"Enrollment has been successful in  PROJECT MANAGEMENT"}', NULL, '2022-03-16 17:11:44', '2022-03-16 17:11:44'),
 	('4a002656-38cb-44fe-b1af-34d5215dc3a0', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 36, '{"Type":"Courses","Id":12,"Message":"Book3 has been sent for the course Post Graduate on  Finance"}', '2022-03-05 08:53:09', '2022-03-05 08:49:23', '2022-03-05 08:53:09'),
 	('4b00bed8-bf2e-4350-971e-a3091bedf1ed', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":38,"Message":"Maariz Hasan enrolled in  Post Graduate on  Finance"}', NULL, '2021-09-13 14:35:43', '2021-09-13 14:35:43'),
@@ -780,9 +826,12 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 	('4f5e7b2a-58d2-4db1-8139-0378f36b646e', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":125,"Message":"Muniff has made a payment of TK 1000"}', NULL, '2022-03-16 22:08:15', '2022-03-16 22:08:15'),
 	('50999217-312a-4faf-915e-cf6a04918918', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":38,"Message":"Maariz Hasan has enrolled in  Post Graduate on  Finance"}', NULL, '2021-09-25 06:58:18', '2021-09-25 06:58:18'),
 	('50a3390b-5d29-4e17-ac6d-548b43b17c40', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":57,"Message":"New student registration done. sdsdsad"}', NULL, '2022-02-27 18:34:41', '2022-02-27 18:34:41'),
+	('50fe4aa3-5ebe-4a40-b045-854dc0e9097a', 'App\\Notifications\\studentBatchTransfered', 'App\\Models\\User', 36, '{"Type":"Courses","Id":16,"Message":"Batch transfer from 02 to 01  (PROJECT MANAGEMENT)"}', NULL, '2022-04-16 13:48:39', '2022-04-16 13:48:39'),
+	('5125b28d-bbc2-40fc-ae6e-17ce83a49aa2', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":58,"Message":"New student registration done. GGUUTUU"}', NULL, '2022-04-15 13:45:27', '2022-04-15 13:45:27'),
 	('51be4bfa-5258-48b6-820b-fa80d03f44d2', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Message":"Maariz Hasan has made a payment of TK 10000","Id":"66"}', '2021-09-08 16:10:23', '2021-09-08 02:01:49', '2021-09-08 16:10:23'),
 	('51cb41ae-5668-47c5-a4a1-bfb180ad6f39', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Message":"Maariz Hasan enrolled in  Post Graduate on Human Resource Management","Id":"35"}', NULL, '2021-09-08 01:55:51', '2021-09-08 15:48:28'),
 	('525dcd82-6ac3-4710-a377-342c20183ede', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":38,"Message":"Maariz Hasan enrolled in  Post Graduate on  Finance"}', NULL, '2021-09-13 14:35:43', '2021-09-13 14:35:43'),
+	('533393dc-b18e-4427-9edc-38fa5f7e82bc', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-08 19:08:51', '2022-04-08 19:08:51'),
 	('54a139db-430d-431a-9279-c7e3ce8385ec', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":92,"Message":"Zikra Hasan has made a payment of TK 30000"}', NULL, '2022-02-17 19:13:32', '2022-02-17 19:13:32'),
 	('55522ea3-9702-49b8-9ce9-da3f0ed4e9ad', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":49,"Message":"New student registration done. MMounota"}', NULL, '2021-11-29 01:14:29', '2021-11-29 01:14:29'),
 	('55712c43-70da-4152-9d4e-7afe4631eb59', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 23, '{"Type":"Payments","Id":125,"Message":"Payment has been successfull of TK 1000"}', NULL, '2022-03-16 22:09:43', '2022-03-16 22:09:43'),
@@ -791,32 +840,43 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 	('58400032-a392-43c5-8dd9-7a9b3f191ed6', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":93,"Message":"Zikra Hasan has made a payment of TK 20000"}', NULL, '2021-09-27 01:23:00', '2021-09-27 01:23:00'),
 	('5a0f9895-c48b-4387-a13b-362587fa5e23', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-03-16 17:56:13', '2022-03-16 17:56:13'),
 	('5c59bdbf-9959-4085-9929-e3add1504c8f', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 35, '{"Type":"Payments","Id":67,"Message":"Payment has been successfull of TK 20000"}', NULL, '2021-09-19 06:39:24', '2021-09-19 06:39:24'),
+	('5d1786dd-6c14-4d58-bcb2-7759e567bdd3', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-08 19:07:58', '2022-04-08 19:07:58'),
 	('5d95e5ed-b207-48c8-9908-6f2570bd6d9a', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 39, '{"Type":"Courses","Id":42,"Message":"Enrollment has been successfull in  Post Graduate on  Finance"}', NULL, '2021-09-15 02:52:36', '2021-09-15 02:52:36'),
+	('5da36a54-e2cf-4796-9572-0f3fc56abf81', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":63,"Message":"New student registration done. moynul test"}', NULL, '2022-04-16 18:27:24', '2022-04-16 18:27:24'),
 	('607c8cd2-bd74-41c9-ba33-71456fa51a36', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 01:12:29', '2021-09-15 01:12:29'),
 	('61309a09-09f4-4680-870f-55e6dae85b27', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":101,"Message":"Test Strudent has made a payment of TK 40000"}', NULL, '2022-01-31 09:44:59', '2022-01-31 09:44:59'),
 	('6150d32d-d3ba-4133-8e44-88e48bc07caf', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 23, '{"Type":"Courses","Id":18,"Message":"Book2 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-03-16 17:56:20', '2022-03-16 17:56:20'),
 	('61bdde90-f943-4bbd-84bb-c3041b78c361', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 52, '{"Type":"Payments","Id":101,"Message":"Payment has been successfull of TK 40000"}', NULL, '2022-01-31 09:44:59', '2022-01-31 09:44:59'),
+	('63f55727-9a73-4629-8b9c-0feb991c21a1', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 05:26:14', '2022-04-16 05:26:14'),
 	('65f72d08-984d-4f7d-bfe6-204bcce1fd25', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":118,"Message":"Maariz Hasan has made a payment of TK 50000"}', NULL, '2022-03-16 17:16:43', '2022-03-16 17:16:43'),
 	('66287428-51b0-4910-9b8e-f09c77dd6905', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":55,"Message":"New student registration done. Test Strudent"}', NULL, '2022-01-19 02:41:57', '2022-01-19 02:41:57'),
+	('6730f7ac-8b5c-4f9e-be98-0b08f74b90c6', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book3 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 05:26:14', '2022-04-16 05:26:14'),
+	('67742091-a45c-4b93-a679-ed3e76f81d2f', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book2 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 09:04:53', '2022-04-16 09:04:53'),
 	('6863fa7b-cace-40a7-ac94-d4f23d4a97fd', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":38,"Message":"Maariz Hasan has enrolled in  Post Graduate on  Finance"}', NULL, '2021-09-25 06:58:18', '2021-09-25 06:58:18'),
+	('68969a3b-0151-4143-8b0e-ca4be9a31d85', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":39,"Message":"MMM has enrolled in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:13:37', '2022-04-07 18:13:37'),
 	('68a1a6e3-64a1-4919-bff0-99ab4b1acb1a', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Message":"New student registration done. Maariz Hasan"}', NULL, '2021-09-08 01:46:16', '2021-09-08 01:46:16'),
 	('697fd442-0642-4c3d-b815-ea4d2cba42f9', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":40,"Message":"nnnn has enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-27 00:27:22', '2021-09-27 00:27:22'),
 	('6a82adc8-b927-47b2-923f-7b668e2665c3', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 39, '{"Type":"Courses","Id":42,"Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 00:52:52', '2021-09-15 00:52:52'),
 	('6af1d54b-9242-4c49-b1ed-f4e0e3ec60e5', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 23, '{"Type":"Courses","Id":21,"Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management"}', NULL, '2021-09-13 12:08:30', '2021-09-13 12:08:30'),
 	('6bd762ee-8e91-4750-b3f1-498a56d4b437', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":92,"Message":"Zikra Hasan has made a payment of TK 30000"}', NULL, '2022-02-17 19:13:32', '2022-02-17 19:13:32'),
+	('6bd90b6e-5d16-4cd2-8b85-f3090e2064bd', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book3 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 17:02:48', '2022-04-16 17:02:48'),
 	('6c9ef3b8-e40d-431b-b9ed-2f1c593fc5af', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 23, '{"Type":"Courses","Id":21,"Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management"}', NULL, '2021-09-13 12:04:56', '2021-09-13 12:04:56'),
 	('6cdfb91f-26d6-4af5-8968-8d99ed52b7b6', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":124,"Message":"Muniff has made a payment of TK 76000"}', NULL, '2022-03-16 21:57:53', '2022-03-16 21:57:53'),
 	('6d8988fc-4409-4ab3-9e13-4e7817b85961', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 02:01:36', '2021-09-15 02:01:36'),
 	('6e0fc0c6-c527-4d56-9221-5b2f1fe272eb', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":80,"Message":"Maariz Hasan has made a payment of TK 30000"}', NULL, '2021-09-23 05:16:49', '2021-09-23 05:16:49'),
+	('6e44dffd-9ec7-43c5-ac59-ea7004b6986a', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 17:52:00', '2022-04-15 17:52:00'),
 	('6f5ba27b-09d4-4182-9b2f-39431e90a32b', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 39, '{"Type":"Payments","Id":76,"Message":"Payment has been successfull of TK 20000"}', NULL, '2021-09-15 03:07:06', '2021-09-15 03:07:06'),
 	('70692a90-ee0a-4da8-bc9e-8f545445c9fd', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":101,"Message":"Test Strudent has made a payment of TK 40000"}', NULL, '2022-01-31 09:44:59', '2022-01-31 09:44:59'),
 	('707da5ab-a4a5-47ea-8dde-dee4a14498e8', 'App\\Notifications\\studentBatchTransfered', 'App\\Models\\User', 36, '{"Type":"Courses","Id":10,"Message":"Batch transfer from 045 to 01  (Post Graduate on  Finance)"}', NULL, '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
 	('70c68501-3ca4-48d1-9be2-0cd2c135597c', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 35, '{"Type":"Payments","Id":77,"Message":"Payment has been successfull of TK 20000"}', '2021-09-18 09:36:40', '2021-09-18 06:57:14', '2021-09-18 09:36:40'),
+	('71052f61-8b27-45ad-8570-62442ad2776c', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 17:02:48', '2022-04-16 17:02:48'),
 	('72730d8c-c517-4f2e-9bab-c38520cad9b2', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 35, '{"Type":"Courses","Id":16,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', '2021-12-19 12:25:08', '2021-10-07 13:46:43', '2021-12-19 12:25:08'),
 	('748de9a3-0c3c-4e4e-88f3-29f0d352e4fe', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":124,"Message":"Muniff has made a payment of TK 76000"}', NULL, '2022-03-16 21:57:53', '2022-03-16 21:57:53'),
 	('75541ba0-c11b-4374-866d-ecb36b5ea469', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 00:52:52', '2021-09-15 00:52:52'),
 	('76095375-f7ba-4413-9204-7de3e958d894', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":54,"Message":"New student registration done. SSS UUUU"}', NULL, '2021-12-22 14:33:41', '2021-12-22 14:33:41'),
+	('794b6ef1-84c2-4842-9e11-a13c00603d7e', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 17:51:02', '2022-04-15 17:51:02'),
 	('7a4ebb67-8adb-4cb7-b224-d463370a99fb', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 36, '{"Type":"Payments","Id":99,"Message":"Payment has been successfull of TK 60000"}', NULL, '2021-10-17 03:53:29', '2021-10-17 03:53:29'),
+	('7a97bcdb-19d0-4f69-a73a-e663a2cc9e68', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book2 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 10:02:55', '2022-04-16 10:02:55'),
 	('7bf87ef2-a538-463c-8d1a-f23e1e9d503f', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":55,"Message":"Test Strudent has enrolled in  Post Graduate on Human Resource Management"}', NULL, '2022-01-19 02:42:10', '2022-01-19 02:42:10'),
 	('7c397cae-38b9-4fda-aa67-74bcd675f461', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 36, '{"Type":"Payments","Id":74,"Message":"Payment has been successfull of TK 44000"}', NULL, '2021-09-15 02:05:37', '2021-09-15 02:05:37'),
 	('7c61f2c6-c771-43ab-815c-2730686280d6', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":77,"Message":"Maariz Hasan has made a payment of TK 20000"}', NULL, '2021-09-18 06:57:14', '2021-09-18 06:57:14'),
@@ -827,6 +887,7 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 	('83373983-725c-4fa4-967f-580c27e6fa0d', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":32,"Message":"Litu has enrolled in  Post Graduate on  Finance"}', NULL, '2021-10-07 13:51:51', '2021-10-07 13:51:51'),
 	('83796221-c8b8-4c59-b7c3-851e24e261c1', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 24, '{"Type":"Courses","Id":12,"Message":"Book1 has been sent for the course Post Graduate on  Finance"}', NULL, '2022-03-03 20:30:19', '2022-03-03 20:30:19'),
 	('8459ac57-802d-4182-8125-1a375fa37889', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":72,"Message":"ggg hasan has made a payment of TK 55000"}', NULL, '2021-09-15 01:54:04', '2021-09-15 01:54:04'),
+	('85e82dc3-b058-4221-82e5-a212709e3dfa', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 10:02:55', '2022-04-16 10:02:55'),
 	('86b5172f-3edf-4049-898c-9672c74a91fa', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Message":"Maariz Hasan has made a payment of TK 20000","Id":"65"}', NULL, '2021-09-08 07:08:05', '2021-09-08 15:49:35'),
 	('875403db-746a-4ee4-a853-6fb37e3f541b', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":81,"Message":"Maariz Hasan has made a payment of TK 20000"}', NULL, '2021-09-23 04:31:50', '2021-09-23 04:31:50'),
 	('88db14b4-afdf-496e-9c92-ce69b86d852d', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 35, '{"Type":"Payments","Message":"Payment has been successfull of TK 10000","Id":"66"}', '2021-09-09 06:36:24', '2021-09-08 02:01:49', '2021-09-09 06:36:24'),
@@ -846,25 +907,32 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 	('9f2d0bd9-fdbe-4abb-a97f-4ae4d68590ce', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 34, '{"Type":"Payments","Id":93,"Message":"Payment has been successfull of TK 20000"}', NULL, '2021-09-27 01:23:00', '2021-09-27 01:23:00'),
 	('a2f5a648-3dd2-445e-ae3f-2b3de6a93c8d', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":21,"Message":"Muniff enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-13 11:59:04', '2021-09-13 11:59:04'),
 	('a52e6ac3-e6fe-44f1-9d85-8f577dab518a', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 46, '{"Type":"Courses","Id":12,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2022-03-04 06:03:39', '2022-03-04 06:03:39'),
+	('a65decd2-db0a-4a9b-88b5-63d95dcb1133', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book2 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 05:26:14', '2022-04-16 05:26:14'),
 	('a6701a22-145c-4fa7-976d-a9f279713097', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 23, '{"Type":"Payments","Id":56,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-02 18:05:15', '2022-03-02 18:05:15'),
 	('a69ff148-f673-48ab-ae23-a5e38fce4e20', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 35, '{"Type":"Courses","Id":13,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2021-09-25 06:58:18', '2021-09-25 06:58:18'),
 	('a7c9b878-b24c-4e52-8b38-9790beb5124d', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":38,"Message":"Maariz Hasan has enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-23 03:43:58', '2021-09-23 03:43:58'),
 	('a8a2ecf3-ad6c-4e4c-880e-a341e9a6d333', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 35, '{"Type":"Payments","Id":79,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-02 17:59:52', '2022-03-02 17:59:52'),
+	('a958dac7-04aa-472f-8466-283c93eebc94', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book3 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 09:04:53', '2022-04-16 09:04:53'),
 	('a97b133f-5369-4b91-bca9-3cadf319e544', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":48,"Message":"New student registration done. MOMIT TEST NEW 2"}', NULL, '2021-11-25 06:54:30', '2021-11-25 06:54:30'),
 	('aaf064c4-9d85-4b4e-8456-efe6998c961f', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Enrollment has been successful in  PROJECT MANAGEMENT"}', NULL, '2022-03-16 17:11:00', '2022-03-16 17:11:00'),
+	('ac51bee5-931b-425e-81da-107c118ed35c', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":39,"Message":"MMM has enrolled in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:15:52', '2022-04-07 18:15:52'),
 	('ad42ff23-f8d4-48f2-88ae-5fdfc10f7446', 'App\\Notifications\\studentBatchTransfered', 'App\\Models\\User', 23, '{"Type":"Courses","Id":16,"Message":"Batch transfer from 02 to 01  (PROJECT MANAGEMENT)"}', NULL, '2022-03-16 18:01:22', '2022-03-16 18:01:22'),
 	('adbaf641-f7f2-4971-956a-40d412c70399', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":99,"Message":"MMM has made a payment of TK 60000"}', NULL, '2021-10-17 03:53:29', '2021-10-17 03:53:29'),
 	('af28c10c-d072-4f2b-be4e-6e9ed2936466', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":99,"Message":"MMM has made a payment of TK 60000"}', NULL, '2021-10-17 03:53:29', '2021-10-17 03:53:29'),
 	('af7c7334-616e-4e3d-a8be-445679d46883', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 36, '{"Type":"Courses","Id":16,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2021-10-17 03:52:22', '2021-10-17 03:52:22'),
 	('b0d2180e-59f7-4861-b1fa-3f8367d2c8aa', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":40,"Message":"New student registration done. nnnn"}', NULL, '2021-09-14 12:15:22', '2021-09-14 12:15:22'),
+	('b0e14a39-24f6-429c-a641-43e729f92f45', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":63,"Message":"New student registration done. moynul test"}', NULL, '2022-04-16 18:27:24', '2022-04-16 18:27:24'),
 	('b125a999-ff43-437f-9a26-d56e7fb3f963', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 35, '{"Type":"Payments","Id":77,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-02 17:59:42', '2022-03-02 17:59:42'),
 	('b15338dd-c8a7-4588-9378-2bf384cd13d3', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 35, '{"Type":"Payments","Id":77,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-05 08:27:04', '2022-03-05 08:27:04'),
+	('b20bc5a7-f22b-4969-8871-961b1514e5b0', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Enrollment has been successful in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:17:36', '2022-04-07 18:17:36'),
 	('b2acfedc-a9d4-4527-8ed8-a78f4ac133f2', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 39, '{"Type":"Payments","Id":72,"Message":"Payment has been successfull of TK 55000"}', NULL, '2021-09-15 01:54:04', '2021-09-15 01:54:04'),
 	('b2d7447b-880a-4f5f-b5e7-914c0cb30c1b', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 01:12:29', '2021-09-15 01:12:29'),
 	('b358104c-ca61-4a47-b728-9daf3ce903c5', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 28, '{"Type":"Courses","Id":16,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2021-10-07 13:51:51', '2021-10-07 13:51:51'),
 	('b4455f89-05c6-4d21-ab7a-d6c8c3497d5c', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":57,"Message":"New student registration done. sdsdsad"}', NULL, '2022-02-27 18:34:41', '2022-02-27 18:34:41'),
 	('b46e2fee-be43-430b-9140-daa56ba1bac0', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 36, '{"Type":"Courses","Id":16,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2021-10-07 13:41:10', '2021-10-07 13:41:10'),
 	('b4a4cc55-4054-492f-8fe2-2232dbb17054', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":67,"Message":"Maariz Hasan has made a payment of TK 20000"}', NULL, '2021-09-19 06:39:24', '2021-09-19 06:39:24'),
+	('b5069366-afcf-4807-b533-ae6812a3669b', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 14:02:09', '2022-04-15 14:02:09'),
+	('b8085e76-d90b-4b50-b772-a481ce13afd8', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-08 19:04:08', '2022-04-08 19:04:08'),
 	('b8e00a59-fc5a-4af2-971b-d4449a23da4a', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":21,"Message":"Muniff enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-13 12:04:56', '2021-09-13 12:04:56'),
 	('b98749d2-c220-4fb9-b7e6-f80c2111bf2c', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":93,"Message":"Zikra Hasan has made a payment of TK 20000"}', NULL, '2021-09-27 01:23:00', '2021-09-27 01:23:00'),
 	('b9f7039d-4178-4879-8d28-b9ac8f6bbc15', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 35, '{"Type":"Payments","Id":80,"Message":"Payment has been successfull of TK 30000"}', NULL, '2021-09-23 05:16:49', '2021-09-23 05:16:49'),
@@ -874,26 +942,37 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 	('bbf0dc8f-830e-41a4-adb8-f826c1a7782c', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":52,"Message":"New student registration done. 2nd test"}', NULL, '2021-12-20 09:03:21', '2021-12-20 09:03:21'),
 	('bef9214e-a5e7-444f-83e8-601dd67118b7', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":125,"Message":"Muniff has made a payment of TK 1000"}', NULL, '2022-03-16 22:08:15', '2022-03-16 22:08:15'),
 	('bf4cdb19-26fa-44ee-bf76-8bb414d0d7b0', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Message":"Maariz Hasan has made a payment of TK 20000"}', NULL, '2021-09-08 07:08:05', '2021-09-08 07:08:05'),
+	('c1accdaf-54b8-42fa-b468-7b7dd6116351', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":60,"Message":"New student registration done. GHuuum"}', NULL, '2022-04-15 13:52:04', '2022-04-15 13:52:04'),
 	('c26b096e-8b26-4e86-b125-e9caba473ff8', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":81,"Message":"Maariz Hasan has made a payment of TK 20000"}', NULL, '2021-09-23 04:31:50', '2021-09-23 04:31:50'),
 	('c3b32c5e-6d99-4823-8649-5d31a00b1b39', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Message":"New student registration done. Maariz Hasan","Id":"35"}', NULL, '2021-09-08 01:46:16', '2021-09-08 15:41:28'),
 	('c44f33e3-29f4-4394-936f-62d8932c0d6b', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 28, '{"Type":"Courses","Id":12,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2022-03-04 05:55:47', '2022-03-04 05:55:47'),
+	('c4ab481e-35d9-4f1f-b223-9d1a117ec8f5', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 35, '{"Type":"Courses","Id":20,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 17:31:22', '2022-04-16 17:31:22'),
 	('c513b5e5-fbe6-4ef4-bfbc-a2b069fd6cda', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":40,"Message":"New student registration done. nnnn"}', NULL, '2021-09-14 12:15:22', '2021-09-14 12:15:22'),
 	('c55d3413-89ac-4bca-86b9-8122a5a23ce7', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 39, '{"Type":"Courses","Id":16,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2021-10-07 13:47:26', '2021-10-07 13:47:26'),
 	('c5e3b030-7e82-4a26-9662-936f0add1326', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":21,"Message":"Muniff enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-13 12:04:56', '2021-09-13 12:04:56'),
 	('c6a6afe2-4fe7-4b96-80b4-fee731f2eec8', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":54,"Message":"New student registration done. SSS UUUU"}', NULL, '2021-12-22 14:33:41', '2021-12-22 14:33:41'),
 	('c886e242-03b2-4b7c-bb94-bce77e1d87bb', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 35, '{"Type":"Courses","Id":12,"Message":"Enrollment has been successfull in  Post Graduate on  Finance"}', '2021-09-18 09:35:38', '2021-09-18 06:34:21', '2021-09-18 09:35:38'),
+	('c9f62ffe-afc4-4a53-8856-04511f6704db', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":39,"Message":"MMM has enrolled in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:13:37', '2022-04-07 18:13:37'),
 	('cc2b8088-5205-4606-b374-47aaf7515c6b', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 36, '{"Type":"Payments","Id":83,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-02 18:20:03', '2022-03-02 18:20:03'),
 	('ccab6d0c-9fb5-4f27-b7ba-3ae9b8f45274', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 24, '{"Type":"Courses","Id":12,"Message":"Book1 has been sent for the course Post Graduate on  Finance"}', '2022-03-03 20:45:49', '2022-03-03 20:34:29', '2022-03-03 20:45:49'),
 	('ccf07e12-3431-4c4a-b443-59c05b34f766', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":38,"Message":"Maariz Hasan has enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-23 03:43:58', '2021-09-23 03:43:58'),
+	('cdcb3e3a-609a-400f-bd20-0cc6bb859f13', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":59,"Message":"New student registration done. GHUUUM"}', NULL, '2022-04-15 13:50:12', '2022-04-15 13:50:12'),
 	('ce62b2a5-3b26-4a7f-b775-22547e7422b3', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":52,"Message":"New student registration done. 2nd test"}', NULL, '2021-12-20 09:03:21', '2021-12-20 09:03:21'),
 	('cfb1e548-a6bf-4cd7-ab3a-3afbad504898', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 23, '{"Type":"Courses","Id":21,"Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management"}', NULL, '2021-09-13 12:09:40', '2021-09-13 12:09:40'),
 	('d0aba5ea-6ab0-426f-bb29-4fea13b0ae92', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":38,"Message":"Maariz Hasan has enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-23 04:20:37', '2021-09-23 04:20:37'),
 	('d261d3e1-eaaa-46d5-8d93-c4f378b761e4', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 36, '{"Type":"Courses","Id":12,"Message":"Enrollment has been successful in  Post Graduate on  Finance"}', NULL, '2021-09-23 04:37:28', '2021-09-23 04:37:28'),
+	('d27f8dbe-9164-4081-80e6-0be58c386472', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":39,"Message":"MMM has enrolled in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:08:46', '2022-04-07 18:08:46'),
+	('d28433fe-9389-427e-b87c-cca953a6218f', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 36, '{"Type":"Courses","Id":18,"Message":"Enrollment has been successful in  PROJECT MANAGEMENT"}', NULL, '2022-04-07 18:15:52', '2022-04-07 18:15:52'),
 	('d2b38559-c2d2-4eed-935b-8426888d414e', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":47,"Message":"New student registration done. MOMIT TEST"}', NULL, '2021-11-25 06:37:56', '2021-11-25 06:37:56'),
+	('d54257c7-69ea-4f20-b280-4eaf19a16355', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 09:04:53', '2022-04-16 09:04:53'),
+	('d6f377a7-586c-44ba-86b2-53a128aefcce', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 14:02:09', '2022-04-15 14:02:09'),
 	('d85ba3a7-b2d3-4f75-888d-51dec8dcab7e', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":40,"Message":"nnnn has enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-27 00:27:22', '2021-09-27 00:27:22'),
 	('d8ebfa1d-5659-41b1-b203-7b8d459499ff', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":21,"Message":"Muniff enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-13 12:09:40', '2021-09-13 12:09:40'),
+	('d90868ef-6d8d-4e67-a2d3-57fe83ef997f', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":59,"Message":"New student registration done. GHUUUM"}', NULL, '2022-04-15 13:50:12', '2022-04-15 13:50:12'),
 	('d9d0dd02-4006-4f5d-8f4b-0f70d4828b94', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 35, '{"Type":"Courses","Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management","Id":"35"}', '2021-09-08 16:27:12', '2021-09-08 01:55:51', '2021-09-08 16:27:12'),
+	('db8d532e-20e2-406d-bdac-aeec73b093d8', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 36, '{"Type":"Payments","Id":136,"Message":"Payment has been successfull of TK 77"}', NULL, '2022-04-16 15:00:27', '2022-04-16 15:00:27'),
 	('dbf800e7-6f0c-4109-ba7d-abf21e53ff76', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":125,"Message":"Muniff has made a payment of TK 1000"}', NULL, '2022-03-16 22:03:57', '2022-03-16 22:03:57'),
+	('dbfb0cc9-4778-4f0f-81bb-0f1762307522', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book1 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 10:02:55', '2022-04-16 10:02:55'),
 	('dea32fec-9361-4064-ae86-08371ca4b43c', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 35, '{"Type":"Payments","Id":84,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-02 17:59:56', '2022-03-02 17:59:56'),
 	('e5247bd2-f667-4cf5-9e14-e38f28bd2ac7', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 35, '{"Type":"Courses","Id":10,"Message":"Enrollment has been successful in  Post Graduate on Human Resource Management"}', NULL, '2021-09-23 03:43:58', '2021-09-23 03:43:58'),
 	('e69d9187-4270-4c16-878b-7625978c7ebf', 'App\\Notifications\\duePaymentNotification', 'App\\Models\\User', 35, '{"Type":"Payments","Id":79,"Message":" You have a due payment of TK 0. Please make the payment."}', NULL, '2022-03-05 08:27:32', '2022-03-05 08:27:32'),
@@ -909,16 +988,23 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 	('ed0b477f-04e9-4b90-974a-f1d9b08305bc', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":125,"Message":"Muniff has made a payment of TK 1000"}', NULL, '2022-03-16 22:09:43', '2022-03-16 22:09:43'),
 	('ed812336-1a9d-4411-9ed5-1d490fa7ec4e', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 39, '{"Type":"Courses","Id":42,"Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 01:06:13', '2021-09-15 01:06:13'),
 	('ee95dad4-f50b-475c-ac18-c9a8480b72f5', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":71,"Message":"ggg hasan has made a payment of TK 55000"}', NULL, '2021-09-15 01:15:28', '2021-09-15 01:15:28'),
+	('ef541e10-cad6-4ee4-9a43-ec00d38c763a', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book3 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-08 19:12:56', '2022-04-08 19:12:56'),
 	('ef5ecd04-10b2-4531-8525-a2d78c5c4554', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 23, '{"Type":"Courses","Id":18,"Message":"Enrollment has been successful in  PROJECT MANAGEMENT"}', NULL, '2022-03-16 17:10:40', '2022-03-16 17:10:40'),
 	('f0b34a11-c0c8-4f61-ad9c-d66f963b91c6', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":53,"Message":"New student registration done. UUU tt"}', NULL, '2021-12-22 14:28:50', '2021-12-22 14:28:50'),
 	('f21593cb-88e2-4a42-9249-97dcf525dd46', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":38,"Message":"Maariz Hasan enrolled in  Post Graduate on  Finance"}', NULL, '2021-09-18 06:34:21', '2021-09-18 06:34:21'),
+	('f288f81a-214f-4124-aded-17e857bc09e7', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 17:49:10', '2022-04-15 17:49:10'),
+	('f2f65089-ebe1-482a-b3fa-270b86dfff8c', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 1, '{"Type":"Students","Id":61,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 14:01:02', '2022-04-15 14:01:02'),
 	('f2f7490e-312f-415a-a074-21b00591cdd0', 'App\\Notifications\\newStudentEnrolledOwn', 'App\\Models\\User', 39, '{"Type":"Courses","Id":42,"Message":"Enrollment has been successfull in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 02:01:36', '2021-09-15 02:01:36'),
+	('f32ec96e-4be4-4f05-95d4-10e1f16aae6f', 'App\\Notifications\\studentBookSent', 'App\\Models\\User', 28, '{"Type":"Courses","Id":18,"Message":"Book2 has been sent for the course PROJECT MANAGEMENT"}', NULL, '2022-04-16 17:02:48', '2022-04-16 17:02:48'),
 	('f40be095-4661-4216-882b-08ea285c052b', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 01:26:52', '2021-09-15 01:26:52'),
 	('f45f5db8-740c-4154-852c-9b60262fe611', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":50,"Message":"New student registration done. HHH"}', NULL, '2021-12-13 16:03:15', '2021-12-13 16:03:15'),
 	('f7439001-6c9c-4c31-a3ba-a0cb1e7e2052', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":39,"Message":"MMM enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 02:04:22', '2021-09-15 02:04:22'),
+	('f864418b-4da1-4c45-b4e0-d9003e5299aa', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":58,"Message":"New student registration done. GGUUTUU"}', NULL, '2022-04-15 13:45:27', '2022-04-15 13:45:27'),
 	('f890feab-9b5c-4655-8589-5d8b36b9f3bc', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 31, '{"Type":"Payments","Id":77,"Message":"Maariz Hasan has made a payment of TK 20000"}', NULL, '2021-09-18 06:57:14', '2021-09-18 06:57:14'),
+	('fa3971cf-8909-47bd-9286-f205c5ce2670', 'App\\Notifications\\newPaymentByStudent', 'App\\Models\\User', 1, '{"Type":"Payments","Id":136,"Message":"MMM has made a payment of TK 77"}', NULL, '2022-04-16 15:00:27', '2022-04-16 15:00:27'),
 	('fd80208d-d582-41e3-b4aa-8551803d4082', 'App\\Notifications\\newPaymentByStudentOwn', 'App\\Models\\User', 23, '{"Type":"Payments","Id":125,"Message":"Payment has been successfull of TK 1000"}', NULL, '2022-03-16 22:08:15', '2022-03-16 22:08:15'),
 	('fe34397e-e66f-4d16-a945-4c36532d3a3d', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 1, '{"Type":"Students","Id":55,"Message":"Test Strudent has enrolled in  Post Graduate on Human Resource Management"}', NULL, '2022-01-19 02:42:10', '2022-01-19 02:42:10'),
+	('ff089b6a-be2a-442d-b7ad-f32847dc9f32', 'App\\Notifications\\newStudentCreated', 'App\\Models\\User', 31, '{"Type":"Students","Id":62,"Message":"New student registration done. FFF"}', NULL, '2022-04-15 17:51:02', '2022-04-15 17:51:02'),
 	('ff6fdbb7-d3b7-47e8-865b-a8718390ff1d', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 01:07:53', '2021-09-15 01:07:53'),
 	('ffc5d6cd-4b34-4266-8db3-8ad214280ed4', 'App\\Notifications\\newStudentEnrolled', 'App\\Models\\User', 31, '{"Type":"Students","Id":42,"Message":"ggg hasan enrolled in  Post Graduate on Human Resource Management"}', NULL, '2021-09-15 01:06:13', '2021-09-15 01:06:13');
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
@@ -936,7 +1022,7 @@ CREATE TABLE IF NOT EXISTS `notification_templates` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.notification_templates: ~7 rows (approximately)
+-- Dumping data for table abpdb.notification_templates: ~8 rows (approximately)
 /*!40000 ALTER TABLE `notification_templates` DISABLE KEYS */;
 INSERT INTO `notification_templates` (`id`, `title`, `details`, `category`, `type`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 'Payment due sms', 'Hello [student_name],\r\nYour payment [payment_amount] is due from [payment_date]. Please clear the payment as soon as possible.\r\nThank you\r\nABP', 1, 'SMS', 'Active', '2021-08-24 18:36:30', '2021-08-24 18:36:31'),
@@ -946,7 +1032,7 @@ INSERT INTO `notification_templates` (`id`, `title`, `details`, `category`, `typ
 	(5, 'Payment due email', '<p>Dear [student_name],&nbsp;</p><p>Greetings from ABP, This is just a reminder that your monthly installment([installment_no]) payment amount of [payment_amount] is due against the course [course_name] for this month. the payment date was at [payment_date]</p><p>&nbsp;Please make the payment ASAP using ABP Payment Portal: https://abpbd.org/app&nbsp;</p><p>Best regards,</p><p>&nbsp;ABP</p>', 1, 'Email', 'Active', '2021-08-24 18:36:30', '2022-03-19 16:42:47'),
 	(6, 'Close Notice', 'Hello [student_name],\r\n the institution will remain close untill 12-10-2021 \r\nThank you\r\nABP', 2, 'Email', 'Active', NULL, NULL),
 	(7, 'Monthly upcoming payment reminder', '<p>Dear [student_name],&nbsp;</p><p>Greetings from ABP, This is just a gentle reminder that your monthly installment([installment_no]) payment amount of [payment_amount] is due against the course [course_name] for this month.</p><p>&nbsp;Please make the payment by 7th of [month] using ABP Payment Portal: https://abpbd.org/app&nbsp;</p><p>Best regards,</p><p>&nbsp;ABP</p><p>&nbsp;</p>', 3, 'Email', 'Active', NULL, '2022-03-19 16:40:50'),
-	(8, 'Welcome Email', '<p>Dear [student_name],&nbsp;</p><p>Greetings from ABP, Welcome to the course [course_name]</p><ul><li>MOMIT</li><li>LITU</li><li>MUNIF</li></ul><p>&nbsp;Best regards, ABP</p>', 5, 'Email', 'Active', '2022-02-25 02:10:02', '2022-03-19 06:39:11');
+	(8, 'Welcome Email', '<p>Dear [student_name],&nbsp;</p><p>Greetings from ABP, Welcome to the course [course_name]</p><p>here is ur email [email]</p><ul><li>MOMIT</li><li>LITU</li><li>MUNIF</li></ul><p>&nbsp;Best regards, ABP</p>', 5, 'Email', 'Active', '2022-02-25 02:10:02', '2022-04-13 19:19:32');
 /*!40000 ALTER TABLE `notification_templates` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.oauth_access_tokens
@@ -1070,7 +1156,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.settings: ~1 rows (approximately)
+-- Dumping data for table abpdb.settings: ~0 rows (approximately)
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` (`id`, `company_name`, `short_name`, `site_name`, `admin_email`, `admin_mobile`, `bill_date`, `bkash_mobile_no`, `rocket_mobile_no`, `site_url`, `support_url`, `admin_url`, `logo`, `fade_logo`, `address`, `created_at`, `updated_at`) VALUES
 	(1, 'Academy Of Business Professionals', 'ABPBD', 'ABPBD', 'admin@abpbd.com, admin1@abpbd.com', '45455', 8, '01980340482', '01980340482', NULL, 'https://abpbd.org/contact ', NULL, 'abp.png', 'logo-fade.png', 'sdfsd f, sdf sdf', NULL, '2022-03-17 16:24:57');
@@ -1098,15 +1184,15 @@ CREATE TABLE IF NOT EXISTS `students` (
   `current_designation` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_qualification` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `how_know` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `passing_year` date DEFAULT NULL,
+  `passing_year` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `contact_no` (`contact_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.students: ~23 rows (approximately)
+-- Dumping data for table abpdb.students: ~28 rows (approximately)
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
 INSERT INTO `students` (`id`, `name`, `student_no`, `email`, `contact_no`, `emergency_contact`, `address`, `nid_no`, `date_of_birth`, `user_profile_image`, `remarks`, `status`, `study_mode`, `type`, `register_type`, `registration_completed`, `current_emplyment`, `current_designation`, `last_qualification`, `how_know`, `passing_year`, `created_at`, `updated_at`) VALUES
 	(21, 'Muniff', '00500006', 'munif@gmail.com', '01980340482', '454', 'asdasds', '123313131231', '2021-06-25', '', 'sdr fsfsfsdff', 'Active', 'Online', 'Enrolled', 'Admin', 'Yes', 'dfsdf', '', 'Masters bachelor', 'From a Trainee of ABP', '2012-01-01', '2021-06-21 09:46:55', '2021-08-18 09:49:34'),
@@ -1118,7 +1204,7 @@ INSERT INTO `students` (`id`, `name`, `student_no`, `email`, `contact_no`, `emer
 	(36, 'Samin Hasan', '88888', 'samin@gmail.com', '456456465', NULL, 'sfg dg', '45645646', '2008-08-12', '', NULL, 'Active', 'Online', 'Non-enrolled', 'Admin', 'Yes', NULL, '', 'Masters bachelor', 'From a Trainee of ABP', NULL, '2021-09-01 12:05:40', '2021-09-01 12:05:40'),
 	(37, 'Zikra Hasan', '00037', 'zikra@gmail.com', '46546546', NULL, NULL, NULL, NULL, NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, '', 'Masters bachelor', 'From a Trainee of ABP', NULL, '2021-09-02 15:43:23', '2021-09-02 15:45:02'),
 	(38, 'Maariz Hasan', '00038', 'maariz@gmail.com', '01987783633', '89745645', 'dhaka', '465545', '2022-09-15', '1631945533.jpg', NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', 'Suvastu', 'SR Developer', NULL, 'From a Trainee of ABP', '2021-07-08', '2021-09-08 01:45:47', '2022-03-02 16:48:40'),
-	(39, 'MMM', '008039', 'mm@mm.com', '54645', '45645646', 'erewr', '5665+', '2021-07-12', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', 'sdfssdf', '', 'Masters bachelor', 'By google search', '2021-09-05', '2021-09-14 12:12:03', '2021-09-15 02:04:16'),
+	(39, 'MMM', '008039', 'mm@mm.com', '54645', '45645646', 'erewr', '5665+', '2021-07-12', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', 'Suvastu', 'SR Exc.', 'Diploma', 'By google search', '2000', '2021-09-14 12:12:03', '2022-04-13 18:05:43'),
 	(40, 'nnnn', '008040', 'nn@nn.nn', '6465465', '4564656456', 'asdasd', '456456465', '2021-07-05', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, '', 'Kamil', 'From a Trainee of ABP', '2021-09-22', '2021-09-14 12:14:56', '2021-09-27 00:27:17'),
 	(42, 'ggg hasan', '008042', 'gg@gg.gg', '456645', '6445654', 'asdasdasds', '164646', '2021-05-11', '', NULL, 'Active', 'Online', 'Non-enrolled', 'Admin', 'Yes', 'dsfadf', '', 'Master\'s', 'From a Trainee of ABP', '2021-06-22', '2021-09-14 12:45:14', '2021-09-18 05:32:48'),
 	(43, 'Zikra Hasan', '008043', 'zikraa@gmail.com', '646545649', '465456465', 'rajshahi', '64645', '2021-06-15', '1632189635.jpg', NULL, 'Active', 'Online', 'Non-enrolled', 'Admin', 'Yes', NULL, '', 'Bachelor (Engineering & Technology)', 'From a Trainee of ABP', NULL, '2021-09-21 01:58:26', '2021-09-21 02:00:35'),
@@ -1127,14 +1213,16 @@ INSERT INTO `students` (`id`, `name`, `student_no`, `email`, `contact_no`, `emer
 	(46, 'hhh', '008046', 'hh@hh.com', '8976546312', '5446878974', 'sdf', '456456', '2021-08-17', '', NULL, 'Active', 'Online', 'Enrolled', 'Admin', 'Yes', NULL, '', 'Bachelor (Engineering & Technology)', 'From a Trainee of ABP', NULL, '2021-10-08 10:55:04', '2021-10-08 10:55:04'),
 	(47, 'MOMIT TEST', '008047', 'momitnew@gmail.com', '465456798', '46546589', 'xfgdfgd', '864564564', '2021-11-01', '1637822276.jpg', NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', 'ASD', '', 'Bachelor (Engineering & Technology)', 'From a Trainee of ABP', '2021-11-15', '2021-11-25 06:37:56', '2021-11-25 06:37:56'),
 	(48, 'MOMIT TEST NEW 2', '008048', 'momittest2@gmail.com', '4566456', '7897894', 'asd dasd sd', '456456789', '2021-11-24', '1637823270.jpg', NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', 'SSD', 'Sr. Developer', 'Bachelor (Engineering & Technology)', 'From a Trainee of ABP', NULL, '2021-11-25 06:54:30', '2021-11-25 06:59:10'),
-	(49, 'MMounota', '008049', 'nnss@nn.nn', '54569789', NULL, NULL, NULL, NULL, NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, '', NULL, 'From a Trainee of ABP', NULL, '2021-11-29 01:14:27', '2021-11-29 01:14:27'),
+	(49, 'MMounota', '008049', 'nnss@nn.nn', '54569789', '12313123123', 'cvxcvxcvxcv', '5767756757', '2022-03-24', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, NULL, NULL, 'From a Trainee of ABP', '0000-00-00', '2021-11-29 01:14:27', '2022-03-24 04:55:58'),
 	(50, 'HHH', '008050', 'dsdddd@f.dfg', '65465489', '8978979', '8977', '89678974', '2021-12-16', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', 'SDL', 'SR', 'Kamil', 'From a Trainee of ABP', NULL, '2021-12-13 16:03:14', '2021-12-13 16:03:14'),
 	(51, 'Test Meeting', '008051', 'test@test.com', '7989465', '32121655', 'dhaka', '77777', '2021-12-01', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', 'Suvastu', 'Jr ENG', 'Diploma', 'From a Trainee of ABP', NULL, '2021-12-20 08:40:50', '2021-12-20 08:40:50'),
 	(52, '2nd test', '008052', 'testt2@gmail.com', '465478796', '6546784', 'dhaka', '4565468', '2021-12-27', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', 'ABP', 'SR Exc.', 'Bachelor\'s', 'From a Trainee of ABP', NULL, '2021-12-20 09:03:20', '2021-12-20 09:03:20'),
 	(54, 'SSS UUUU', '008054', 'UUUU@UUU.UU', '455555555', '5555555', 'Dhaa', '8979878', '2021-12-23', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, NULL, 'Kamil', 'From a Trainee of ABP', NULL, '2021-12-22 14:33:41', '2021-12-22 14:33:41'),
 	(55, 'Test Strudent', '008055', 'dd@dddd.com', '6545489', '6548664', 'dhka', '65464', '2021-12-31', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, NULL, 'Bachelor\'s', 'By google search', NULL, '2022-01-19 02:41:57', '2022-01-19 02:41:57'),
 	(56, 'Test Student2', '008056', 'ss@ss.com', '87986415', '689798645', 'dhaja', '546456', '2022-01-19', '', NULL, 'Active', 'Online', 'Enrolled', 'Admin', 'Yes', 'Suvastu', 'Jr ENG', 'Doctorate', 'From office colleague', '2022-01-20', '2022-01-19 02:51:18', '2022-01-19 02:51:18'),
-	(57, 'sdsdsad', '008057', 'sdf@fgdf.sdf', '34534534', '67567', '45645', '13131233', '2022-02-15', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, NULL, 'Diploma', NULL, NULL, '2022-02-27 18:34:39', '2022-02-27 18:34:39');
+	(57, 'sdsdsad', '008057', 'sdf@fgdf.sdf', '34534534', '67567', '45645', '13131233', '2022-02-15', NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, NULL, 'Diploma', NULL, NULL, '2022-02-27 18:34:39', '2022-02-27 18:34:39'),
+	(62, 'FFF', '008062', 'hyhy@df.com', '09123837474', '09123837474', 'fghgh fhg', '11333333', '2022-04-28', NULL, NULL, 'Active', 'Campus', 'Non-enrolled', 'Self', 'Yes', 'Suvastu', 'SR Exc.', 'Kamil', 'From Email', '2050', '2022-04-15 14:02:09', '2022-04-15 14:02:09'),
+	(63, 'moynul test', '008063', 'moynul@gmail.com', '08235364748', NULL, NULL, NULL, NULL, NULL, NULL, 'Active', 'Online', 'Non-enrolled', 'Self', 'Yes', NULL, NULL, NULL, NULL, NULL, '2022-04-16 18:27:24', '2022-04-16 18:27:24');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.student_books
@@ -1143,81 +1231,103 @@ CREATE TABLE IF NOT EXISTS `student_books` (
   `batch_book_id` bigint(20) NOT NULL,
   `batch_student_id` bigint(20) DEFAULT NULL,
   `student_id` bigint(20) NOT NULL,
-  `sent_date` timestamp NULL DEFAULT NULL,
   `received_date` timestamp NULL DEFAULT NULL,
-  `status` enum('Active','Inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Active',
+  `sent_date` timestamp NULL DEFAULT NULL,
+  `status` enum('Active','Inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Inactive',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.student_books: ~42 rows (approximately)
+-- Dumping data for table abpdb.student_books: ~55 rows (approximately)
 /*!40000 ALTER TABLE `student_books` DISABLE KEYS */;
-INSERT INTO `student_books` (`id`, `batch_book_id`, `batch_student_id`, `student_id`, `sent_date`, `received_date`, `status`, `created_at`, `updated_at`) VALUES
+INSERT INTO `student_books` (`id`, `batch_book_id`, `batch_student_id`, `student_id`, `received_date`, `sent_date`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 8, 0, 38, NULL, NULL, 'Inactive', '2022-03-03 15:07:43', '2022-03-03 15:07:43'),
-	(16, 13, 34, 28, '2022-03-03 00:00:00', NULL, 'Inactive', '2022-03-03 16:20:24', '2022-03-03 20:34:29'),
+	(16, 13, 34, 28, NULL, NULL, 'Inactive', '2022-03-03 16:20:24', '2022-03-03 20:34:29'),
 	(17, 13, 36, 21, NULL, NULL, 'Inactive', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
-	(18, 13, 49, 42, NULL, NULL, 'Active', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
-	(19, 13, 50, 38, NULL, NULL, 'Active', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
-	(20, 13, 53, 39, NULL, NULL, 'Active', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
+	(18, 13, 49, 42, NULL, NULL, 'Inactive', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
+	(19, 13, 50, 38, NULL, NULL, 'Inactive', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
+	(20, 13, 53, 39, NULL, NULL, 'Inactive', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
 	(21, 13, 65, 48, NULL, NULL, 'Inactive', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
 	(22, 13, 66, 51, NULL, NULL, 'Inactive', '2022-03-03 16:20:24', '2022-03-03 16:20:24'),
 	(23, 14, 34, 28, NULL, NULL, 'Inactive', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
 	(24, 14, 36, 21, NULL, NULL, 'Inactive', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
-	(25, 14, 49, 42, NULL, NULL, 'Active', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
-	(26, 14, 50, 38, '2022-03-04 00:03:29', NULL, 'Active', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
-	(27, 14, 53, 39, NULL, NULL, 'Active', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
+	(25, 14, 49, 42, NULL, NULL, 'Inactive', '2022-03-03 16:26:03', '2022-03-24 08:39:43'),
+	(26, 14, 50, 38, NULL, NULL, 'Inactive', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
+	(27, 14, 53, 39, NULL, NULL, 'Inactive', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
 	(28, 14, 65, 48, NULL, NULL, 'Inactive', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
 	(29, 14, 66, 51, NULL, NULL, 'Inactive', '2022-03-03 16:26:03', '2022-03-03 16:26:03'),
-	(30, 2, 84, 32, NULL, NULL, 'Active', '2022-03-04 05:55:39', '2022-03-04 05:55:39'),
-	(32, 13, 78, 49, NULL, NULL, 'Active', '2022-03-04 06:03:25', '2022-03-04 06:03:25'),
-	(33, 14, 78, 49, NULL, NULL, 'Active', '2022-03-04 06:03:25', '2022-03-04 06:03:25'),
-	(37, 1, 84, 32, NULL, NULL, 'Active', NULL, NULL),
-	(38, 8, 84, 32, NULL, NULL, 'Active', NULL, NULL),
+	(30, 2, 84, 32, NULL, NULL, 'Inactive', '2022-03-04 05:55:39', '2022-03-04 05:55:39'),
+	(32, 13, 78, 49, NULL, NULL, 'Inactive', '2022-03-04 06:03:25', '2022-03-04 06:03:25'),
+	(33, 14, 78, 49, NULL, NULL, 'Inactive', '2022-03-04 06:03:25', '2022-03-04 06:03:25'),
+	(37, 1, 84, 32, NULL, NULL, 'Inactive', NULL, NULL),
+	(38, 8, 84, 32, NULL, NULL, 'Inactive', NULL, NULL),
 	(39, 15, 54, 38, NULL, NULL, 'Inactive', '2022-03-04 20:32:44', '2022-03-04 20:32:44'),
-	(44, 1, 91, 39, NULL, NULL, 'Active', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
-	(45, 2, 91, 39, NULL, NULL, 'Active', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
-	(46, 8, 91, 39, NULL, NULL, 'Active', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
-	(47, 15, 91, 39, NULL, NULL, 'Active', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
+	(44, 1, 91, 39, NULL, NULL, 'Inactive', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
+	(45, 2, 91, 39, NULL, NULL, 'Inactive', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
+	(46, 8, 91, 39, NULL, NULL, 'Inactive', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
+	(47, 15, 91, 39, NULL, NULL, 'Inactive', '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
 	(48, 16, 34, 28, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
 	(49, 16, 36, 21, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
-	(50, 16, 49, 42, NULL, NULL, 'Active', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
+	(50, 16, 49, 42, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-24 09:00:59'),
 	(51, 16, 50, 38, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
-	(52, 16, 53, 39, '2022-03-05 00:00:00', NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:23'),
+	(52, 16, 53, 39, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:23'),
 	(53, 16, 65, 48, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
 	(54, 16, 66, 51, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
 	(55, 16, 77, 32, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
-	(56, 16, 78, 49, NULL, NULL, 'Active', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
-	(57, 17, 92, 38, '2022-03-16 00:00:00', NULL, 'Active', '2022-03-16 17:12:18', '2022-03-16 17:56:18'),
-	(58, 17, 93, 21, NULL, NULL, 'Active', '2022-03-16 17:12:18', '2022-03-16 17:12:18'),
-	(59, 17, 94, 32, '2022-03-16 00:00:00', NULL, 'Active', '2022-03-16 17:12:18', '2022-03-16 17:56:13'),
-	(60, 18, 92, 38, NULL, NULL, 'Active', '2022-03-16 17:12:29', '2022-03-16 17:12:29'),
-	(61, 18, 93, 21, '2022-03-16 00:00:00', NULL, 'Active', '2022-03-16 17:12:29', '2022-03-16 17:56:20'),
-	(62, 18, 94, 32, NULL, NULL, 'Active', '2022-03-16 17:12:29', '2022-03-16 17:12:29'),
-	(63, 19, 95, 49, NULL, NULL, 'Active', '2022-03-16 17:12:47', '2022-03-16 17:12:47'),
-	(64, 19, 96, 21, NULL, NULL, 'Active', '2022-03-16 18:01:22', '2022-03-16 18:01:22');
+	(56, 16, 78, 49, NULL, NULL, 'Inactive', '2022-03-05 08:49:00', '2022-03-05 08:49:00'),
+	(57, 17, 92, 38, NULL, NULL, 'Inactive', '2022-03-16 17:12:18', '2022-03-16 17:56:18'),
+	(58, 17, 93, 21, NULL, NULL, 'Inactive', '2022-03-16 17:12:18', '2022-03-16 17:12:18'),
+	(59, 17, 94, 32, NULL, '2022-04-16 00:00:00', 'Active', '2022-03-16 17:12:18', '2022-04-16 17:02:48'),
+	(60, 18, 92, 38, NULL, NULL, 'Inactive', '2022-03-16 17:12:29', '2022-03-16 17:12:29'),
+	(61, 18, 93, 21, NULL, NULL, 'Inactive', '2022-03-16 17:12:29', '2022-03-16 17:56:20'),
+	(62, 18, 94, 32, NULL, '2022-04-16 00:00:00', 'Active', '2022-03-16 17:12:29', '2022-04-16 17:02:48'),
+	(63, 19, 95, 49, NULL, NULL, 'Inactive', '2022-03-16 17:12:47', '2022-03-16 17:12:47'),
+	(64, 19, 96, 21, NULL, NULL, 'Inactive', '2022-03-16 18:01:22', '2022-03-16 18:01:22'),
+	(73, 20, 92, 38, NULL, NULL, 'Inactive', '2022-04-08 15:54:34', '2022-04-08 15:54:34'),
+	(74, 20, 93, 21, NULL, NULL, 'Inactive', '2022-04-08 15:54:34', '2022-04-08 15:54:34'),
+	(75, 20, 94, 32, NULL, '2022-04-16 00:00:00', 'Active', '2022-04-08 15:54:34', '2022-04-16 17:02:48'),
+	(77, 17, 102, 39, NULL, '2022-04-16 00:00:00', 'Active', '2022-04-08 16:51:49', '2022-04-16 17:02:48'),
+	(78, 18, 102, 39, NULL, NULL, 'Inactive', '2022-04-08 16:51:49', '2022-04-08 16:51:49'),
+	(79, 20, 102, 39, NULL, NULL, 'Inactive', '2022-04-08 16:51:49', '2022-04-08 16:51:49'),
+	(80, 19, 104, 39, NULL, NULL, 'Inactive', '2022-04-16 13:48:39', '2022-04-16 13:48:39'),
+	(81, 21, 105, 38, NULL, '2022-04-16 00:00:00', 'Active', '2022-04-16 17:18:24', '2022-04-16 17:31:22'),
+	(82, 21, 106, 32, NULL, NULL, 'Inactive', '2022-04-16 17:18:24', '2022-04-16 17:18:24'),
+	(83, 21, 107, 39, NULL, NULL, 'Inactive', '2022-04-16 17:18:24', '2022-04-16 17:18:24'),
+	(84, 22, 105, 38, NULL, NULL, 'Inactive', '2022-04-16 17:18:36', '2022-04-16 17:18:36'),
+	(85, 22, 106, 32, NULL, NULL, 'Inactive', '2022-04-16 17:18:36', '2022-04-16 17:18:36'),
+	(86, 22, 107, 39, NULL, NULL, 'Inactive', '2022-04-16 17:18:36', '2022-04-16 17:18:36');
 /*!40000 ALTER TABLE `student_books` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.student_books_feedback
 CREATE TABLE IF NOT EXISTS `student_books_feedback` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `student_book_id` bigint(20) NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `feedback` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.student_books_feedback: ~7 rows (approximately)
+-- Dumping data for table abpdb.student_books_feedback: ~15 rows (approximately)
 /*!40000 ALTER TABLE `student_books_feedback` DISABLE KEYS */;
-INSERT INTO `student_books_feedback` (`id`, `student_book_id`, `feedback`, `created_at`, `updated_at`) VALUES
-	(1, 26, 'bla bla bla', NULL, NULL),
-	(2, 26, 'kla kla kla ', NULL, NULL),
-	(3, 26, 'chu chu', '2022-03-03 18:31:22', '2022-03-03 18:31:22'),
-	(4, 25, 'Gu GU', '2022-03-03 18:39:12', '2022-03-03 18:39:12'),
-	(5, 52, 'this is a feedbak for book3', '2022-03-05 08:49:53', '2022-03-05 08:49:53'),
-	(6, 52, 'this is a feedbak for book3 again', '2022-03-05 08:50:04', '2022-03-05 08:50:04'),
-	(7, 58, 'disabled', '2022-03-16 18:00:37', '2022-03-16 18:00:37');
+INSERT INTO `student_books_feedback` (`id`, `student_book_id`, `created_by`, `feedback`, `created_at`, `updated_at`) VALUES
+	(1, 26, 1, 'bla bla bla', NULL, NULL),
+	(2, 26, 1, 'kla kla kla ', NULL, NULL),
+	(3, 26, 1, 'chu chu', '2022-03-03 18:31:22', '2022-03-03 18:31:22'),
+	(4, 25, 1, 'Gu GU', '2022-03-03 18:39:12', '2022-03-03 18:39:12'),
+	(5, 52, 1, 'this is a feedbak for book3', '2022-03-05 08:49:53', '2022-03-05 08:49:53'),
+	(6, 52, 1, 'this is a feedbak for book3 again', '2022-03-05 08:50:04', '2022-03-05 08:50:04'),
+	(7, 58, 1, 'disabled', '2022-03-16 18:00:37', '2022-03-16 18:00:37'),
+	(10, 77, 1, 'This is a test for MMM book2', '2022-04-08 19:12:43', '2022-04-08 19:12:43'),
+	(11, 75, 1, 'This is a test for Litu book3', '2022-04-08 19:13:06', '2022-04-08 19:13:06'),
+	(24, 59, 1, 'Kawaaaa', '2022-04-16 10:02:55', '2022-04-16 10:02:55'),
+	(25, 62, 1, 'Hawaaaa', '2022-04-16 10:02:55', '2022-04-16 10:02:55'),
+	(26, 75, 1, 'Bhawaaaa', '2022-04-16 10:02:55', '2022-04-16 10:02:55'),
+	(27, 59, 1, 'AAAAAAAA', '2022-04-16 17:02:48', '2022-04-16 17:02:48'),
+	(28, 82, 1, 'Hmmmm', '2022-04-16 17:24:53', '2022-04-16 17:24:53'),
+	(29, 86, 1, 'Tmmmmmm', '2022-04-16 17:24:53', '2022-04-16 17:24:53');
 /*!40000 ALTER TABLE `student_books_feedback` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.student_documents
@@ -1227,9 +1337,9 @@ CREATE TABLE IF NOT EXISTS `student_documents` (
   `document_name` varchar(255) NOT NULL,
   `type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table abpdb.student_documents: ~15 rows (approximately)
+-- Dumping data for table abpdb.student_documents: ~22 rows (approximately)
 /*!40000 ALTER TABLE `student_documents` DISABLE KEYS */;
 INSERT INTO `student_documents` (`id`, `student_id`, `document_name`, `type`) VALUES
 	(5, 28, 'avatar-1.jpg1625469856.jpg', 'jpg'),
@@ -1253,7 +1363,8 @@ INSERT INTO `student_documents` (`id`, `student_id`, `document_name`, `type`) VA
 	(34, 32, 'bg_2.png1633614707.png', 'png'),
 	(35, 47, '1627796494.png1637822276.png', 'png'),
 	(36, 48, 'image08_thumb.jpg1637823270.jpg', 'jpg'),
-	(37, 38, 'blackandwhite.png1646239720.png', 'png');
+	(37, 38, 'blackandwhite.png1646239720.png', 'png'),
+	(38, 49, 'Untitled.png1648094627.png', 'png');
 /*!40000 ALTER TABLE `student_documents` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.student_payments
@@ -1280,9 +1391,9 @@ CREATE TABLE IF NOT EXISTS `student_payments` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_student_payments_batch_students` (`student_enrollment_id`),
   CONSTRAINT `FK_student_payments_batch_students` FOREIGN KEY (`student_enrollment_id`) REFERENCES `batch_students` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=126 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.student_payments: ~50 rows (approximately)
+-- Dumping data for table abpdb.student_payments: ~59 rows (approximately)
 /*!40000 ALTER TABLE `student_payments` DISABLE KEYS */;
 INSERT INTO `student_payments` (`id`, `student_enrollment_id`, `installment_no`, `payable_amount`, `paid_amount`, `payment_status`, `paid_type`, `last_payment_date`, `paid_date`, `details`, `payment_refference_no`, `invoice_no`, `receive_status`, `paid_by`, `status`, `payment_received_by`, `attachment`, `created_at`, `updated_at`) VALUES
 	(48, 33, 1, 44000, 44000, 'Paid', 'Cash', '2021-07-12', '2021-07-14', NULL, '111', 'INV-000001', 'Received', 'Pending', 'Active', NULL, NULL, '2021-07-12 08:21:31', '2021-07-13 11:33:51'),
@@ -1317,24 +1428,33 @@ INSERT INTO `student_payments` (`id`, `student_enrollment_id`, `installment_no`,
 	(93, 57, 3, 20000, 20000, 'Paid', 'Cash', '2022-11-08', '2022-11-08', NULL, NULL, 'INV-002005', 'Received', 'Admin', 'Active', 1, NULL, '2021-09-27 00:33:00', '2021-09-27 01:23:00'),
 	(99, 64, 1, 60000, 60000, 'Paid', 'Cash', '2022-01-01', '2022-01-01', NULL, NULL, 'INV-002006', 'Received', 'Admin', 'Active', 1, NULL, '2021-10-17 03:52:13', '2021-10-17 03:53:29'),
 	(100, 65, 1, 20000, 0, 'Unpaid', 'Cash', '2021-11-25', NULL, NULL, '619f334b93234', NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2021-11-25 06:54:45', '2021-11-25 06:55:07'),
-	(101, 67, 1, 40000, 40000, 'Paid', 'Bkash', '2022-01-19', '2022-01-19', NULL, NULL, 'INV-002007', 'Received', 'Admin', 'Active', 1, NULL, '2022-01-19 02:42:10', '2022-01-31 09:44:58'),
 	(104, 77, 1, 11000, 0, 'Unpaid', 'Cash', '2021-09-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Inactive', NULL, NULL, '2022-03-04 05:55:39', '2022-03-04 20:12:50'),
 	(105, 77, 2, 11000, 0, 'Unpaid', 'Cash', '2022-03-08', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Inactive', NULL, NULL, '2022-03-04 05:55:39', '2022-03-04 20:12:50'),
 	(106, 78, 1, 20000, 0, 'Unpaid', 'Cash', '2021-09-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-04 06:03:25', '2022-03-04 06:03:25'),
 	(109, 84, 1, 11000, 0, 'Unpaid', 'Cash', '2021-09-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-04 20:12:50', '2022-03-04 20:12:50'),
 	(110, 84, 2, 11000, 0, 'Unpaid', 'Cash', '2022-03-08', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-04 20:12:50', '2022-03-04 20:12:50'),
 	(111, 84, 0, 111, 0, 'Unpaid', 'Cash', '2022-03-04', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-04 20:12:50', '2022-03-04 20:12:50'),
-	(115, 91, 1, 11000, 0, 'Unpaid', 'Cash', '2021-09-23', NULL, NULL, '62014f219280c', NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
-	(116, 91, 2, 11000, 0, 'Unpaid', 'Cash', '2022-03-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
-	(117, 91, 0, 5, 0, 'Unpaid', 'Cash', '2022-03-04', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-04 21:50:54', '2022-03-04 21:50:54'),
+	(115, 91, 1, 11000, 0, 'Unpaid', 'Cash', '2021-09-23', NULL, NULL, '62014f219280c', NULL, 'Received', 'Pending', 'Inactive', NULL, NULL, '2022-03-04 21:50:54', '2022-04-13 18:39:20'),
+	(116, 91, 2, 11000, 0, 'Unpaid', 'Cash', '2022-03-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Inactive', NULL, NULL, '2022-03-04 21:50:54', '2022-04-13 18:39:20'),
+	(117, 91, 0, 5, 0, 'Unpaid', 'Cash', '2022-03-04', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Inactive', NULL, NULL, '2022-03-04 21:50:54', '2022-04-13 18:39:20'),
 	(118, 92, 1, 50000, 50000, 'Paid', 'Cash', '2022-04-01', '2022-03-16', NULL, NULL, 'INV-002009', 'Received', 'Admin', 'Active', 1, NULL, '2022-03-16 17:09:52', '2022-03-16 17:16:43'),
 	(119, 92, 2, 30000, 0, 'Unpaid', 'Cash', '2022-06-08', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-16 17:09:52', '2022-03-16 17:09:52'),
 	(120, 93, 1, 76000, 0, 'Unpaid', 'Cash', '2022-04-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Inactive', NULL, NULL, '2022-03-16 17:10:30', '2022-03-16 18:25:31'),
 	(121, 94, 1, 50000, 0, 'Unpaid', 'Cash', '2022-04-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-16 17:10:51', '2022-03-16 17:10:51'),
 	(122, 94, 2, 30000, 0, 'Unpaid', 'Cash', '2022-06-08', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-16 17:10:51', '2022-03-16 17:10:51'),
-	(123, 95, 1, 76000, 0, 'Unpaid', 'Cash', '2022-08-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-16 17:11:35', '2022-03-16 17:11:35'),
+	(123, 95, 1, 76000, 0, 'Unpaid', 'Cash', '2022-08-01', NULL, NULL, '623adf97d2aac', NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-03-16 17:11:35', '2022-03-23 08:51:35'),
 	(124, 96, 1, 76000, 76000, 'Paid', 'Cash', '2022-04-01', '2022-03-16', NULL, NULL, 'INV-002010', 'Received', 'Admin', 'Active', 1, NULL, '2022-03-16 18:01:22', '2022-03-16 21:57:53'),
-	(125, 96, 0, 1000, 1000, 'Paid', 'Cash', '2022-03-16', '2022-03-16', NULL, NULL, 'INV-002011', 'Received', 'Admin', 'Active', 1, NULL, '2022-03-16 18:01:22', '2022-03-16 22:09:43');
+	(125, 96, 0, 1000, 1000, 'Paid', 'Cash', '2022-03-16', '2022-03-16', NULL, NULL, 'INV-002011', 'Received', 'Admin', 'Active', 1, NULL, '2022-03-16 18:01:22', '2022-03-16 22:09:43'),
+	(130, 102, 1, 76000, 0, 'Unpaid', 'Cash', '2022-04-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Inactive', NULL, NULL, '2022-04-08 16:51:49', '2022-04-16 13:48:39'),
+	(131, 103, 1, 11000, 0, 'Unpaid', 'Cash', '2021-09-23', NULL, ' Paid against old batch', '62014f219280c', NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-04-13 18:39:20', '2022-04-13 18:39:20'),
+	(132, 103, 2, 11000, 0, 'Unpaid', 'Cash', '2022-03-01', NULL, ' Paid against old batch', NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-04-13 18:39:20', '2022-04-13 18:39:20'),
+	(133, 103, 0, 5, 0, 'Unpaid', 'Cash', '2022-03-04', NULL, ' Paid against old batch', NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-04-13 18:39:20', '2022-04-13 18:39:20'),
+	(134, 103, 0, 333, 0, 'Unpaid', 'Cash', '2022-04-13', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-04-13 18:39:20', '2022-04-13 18:39:20'),
+	(135, 104, 1, 76000, 0, 'Unpaid', 'Cash', '2022-04-01', NULL, ' Paid against old batch', NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-04-16 13:48:39', '2022-04-16 13:48:39'),
+	(136, 104, 0, 77, 77, 'Paid', 'Cash', '2022-04-16', '2022-04-16', NULL, NULL, 'INV-002012', 'Received', 'Admin', 'Active', 1, NULL, '2022-04-16 13:48:39', '2022-04-16 15:00:26'),
+	(137, 105, 1, 100, 0, 'Unpaid', 'Cash', '2022-05-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-04-16 17:14:57', '2022-04-16 17:14:57'),
+	(138, 106, 1, 100, 0, 'Unpaid', 'Cash', '2022-05-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-04-16 17:15:28', '2022-04-16 17:15:28'),
+	(139, 107, 1, 100, 0, 'Unpaid', 'Cash', '2022-05-01', NULL, NULL, NULL, NULL, 'Received', 'Pending', 'Active', NULL, NULL, '2022-04-16 17:15:42', '2022-04-16 17:15:42');
 /*!40000 ALTER TABLE `student_payments` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.student_revise_payments
@@ -1362,14 +1482,15 @@ CREATE TABLE IF NOT EXISTS `template_categories` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table abpdb.template_categories: ~5 rows (approximately)
+-- Dumping data for table abpdb.template_categories: ~6 rows (approximately)
 /*!40000 ALTER TABLE `template_categories` DISABLE KEYS */;
 INSERT INTO `template_categories` (`id`, `category_name`, `placeholders`) VALUES
-	(1, 'Unpaid', '[student_name],[payment_date],[payment_amount],[course_name],[installment_no]'),
-	(2, 'Student', '[student_name]'),
-	(3, 'upcoming-due', '[student_name],[month],[payment_amount],[course_name],[installment_no]'),
+	(1, 'Unpaid', '[student_name],[email],[payment_date],[payment_amount],[course_name],[installment_no]'),
+	(2, 'Student', '[student_name], [email]'),
+	(3, 'upcoming-due', '[student_name], [email],[month],[payment_amount],[course_name],[installment_no]'),
 	(4, 'otp', ''),
-	(5, 'welcome', '[student_name],[course_name]');
+	(5, 'welcome', '[student_name],[email],[course_name]'),
+	(6, 'General', '');
 /*!40000 ALTER TABLE `template_categories` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.units
@@ -1418,12 +1539,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`),
   UNIQUE KEY `contact_no` (`contact_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.users: ~29 rows (approximately)
+-- Dumping data for table abpdb.users: ~31 rows (approximately)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `user_profile_image`, `contact_no`, `remarks`, `student_id`, `status`, `type`, `login_status`, `password`, `email_verified_at`, `remember_token`, `otp`, `created_at`, `updated_at`) VALUES
-	(1, 'Momit', 'Hasan', 'momit@technolife.ee', '1616308888.jpg', '74645564654', NULL, NULL, 1, 'Admin', 0, '$2y$10$l7pbujEwdwtKp53IptFxnOJ7c09o1cPJk3QvUEkg5WbMRV36Jph3.', NULL, NULL, '', '2021-06-07 12:50:15', '2022-03-19 16:21:11'),
+	(1, 'Momit', 'Hasan', 'momit@technolife.ee', '1616308888.jpg', '74645564654', NULL, NULL, 1, 'Admin', 1, '$2y$10$l7pbujEwdwtKp53IptFxnOJ7c09o1cPJk3QvUEkg5WbMRV36Jph3.', NULL, NULL, '', '2021-06-07 12:50:15', '2022-04-16 18:26:43'),
 	(23, 'Muniff DD', 'Hasannn', 'munif@gmail.com', '1631513007.jpg', '654646800', NULL, 21, 1, 'Student', 1, '$2y$10$KuzBDu8QI.9wk3PdzKq79uZ0qB68R/iSe4hoXUVE7pq2i5B0LREB2', NULL, NULL, '', '2021-06-21 09:46:55', '2022-03-17 15:16:43'),
 	(24, 'Muntakim hasan', NULL, 'muntakim@gmail.com', '1625479466.jpg', '8646485', 'sdf hfsdj fhsdkfh sdnfhkl sdf', 28, 1, 'Student', 1, '$2y$10$zFj3Z1gRkrbgUvoNXF6cXubdAp8p54yy4kRgJ421RQNqllCEvHJka', NULL, NULL, '', '2021-07-05 07:24:16', '2022-03-03 20:41:29'),
 	(28, 'Litu', NULL, 'litu@gmail1.com', NULL, '646465', NULL, 32, 1, 'Student', 0, '$2y$10$5Z7y7Bt1TDrjp.mtolCSBu.MOayoHhvtMQmLIPV6eLywYVo2XtGGy', NULL, NULL, '', '2021-08-16 15:37:45', '2021-10-07 13:51:47'),
@@ -1433,8 +1554,8 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `user_profile_ima
 	(32, 'Zarif Hasan', NULL, 'zarif@gmail.com', NULL, '464654', NULL, 35, 1, 'Student', 0, '$2y$10$1yuPJcZtGqCXEMT7TC.ceOF316MmIGn5n41jmW5j4pBEMNjmwXnPe', NULL, NULL, '', '2021-09-01 12:03:14', '2021-09-01 12:03:14'),
 	(33, 'Samin Hasan', NULL, 'samin@gmail.com', NULL, '456456465', NULL, 36, 1, 'Student', 0, '$2y$10$9kGfMdKSqY0JVJyRhsuy0.TOm.Z14Pxk2B8tjipIgc2L3bPfYYlSG', NULL, NULL, '', '2021-09-01 12:05:40', '2021-09-01 12:05:40'),
 	(34, 'Zikra Hasan', NULL, 'zikra@gmail.com', NULL, '46546546', NULL, 37, 1, 'Student', 0, '$2y$10$fiM.EM7kdxux6QEgPQJ97eV9bpce/P68HFN2tb.WV1EtnOcIOPaPq', NULL, NULL, '', '2021-09-02 15:43:23', '2021-09-02 15:43:23'),
-	(35, 'Maariz Hasan', NULL, 'maariz@gmail.com', '1631945533.jpg', '01987783633', NULL, 38, 1, 'Student', 1, '$2y$10$TQ/EjJaWWwH/q4EveSFl5.fW3aIm1zVCaA6isMmtjFiU/8Nf9oHFO', NULL, NULL, '', '2021-09-08 01:45:47', '2022-03-16 19:25:16'),
-	(36, 'MMM', NULL, 'mm@mm.com', NULL, '54645', NULL, 39, 1, 'Student', 0, '$2y$10$P8KteUhsXudRtpfkfq58FuYmVEL6SgZ04cv/L6rk7vn1R3NpbnNEi', NULL, NULL, '', '2021-09-14 12:12:03', '2022-03-14 16:43:12'),
+	(35, 'Maariz Hasan', NULL, 'maariz@gmail.com', '1631945533.jpg', '01987783633', NULL, 38, 1, 'Student', 0, '$2y$10$TQ/EjJaWWwH/q4EveSFl5.fW3aIm1zVCaA6isMmtjFiU/8Nf9oHFO', NULL, NULL, '', '2021-09-08 01:45:47', '2022-04-16 17:32:39'),
+	(36, 'MMM', NULL, 'mm@mm.com', NULL, '54645', NULL, 39, 1, 'Student', 1, '$2y$10$P8KteUhsXudRtpfkfq58FuYmVEL6SgZ04cv/L6rk7vn1R3NpbnNEi', NULL, NULL, '', '2021-09-14 12:12:03', '2022-04-16 14:28:28'),
 	(37, 'nnnn', NULL, 'nn@nn.nn', NULL, '6465465', NULL, 40, 1, 'Student', 1, '$2y$10$7WKN4pOShBPyFR6.Au2VBuAo2sI5ASAhhvY3vPo3/uuSb.JXcQwg2', NULL, NULL, '', '2021-09-14 12:14:57', '2021-12-01 03:20:26'),
 	(39, 'ggg hasan', NULL, 'gg@gg.gg', NULL, '456645', NULL, 42, 1, 'Student', 1, '$2y$10$64jG.PGZoqlCoj2OHanfs.0QPUkVfft5JlOVi3c1jgMUmUpdW4x32', NULL, NULL, '', '2021-09-14 12:45:14', '2021-09-18 05:32:48'),
 	(40, 'Zikra Hasan', NULL, 'zikraa@gmail.com', '1632189635.jpg', '646545649', NULL, 43, 1, 'Student', 0, '$2y$10$X6iXLD1fXgTTcniXl5AK1umoZUY3p0NrZus3y6gKwGBvsf7LwaVvK', NULL, NULL, '', '2021-09-21 01:58:26', '2021-09-21 02:00:35'),
@@ -1443,7 +1564,7 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `user_profile_ima
 	(43, 'hhh', NULL, 'hh@hh.com', NULL, '8976546312', NULL, 46, 1, 'Student', 0, '$2y$10$dnV1gi6tR5HKxFbZHM7vt.eHSx7UTeom7OqN6VdRN8ECJeEnvpSX6', NULL, NULL, '', '2021-10-08 10:55:04', '2021-10-08 10:55:04'),
 	(44, 'MOMIT TEST', NULL, 'momitnew@gmail.com', '1637822276.jpg', '465456798', NULL, 47, 1, 'Student', 0, '$2y$10$k06Aw1FAo5Y4G5fBWCv1HuSXZ6rJqOjaBo5yGuT017py9rZFIQuC6', NULL, NULL, '', '2021-11-25 06:37:56', '2021-11-25 06:37:56'),
 	(45, 'MOMIT TEST NEW 2', NULL, 'momittest2@gmail.com', '1637823270.jpg', '4566456', NULL, 48, 1, 'Student', 1, '$2y$10$ZcwC9KOn8bSVuUpZfhBQO.qNcxh2SyeQiOeHJahi5dc5UTtkODsuu', NULL, 'ZoPIHj4qMc8OqxqWoxycQmtKcZgvvvoNfpTOnmgHw0hwYTQaq2UZkc70kYGU', '', '2021-11-25 06:54:30', '2021-11-29 01:13:09'),
-	(46, 'MMounota', NULL, 'nnss@nn.nn', NULL, '54569789', NULL, 49, 1, 'Student', 0, '$2y$10$Xkf1ckzP95c7t2U54yrAlOfbhiXLeqgmgPK3FNqeFIDsnpMgjQ7QS', NULL, NULL, '', '2021-11-29 01:14:28', '2021-11-29 01:14:28'),
+	(46, 'MMounota', NULL, 'nnss@nn.nn', NULL, '54569789', NULL, 49, 1, 'Student', 1, '$2y$10$Xkf1ckzP95c7t2U54yrAlOfbhiXLeqgmgPK3FNqeFIDsnpMgjQ7QS', NULL, NULL, '', '2021-11-29 01:14:28', '2022-04-07 17:51:55'),
 	(47, 'HHH', NULL, 'dsdddd@f.dfg', NULL, '65465489', NULL, 50, 1, 'Student', 0, '$2y$10$AAiBpx/XE3Vk6c4n8HvLW.KE8XMtGH34.lfUE82sZgNLfE.wzGv7C', NULL, '5uwJy4VpNm64mwrvbZaHcIXhzBGa7gRDDaqTb3ZT3oyjHcf11agxWdNDONKK', '', '2021-12-13 16:03:14', '2021-12-13 16:03:14'),
 	(48, 'Test Meeting', NULL, 'test@test.com', NULL, '7989465', NULL, 51, 1, 'Student', 1, '$2y$10$P8wIGLaHcUPrXGwh7/aUz.l4AD7GW/4LSEVp4Hvn6MecikTJTda6q', NULL, 'slwoYbARRTtw2pYsGKXN8xrAQrRIpta1lQyXhsoceNueL9PvgZ3t53tKA9PN', '', '2021-12-20 08:40:50', '2021-12-20 08:44:16'),
 	(49, '2nd test', NULL, 'testt2@gmail.com', NULL, '465478796', NULL, 52, 1, 'Student', 1, '$2y$10$9HsvX.ufJQ1Sjs/WnpaXAu2iBC6rRGs90LE8YiOXWEbA9SlQYyIUa', NULL, 'Uz0X327tLa8B29CUP3QYfmkO6LOObbBiLPt9HIZLzGlb09XJf7HBW8F1toed', '', '2021-12-20 09:03:20', '2021-12-20 09:05:26'),
@@ -1451,7 +1572,9 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `user_profile_ima
 	(51, 'SSS UUUU', NULL, 'UUUU@UUU.UU', NULL, '455555555', NULL, 54, 1, 'Student', 0, '$2y$10$/aEkMZvI/oRz/lETW8065.Yx20SK2oxt3qHEhg.oI1mcFvkrjC1E6', NULL, 'RsKjVlqJmAfOeAXGL5DCBDBsf4LGb1ucK9XTTO8rDCtoXwQpN0yqrPq6ohYm', '', '2021-12-22 14:33:41', '2021-12-22 14:33:41'),
 	(52, 'Test Strudent', NULL, 'dd@dddd.com', NULL, '6545489', NULL, 55, 1, 'Student', 1, '$2y$10$U9YDs.qmHiukxqRBpuPC9u898FwG70zRyEOOBjrkEI/mT30ddmyfW', NULL, 'BOcPcRYbaIBUWYKUUybRviigB25iSmufZKMbgauVBNyRyPIR1PAt6QIJNxGh', '', '2022-01-19 02:41:57', '2022-01-19 02:42:58'),
 	(53, 'Test Student2', NULL, 'ss@ss.com', NULL, '87986415', NULL, 56, 1, 'Student', 0, '$2y$10$32T6UVUSznSzUsME4zzl4ebNjmApEgAqh360J0Tscs7ZI6MyWdlmi', NULL, NULL, '', '2022-01-19 02:51:18', '2022-01-19 02:51:18'),
-	(54, 'sdsdsad', NULL, 'sdf@fgdf.sdf', NULL, '34534534', NULL, 57, 1, 'Student', 0, '$2y$10$FzQRL67RLsXF.5ebxaP/2utyRg8sxUuMb.92G7KH2v8RYSC5PGB9K', NULL, 'iidXYdSWPElFCvNECAi0iCoFG0hyP6ds4LaatUMoElZdxw2bf1wvehHZRDPY', '', '2022-02-27 18:34:39', '2022-02-27 18:34:39');
+	(54, 'sdsdsad', NULL, 'sdf@fgdf.sdf', NULL, '34534534', NULL, 57, 1, 'Student', 0, '$2y$10$FzQRL67RLsXF.5ebxaP/2utyRg8sxUuMb.92G7KH2v8RYSC5PGB9K', NULL, 'iidXYdSWPElFCvNECAi0iCoFG0hyP6ds4LaatUMoElZdxw2bf1wvehHZRDPY', '', '2022-02-27 18:34:39', '2022-02-27 18:34:39'),
+	(59, 'FFF', NULL, 'hyhy@df.com', NULL, '09123837474', NULL, 62, 1, 'Student', 1, '$2y$10$Vrg2qfqkcpTBh4kkkN.vDeZxzDrrOw34A9nZWKyH5DwtafprQ89Pm', NULL, 'jO12f9uUmgZskqPWZY6TGGrO3sYnoia0Uz6wtANe7TwykEkJVreKFjTGPMjT', '', '2022-04-15 14:02:09', '2022-04-15 17:42:11'),
+	(60, 'moynul test', NULL, 'moynul@gmail.com', NULL, '08235364748', NULL, 63, 1, 'Student', 0, '$2y$10$u7o4Gf4b2RAs3/t35h5xD.8Fqfk33bW85/TBSMDuG2bbsCGhHnHmy', NULL, NULL, '', '2022-04-16 18:27:24', '2022-04-16 18:27:24');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.user_groups
@@ -1488,9 +1611,9 @@ CREATE TABLE IF NOT EXISTS `user_group_members` (
   KEY `FK_user_group_members_user_groups` (`group_id`),
   CONSTRAINT `FK_user_group_members_user_groups` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`),
   CONSTRAINT `FK_user_group_members_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.user_group_members: ~33 rows (approximately)
+-- Dumping data for table abpdb.user_group_members: ~38 rows (approximately)
 /*!40000 ALTER TABLE `user_group_members` DISABLE KEYS */;
 INSERT INTO `user_group_members` (`id`, `user_id`, `group_id`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 1, 1, 1, NULL, NULL),
@@ -1528,7 +1651,9 @@ INSERT INTO `user_group_members` (`id`, `user_id`, `group_id`, `status`, `create
 	(55, 51, 27, 1, '2021-12-22 14:33:41', '2021-12-22 14:33:41'),
 	(56, 52, 27, 1, '2022-01-19 02:41:57', '2022-01-19 02:41:57'),
 	(57, 53, 27, 1, '2022-01-19 02:51:18', '2022-01-19 02:51:18'),
-	(58, 54, 27, 1, '2022-02-27 18:34:39', '2022-02-27 18:34:39');
+	(58, 54, 27, 1, '2022-02-27 18:34:39', '2022-02-27 18:34:39'),
+	(63, 59, 27, 1, '2022-04-15 14:02:09', '2022-04-15 14:02:09'),
+	(64, 60, 27, 1, '2022-04-16 18:27:24', '2022-04-16 18:27:24');
 /*!40000 ALTER TABLE `user_group_members` ENABLE KEYS */;
 
 -- Dumping structure for table abpdb.user_group_permissions
@@ -1546,7 +1671,7 @@ CREATE TABLE IF NOT EXISTS `user_group_permissions` (
   CONSTRAINT `FK_user_group_permissions_user_groups` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=517 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table abpdb.user_group_permissions: ~278 rows (approximately)
+-- Dumping data for table abpdb.user_group_permissions: ~330 rows (approximately)
 /*!40000 ALTER TABLE `user_group_permissions` DISABLE KEYS */;
 INSERT INTO `user_group_permissions` (`id`, `group_id`, `action_id`, `status`, `created_at`, `updated_at`) VALUES
 	(1, 1, 1, 1, NULL, NULL),
@@ -1882,5 +2007,6 @@ INSERT INTO `user_group_permissions` (`id`, `group_id`, `action_id`, `status`, `
 /*!40000 ALTER TABLE `user_group_permissions` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
