@@ -683,8 +683,8 @@ class BatchController extends Controller
             $data['id'] 		    = $trasferedStudent->id;            
 			$data['student_name']   = "<a href='javascript:void(0)' onclick='showStudent(".$trasferedStudent->student_id.")' />". $trasferedStudent->student->name."</a>";
             $data['course_name']= "<a href='javascript:void(0)' onclick='showCourse(".$trasferedStudent->batch->course_id.")' />".$trasferedStudent->batch->course->title."</a>";
-            $data['from_batch_name'] = $trasferedStudent->batch->batch_name; 
-            $data['to_batch_name']   = $trasferedStudent->prev_batch->batch->batch_name; 
+            $data['to_batch_name'] = $trasferedStudent->batch->batch_name; 
+            $data['from_batch_name']   = $trasferedStudent->prev_batch->batch->batch_name; 
 
             $data['transfer_date']   = (!is_null($trasferedStudent->transfer_date))?$trasferedStudent->transfer_date:'';   
 			$data['fee']             = number_format($trasferedStudent->transfer_fee,2);
@@ -705,8 +705,8 @@ class BatchController extends Controller
         $return['id'] 		        = $trasferedStudent->id;            
         $return['student_name']     = "<a href='javascript:void(0)' onclick='showStudent(".$trasferedStudent->student_id.")' />". $trasferedStudent->student->name."</a>";
         $return['course_name']= "<a href='javascript:void(0)' onclick='showCourse(".$trasferedStudent->batch->course_id.")' />".$trasferedStudent->batch->course->title."</a>";
-        $return['from_batch_name']  = $trasferedStudent->batch->batch_name; 
-        $return['to_batch_name']    = $trasferedStudent->prev_batch->batch->batch_name; 
+        $return['to_batch_name']  = $trasferedStudent->batch->batch_name; 
+        $return['from_batch_name']    = $trasferedStudent->prev_batch->batch->batch_name; 
 
         $return['transfer_date']    = (!is_null($trasferedStudent->transfer_date))?$trasferedStudent->transfer_date:'';   
         $return['fee']              = number_format($trasferedStudent->transfer_fee,2);
@@ -789,7 +789,7 @@ class BatchController extends Controller
                     // update current  batch total enrollment
                     $batch                              = Batch::find($request['to_batch_id']);
                     
-                    $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
+                    $currentTotalEnrolledStudent        = $batch->total_enrolled_student+1;
                     $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
                     $batch->update();
 

@@ -152,7 +152,6 @@ trait PortalHelperModel
 					<td class='text-center'>".$studentResult->certificate_status."</td>
 					<td class='text-center'>".$certificateNo."</td>
 				";
-				$certificateNo = 
 				$resultInfoArr        = explode(',',$studentResult->student_result_details);
 				foreach($resultInfoArr as $resultInfo){
 					$singleResultArr    = explode('@',$resultInfo);
