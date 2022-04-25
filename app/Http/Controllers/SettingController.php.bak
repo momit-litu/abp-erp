@@ -39,7 +39,7 @@ class SettingController extends Controller
         $add_action_id  		= 15;// update action id
         $add_permisiion 		= $this->PermissionHasOrNot($admin_user_id,$add_action_id );
         $data['actions']['update_permisiion']= $add_permisiion;
-		//dd($data);
+		dd($data);
 		return view('setting.general_setting',$data);
 	}
 

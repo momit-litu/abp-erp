@@ -198,8 +198,6 @@ ALTER TABLE `students`
 
 
 
-
-
 change email url to email/send
 
 run script for result data
