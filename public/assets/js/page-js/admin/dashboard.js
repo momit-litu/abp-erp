@@ -81,7 +81,7 @@ var Index = function () {
 								<div class="widget-numbers mb-0 w-100">
 									<div class="widget-chart-flex">
 										<div class="fsize-4">				
-											`+(parseFloat(data['selfRegistered'])+parseFloat(data['selfRegistered']))+`
+											`+(parseFloat(data['selfRegistered'])+parseFloat(data['adminRegistered']))+`
 										</div>
 										<div class="ml-auto">
 											<div class="widget-title ml-auto font-size-lg font-weight-normal text-muted">
