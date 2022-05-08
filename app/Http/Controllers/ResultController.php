@@ -108,7 +108,7 @@ class ResultController extends Controller
                         ORDER BY bs.id ASC
                 )A
                 GROUP BY student_name 
-                ORDER BY  student_name";
+                ORDER BY  student_enrollment_id asc ";
     
         $studentResults   = DB::select($sql);
         $table  = "";
@@ -314,7 +314,7 @@ class ResultController extends Controller
                 LEFT JOIN users u ON u.id = cf.created_by
                 WHERE bs.batch_id=$batchId AND bs.status = 'Active'
                 GROUP BY bs.id
-                ORDER BY bs.id ASC";
+                ORDER BY bs.student_enrollment_id ASC";
              //   echo $sql;die;
 
         $studentResults   = DB::select($sql);
