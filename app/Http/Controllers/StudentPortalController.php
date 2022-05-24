@@ -122,7 +122,7 @@ class StudentPortalController extends Controller
         
         $data['student']=$student;
         $batchDetails   = $this->courseDetailsByBatchId($id);
-
+        //dd($batchDetails);
         if(!$batchDetails){
             return redirect()->back();
         }

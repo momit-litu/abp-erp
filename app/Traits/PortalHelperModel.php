@@ -134,7 +134,7 @@ trait PortalHelperModel
 				LEFT JOIN students s ON s.id = bs.student_id
 				left join result_states rs ON rs.id = bsu.result 
 				left join certificate_states cs ON cs.id = bs.certificate_status
-				WHERE bs.id=$enrollmentId  AND bs.status = 'Active'
+				WHERE bs.id=$enrollmentId  AND bs.status = 'Active' AND bsu.show=1
 				ORDER BY bs.id ASC
 		)A
 		GROUP BY student_name 

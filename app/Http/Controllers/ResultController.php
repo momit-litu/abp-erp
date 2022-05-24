@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\File;
 
 use App\Exports\ResultExport;
 use App\Imports\ResultImport;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ResultController extends Controller
@@ -91,8 +92,6 @@ class ResultController extends Controller
 */
         $admin_user_id 		= Auth::user()->id;
         $edit_permisiion 	= $this->PermissionHasOrNot($admin_user_id,120);  
-        $publish_permisiion = $this->PermissionHasOrNot($admin_user_id,121);      
-        $return_arr         = array(); 
         $sql = "SELECT student_no, student_id, student_name,student_enrollment_id,student_status,
                 GROUP_CONCAT(student_result_details) student_result_details, batch_student_id, balance, result_published_status, certificate_status
                 FROM (
@@ -124,14 +123,22 @@ class ResultController extends Controller
                 $statusHtml = ($studentResult->student_status =="Active")?"<button class='btn btn-xs btn-success' disabled >$studentResult->student_status</button>":"<button class='btn btn-xs btn btn-danger' disabled>$studentResult->student_status</button>";
                
                 $paymenthHtml= ($studentResult->balance == 0)?"<button class='btn btn-xs btn-success' disabled >Paid</button>":"<button class='btn btn-xs btn btn-warning' disabled>Due</button>";
+            
+                $tillSDatePayment = StudentPayment::select(DB::raw('SUM(payable_amount - paid_amount) AS balance'))
+                                        ->where('last_payment_date', '<=' ,Date('Y-m-d'))
+                                        ->where('student_enrollment_id',$batch_student_id)
+                                        ->first();
+               
+                $paymentTillDateHtml = ($tillSDatePayment['balance'])?"<button class='btn btn-xs btn btn-warning' disabled>Due</button>":"<button class='btn btn-xs btn-success' disabled >Paid</button>";
+
 
                 $tableBody .=  "<td class='text-center '>$statusHtml</td>                                
                                 <td class='text-center '>$paymenthHtml</td>
+                                <td class='text-center '>$paymentTillDateHtml</td>
                                 ";
 
 
                 $resultInfoArr        = explode(',',$studentResult->student_result_details);
-                $studentResultInfoArr = array();
                 foreach($resultInfoArr as $resultInfo){
                     $singleResultArr    = explode('@',$resultInfo);
                    // $studentResultId  = $singleResultArr[0];
@@ -145,9 +152,6 @@ class ResultController extends Controller
                 if($edit_permisiion>0){
                     $tableBody .="<button title='Edit' onclick='editResult(".$batch_student_id.")' id=edit_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-primary' ><i class='lnr-pencil'></i></button>&nbsp;";
                 }
-                /*if($publish_permisiion>0){
-                    $tableBody .="<button title='Edit' onclick='publishResult(".$batch_student_id.")' id=publish_" .$batch_student_id. "  class='btn btn-xs btn-hover-shine  btn-warning' ><i class='pe-7s-note2'></i></button>";
-                }*/
                 $tableBody .= "</td></tr>";
             }
             $table = "
@@ -159,6 +163,7 @@ class ResultController extends Controller
                         <th width='100'>Enrollment Id</th>                        
                         <th width='80' class='text-center'>Status</th>                        
                         <th width='80' class='text-center'>Paymemt Status</th>
+                        <th width='80' class='text-center'>Paymemt Status till date</th>
                         $tableHead
                         <th width='120'></th>
                     </tr>
@@ -231,8 +236,7 @@ class ResultController extends Controller
 
     public function updateResult(Request $request)
     {
-
-       // dd($request->all());
+       //dd($request->all());
 		$admin_user_id 	  = Auth::user()->id;
         $entry_permission = $this->PermissionHasOrNot($admin_user_id,120);
 		try 
@@ -241,13 +245,15 @@ class ResultController extends Controller
             if(!is_null($request->input('edit_id')) && $request->input('edit_id') != ""){
                 $batchStudentId = $request->input('edit_id');
                 $scores         = $request->input('score');
-                
+                $show           = ($request->has('show'))?$request->input('show'):'';
+               
                 $batchStudent   = BatchStudent::with('batch_student_units')->find($batchStudentId);
                 foreach($batchStudent->batch_student_units as $unitResult){
-                    if(is_numeric($scores[$unitResult->id])){
+                    if(is_numeric($scores[$unitResult->id]) || isset($show[$unitResult->id])){
                         $result = ResultState::where('heighest_mark','>=',$scores[$unitResult->id])->where('lowest_mark','<=',$scores[$unitResult->id])->first();
                         $unitResult->score   = $scores[$unitResult->id];
                         $unitResult->result  = $result->id;
+                        $unitResult->show    = isset($show[$unitResult->id])?1:0;
                         $unitResult->save();
                     }
                 }

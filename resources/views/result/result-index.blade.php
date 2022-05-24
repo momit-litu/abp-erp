@@ -123,6 +123,7 @@
 													<th>Unit Name</th>
 													<th class='text-center'>Credit Hour</th>
 													<th class='text-center'>Score</th>
+                                                    <th class='text-center'>Show</th>
 												</tr>
 											</thead>
 											<tbody id="result_div_edit">

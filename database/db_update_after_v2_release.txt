@@ -1,0 +1,2 @@
+ALTER TABLE `batch_student_units`
+	ADD COLUMN `show` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '0: not-show, 1: show' AFTER `status`;

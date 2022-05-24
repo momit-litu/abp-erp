@@ -412,9 +412,10 @@ function editResult(id){
 												<option selected="" value="Null">Not Given</option>
 												`+resultOption+`
 										    </select>`;*/
-					var resultScoreInput = `<input type='text' value='`+unit['score']+`' name='score[`+unit['id']+`]' id='score_`+unit['id']+`' class='score form-controll' />`
-
-					resultHtml 	+= "<tr class='table-active'><td>("+unit['unit']['unit_code']+") "+unit['unit']['name']+"</td>"+"<td class='text-center'>"+unit['unit']['credit_hour']+"</td>"+"<td class='text-center'>"+resultScoreInput+"</td></tr>";
+					var showStatus 			= (unit['show'])?'checked':'';
+					var resultScoreInput 	= `<input type='text' value='`+unit['score']+`' name='score[`+unit['id']+`]' id='score_`+unit['id']+`' class='score form-controll' />`
+					var resultShowInput 	= `<input type='checkbox' value='`+unit['id']+`' name='show[`+unit['id']+`]' id='show_`+unit['id']+`'  `+showStatus+`  class='show form-controll' />`
+					resultHtml 	+= "<tr class='table-active'><td>("+unit['unit']['unit_code']+") "+unit['unit']['name']+"</td>"+"<td class='text-center'>"+unit['unit']['credit_hour']+"</td>"+"<td class='text-center'>"+resultScoreInput+"</td><td>"+resultShowInput+"</td></td></tr>";
 				});
 			}
 			$('#form-title').html('Result of '+data['student']['name']);
