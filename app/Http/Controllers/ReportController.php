@@ -504,7 +504,7 @@ class ReportController extends Controller
 
         
         $payments = DB::select("
-             SELECT SUM(sp.payable_amount) AS payable_amount, SUM(sp.paid_amount) AS paid_amount, payment_type,  s.student_no,  b.id,  b.batch_name, c.title
+            SELECT SUM(sp.payable_amount) AS payable_amount, SUM(sp.paid_amount) AS paid_amount, payment_type,  s.student_no,  b.id,  b.batch_name, c.title
             FROM student_payments sp
             LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
             LEFT JOIN students s ON s.id = bs.student_id
@@ -532,6 +532,259 @@ class ReportController extends Controller
         return json_encode(array('data'=>$return_arr));	
 	} 
 
+    public function bookReport()
+    {
+        $data['page_title']     = $this->page_title;
+        $data['module_name']    = "Reports";
+        $data['sub_module']     = "Book Report";
+
+        $admin_user_id          = Auth::user()->id;
+        $view_action_id         = 126;
+        $view_permisiion        = $this->PermissionHasOrNot($admin_user_id, $view_action_id);
+        $data['actions']['view_permisiion'] = $view_permisiion;
+
+        return view('report.book-report', $data);
+    }
+
+
+	public function bookReportList(Request $request)
+    {
+        $dateCondition = $courseCondition = $groupByCondition = "";
+
+        if($request->from_date != "" && $request->to_date != ""){            
+            $dateCondition ="  and sb.created_at between '".$request->from_date."' and '".$request->to_date."'";
+        }
+        if($request->course_id != "") {
+            $couseCondition     = " AND  c.id = ".$request->course_id ;
+            $groupByCondition   = ', batch_name';
+        }
+
+
+        $bookSql = "
+            SELECT course_name,  batch_name,COUNT(s.id) as total_student, 
+            sum(total_dropout) as total_dropout, sum(total_sent) as total_sent, sum(total_unsent) as total_unsent
+            FROM 
+            (
+                SELECT  sb.student_id, c.short_name AS course_name, b.batch_name,
+                bb.id, bs.student_enrollment_id, bs.status AS student_status,
+                case when bs.dropout='Active' then 1 ELSE 0 END total_dropout, 
+                sum(case when sb.status='Active' then 1 ELSE 0 END) total_sent, 
+                sum(case when sb.status='Inactive' then 1 ELSE 0 END) total_unsent,
+                bb.status AS book_status, sb.status
+                FROM student_books sb 
+                LEFT JOIN  batch_books bb ON sb.batch_book_id = bb.id
+                LEFT JOIN batch_students bs ON bs.id = sb.batch_student_id
+            
+                LEFT JOIN batches b  ON bs.batch_id = b.id
+                LEFT JOIN  courses c ON c.id = b.course_id
+                WHERE  bs.status='Active'  /*and bb.batch_id=12*/   $dateCondition $couseCondition
+                GROUP BY sb.student_id, b.id
+                ORDER BY sb.id ASC
+            )A  
+            LEFT JOIN students s ON A.student_id = s.id
+            GROUP BY course_name $groupByCondition
+            ";
+        $booksReport = DB::select($bookSql);
+        
+        $return_arr = array();
+        foreach($booksReport as $row){
+            $data['course_name']= ($request->course_id != "")?$row->course_name.'-'.$row->batch_name:$row->course_name;
+            $data['total_student'] = $row->total_student; 
+			$data['total_dropout'] = $row->total_dropout;
+			$data['total_sent']    = $row->total_sent;
+			$data['total_unsent']  = $row->total_unsent;
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));	 
+	}
+
+
+    public function certificateReport()
+    {
+        $data['page_title']     = $this->page_title;
+        $data['module_name']    = "Reports";
+        $data['sub_module']     = "Certificate Report";
+
+        $admin_user_id          = Auth::user()->id;
+        $view_action_id         = 127;
+        $view_permisiion        = $this->PermissionHasOrNot($admin_user_id, $view_action_id);
+        $data['actions']['view_permisiion'] = $view_permisiion;
+
+        return view('report.certificate-report', $data);
+    }
+
+
+	public function certificateReportList(Request $request)
+    {
+        $dateCondition = $courseCondition = $groupByCondition = "";
+
+        if($request->from_date != "" && $request->to_date != ""){            
+            $dateCondition ="  and bs.created_at between '".$request->from_date."' and '".$request->to_date."'";
+        }
+        if($request->course_id != "") {
+            $courseCondition     = " AND  c.id = ".$request->course_id ;
+            $groupByCondition   = ', batch_name';
+        }
+
+        $certificateSql = "
+                SELECT course_name,  batch_name,COUNT(s.id) as total_student, 
+                SUM(case when certificate_status='1' then 1 ELSE 0 END ) total_pending,
+                SUM(case when certificate_status='2' then 1 ELSE 0 END ) total_process,
+                SUM(case when certificate_status='3' then 1 ELSE 0 END ) total_ready,
+                SUM(case when certificate_status='4' then 1 ELSE 0 END ) total_received
+                FROM 
+                (
+                    SELECT  bs.student_id, c.short_name AS course_name, b.batch_name,
+                    bs.status AS student_status, certificate_status
+                    FROM 
+                    batch_students bs
+                    LEFT JOIN batches b  ON bs.batch_id = b.id
+                    LEFT JOIN  courses c ON c.id = b.course_id
+                    LEFT JOIN certificate_states cs ON cs.id = certificate_status 
+                    WHERE bs.status='Active'   $dateCondition $courseCondition
+                    GROUP BY bs.student_id, b.id
+                    ORDER BY bs.id ASC
+                )A  
+                LEFT JOIN students s ON A.student_id = s.id
+                GROUP BY course_name  $groupByCondition
+            ";
+
+        $certificateReportResult = DB::select($certificateSql);
+        
+        $return_arr = array();
+        foreach($certificateReportResult as $row){
+            $data['course_name']= ($request->course_id != "")?$row->course_name.'-'.$row->batch_name:$row->course_name;
+            $data['total_student'] = $row->total_student; 
+			$data['pending'] = $row->total_pending;
+			$data['in_process']    = $row->total_process;
+			$data['ready']  = $row->total_ready;
+            $data['received']  = $row->total_received;
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));	 
+	}
+
+
+    public function resultReport()
+    {
+        $data['page_title']     = $this->page_title;
+        $data['module_name']    = "Reports";
+        $data['sub_module']     = "Result Report";
+
+        $admin_user_id          = Auth::user()->id;
+        $view_action_id         = 128;
+        $view_permisiion        = $this->PermissionHasOrNot($admin_user_id, $view_action_id);
+        $data['actions']['view_permisiion'] = $view_permisiion;
+
+        return view('report.result-report', $data);
+    }
+
+    // need to update
+	public function resultReportList(Request $request)
+    {
+        $dateCondition = $courseCondition = $groupByCondition = "";
+
+        if($request->from_date != "" && $request->to_date != ""){            
+            $dateCondition ="  and sb.created_at between '".$request->from_date."' and '".$request->to_date."'";
+        }
+        if($request->course_id != "") {
+            $courseCondition     = " AND  c.id = ".$request->course_id ;
+            $groupByCondition   = ', batch_name';
+        }
+
+        $certificateSql = "
+                SELECT course_name,  batch_name,COUNT(s.id) as total_student, 
+                SUM(case when certificate_status='1' then 1 ELSE 0 END ) total_pending,
+                SUM(case when certificate_status='2' then 1 ELSE 0 END ) total_process,
+                SUM(case when certificate_status='3' then 1 ELSE 0 END ) total_ready,
+                SUM(case when certificate_status='4' then 1 ELSE 0 END ) total_received
+                FROM 
+                (
+                    SELECT  bs.student_id, c.short_name AS course_name, b.batch_name,
+                    bs.status AS student_status, certificate_status
+                    FROM 
+                    batch_students bs
+                    LEFT JOIN batches b  ON bs.batch_id = b.id
+                    LEFT JOIN  courses c ON c.id = b.course_id
+                    LEFT JOIN certificate_states cs ON cs.id = certificate_status 
+                    WHERE bs.status='Active'   $dateCondition $courseCondition
+                    GROUP BY bs.student_id, b.id
+                    ORDER BY bs.id ASC
+                )A  
+                LEFT JOIN students s ON A.student_id = s.id
+                GROUP BY course_name  $groupByCondition
+            ";
+
+        $certificateReportResult = DB::select($certificateSql);
+        
+        $return_arr = array();
+        foreach($certificateReportResult as $row){
+            $data['course_name']= ($request->course_id != "")?$row->course_name.'-'.$row->batch_name:$row->course_name;
+            $data['total_student'] = $row->total_student; 
+			$data['pending'] = $row->total_pending;
+			$data['in_process']    = $row->total_process;
+			$data['ready']  = $row->total_ready;
+            $data['received']  = $row->total_received;
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));	 
+	}
+
+    public function dropoutReport()
+    {
+        $data['page_title']     = $this->page_title;
+        $data['module_name']    = "Reports";
+        $data['sub_module']     = "Dropout Report";
+
+        $admin_user_id          = Auth::user()->id;
+        $view_action_id         = 129;
+        $view_permisiion        = $this->PermissionHasOrNot($admin_user_id, $view_action_id);
+        $data['actions']['view_permisiion'] = $view_permisiion;
+
+        return view('report.dropout-report', $data);
+    }
+
+
+	public function dropoutReportList(Request $request)
+    {
+        $dateCondition = $courseCondition = $groupByCondition = "";
+
+        if($request->from_date != "" && $request->to_date != ""){            
+            $dateCondition ="  and bs.created_at between '".$request->from_date."' and '".$request->to_date."'";
+        }
+        if($request->course_id != "") {
+            $courseCondition     = " AND  c.id = ".$request->course_id ;
+            $groupByCondition   = ', b.id';
+        }
+
+        $dropoutSql = "
+                SELECT  bs.id, bs.student_id, c.short_name AS course_name,b.id, b.batch_name,
+                bs.status AS student_status,bs.dropout,
+                COUNT(bs.id) AS total_student,
+                SUM(case when bs.dropout='Yes' then 1 ELSE 0 END) total_dropout
+                FROM 
+                batch_students bs
+                LEFT JOIN batches b  ON bs.batch_id = b.id
+                LEFT JOIN  courses c ON c.id = b.course_id
+                WHERE bs.status='Active'  $courseCondition
+                GROUP BY  c.id $groupByCondition
+                ORDER BY  c.id ASC
+            ";
+
+        $dropoutReportResult = DB::select($dropoutSql);
+        
+        $return_arr = array();
+        foreach($dropoutReportResult as $row){
+            $data['course_name']= ($request->course_id != "")?$row->course_name.'-'.$row->batch_name:$row->course_name;
+            $data['total_student'] = $row->total_student; 
+			$data['total_dropout'] = $row->total_dropout;
+			$data['dropout_per']    = ($row->total_dropout*100)/ $row->total_student.'%';
+            $return_arr[] = $data;
+        }
+        return json_encode(array('data'=>$return_arr));	 
+	}
+
+    
 
 	public function dashboardContent($period)
     {

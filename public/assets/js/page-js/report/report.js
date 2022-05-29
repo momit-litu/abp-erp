@@ -1061,6 +1061,322 @@ $(document).ready(function () {
 		$('#report-data').css('display','block');
 	});
 
+	$("#show_book_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Book Status  ';
+		if($.trim($('#course_name').val()) != ""){
+			report_heading += " of "+$('#course_name').val();
+		}
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+
+		book_datatable = $('#book_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/book-report",
+				"type": "POST",
+				"data" : {
+					"course_id": $("#course_id").val(),
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+				}
+			},
+			"aoColumns": [				
+				{ mData: 'course_name'},		
+				{ mData: 'total_student' , className: "text-center"},		
+				{ mData: 'total_dropout' , className: "text-center"},		
+				{ mData: 'total_sent' , className: "text-center"},		
+				{ mData: 'total_unsent' , className: "text-center"},				
+			]
+		});			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_certificate_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Certificate Status  ';
+		if($.trim($('#course_name').val()) != ""){
+			report_heading += " of "+$('#course_name').val();
+		}
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+
+		book_datatable = $('#certificate_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/certificate-report",
+				"type": "POST",
+				"data" : {
+					"course_id": $("#course_id").val(),
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+				}
+			},
+			"aoColumns": [				
+				{ mData: 'course_name'},		
+				{ mData: 'total_student' , className: "text-center"},		
+				{ mData: 'pending' , className: "text-center"},		
+				{ mData: 'in_process' , className: "text-center"},		
+				{ mData: 'ready' , className: "text-center"},	
+				{ mData: 'received' , className: "text-center"},					
+			]
+		});			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_result_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Result Status  ';
+		if($.trim($('#course_name').val()) != ""){
+			report_heading += " of "+$('#course_name').val();
+		}
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+
+		book_datatable = $('#result_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/result-report",
+				"type": "POST",
+				"data" : {
+					"course_id": $("#course_id").val(),
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+				}
+			},
+			"aoColumns": [				
+				{ mData: 'course_name'},		
+				{ mData: 'total_student' , className: "text-center"},		
+				{ mData: 'pending' , className: "text-center"},		
+				{ mData: 'in_process' , className: "text-center"},		
+				{ mData: 'ready' , className: "text-center"},	
+				{ mData: 'received' , className: "text-center"},					
+			]
+		});			
+		$('#report-data').css('display','block');
+	});
+
+	$("#show_dropout_status_report").on('click',function(){
+		event.preventDefault();
+		var report_heading = 'Dropout Status  ';
+		if($.trim($('#course_name').val()) != ""){
+			report_heading += " of "+$('#course_name').val();
+		}
+		if($.trim($('#from_date').val()) != ""){
+			report_heading += " from "+$('#from_date').val();
+		}
+		if($.trim($('#to_date').val()) != ""){
+			report_heading += " To "+$('#to_date').val();
+		}
+
+		book_datatable = $('#dropout_table').DataTable({
+			destroy: true,
+			dom: 'Bfrtip',
+			'paging': false,
+			buttons: [
+				{
+					extend: 'excel',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'pdf',
+					messageTop: report_heading,
+					footer: true 
+				},
+				{
+					extend: 'print',
+					messageTop: "<h5>"+report_heading+"<br><p>&nbsp;</p></h5>",
+					footer: true ,
+					customize: function ( win ) {
+						$(win.document.body).find('h1').css('text-align', 'center');
+						$(win.document.body).find('h1').next('div').css('text-align', 'center');
+						$(win.document.body)
+							.css( 'font-size', '10pt' )
+							.prepend(
+								'<img src="'+fade_logo_url+'" style="position:absolute; top:42%; left:39%;" />'
+							);
+	 
+						$(win.document.body).find( 'table' )
+							.addClass( 'compact' )
+							.css( {
+								//color: '#FF0000',
+								//margin: '20px'
+								/* Etc CSS Styles..*/
+							} );
+						$(win.document.body).find( 'td' )
+						.css( {
+							//border: '1px solid #FF0000',
+							/* Etc CSS Styles..*/
+						} );
+					}
+				}
+			],
+			"order": [[ 0, 'desc' ]],
+			"processing": true,
+			"serverSide": false,
+			"ajax": { 
+				"url" : url+"/dropout-report",
+				"type": "POST",
+				"data" : {
+					"course_id": $("#course_id").val(),
+					"from_date": $("#from_date").val(),
+					"to_date":$("#to_date").val(),
+				}
+			},
+			"aoColumns": [				
+				{ mData: 'course_name'},		
+				{ mData: 'total_student' , className: "text-center"},		
+				{ mData: 'total_dropout' , className: "text-center"},		
+				{ mData: 'dropout_per' , className: "text-center"},					
+			]
+		});			
+		$('#report-data').css('display','block');
+	});
 
 	$("#clear_button").on('click',function(){
 		clear_form();

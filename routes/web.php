@@ -311,6 +311,20 @@ Route::group(['middleware' => ['auth','permission'] ], function () {
 	Route::get('expense-income',array('as'=>'Expense Vs Income Report' , 'action_id'=>'104', 'uses' =>'ReportController@expenseIncome'));
 	Route::post('expense-income',array('as'=>'Expense Vs Income Report' , 'action_id'=>'104', 'uses' =>'ReportController@expenseIncomeList'));
 
+	Route::get('book-report',array('as'=>'Book Report' , 'action_id'=>'126', 'uses' =>'ReportController@bookReport'));
+	Route::post('book-report',array('as'=>'Book Report' , 'action_id'=>'126', 'uses' =>'ReportController@bookReportList'));
+
+	Route::get('certificate-report',array('as'=>'certificate Report' , 'action_id'=>'127', 'uses' =>'ReportController@certificateReport'));
+	Route::post('certificate-report',array('as'=>'certificate Report' , 'action_id'=>'127', 'uses' =>'ReportController@certificateReportList'));
+
+	Route::get('result-report',array('as'=>'result Report' , 'action_id'=>'128', 'uses' =>'ReportController@resultReport'));
+	Route::post('result-report',array('as'=>'result Report' , 'action_id'=>'128', 'uses' =>'ReportController@resultReportList'));
+
+	Route::get('dropout-report',array('as'=>'dropout Report' , 'action_id'=>'129', 'uses' =>'ReportController@dropoutReport'));
+	Route::post('dropout-report',array('as'=>'dropout Report' , 'action_id'=>'129', 'uses' =>'ReportController@dropoutReportList'));
+
+
+
 });
 
 
