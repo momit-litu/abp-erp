@@ -549,7 +549,7 @@ class ReportController extends Controller
 
 	public function bookReportList(Request $request)
     {
-        $dateCondition = $courseCondition = $groupByCondition = "";
+        $dateCondition = $couseCondition = $groupByCondition = "";
 
         if($request->from_date != "" && $request->to_date != ""){            
             $dateCondition ="  and sb.created_at between '".$request->from_date."' and '".$request->to_date."'";
@@ -558,7 +558,6 @@ class ReportController extends Controller
             $couseCondition     = " AND  c.id = ".$request->course_id ;
             $groupByCondition   = ', batch_name';
         }
-
 
         $bookSql = "
             SELECT course_name,  batch_name,COUNT(s.id) as total_student, 
@@ -584,6 +583,7 @@ class ReportController extends Controller
             LEFT JOIN students s ON A.student_id = s.id
             GROUP BY course_name $groupByCondition
             ";
+            //echo $bookSql;die;
         $booksReport = DB::select($bookSql);
         
         $return_arr = array();
