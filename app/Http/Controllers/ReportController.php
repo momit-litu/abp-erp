@@ -136,7 +136,7 @@ class ReportController extends Controller
 
 	public function studentReportList(Request $request)
     {
-		$studentSQL  = Student::with('batches');
+		$studentSQL  = Student::with('batches','createdBy');
         if($request->from_date != "")
             $studentSQL->where('created_at','>=',$request->from_date);
         if($request->to_date != "")
@@ -151,7 +151,7 @@ class ReportController extends Controller
             $studentSQL->where('study_mode','=',$request->study_mode);
 
         $studentes = $studentSQL->get();
-        
+
         $return_arr = array();
         foreach($studentes as $student){
             $data['first_name'] = $student->name;
@@ -163,7 +163,12 @@ class ReportController extends Controller
             $data['date_of_birth']      = $student->date_of_birth;
             $data['study_mode']         = $student->study_mode;
             $data['type']               = $student->type;
-            $data['register_type']      = $student->register_type;
+            
+            if($student->createdBy)
+                $data['register_type']      = $student->register_type.' ('.$student->createdBy->first_name.')';
+            else
+                $data['register_type']      = $student->register_type;
+
             $data['status']             = $student->status;
             $return_arr[] = $data;
         }

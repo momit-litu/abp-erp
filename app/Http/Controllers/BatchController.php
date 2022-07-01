@@ -73,7 +73,8 @@ class BatchController extends Controller
            // echo $total_pending_student; die;
             $data['id'] 		= $batch->id;            
 			$data['batch_name'] = $batch->batch_name; 
-            $data['course_name']= "<a href='javascript:void(0)' onclick='showCourse(".$batch->course_id.")' />".$batch->course->title."</a>";
+            $data['course_shortname'] = "<a href='javascript:void(0)' onclick='showCourse(".$batch->course_id.")' />".$batch->course->short_name."</a>";             
+            $data['course_name']= $batch->course->title;
             $data['start_date'] = $batch->start_date; 
 			$data['end_date']   = $batch->end_date;
 			$data['student_limit'] 		    = $batch->student_limit;
@@ -336,24 +337,23 @@ class BatchController extends Controller
             $batchStudent->status   = ($batchStudent->dropout == 'Yes')?'Inactive':'Active';
             $batchStudent->update();
             if($batchStudent->dropout == 'Yes'){
-                $batch                              = Batch::find($request['batch_id']);
-                $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
-                $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
-                $batch->update();
+                // $batch                              = Batch::find($request['batch_id']);
+                // $currentTotalEnrolledStudent        = $batch->total_enrolled_student-1;
+                // $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+                // $batch->update();
                 foreach($batchStudent->payments as $key => $payment){
                     $studentPayment = StudentPayment::find($payment->id);
                     if($studentPayment->payment_status =='Unpaid'){
                         $studentPayment->status = 'Inactive';
                         $studentPayment->save();
                     }
-                }
-                
+                }  
             }
             else{
-                $batch                              = Batch::find($request['batch_id']);
-                $currentTotalEnrolledStudent        = $batch->total_enrolled_student+1;
-                $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
-                $batch->update();
+                // $batch                              = Batch::find($request['batch_id']);
+                // $currentTotalEnrolledStudent        = $batch->total_enrolled_student+1;
+                // $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+                // $batch->update();
                 foreach($batchStudent->payments as $key => $payment){
                     $studentPayment = StudentPayment::find($payment->id);
                     if($studentPayment->payment_status =='Unpaid'){

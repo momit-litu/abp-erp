@@ -46,6 +46,7 @@ $(document).ready(function () {
 			{ "width": "60px", "targets":[ 7 ]},
 			{ "width": "120px", "targets":[ 8 ]},
         ],
+		
 	});
 	
 	$.ajaxSetup({

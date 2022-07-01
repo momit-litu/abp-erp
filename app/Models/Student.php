@@ -22,5 +22,8 @@ class Student extends Model
 	public function batchStudent(){
         return $this->hasMany('App\Models\BatchStudent','student_id','id');
     }
+	public function createdBy(){
+		return $this->hasOne('App\Models\User','id','created_by');
+	}
 	
 }

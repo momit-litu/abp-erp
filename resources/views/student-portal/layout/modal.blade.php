@@ -297,7 +297,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
-                                                <label>Postal  Address<span class="required">*</span></label>
+                                                <label>Address<span class="required">*</span>
+                                                    <a  data-toggle="tooltip" data-placement="top" title="Books will be sent on this address">
+                                                        <i class="pe-7s-info"> </i>
+                                                      </a>                                                        
+                                                </label>
                                                 <input type="text" id="student_address_field" name="student_address_field" required class="form-control col-lg-12"/>
                                             </div>
                                         </div>
@@ -320,6 +324,8 @@
 													<option value="Bachelor (Engineering & Technology)">Bachelor (Engineering & Technology)</option>
                                                     <option value="Bachelor's">Bachelor's</option>
                                                     <option value="Diploma">Diploma</option>
+                                                    <option value="SSC">SSC</option>
+                                                    <option value="HSC">HSC</option>
                                                     <option value="Doctorate">Doctorate</option>
                                                     <option value="Fazil">Fazil</option>
                                                     <option value="Kamil">Kamil</option>
@@ -479,7 +485,7 @@
                                   <div class="results-subtitle mt-4">Success!</div>
                                   <div class="results-title">Your registration has been successfull!</div>
                                   <div class="mt-3 mb-3"></div>
-                                  <div class="results-title">Your Have to make the payment to activate the enrollment in this course!</div>
+                                  <div class="results-title">You Have to make the payment to activate the enrollment in this course!</div>
                                   <div class="text-center">
                                       <a href="" class="btn-shadow btn-wide btn btn-success btn-lg first_payment_id"  >Make Payment</a>
                                   </div>

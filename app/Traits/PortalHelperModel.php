@@ -81,7 +81,10 @@ trait PortalHelperModel
         try{
 			if (Auth::check()){
 				$studentId 		= Auth::user()->student_id;
-				$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units')
+				$batch   = Batch::with('course','batch_fees.installments', 'course.units')
+										->with(['batch_fees' => function($query){
+												$query->where('status','Active')->orderBy('total_installment','desc');
+										}])
 										->with(['students' => 	function ($query) use ($studentId) {
 											$query->where('student_id',$studentId); //->where('batch_students.status','Active');
 										}])
@@ -93,7 +96,7 @@ trait PortalHelperModel
 							WHERE sb.STATUS='Active' AND bb.STATUS='Active'   AND student_id=$studentId AND bb.batch_id=$batchId");
 				
 				$batch->books = $books;
-		}
+			}
 			else
 				$batch   = Batch::with('course','batch_fees','batch_fees.installments', 'course.units','students')->find($batchId);
 		         

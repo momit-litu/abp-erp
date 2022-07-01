@@ -144,7 +144,11 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label>Postal  Address<span class="required">*</span></label>
+                                                    <label>Address<span class="required">*</span>
+                                                        <a  data-toggle="tooltip" data-placement="top" title="Books will be sent on this address">
+                                                            <i class="pe-7s-info"> </i>
+                                                          </a>                                                        
+                                                    </label>
                                                     <input type="text" id="address" name="address"  class="form-control col-lg-12"/>
                                                 </div>
                                             </div>
@@ -167,6 +171,8 @@
                                                         <option value="Bachelor (Engineering & Technology)">Bachelor (Engineering & Technology)</option>
                                                         <option value="Bachelor's">Bachelor's</option>
                                                         <option value="Diploma">Diploma</option>
+                                                        <option value="SSC">SSC</option>
+                                                        <option value="HSC">HSC</option>
                                                         <option value="Doctorate">Doctorate</option>
                                                         <option value="Fazil">Fazil</option>
                                                         <option value="Kamil">Kamil</option>

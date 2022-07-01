@@ -35,21 +35,25 @@
 	<div class="app-main">
         @include('layout.sidebar')
 		@yield('content')
-        <div class="body-block-example-1 d-none">
-            <div class="loader bg-transparent no-shadow p-0">
-                <div class="ball-grid-pulse">
-                    <div class="bg-white"></div>
-                    <div class="bg-white"></div>
-                    <div class="bg-white"></div>
-                    <div class="bg-white"></div>
-                    <div class="bg-white"></div>
-                    <div class="bg-white"></div>
-                    <div class="bg-white"></div>
-                    <div class="bg-white"></div>
-                    <div class="bg-white"></div>
-                </div>
-            </div>
+        <div id="email-progress" class="d-none">
+			<div class="font-icon-wrapper float-left mr-3 mb-3" style ="background-color: white;" >
+			<div class="loader-wrapper d-flex justify-content-center align-items-center">
+				<div class="loader">
+					<div class="ball-spin-fade-loader">
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+					</div>
+				</div>
+			</div>
+			<p>Sending.....</p></div>
         </div>
+		
     </div>
 </div>
 

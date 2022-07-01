@@ -56,15 +56,15 @@
 							  </tr>
 							  <tr>
 								<td width="50%" class="purchase_item" style="font-size:12px"><span class="f-fallback">{{$invoice['only_course_name']}}</span><br>Batch : {{$invoice['batch_name']}}<br>Enrollment ID : {{$invoice['batch_student_enrollment_id']}}</td>
-								<td width="20%" align="right" class="purchase_item" style="font-size:12px"><span class="f-fallback">৳{{$invoiceDetails['actual_fees']}}</span></td>
+								<td width="20%" align="right" class="purchase_item" style="font-size:12px"><span class="f-fallback">Tk. {{$invoiceDetails['actual_fees']}}</span></td>
 								
-								<td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">৳ {{$invoiceDetails['total_payable']}}</span></td>
+								<td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">Tk.  {{$invoiceDetails['total_payable']}}</span></td>
 							</tr>
 							  @if($invoiceDetails['discount']>0)
 								<tr>
 								  <td width="50%" class="" style="font-size:12px"><span class="f-fallback">Discount</span></td>
-								  <td width="20%" style="font-size:12px" align="right" class="purchase_item" ><span class="f-fallback">(৳ {{$invoiceDetails['discount']}})</span></td>
-								  <td class="align-right" style="font-size:12px" width="20%" align="right" ><span class="f-fallback" >(৳ {{$invoiceDetails['discount']}})</span></td>
+								  <td width="20%" style="font-size:12px" align="right" class="purchase_item" ><span class="f-fallback">(Tk.  {{$invoiceDetails['discount']}})</span></td>
+								  <td class="align-right" style="font-size:12px" width="20%" align="right" ><span class="f-fallback" >(Tk.  {{$invoiceDetails['discount']}})</span></td>
 							  </tr>
 							 @endif
 							 <tr>
@@ -72,13 +72,13 @@
 							</tr>
 							<tr>
 								<td colspan="2" align="right" style="font-size:12px"><b class="f-fallback">Total</b></td>
-								<td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">৳ {{$invoiceDetails['total_payable']}}</span></td>
+								<td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">Tk.  {{$invoiceDetails['total_payable']}}</span></td>
 							</tr>
 							@foreach($invoiceDetails['payments'] as $payment)
 							  @if($payment['payment_status'] == 'Paid')
 								  <tr>
 									  <td colspan="2" align="right" style="font-size:12px"><span class="f-fallback">Payment of {{$payment['paid_date']}}</span></td>
-									  <td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">৳ {{$payment['paid_amount']}}</span></td>
+									  <td class="align-right" width="20%" align="right" style="font-size:12px"><span class="f-fallback">Tk.  {{$payment['paid_amount']}}</span></td>
 								  </tr>
 							  @endif
 							@endforeach
@@ -87,7 +87,7 @@
 							</tr>
 							<tr>
 								<td colspan="2" align="right" style="font-size:12px"><b class="f-fallback">Amount Due (BDT)</b></td>
-								<td class="align-right" width="20%" align="right" style="font-size:12px"><b class="f-fallback">৳ {{$invoiceDetails['balance']}}</b></td>
+								<td class="align-right" width="20%" align="right" style="font-size:12px"><b class="f-fallback">Tk.  {{$invoiceDetails['balance']}}</b></td>
 							</tr>
 							</table>
 						  </td>

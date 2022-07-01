@@ -101,7 +101,7 @@ class PaymentController extends Controller
         if($request->search_to_date != "")
             $paymentsSql->where('last_payment_date','<=',$request->search_to_date);
 
-		$payments   =	$paymentsSql->orderBy('last_payment_date','desc')->get();
+		$payments   =	$paymentsSql->orderBy('last_payment_date','desc')->orderBy('installment_no','asc')->get();
 		//dd($payments);	
         $return_arr = array();
         foreach($payments as $payment){

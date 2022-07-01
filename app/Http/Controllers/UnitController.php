@@ -167,7 +167,7 @@ class UnitController extends Controller
 		try {
             $rule = [
                 'unit_code' => 'required|unique:units|string',
-                'name' 		=> 'required|unique:units', 
+                'name' 		=> 'required', 
 				'glh' 		=> 'required',
 				'tut' 		=> 'required',
 				'credit_hour' 		=> 'required',				

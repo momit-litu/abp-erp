@@ -25,7 +25,7 @@
 									</li>
 									<li class="active breadcrumb-item" aria-current="page">
 										<a href="{{\Request::url()}}">
-											{{isset($page_title) ? $page_title : ''}}
+											{{ isset($page_title) ? $page_title : '' }}
 										</a>
 									</li>
 								</ol>

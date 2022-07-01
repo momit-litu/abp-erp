@@ -9,8 +9,9 @@ $(document).ready(function () {
 			cache: false,
 			success: function(response){
 				var response = JSON.parse(response);
-				var data = response['template'];				
-				$('#message_body').val(data['details']);	
+				var data = response['template'];	
+				details = $(data['details']).text();			
+				$('#message_body').val(details);	
 			}
 		});	
 	});
@@ -386,6 +387,7 @@ $(document).ready(function () {
 			success_or_error_msg('#form_submit_error','danger',"Please select student","#sms_student_name");
 		}
 		else{
+			$.blockUI({message:$("#email-progress"),   timeout: 1000000 });
 			// validate the installment details
 			$.ajax({
 				url: url+"/email/send",
@@ -396,6 +398,7 @@ $(document).ready(function () {
 				contentType:false,
 				processData:false,
 				success: function(data){
+					$.unblockUI();
 					var response = JSON.parse(data);
 					if(response['response_code'] == 0){				
 						toastr['error']( response['message'], 'Failed!!!!');

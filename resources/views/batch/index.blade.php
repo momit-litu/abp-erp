@@ -48,7 +48,8 @@
 						<tr> 
 							<th>ID</th>
 							<th>Batch</th>
-							<th>Course Title</th>											
+							<th>Course</th>
+							<th>Title</th>											
 							<th>Start Date </th>
 							<th>End Date</th>
 							<th>Student Limit</th>

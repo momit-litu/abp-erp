@@ -30,6 +30,7 @@ $(document).ready(function () {
 		"aoColumns": [
 			{ mData: 'id'},
 			{ mData: 'batch_name'},
+			{ mData: 'course_shortname' },
 			{ mData: 'course_name' },
 			{ mData: 'start_date', className: "text-center"},
 			{ mData: 'end_date', className: "text-center"},			
@@ -44,6 +45,26 @@ $(document).ready(function () {
             { "targets": [ 0 ],  "visible": false },
 			{ "width": "110px", "targets":[ 10 ]},
         ],
+		"initComplete": function () {
+            this.api().columns().every( function (key) {
+				var column = this;			
+				if(column[0] == 3 ){
+					var select = $('<select><option value=""></option></select>')
+						.appendTo( $(column.header()) )
+						.on( 'change', function () {
+							var val = $.fn.dataTable.util.escapeRegex(
+								$(this).val()
+							);
+							column
+								.search( val ? '^'+val+'$' : '', true, false )
+								.draw();
+						} );
+					column.data().unique().sort().each( function ( d, j ) {
+						select.append( '<option value="'+d+'">'+d+'</option>' )
+					} );
+				}
+            } );
+        }
 	});
 	
 	
