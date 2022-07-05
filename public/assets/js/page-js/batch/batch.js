@@ -48,7 +48,7 @@ $(document).ready(function () {
 		"initComplete": function () {
             this.api().columns().every( function (key) {
 				var column = this;			
-				if(column[0] == 3 ){
+				if(column[0] == 2 ){
 					var select = $('<select><option value=""></option></select>')
 						.appendTo( $(column.header()) )
 						.on( 'change', function () {
