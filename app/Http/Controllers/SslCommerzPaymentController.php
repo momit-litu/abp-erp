@@ -165,7 +165,7 @@ class SslCommerzPaymentController extends Controller
         try { 
             $tran_id    = $request->input('tran_id');
             $amount     = $request->input('amount');
-            dd($request->all());
+            //dd($request->all());
             /*
             $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
                         if ($validation == TRUE) {
@@ -181,20 +181,18 @@ class SslCommerzPaymentController extends Controller
                 $payment->paid_amount    =  $payment->paid_amount + $amount;
                 $payment->payment_status =  (($payment->paid_amount+$amount) == $payment->payable_amount)?'Paid':'Partial';
                 $payment->paid_date      =  date('Y-m-d');
-                $payment->$invoice_no    = $studentPayment->getNextInvoiceNo();
+                $payment->invoice_no     = $studentPayment->getNextInvoiceNo();
                 if($payment->update())
                     $studentPayment->updateStudentFees($studentPayment->student_enrollment_id); 
                 else
                     throw new Exception('Something wrong!! Please contact with ABP admin');
-                
             }
             else{
                 throw new Exception('Something wrong!! Your payment process is failed');
             }
             DB::commit();
             $data['response_code'] = 1;
-            $data['message'] = "Payment received successfully";
-           
+            $data['message'] = "Payment received successfully";  
         }
         catch (\Exception $e){
             DB::rollback();

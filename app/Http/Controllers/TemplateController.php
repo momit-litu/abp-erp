@@ -145,8 +145,8 @@ class TemplateController extends Controller
 		try {
             $rule = [
                 'title' 		=> 'required', 
-				'template_type' 			=> 'required',
-				'details' 		=> 'required',
+				'template_type' => 'required',
+			//	'details' 		=> 'required',
 				'category' 		=> 'required',
             ];
             $validation = \Validator::make($request, $rule);
@@ -162,7 +162,7 @@ class TemplateController extends Controller
                 $notificationTemplate = NotificationTemplate::create([
 					'title'				=>  $request['title'],
 					'type'				=>  $request['template_type'],
-                    'details' 			=>  $request['details'],
+                    'details' 			=>  ($request['template_type']=='Email')?$request['email_details']:$request['sms_details'],
 					'category' 			=>  $request['category'],					
                     'status' 			=> (isset($request['status']))?'Active':'Inactive'
                 ]);
@@ -193,7 +193,7 @@ class TemplateController extends Controller
             $rule = [
                 'title' 		=> 'required', 
 				'template_type'	=> 'required',
-				'details' 		=> 'required',
+				//'details' 		=> 'required',
 				'category' 		=> 'required',
             ];
             $validation = \Validator::make($request, $rule);
@@ -205,11 +205,11 @@ class TemplateController extends Controller
             }
             else{
 				DB::beginTransaction();
-				$notificationTemplate->details 		= $request['details'];
+				$notificationTemplate->details 		=($request['template_type']=='Email')?$request['email_details']:$request['sms_details'];
 				$notificationTemplate->type			= $request['template_type'];
 				$notificationTemplate->title 		= $request['title'];
 				$notificationTemplate->category 	= $request['category'];
-				$notificationTemplate->status 					= (isset($request['status']))?$request['status']:'Inactive';
+				$notificationTemplate->status 		= (isset($request['status']))?$request['status']:'Inactive';
 				$notificationTemplate->update();
 				
 				DB::commit();

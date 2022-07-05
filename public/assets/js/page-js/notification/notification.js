@@ -10,8 +10,8 @@ $(document).ready(function () {
 			success: function(response){
 				var response = JSON.parse(response);
 				var data = response['template'];	
-				details = $(data['details']).text();			
-				$('#message_body').val(details);	
+				//details = $(data['details']).text();			
+				$('#message_body').val(data['details']);	
 			}
 		});	
 	});
@@ -31,6 +31,19 @@ $(document).ready(function () {
 			}
 		});		
 	});
+
+	$("#template_type").on('change',function(){
+		var message_type = $(this).val();
+		if(message_type == 'Email'){
+			$('#sms_details_div').addClass('d-none');
+			$('#email_details_div').removeClass('d-none');
+		}
+		else{
+			$('#sms_details_div').removeClass('d-none');
+			$('#email_details_div').addClass('d-none')
+		}
+	});
+	
 	
 	getPaymentBatchTemplateDetails = function getPaymentBatchTemplateDetails(id){	
 		$.ajax({
@@ -143,7 +156,7 @@ $(document).ready(function () {
 	$("#sent_sms_submit").on('click',function(event){
 		event.preventDefault();
 		var formData = new FormData($('#sms_form')[0]);
-	
+
 		if($.trim($('#message_body').val()) == ""){
 			success_or_error_msg('#form_submit_error','danger',"Please enter message body","#message_body");
 		}
@@ -235,7 +248,9 @@ $(document).ready(function () {
 				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
 			}
 		});
-		editors.details.updateSourceElement();
+
+		editors.email_details.updateSourceElement();				
+
 		var formData = new FormData($('#template_form')[0]);
 
 		if($.trim($('#title').val()) == ""){
@@ -322,9 +337,17 @@ $(document).ready(function () {
 				$("#category").val(data['category']);
 				$("#template_type").val(data['type']);
 				$('#category').trigger('change');
+				$("#template_type").trigger('change');				
 				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
+				
 				details = (data['details'] != null)?data['details']:"";
-				editors.details.setData(details);
+				if($("#template_type").val() == 'Email'){					
+					editors.email_details.setData(details);
+				}
+				else{
+					$("#sms_details").val(details);
+				}
+				
 
 				$('#entry-form').modal('show');
 			}

@@ -122,8 +122,12 @@
 											<div id="placeholders"></div>
 											<div class="position-relative form-group">
 												<label  >Body<span class="required">*</span></label>
-												<!--<textarea name="details" id="details" class='ckeditor'></textarea> -->
-												<textarea  rows="4" id="details" required name="details"  class="form-control col-lg-12"></textarea>
+												<div  id="sms_details_div"  >
+													<textarea  rows="4" id="sms_details" 	 name="sms_details"  class="form-control col-lg-12"></textarea>
+												</div> 
+												<div  id="email_details_div" class="d-none">
+													<textarea  rows="4" id="email_details" 	 name="email_details"  class="form-control col-lg-12"></textarea>
+												</div>
 											</div>
 										</div>
 									</div>										
@@ -167,8 +171,7 @@
 @endsection
 @section('JScript')
 <script type="text/javascript">
-	createEditor('details');
-
+	createEditor('email_details');
 </script>	
 <script type="text/javascript" src="{{ asset('assets/js/page-js/notification/notification.js')}}"></script>
 @endsection

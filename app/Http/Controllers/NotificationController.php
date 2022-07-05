@@ -252,9 +252,9 @@ class NotificationController extends Controller
                     $message = "SMS sent successfully. ".$responseText;
                 }
                 // SMS for non template SMS or generic template body to any student or bulk students
-                else{ 
+                else{  
 					$all_student_type = ($request->all_student_type != null)?$request->all_student_type:"";
-                    $studentSql = " SELECT s.contact_no, s.id AS student_id, NAME AS stuudent_name, student_no
+                    $studentSql = " SELECT s.contact_no, s.id AS student_id, NAME AS student_name, student_no
                                     FROM students s ";
                     $studentCondition = " WHERE contact_no IS NOT null ";
                     if($all_student_type == 'active')
@@ -288,17 +288,19 @@ class NotificationController extends Controller
                     } 
                     $studentSql .=$studentCondition;
                     $students   = DB::select($studentSql);
-                    $studentsContacts =  array_column($students, 'contact_no');
-                    $mobileNos  = implode(',',  $studentsContacts);
-                   // $smsBody    = str_replace('[student_name]')
-                    $smsParam   = array(
-                        'commaSeperatedReceiverNumbers'=>$mobileNos,
-                        'smsText'=>$request->message_body,
-                    );
-                    //dd($smsParam);
-                    $response = json_decode($this->SMSService->sendSMS($smsParam), true);
-                    if($response['status']=="FAILED") throw new Exception($response['message']);
-                    $message = "SMS sent successfully.";
+                    $responseText   = "";
+                    foreach($students as $details){ 
+                        $mobileNo = $details->contact_no;
+                        $smsBody  = str_replace('[student_name]',$details->student_name, $request->message_body);
+                        $smsParam = array(
+                            'commaSeperatedReceiverNumbers'=>$mobileNo,
+                            'smsText'=>$smsBody,
+                        );
+                        $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
+                        if($response['status']=="FAILED")
+                         $responseText .= $mobileNo." - Not Sent , ";
+                    }
+                    $message = "SMS sent successfully. ".$responseText;
                 }
 
 				DB::commit();
