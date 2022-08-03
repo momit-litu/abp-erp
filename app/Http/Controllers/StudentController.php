@@ -309,7 +309,8 @@ class StudentController extends Controller
                     'registration_completed' => "Yes",
                     'passing_year' => $request['passing_year'],
                     'user_profile_image' => $profileImage,
-                    'status' => (isset($request['status'])) ? 'Active' : 'Inactive'
+                    'status' => (isset($request['status'])) ? 'Active' : 'Inactive',
+                    'created_by' =>  Auth::user()->id
                 ]);
 
                 if($student){

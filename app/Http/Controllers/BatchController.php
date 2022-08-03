@@ -302,10 +302,12 @@ class BatchController extends Controller
             }
             $batchStudent->update();
 
-            $batch                              = Batch::find($request['batch_id']);
-            $currentTotalEnrolledStudent        = $batch->total_enrolled_student+1;
-            $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
-            $batch->update();
+            if($batchStudent->dropout != 'Yes'){
+                $batch                              = Batch::find($request['batch_id']);
+                $currentTotalEnrolledStudent        = $batch->total_enrolled_student+1;
+                $batch->total_enrolled_student      = $currentTotalEnrolledStudent;
+                $batch->update();
+            }
 
 			DB::commit();
             $return['message'] = "Student status updated";

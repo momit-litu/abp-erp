@@ -24,7 +24,6 @@ $(document).ready(function () {
 
 		payment_datatable = $('#payments_table').DataTable({
 			destroy: true,
-			"order": [[ 0, 'desc' ]],
 			"processing": true,
 			"serverSide": false,
 			"ajax": { 

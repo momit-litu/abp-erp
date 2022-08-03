@@ -133,7 +133,7 @@
 												<tr><td>&nbsp;<b></b></td></tr>
 												<tr><td>&nbsp;<b></b></td></tr>
 												<tr><td>Study Mode : <b> {{$student->study_mode}}</b></td></tr>
-												<tr><td>Enrollment Status : <b> {{$student->type}}</b></td></tr>
+												{{-- <tr><td>Enrollment Status : <b> {{$student->type}}</b></td></tr> --}}
 												<tr><td>&nbsp;<b></b></td></tr>
 												<tr><td>Last Qualification : <b> {{$student->last_qualification}}</b></td></tr>
 												<tr><td>Passing Year : <b> {{$student->passing_year}}</b></td></tr>
