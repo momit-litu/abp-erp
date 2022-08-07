@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use DB;
 use Auth;
+use Carbon\Carbon;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\Expense;
@@ -89,8 +90,10 @@ class ReportController extends Controller
         
         if($request->from_date != "")
             $batchSQL->where('start_date','>=',$request->from_date);
-        if($request->to_date != "")
-            $batchSQL->where('start_date','<=',$request->to_date);
+        if($request->to_date != ""){
+            $newFormDate = Carbon::createFromFormat('Y-m-d', $request->to_date)->addDays(1);
+            $batchSQL->where('start_at','<',$newFormDate);
+        }    
         if($request->running_status != "All")  
             $batchSQL->where('running_status','=',$request->running_status);
         if($request->course_id != "")
@@ -137,10 +140,13 @@ class ReportController extends Controller
 	public function studentReportList(Request $request)
     {
 		$studentSQL  = Student::with('batches','createdBy');
+        
         if($request->from_date != "")
             $studentSQL->where('created_at','>=',$request->from_date);
-        if($request->to_date != "")
-            $studentSQL->where('created_at','<=',$request->to_date);
+        if($request->to_date != ""){
+            $newFormDate = Carbon::createFromFormat('Y-m-d', $request->to_date)->addDays(1);
+            $studentSQL->where('created_at','<',$newFormDate);
+        }            
         if($request->type != "All")  
             $studentSQL->where('type','=',$request->type);
         if($request->register_type != "All")  
@@ -195,8 +201,10 @@ class ReportController extends Controller
 
         if($request->from_date != "")
             $paymentSQL->where('last_payment_date','>=',$request->from_date);
-        if($request->to_date != "")
-            $paymentSQL->where('last_payment_date','<=',$request->to_date);
+        if($request->to_date != ""){
+            $newFormDate = Carbon::createFromFormat('Y-m-d', $request->to_date)->addDays(1);
+            $paymentSQL->where('last_payment_date','<',$newFormDate);
+        }    
         if($request->payment_status != "All")  
             $paymentSQL->where('payment_status','=',$request->payment_status);
        
@@ -252,9 +260,12 @@ class ReportController extends Controller
 		$paymentSQL  =  StudentPayment::with('paidBy','enrollment','enrollment.batch.course');
 
         if($request->from_date != "")
-            $paymentSQL->where('last_payment_date','>=',$request->from_date);
-        if($request->to_date != "")
-            $paymentSQL->where('last_payment_date','<=',$request->to_date);
+            $paymentSQL->where('paid_date','>=',$request->from_date);
+        if($request->to_date != ""){
+            $newFormDate = Carbon::createFromFormat('Y-m-d', $request->to_date)->addDays(1);
+            $paymentSQL->where('paid_date','<',$newFormDate);
+        }   
+
         /*if($request->payment_status != "All")  
             $paymentSQL->where('payment_status','=',$request->payment_status);
        */
@@ -275,8 +286,8 @@ class ReportController extends Controller
         }
         else
             $paymentSQL->with('enrollment.batch');
-  
-        $payments = $paymentSQL->where('payment_status','!=','Unpaid')->orderBy('created_at','desc')->get();
+       
+        $payments = $paymentSQL->where('payment_status','!=','Unpaid')->orderBy('updated_at','desc')->get();
         $return_arr = array();
         foreach($payments as $payment){
             $data['student_name']   =  $payment->enrollment->student->name." ".$payment->enrollment->student->student_no; 
@@ -315,8 +326,10 @@ class ReportController extends Controller
 
         if($request->from_date != "")
             $paymentSQL->where('paid_date','>=',$request->from_date);
-        if($request->to_date != "")
-            $paymentSQL->where('paid_date','<=',$request->to_date);
+        if($request->to_date != ""){
+            $newFormDate = Carbon::createFromFormat('Y-m-d', $request->to_date)->addDays(1);
+            $paymentSQL->where('paid_date','<',$newFormDate);
+        }   
         /*if($request->payment_status != "All")  
             $paymentSQL->where('payment_status','=',$request->payment_status);
        */
@@ -390,8 +403,10 @@ class ReportController extends Controller
 
         if($request->from_date != "")
             $expencesSQL .= " And expense_date >= '".$request->from_date."'";
-        if($request->to_date != "")
-            $expencesSQL .= " And expense_date <= '".$request->to_date."'";     
+        if($request->to_date != ""){
+            $newFormDate = Carbon::createFromFormat('Y-m-d', $request->to_date)->addDays(1);
+            $expencesSQL .= " And expense_date < '".$newFormDate."'";  
+        }                
 
         if($request->expense_head_id != "")
             $expencesSQL .= " And eh.id= ".$request->expense_head_id;

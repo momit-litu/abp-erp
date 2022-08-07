@@ -161,7 +161,6 @@ class BatchBookController extends Controller
             ];
             $validation = \Validator::make($request->all(), $rule);
             //dd($request);
-
             if ($validation->fails()) {
                 $return['response_code'] = 0;
                 $return['errors'] = $validation->errors();
@@ -171,7 +170,9 @@ class BatchBookController extends Controller
                 $csv = $request->file('csv_book_file');
                 if (isset($csv) && $csv!="") {
                     $ext        = $csv->getClientOriginalExtension();
-                    $csv_full_name = $csv->getClientOriginalName().'_'.time() . '.' . $ext;
+                    $fileName   = explode('.',$csv->getClientOriginalName())[0];
+                    $csv_full_name = $fileName.'_'.time() . '.' . $ext;
+                    
                     $upload_path = 'assets/images/books/';
                     $success = $csv->move($upload_path, $csv_full_name);
                     Excel::import(new BookImport, $upload_path.$csv_full_name);

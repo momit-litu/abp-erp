@@ -22,6 +22,7 @@ class BookImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+
         $studentEnrollmentId = $row['student_enrollment_id'];
         foreach($row as $key=>$value){
            if($key != 'course_batch' && $key != 'student_name' &&  $key != 'student_enrollment_id'){

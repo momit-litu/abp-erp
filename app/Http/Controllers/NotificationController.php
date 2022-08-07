@@ -22,7 +22,7 @@ use App\Models\StudentPayment;
 use App\Models\BatchFeesDetail;
 use App\Traits\StudentNotification;
 use App\Models\NotificationTemplate;
-
+use Illuminate\Support\Facades\Log;
 
 use App\Models\StudentRevisePayment;
 use Illuminate\Support\Facades\File;
@@ -64,7 +64,7 @@ class NotificationController extends Controller
     
     public function sendSMS(Request $request)
     {
-		//dd($request->all());
+		
         try {
             $rule = [ 
 				'message_body' => 'required',
@@ -110,20 +110,21 @@ class NotificationController extends Controller
 						else
 							$studentCondition =   " AND s.id IN($studentIds)" ; 
                     }
-                    $paymentStudentSql = "
-                                        SELECT 
-                                        sp.payable_amount, sp.last_payment_date, s.contact_no, s.name
-                                        from student_payments sp
-                                        LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
-                                        LEFT JOIN students s on s.id = bs.student_id
-                                        WHERE sp.payment_status='Unpaid' and sp.last_payment_date<'$lastDate'
-                                        $studentStatusCondition
-                                        $studentCondition";
+                    $paymentStudentSql = " SELECT sp.payable_amount, sp.last_payment_date, s.contact_no, s.name
+                                from student_payments sp
+                                LEFT JOIN batch_students AS bs ON bs.id=sp.student_enrollment_id
+                                LEFT JOIN students s on s.id = bs.student_id
+                                WHERE sp.payment_status='Unpaid' and sp.last_payment_date<'$lastDate'
+                                $studentStatusCondition
+                                $studentCondition";
 					
                     $studentPayments = DB::select($paymentStudentSql);
+                    //dd($studentPayments);
                     $responseText   = "";
-                    foreach($studentPayments as $details){                  
+                    Log::debug('Bulk SMS  total selected ='.count($studentPayments));
+                    foreach($studentPayments as $details){                 
                         $mobileNo = $details->contact_no;
+                        Log::debug('Mobile No ='.$mobileNo);
                         $replacableArray = ["[student_name]","[payment_amount]","[payment_date]"];
                         $replaceByArray = [$details->name, $details->payable_amount, $details->last_payment_date];
                         $smsBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
@@ -131,10 +132,13 @@ class NotificationController extends Controller
                             'commaSeperatedReceiverNumbers'=>$mobileNo,
                             'smsText'=>$smsBody,
                         );
-                       
                         $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                        if($response['status']=="FAILED")
+                        if($response['status']=="FAILED"){
+                            Log::debug('Faild to send sms');
                             $responseText .= $mobileNo." - Not Sent , ";
+                        }
+                        else
+                            Log::debug('SMS sent'); 
                     }
                     $message = "SMS sent successfully. ".$responseText;
                 }
@@ -179,9 +183,11 @@ class NotificationController extends Controller
 					//echo $paymentStudentSql;die;
                     $studentPayments = DB::select($paymentStudentSql);
                     $responseText   = "";
+                    Log::debug('Bulk SMS  total selected ='.count($studentPayments));
                     if(count($studentPayments)>0){
                         foreach($studentPayments as $details){                  
                             $mobileNo = $details->contact_no;
+                            Log::debug('Mobile No ='.$mobileNo);
                             $replacableArray = ["[student_name]","[month]"];
                             $replaceByArray = [$details->name, date('F')];
                             $smsBody    = str_replace($replacableArray,$replaceByArray,$request->message_body);
@@ -191,8 +197,12 @@ class NotificationController extends Controller
                             );
                             // echo $mobileNo.'---';
                             $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                            if($response['status']=="FAILED")
+                            if($response['status']=="FAILED"){
+                                Log::debug('Faild to send sms');
                                 $responseText .= $mobileNo." - Not Sent , ";
+                            }
+                            else
+                                Log::debug('SMS sent'); 
                         }
                         $message = "SMS sent successfully. ".$responseText;
                     }
@@ -237,8 +247,10 @@ class NotificationController extends Controller
                     $studentSql .=$studentCondition;
                     $students   = DB::select($studentSql);
                     $responseText   = "";
+                    Log::debug('Bulk SMS total selected ='.count($students));
                     foreach($students as $details){                  
                         $mobileNo = $details->contact_no;
+                        Log::debug('Mobile No ='.$mobileNo);
                         $smsBody    = str_replace('[student_name]',$details->student_name,$request->message_body);
                         $smsParam = array(
                             'commaSeperatedReceiverNumbers'=>$mobileNo,
@@ -246,8 +258,12 @@ class NotificationController extends Controller
                         );
 
                         $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                        if($response['status']=="FAILED")
-                         $responseText .= $mobileNo." - Not Sent , ";
+                        if($response['status']=="FAILED"){
+                            Log::debug('Faild to send sms');
+                            $responseText .= $mobileNo." - Not Sent , ";
+                        }
+                        else
+                            Log::debug('SMS sent'); 
                     }
                     $message = "SMS sent successfully. ".$responseText;
                 }
@@ -289,16 +305,22 @@ class NotificationController extends Controller
                     $studentSql .=$studentCondition;
                     $students   = DB::select($studentSql);
                     $responseText   = "";
+                    Log::debug('Bulk SMS  total selected ='.count($students));
                     foreach($students as $details){ 
                         $mobileNo = $details->contact_no;
+                        Log::debug('Mobile No ='.$mobileNo);
                         $smsBody  = str_replace('[student_name]',$details->student_name, $request->message_body);
                         $smsParam = array(
                             'commaSeperatedReceiverNumbers'=>$mobileNo,
                             'smsText'=>$smsBody,
                         );
                         $response       = json_decode($this->SMSService->sendSMS($smsParam), true);
-                        if($response['status']=="FAILED")
-                         $responseText .= $mobileNo." - Not Sent , ";
+                        if($response['status']=="FAILED"){
+                            Log::debug('Faild to send sms');
+                            $responseText .= $mobileNo." - Not Sent , ";
+                        }
+                        else
+                            Log::debug('SMS sent'); 
                     }
                     $message = "SMS sent successfully. ".$responseText;
                 }
@@ -617,6 +639,7 @@ class NotificationController extends Controller
                     //dd($studentSql);
                     $students   = DB::select($studentSql);
                     $responseText   = "";
+                    Log::debug('Bulk SMS total selected ='.count($studentPayments));
                     foreach($students as $details){   
                         $replacableArray = ["[student_name]","[email]"];
                         $replaceByArray = [$details->student_name, $details->email];
