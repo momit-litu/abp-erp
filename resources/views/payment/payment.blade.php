@@ -111,7 +111,7 @@
 </div>
 
 </div>
-<div class="modal fade" id="entry-form" >
+<div class="modal fade" id="payment-form" >
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">

@@ -401,10 +401,11 @@ $(document).ready(function () {
 				$('#attachment_div').html("<a target='_blank' href='"+payment_attachment_url+"/"+data['attachment']+"'>"+data['attachment']+"</a>");
 				$("#edit_id").val(data['id']);
 				$("#details").val(data['details']);
-				$('#entry-form').modal('show');
+				$('#payment-form').modal('show');
 			}
 		});
 	}
+
 
 	paymentSMS = function paymentSMS(id){
 		var edit_id = id;
@@ -626,7 +627,7 @@ $(document).ready(function () {
 								
 								var actions = (payment['payment_status']!='Paid')?`
 								<button type="button"   class="border-0 btn-transition btn btn-outline-primary btn-xs" onClick="editSchedule(`+payment['id']+`)"  ><i class="lnr-pencil"></i></button>
-
+								<button type="button"   class="border-0 btn-transition btn btn-outline-warning btn-xs" onClick="paymentEdit(`+payment['id']+`)"  ><i class="pe-7s-cash"></i></button>
 								<button type="button"   class="border-0 btn-transition btn btn-outline-danger btn-xs" onClick="deleteSchedule(`+payment['id']+`)" ><i class="fa fa-trash-alt"></i></button>`:"";
 								
 								let installment_no_td  = (payment['installment_no']==0)?"Transfer Fee":payment['installment_no'];
