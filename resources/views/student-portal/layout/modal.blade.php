@@ -253,7 +253,8 @@
                                     <div class="form-row">
                                         <div class="col-md-12">
                                             <div class="position-relative form-group">
-                                                <label for="first_name" class="">Full Name<span class="required text-danger">*</span></label>
+                                                <label for="first_name" class="">Full Name<span class="required text-danger">*</span><span><i> (This name will appear on your certificate)<i></span></label>
+
                                                 <input type="text" id="name" name="name" required class="form-control col-lg-12"/>
                                             </div>
                                         </div>
@@ -297,7 +298,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
-                                                <label>Address<span class="required">*</span>
+                                                <label>Address<span class="required">*</span><span><i> (Books will be sent on this address)<i></span>
                                                     <a  data-toggle="tooltip" data-placement="top" title="Books will be sent on this address">
                                                         <i class="pe-7s-info"> </i>
                                                       </a>                                                        
@@ -400,7 +401,7 @@
 									
                                     <div class="form-row">
                                         <div class="col-md-6">
-                                            <label>	<strong>Certificate, Transcript and NID</strong></label><br>
+                                            <label>	<strong>Certificate, Transcript and NID</strong><span class="required"> *</span></label><br>
                                             <small class="text-danger">You have to select all the documents at a time</small>
                                             <hr>
                                             <input type="file" class="form-control col-lg-12" name="documents[]"  data-show-upload="true" data-show-caption="true" id="documents" value="" multiple>
