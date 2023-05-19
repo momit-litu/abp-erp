@@ -166,19 +166,19 @@
 										</div>
 									</div>
 									<div class="form-row">									
-										<div class="col-md-3">
+										<div class="col-md-2">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">Active?</label>
 												<input type="checkbox" id="status" name="status" checked="checked" value="1" class="form-control col-lg-12"/>
 											</div>
 										</div>
-										<div class="col-md-3">
+										<div class="col-md-2">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">Featured?</label>
 												<input type="checkbox" id="featured" name="featured" value="1" class="form-control col-lg-12"/>
 											</div>
 										</div>
-										<div class="col-md-3">
+										<div class="col-md-2">
 											<div class="position-relative form-group">
 												<label for="company_name" class="">Draft/Hide?</label>
 												<input type="checkbox" id="draft" name="draft" value="1" class="form-control col-lg-12"/>
@@ -189,6 +189,18 @@
 												<label for="company_name" class="">Show Seat Limit?</label>
 												<input type="checkbox" id="show_seat_limit" name="show_seat_limit" value="1" class="form-control col-lg-12"/>
 											</div> 
+										</div>
+										<div class="col-md-3">
+											<div class="row">
+												<div class="position-relative form-group col-lg-6">
+													<label for="cashback" class="">Cashback?</label>
+													<input type="checkbox" id="cashback" name="cashback" value="1" class="form-control col-lg-12"/>
+												</div> 
+												<div class="position-relative form-group col-lg-6">
+													<label for="cashback" class="">%</label>
+													<input type="text" id="cashback_percent" name="cashback_percent"  class="form-control col-lg-12"/>
+												</div> 
+											</div>
 										</div>
 									</div>
 									<br>

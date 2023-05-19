@@ -292,7 +292,7 @@ $(document).ready(function () {
 				var featuredHtml= (data['featured']=="Yes")?'<span class="badge badge-info">Featured</span>':'';
 				var seatLimitHtml= (data['show_seat_limit']=="Yes")?'<span class="badge badge-primary">Show Seat Limit</span>':'';
 				var draftHtml 	= (data['draft']=="Yes")?'<span class="badge badge-warning">Draft</span>':'';
-
+				var cashbackHtml = (data['cashback']=="Yes" && data['cashback_percent']>0)?"("+data['cashback_percent']+"% Cashback)":"";
 				if(data['running_status']=="Completed")
 					 runningStatusHtml = '<span class="badge badge-primary">Completed</span>'
 				else if(data['running_status']=="Running")
@@ -313,7 +313,7 @@ $(document).ready(function () {
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Student limit :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['student_limit']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Total Enrolled Student :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+data['total_enrolled_student']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong> Details :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+details+"</div></div>";
-					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Registration Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>TK. "+data['fees']+"</div></div>";
+					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Registration Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>TK. "+data['fees']+" "+cashbackHtml+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Discount Fee :</strong></div>"+"<div class='col-lg-9 col-md-8'>TK. "+data['discounted_fees']+"</div></div>";
 					modalHtml +="<div class='row margin-top-5'><div class='col-lg-3 col-md-4 '><strong>Status :</strong></div>"+"<div class='col-lg-9 col-md-8'>"+runningStatusHtml+statusHtml+featuredHtml+seatLimitHtml+draftHtml+"</div></div>";
 
@@ -739,6 +739,7 @@ $(document).ready(function () {
 				$("#class_schedule").val(data['class_schedule']);				
 				$("#fees").val(data['fees']);
 				$("#discounted_fees").val(data['discounted_fees']);
+				$("#cashback_percent").val((data['cashback_percent'])?data['cashback_percent']:'');
 				$("#student_limit").val(data['student_limit']);
 				$("#edit_id").val(data['id']);
 				$("#details").val(data['details']);
@@ -746,6 +747,7 @@ $(document).ready(function () {
 				(data['status']=='Inactive')?$("#status").iCheck('uncheck'):$("#status").iCheck('check');
 				
 				(data['featured']=='No')?$("#featured").iCheck('uncheck'):$("#featured").iCheck('check');
+				(data['cashback']=='No')?$("#cashback").iCheck('uncheck'):$("#cashback").iCheck('check');
 				(data['show_seat_limit']=='No')?$("#show_seat_limit").iCheck('uncheck'):$("#show_seat_limit").iCheck('check');
 				(data['draft']=='No')?$("#draft").iCheck('uncheck'):$("#draft").iCheck('check');
 				

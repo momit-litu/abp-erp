@@ -453,6 +453,8 @@ class BatchController extends Controller
                     'running_status'=>  $request['running_status'],
                     'status'        => (isset($request['status']))?'Active':'Inactive',
                     'featured'      => (isset($request['featured']))?'Yes':'No',
+                    'cashback'      => (isset($request['cashback']))?'Yes':'No',
+                    'cashback_percent' 	=>  ($request['cashback_percent'])?$request['cashback_percent']:NULL,
                     'draft'         => (isset($request['draft']))?'Yes':'No',
                     'show_seat_limit'=> (isset($request['show_seat_limit']))?'Yes':'No' ,
                     'created_by'    => $admin_user_id
@@ -555,6 +557,9 @@ class BatchController extends Controller
                 $Batch->running_status 	= $request['running_status'];
                 $Batch->status 			= (isset($request['status']))?$request['status']:'Inactive';
                 $Batch->featured 		= (isset($request['featured']))?$request['featured']:'No';
+                $Batch->cashback 		= (isset($request['cashback']))?$request['cashback']:'No';
+                $Batch->cashback_percent= ($request['cashback_percent'])?$request['cashback_percent']:$Batch->cashback_percent;
+               
                 $Batch->show_seat_limit = (isset($request['show_seat_limit']))?$request['show_seat_limit']:'No';
                 $Batch->draft 		    = (isset($request['draft']))?$request['draft']:'No';
                 

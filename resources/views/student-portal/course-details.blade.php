@@ -290,12 +290,19 @@
                                     <div class="card mb-3 widget-chart widget-chart2 bg-focus text-left">
                                         <div class="widget-chart-content text-white">
                                             <div class="widget-chart-flex">
-                                                <div class="widget-title">Onetime Payment</div>
-                                                <div class="widget-subtitle text-warning"><del>{{ ($batch->fees > $batch->discounted_fees)?$batch->fees:$batch->fees }}</del></div>
+                                                <div class="widget-title">Onetime Payment </div>
+                                                <div class="widget-subtitle text-warning"><del>
+                                                    {{ ($batch->fees >= $batch->discounted_fees)?$batch->fees:$batch->fees }}
+                                                    
+                                                </del></div>
                                             </div>
-                                            <div class="widget-chart-flex">
-                                                <div class="widget-numbers">{{ $batch->discounted_fees }}
+                                            <div class="widget-chart-flex">                                                                                             
+                                                <div class="widget-numbers">
+                                                    {{ $batch->discounted_fees }}                                                   
                                                 </div>
+                                                <div class="widget-title">
+                                                    {{ ($batch->cashback && $batch->cashback_percent>0)?$batch->cashback_percent."% Cashback on Full Payment via Visa Card)":'' }}
+                                                </div>  
                                             </div>
                                         </div>
                                     </div>
