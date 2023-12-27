@@ -669,6 +669,64 @@ class StudentPortalController extends Controller
         else
             return redirect('portal/dashboard')->with('message',"Your payment process is failed")->with('response_code',0);
     }
+
+    public function sslPaymentIPN(Request $request)
+    {     
+        try { 
+            $tran_id    = $request->input('tran_id');
+            $amount     = $request->input('amount');
+
+            DB::beginTransaction();
+            $payment = StudentPayment::with('enrollment','enrollment.student')->where('payment_refference_no',$tran_id)->where('payment_status','!=','Paid')->first();
+            $studentPayment = new StudentPayment;
+
+            if (!empty($payment)) {
+                //$payment_status =  (intval($payment->paid_amount+$amount) == intval($payment->payable_amount))?"Paid":"Partal";
+                $payment_status          =  "Paid";
+                $payment->paid_type      =  'SSL';
+                $payment->paid_amount    =  $amount;//$payment->paid_amount + $amount;
+                $payment->payment_status =  $payment_status;
+                $payment->paid_date      =  date('Y-m-d');
+                $payment->paid_by        =  'Self';
+                $payment->details        =  'Payment success via IPN';
+                
+                $payment->invoice_no     = $studentPayment->getNextInvoiceNo();
+
+                if($payment->update()){
+                    $studentPayment->updateStudentFees($payment->student_enrollment_id); 
+                    if($payment->enrollment->status == 'Inactive'){
+                        $enrollment             = BatchStudent::with('batch', 'batch.course')->find($payment->enrollment->id);
+                        $enrollment->status     = "Active";
+      
+                        $lastEnrollmentIdSQL    = DB::select("SELECT Max(SUBSTR(student_enrollment_id,-3,3)) as max_enrollmen_id FROM batch_students where student_enrollment_id != '' AND batch_id=".$enrollment->batch_id);
+
+                        $lastEnrollmentId = (!is_null($lastEnrollmentIdSQL[0]->max_enrollmen_id))?$lastEnrollmentIdSQL[0]->max_enrollmen_id:0;
+
+                        $student_enrollment_id =  $enrollment->batch->course->short_name_id. $enrollment->batch->batch_name. str_pad((substr($lastEnrollmentId,-3)+1),3,'0',STR_PAD_LEFT);
+
+                        $enrollment->student_enrollment_id = $student_enrollment_id ;
+                        $enrollment->save();
+
+                        $student = Student::find($enrollment->student_id);
+                        if($student->type =='Non-enrolled'){
+                            $student->type ='Enrolled';
+                            $student->save();
+                        }
+                    }
+                }                   
+                else
+                    throw new Exception('Something wrong!! Please contact with ABP admin');
+            }
+            else{
+                throw new Exception('Something wrong!! Your payment process is failed');
+            }
+            $this->studentPaymentPaidNotification($payment);
+            $this->invoiceEmail($payment->id);  
+            DB::commit();        }
+        catch (\Exception $e){
+            DB::rollback();
+        }        
+    }
    
     public function terms()
     {

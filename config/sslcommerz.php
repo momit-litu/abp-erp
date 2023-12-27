@@ -22,5 +22,5 @@ return [
     'success_url' => '/sslcommerz/success',
     'failed_url' => '/sslcommerz/fail',
     'cancel_url' => '/cancel',
-    'ipn_url' => '/ipn',
+    'ipn_url' => '/sslcommerz/ipn',
 ];

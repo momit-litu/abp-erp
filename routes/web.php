@@ -39,6 +39,7 @@ Route::get('/login',array('as'=>'login', 'uses' =>'AuthController@authLogin'));
 
 Route::get('/payment/{id}',array('as'=>'Payment Details' , 'uses' =>'PaymentController@show'));
 Route::post('/sslcommerz/success',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentSuccess'));
+Route::post('/sslcommerz/ipn',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentIPN'));
 Route::post('/sslcommerz/fail',array('as'=>'example1', 'uses' =>'StudentPortalController@sslPaymentFail'));
 
 #Login
