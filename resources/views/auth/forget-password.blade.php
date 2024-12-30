@@ -33,6 +33,15 @@
                                     <div class="position-relative form-group"><label for="exampleEmail" class="">Email</label><input name="email" id="exampleEmail" placeholder="Email here..." type="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"></div>
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <!-- Add the CAPTCHA -->
+                                <div class="form-group">                                   
+                                    {!! NoCaptcha::display() !!}
+                                    @error('g-recaptcha-response')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="mt-4 d-flex align-items-center"><h6 class="mb-0"><a href="{{url('/auth/login')}}" class="text-primary">Sign in existing account</a></h6>
                                 <div class="ml-auto">
                                     <button class="btn btn-primary btn-lg">Recover Password</button>
@@ -45,4 +54,6 @@
         </div>
     </div>
 </div>
+<!-- Add the CAPTCHA script -->
+{!! NoCaptcha::renderJs() !!}
 @endsection

@@ -51,8 +51,7 @@
                             </div>
                             <div class="form-row">
                                 <!-- Add the CAPTCHA -->
-                                <div class="form-group">
-                                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+                                <div class="form-group">                                   
                                     {!! NoCaptcha::display() !!}
                                     @error('g-recaptcha-response')
                                     <span class="text-danger">{{ $message }}</span>

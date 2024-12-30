@@ -37,6 +37,15 @@
                                     <div class="position-relative form-group"><label for="examplePassword" class="">Password</label><input name="password" id="examplePassword" placeholder="Password here..." type="password" class="form-control @error('password') is-invalid @enderror"></div>
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <!-- Add the CAPTCHA -->
+                                <div class="form-group">                                   
+                                    {!! NoCaptcha::display() !!}
+                                    @error('g-recaptcha-response')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="position-relative form-check"><input name="check" id="exampleCheck" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label">Keep me logged in</label></div>
                             <div class="divider row"></div>
                             <div class="d-flex align-items-center">
@@ -53,4 +62,7 @@
         </div>
     </div>
 </div>
+
+<!-- Add the CAPTCHA script -->
+{!! NoCaptcha::renderJs() !!}
 @endsection

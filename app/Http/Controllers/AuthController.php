@@ -74,6 +74,7 @@ class AuthController extends Controller
         $validator = \Validator::make($request->all(), [
             'email' 	=> 'required|email',
             'password' 	=> 'required',
+            'g-recaptcha-response' => 'required|captcha',
         ]);
 
         if ($validator->fails()) {
@@ -168,6 +169,7 @@ class AuthController extends Controller
     {
         $v = \Validator::make($request->all(), [
             'email' => 'required|email',
+            'g-recaptcha-response' => 'required|captcha',
         ]);
         if ($v->fails()) {
             return redirect()->back()->withErrors($v)->withInput();
@@ -209,6 +211,7 @@ class AuthController extends Controller
 
         $v = \Validator::make($request->all(), [
             'mobile_no' => 'required|numeric',
+            'g-recaptcha-response' => 'required|captcha',
         ]);
         if ($v->fails()) {
             return redirect()->back()->withErrors($v)->withInput();
