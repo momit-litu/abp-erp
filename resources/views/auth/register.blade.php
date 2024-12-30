@@ -49,6 +49,16 @@
                                     <div class="position-relative form-group"><label for="examplePassword" class="">Confirm Password<span class="text-danger">*</span></label><input  recuired name="confirm_password" id="confirm_password" placeholder="Confirm Password ..." type="password" class="form-control @error('confirm_password') is-invalid @enderror"></div>
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <!-- Add the CAPTCHA -->
+                                <div class="form-group">
+                                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+                                    {!! NoCaptcha::display() !!}
+                                    @error('g-recaptcha-response')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="mt-3 position-relative form-check"><input name="terms_condition" id="terms_condition" type="checkbox" class="form-check-input @error('terms_condition') is-invalid @enderror"><label for="exampleCheck" class="form-check-label" >Accept our <a data-toggle="modal" data-target="#terms-modal" href="javascript:void(0)">Terms and Conditions</a>.</label></div>
                             <div class="divider row"></div>
                             <div class="mt-4 d-flex align-items-center"><h5 class="mb-0">Already have an account? <a href="{{url('/login')}}" class="text-primary">Sign in</a></h5>
@@ -64,4 +74,8 @@
         </div>
     </div>
 </div>
+
+<!-- Add the CAPTCHA script -->
+{!! NoCaptcha::renderJs() !!}
+
 @endsection

@@ -315,6 +315,7 @@ class AuthController extends Controller
             'password'  => 'required|min:4|',
             'confirm_password'  => 'required|same:password',
             'terms_condition'   =>'accepted',
+            'g-recaptcha-response' => 'required|captcha',
         ]);
 
         if ($v->fails()) {
