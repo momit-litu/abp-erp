@@ -461,7 +461,7 @@ class ExpenseController extends Controller
                 'expense_head_id' => 'required',
                 'amount' => 'required',
 				'expense_date' => 'required',
-				
+				'attachment' => 'mimes:jpeg,jpg,png,svg|max:5000',
             ];
             $validation = \Validator::make($request, $rule);
             //dd($request);
@@ -519,6 +519,7 @@ class ExpenseController extends Controller
             $rule = [
                 'expense_head_id' => 'required',
                 'amount' => 'required',
+                'attachment' => 'mimes:jpeg,jpg,png,svg|max:5000',
             ];
             $validation = \Validator::make($request, $rule);
 

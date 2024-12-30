@@ -279,7 +279,7 @@ class StudentPortalController extends Controller
                 'contact_no' => 'Required|max:11|unique:users,contact_no',
                 'student_email' => 'Required|email',
                 'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:2000',
-                'documents.*' => 'max:2000',
+                'documents.*' => 'mimes:jpeg,jpg,png,svg,pdf|max:2000',
 				'password'  => 'required|min:4|',
 				'confirm_password'  => 'required|same:password',
             ];			
@@ -433,7 +433,7 @@ class StudentPortalController extends Controller
                 'contact_no' => 'Required|max:13',
                 'student_email' => 'Required|email',
                 'user_profile_image' => 'mimes:jpeg,jpg,png,svg|max:2000',
-                'documents.*' => 'max:2000',
+                'documents.*' => 'mimes:jpeg,jpg,png,svg,pdf|max:2000',
             ];
             $validation = \Validator::make($request, $rule);
             //dd($request);
