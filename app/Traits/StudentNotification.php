@@ -4,7 +4,7 @@ namespace App\Traits;
 use App\Models\User;
 use App\Mail\bulkMail;
 use App\Models\Student;
-use App\Mail\InvoiceMail;
+use App\Mail\invoiceMail;
 use Illuminate\Support\Str;
 use App\Models\BatchStudent;
 use App\Models\StudentPayment;
@@ -35,7 +35,7 @@ trait StudentNotification
     public function invoiceEmail($paymentId){
         $studentPayment = new StudentPayment();
 		$payment = 	$studentPayment->getPaymentDetailByPaymentId($paymentId);
-		Mail::to($payment['student_email'])->send(new InvoiceMail($payment));
+		Mail::to($payment['student_email'])->send(new invoiceMail($payment));
 	}
 
     public function registrationEmail($studentId){

@@ -282,6 +282,7 @@ class StudentPortalController extends Controller
                 'documents.*' => 'mimes:jpeg,jpg,png,svg,pdf|max:2000',
 				'password'  => 'required|min:4|',
 				'confirm_password'  => 'required|same:password',
+                'g-recaptcha-response' => 'required|captcha',
             ];			
 			
             $validation = \Validator::make($request, $rule);

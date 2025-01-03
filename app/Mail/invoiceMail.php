@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 
-class InvoiceMail extends Mailable
+class invoiceMail extends Mailable
 {
     use Queueable, SerializesModels;
 

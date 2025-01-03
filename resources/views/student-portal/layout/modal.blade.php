@@ -419,6 +419,12 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        {!! NoCaptcha::display() !!}
+                                        @error('g-recaptcha-response')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -513,6 +519,7 @@
     </div>
   </div>
 </div>
+{!! NoCaptcha::renderJs() !!}
 @endif
 
 

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\TestMail;
+use App\Mail\TestEmail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +14,12 @@ use App\Mail\TestMail;
 |
 */
 
-	
+Route::get('/test-email', function () {
+	// echo "MOMIT";
+	 Mail::to('moynul.hasan@amiprobashi.com')->send(new TestEmail());
+	 echo "SENT";
+ });
+
 Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');
 	Artisan::call('route:clear');
